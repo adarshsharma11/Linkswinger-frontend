@@ -1,0 +1,29 @@
+
+@import "utils/variables.scss";
+@import "style";
+html {
+    &.style1 {
+        
+        @import "./style1.scss";
+    }
+    &.style2 {
+        
+        @import "./style2.scss";
+    }
+    &.style3 {
+        
+        @import "./style3.scss";
+    }
+    &.style4 {
+       
+        @import "./style4.scss";
+    }
+    &.style5 {
+       
+        @import "./style5.scss";
+    }
+    &.style6 {
+       
+        @import "./style6.scss";
+    }
+}
