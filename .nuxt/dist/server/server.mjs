@@ -395,7 +395,7 @@ const _routes = [
   {
     name: "index",
     path: "/",
-    component: () => import("./_nuxt/index-DlaSLKo3.js")
+    component: () => import("./_nuxt/index-By-Tucfg.js")
   },
   {
     name: "bonus-faq",
