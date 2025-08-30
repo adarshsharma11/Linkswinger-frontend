@@ -21,10 +21,7 @@ export default defineNuxtConfig({
   },
   plugins: [
     { src: "~/plugins/plugin.js", mode: "client" } ],
-  devtools: { enabled: true },
-  nitro: {
-    preset: 'static'
-  },
+  devtools: { enabled: false },
   ssr: true,
   runtimeConfig: {
     public: {

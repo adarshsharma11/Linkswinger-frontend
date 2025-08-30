@@ -1,0 +1,1 @@
+{"file":"virtual_public-BZCgBRg3.js","mappings":";AAAuD,MAAA,aAAe,gBAAgB,gCAAgC;","names":[],"sources":["../../../../virtual:public?%2Fimages%2Flanding%2Fchitchat%2F2.png"],"sourcesContent":["import { publicAssetsURL } from '#internal/nuxt/paths';export default publicAssetsURL(\"/images/landing/chitchat/2.png\")"],"version":3}

@@ -1,0 +1,1 @@
+import{_}from"./xvGN-v0Y.js";import{_ as c}from"./Dra6NQ7v.js";import{_ as t,c as r,o as m,b as o}from"./D5LAQYkj.js";const s={},a={class:"inner-page"};function i(p,f){const e=_,n=c;return m(),r("div",a,[o(e),o(n,{main:"Home",title:"Blog"})])}const B=t(s,[["render",i]]);export{B as _};

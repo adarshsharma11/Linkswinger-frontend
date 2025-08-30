@@ -1,5 +1,4 @@
 /// <reference types="floating-vue" />
-/// <reference types="@nuxt/devtools" />
 /// <reference types="nuxt-icon" />
 /// <reference types="@pinia/nuxt" />
 /// <reference types="@nuxt/telemetry" />

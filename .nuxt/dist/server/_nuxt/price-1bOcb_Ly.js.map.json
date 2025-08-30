@@ -1,0 +1,1 @@
+{"file":"price-1bOcb_Ly.js","mappings":";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;AAKA,YAAQ;AAAA,MACJ,OAAO;AAAA,IACX,CAAC;;;;;;;;;;;;;","names":[],"sources":["../../../../pages/bonus/price.vue"],"sourcesContent":["<template>\n<BonusPagePrice/>\n</template>\n\n<script setup>\nuseHead({\n    title: \"Bonus Price - Chat Messenger Nuxt Template\"\n})\n</script>\n"],"version":3}

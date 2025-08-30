@@ -95,7 +95,7 @@
         "../node_modules/nuxt/dist/app/compat/vue-demi"
       ],
       "#icon-collections": [
-        "./icon-collections"
+        "./icon-collections.mjs"
       ],
       "#vue-router": [
         "../node_modules/vue-router"
@@ -107,7 +107,7 @@
         "./imports"
       ],
       "#app-manifest": [
-        "./manifest/meta/dev"
+        "./manifest/meta/ebbf5b77-aceb-4de6-82b7-c7d3c61ca642.json"
       ],
       "#components": [
         "./components"
@@ -157,8 +157,6 @@
     "../node_modules/@pinia/nuxt/dist/runtime",
     "../node_modules/floating-vue/nuxt/runtime",
     "../node_modules/floating-vue/nuxt/dist/runtime",
-    "../node_modules/@nuxt/devtools/runtime",
-    "../node_modules/@nuxt/devtools/dist/runtime",
     "../node_modules/@nuxt/telemetry/runtime",
     "../node_modules/@nuxt/telemetry/dist/runtime",
     ".."
@@ -171,7 +169,6 @@
     "../node_modules/nuxt-icon/node_modules",
     "../node_modules/@pinia/nuxt/node_modules",
     "../node_modules/floating-vue/node_modules",
-    "../node_modules/@nuxt/devtools/node_modules",
     "../node_modules/@nuxt/telemetry/node_modules",
     "../node_modules/nuxt-icon/runtime/server",
     "../node_modules/nuxt-icon/dist/runtime/server",
@@ -179,10 +176,8 @@
     "../node_modules/@pinia/nuxt/dist/runtime/server",
     "../node_modules/floating-vue/nuxt/runtime/server",
     "../node_modules/floating-vue/nuxt/dist/runtime/server",
-    "../node_modules/@nuxt/devtools/runtime/server",
-    "../node_modules/@nuxt/devtools/dist/runtime/server",
     "../node_modules/@nuxt/telemetry/runtime/server",
     "../node_modules/@nuxt/telemetry/dist/runtime/server",
-    "dev"
+    "../.output"
   ]
 }

@@ -1,0 +1,1 @@
+{"version":3,"file":"virtual_public-gvOZEf4Y.js","sources":["../../../../virtual:public?%2Fimages%2Flanding%2Ffooter%2F2.png"],"sourcesContent":["import { publicAssetsURL } from '#internal/nuxt/paths';export default publicAssetsURL(\"/images/landing/footer/2.png\")"],"names":[],"mappings":";AAAuD,MAAA,aAAe,gBAAgB,8BAA8B;"}
