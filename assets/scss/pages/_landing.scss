@@ -337,7 +337,7 @@ header {
 			width: 58px;
 			height: 58px;
 			border-radius: 29px;
-			background-image: linear-gradient(110deg, #1ca9fe 0%, #1c6ee9 100%);
+			background-image: $gradient-bg-color;
 			display: flex;
 			justify-content: center;
 			align-items: center;
@@ -415,7 +415,7 @@ header {
 						width: 58px;
 						height: 58px;
 						border-radius: 29px;
-						background-image: linear-gradient(110deg, #1ca9fe 0%, #1c6ee9 100%);
+						background-image: $gradient-bg-color;
 						display: flex;
 						justify-content: center;
 						align-items: center;
@@ -545,7 +545,7 @@ header {
 		.icon-box {
 			background-color: $light-blue1;
 			filter: drop-shadow(0px 5px 15px rgba(29, 159, 250, 0.35));
-			background-image: linear-gradient(145deg, #1ca9fe 0%, #1c6ee9 100%);
+			background-image: $gradient-bg-color;
 			i {
 				color: $white;
 			}
@@ -686,7 +686,7 @@ header {
 			width: 58px;
 			height: 58px;
 			border-radius: 29px;
-			background-image: linear-gradient(110deg, #1ca9fe 0%, #1c6ee9 100%);
+			background-image: $gradient-bg-color;
 			display: flex;
 			justify-content: center;
 			align-items: center;
@@ -757,7 +757,7 @@ header {
 						width: 58px;
 						height: 58px;
 						border-radius: 29px;
-						background-image: linear-gradient(110deg, #1ca9fe 0%, #1c6ee9 100%);
+						background-image: $gradient-bg-color;
 						display: flex;
 						justify-content: center;
 						align-items: center;
@@ -872,7 +872,7 @@ header {
             height: 58px;
             border-radius: 29px;
             filter: drop-shadow(0px 5px 15px rgba(29,159,250,0.25));
-            background-image: linear-gradient(110deg, #1ca9fe 0%, #1c6ee9 100%);
+            background-image: $gradient-bg-color;
             display:flex;
             justify-content:center;
             align-items:center;
@@ -1025,11 +1025,7 @@ header {
 					}
 					&.active {
 						.tab-main {
-							background-image: linear-gradient(
-								155deg,
-								#1ca9fe 0%,
-								#1c6ee9 100%
-							);
+							background-image: $gradient-bg-color;
 							.tab-img{
 								i{
 									color: $white;
@@ -1479,7 +1475,7 @@ header {
 	button {
 		border-radius: 10px;
 		filter: drop-shadow(0px 5px 15px rgba(29, 159, 250, 0.35));
-		background-image: linear-gradient(155deg, #1ca9fe 0%, #1c6ee9 100%);
+		background-image: $gradient-bg-color;
 		color: $white;
 		margin-left: 20px;
 		line-height: 1;
@@ -1594,7 +1590,7 @@ footer {
 	.foot-apl-btn {
 		border-radius: 10px;
 		filter: drop-shadow(0px 5px 15px rgba(29, 159, 250, 0.35));
-		background-image: linear-gradient(145deg, #1ca9fe 0%, #1c6ee9 100%);
+		background-image: $gradient-bg-color;
 		display: flex;
 		width: fit-content;
 		align-items: center;
@@ -1663,7 +1659,7 @@ footer {
 				padding-bottom: 4px;
 			}
 			&.active {
-				background-image: linear-gradient(145deg, #1ca9fe 0%, #1c6ee9 100%);
+				background-image: $gradient-bg-color;
 				transition: all 0.3s ease;
 				color: $white;
 				h4,
