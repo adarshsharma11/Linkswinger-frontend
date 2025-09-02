@@ -186,12 +186,7 @@
     <div class="container copyright-footer">
       <div class="row copyright">
         <div class="col-md-6 col-sm-12">
-          <p class="footer-left">© 2021 Chitchat. All Rights Reserved</p>
-        </div>
-        <div class="col-md-6 col-sm-12 links_horizontal">
-          <p class="text-end">
-            Made with <span>&hearts; </span>By Theme Pixelstrap
-          </p>
+          <p class="footer-left">© 2025 Linksswinger. All Rights Reserved</p>
         </div>
       </div>
     </div>

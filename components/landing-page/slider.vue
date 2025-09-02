@@ -1,6 +1,6 @@
 <template>
  
-  <section class="slider-block">
+  <section class="slider-block bg-dark">
     <div class="custom-container">
       <div class="row">
         <div class="col-12">

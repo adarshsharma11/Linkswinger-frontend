@@ -1,6 +1,6 @@
 <template>
 
-  <section class="section-py-space subscribe-main light-bg" id="subscribe">
+  <section class="section-py-space subscribe-main dark-bg" id="subscribe">
     <div class="container-fluid">
       <div class="row">
         <div class="col-12">
@@ -34,7 +34,6 @@
             <div>
               <h1>Subscribe our Newsletter get new update.</h1>
               <form class="form-inline d-flex">
-                <input class="form-control" placeholder="your name" />
                 <input class="form-control" placeholder="email" />
                 <button class="btn">Submit</button>
               </form>
