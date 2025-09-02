@@ -10,14 +10,13 @@
                 <div class="ply-content"><i class="ti-shield"></i></div>
                 <h3>Secure Your <span>Messages</span></h3>
               </div>
-              <h1>The world's top secure App</h1>
+              <h1>Ready to Join Our Community?</h1>
               <h4>
-                <span>Desktop App </span>– Easy to use our chat app, Attractive
-                and clean design, with many Features :- Dark & light, Recent
-                Chat And many more.......
+               Start connecting with like-minded individuals in a safe, verified environment.
               </h4>
-              <nuxt-link to="/messenger/messenger" class="btn pricing-btn">
-               learn more</nuxt-link
+              <nuxt-link to="/authentication/signup" class="btn pricing-btn">
+               Sign Up Now
+              </nuxt-link
               >
             </div>
           </div>

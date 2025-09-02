@@ -1,17 +1,14 @@
 <template>
   
-    <section class="section-py-space" id="price">
+    <section class="section-py-space bg-dark" id="price">
+
       <div class="container-fluid">
         <div class="row">
           <div class="col-12">
             <div class="landing-title">
-              <div>
-                <h1>pricing plan</h1>
-              </div>
               <div class="sub-title">
                 <div>
-                  <h4>Choose Your Pricing Plan</h4>
-                  <h2>Affordable for everyone!</h2>
+                  <h2 class="text-white">Platform Features</h2>
                 </div>
               </div>
             </div>
@@ -36,7 +33,7 @@
                           <div class="pricing-icon">
                             <img
                               class="img-fluid"
-                             :src="`${config.public.baseURL}${item.img}`"
+                             :src="`${item.img}`"
                               alt="test-img"
                             />
                           </div>
@@ -89,44 +86,44 @@ let swiperOption=ref({
         },
       })
 
-      let  plans= ([
-        {
-          img: "/images/landing/pricing-plan/1.png",
-          plan :"Free Plan",
-          price:"$0",
-          palne:"Totally Free Plane",
-          feature1 : "Common Feature is Available",
-          feature2 : "sxgsgerggregrterett",
-          feature3 : "Try for free, Forever!"
-        },
-        {
-          img: "/images/landing/pricing-plan/2.png",
-          plan :"Professional",
-          price:"$59",
-          palne:"Professional Plane",
-          feature1 : "All Features is Available",
-          feature2 : "High Definition Full-screen",
-          feature3 : "24/7 phone and email support"
-        },
-        {
-          img: "/images/landing/pricing-plan/3.png",
-          plan :"Advanced",
-          price:"$99",
-          palne:"Advance Plane",
-          feature1 : "All Features is Available",
-          feature2 : "High Definition Full-screen",
-          feature3 : "24/7 phone and email support"
-        },
-        {
-          img: "/images/landing/pricing-plan/2.png",
-          plan :"Professional",
-          price:"$59",
-          palne:"Professional Plane",
-          feature1 : "All Features is Available",
-          feature2 : "High Definition Full-screen",
-          feature3 : "24/7 phone and email support"
-        }
-      ])
+let plans = ([
+  {
+    img: "/images/landing/pricing-plan/1.png",
+    plan: "Free Plan",
+    price: "$0",
+    palne: "Basic Features",
+    feature1: "Basic Secure Messaging",
+    feature2: "Limited Video Calls (5 mins)",
+    feature3: "Basic Security Verification"
+  },
+  {
+    img: "/images/landing/pricing-plan/2.png",
+    plan: "Professional",
+    price: "$59",
+    palne: "Enhanced Features",
+    feature1: "Unlimited Secure Messaging with Media",
+    feature2: "HD Video Calls (No Time Limit)",
+    feature3: "Advanced Security & Trust Score"
+  },
+  {
+    img: "/images/landing/pricing-plan/3.png",
+    plan: "Advanced",
+    price: "$99",
+    palne: "Premium Features",
+    feature1: "Priority Secure Messaging & Storage",
+    feature2: "Group Video Calls & Screen Sharing",
+    feature3: "Premium Verification Badge"
+  },
+  {
+    img: "/images/landing/pricing-plan/2.png",
+    plan: "Enterprise",
+    price: "$159",
+    palne: "Complete Package",
+    feature1: "All Premium Messaging Features",
+    feature2: "Unlimited Video Conference Tools",
+    feature3: "Custom Security Solutions"
+  }
+])
 let modules= [Pagination]
 </script>
 
