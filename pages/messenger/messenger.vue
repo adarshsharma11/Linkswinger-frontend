@@ -6,6 +6,6 @@
 
 <script setup>
 useHead({
-    title: "Chitchat - Chat Messenger Nuxt Template"
+    title: "LinkSwinger – Verified Connections, Genuine People"
 })
 </script>
