@@ -1,6 +1,6 @@
 <template>
   
-    <div class="chitchat-main" :class="togglerightside ? 'small-sidebar': ''" id="content">
+    <div class="chitchat-main" id="content">
       <div class="chat-content tabto" :class="activechat == 1 ? 'active' : ''">
         <div class="scrolltopdirectchat messages custom-scroll" :class="activechatType == 1 ? 'active' : ''" id="chating" 
           :style="chatwallpaperIndex !== 0? [{'background-image': 'url(' + chatwallpaper + ')'},styleObject] 
@@ -77,7 +77,7 @@ import { ref, computed, reactive, watch, onMounted } from 'vue';
 import { useCommonStore } from "@/store/common";
 import {useGroupChatStore} from "@/store/groupchat"
 import {useDirectChatStore} from "@/store/chat"
-import emogi from '../../data/emogi.json';
+import emogi from '@/data/emogi.json';
 import { MessengerPageContactsContactcontent } from '#components';
 
 const commonStore = useCommonStore();

@@ -1,9 +1,9 @@
 import { defineStore } from "pinia";
 import { ref, reactive } from "vue";
-import Contact from "../../data/contact.json";
-import Logs from "../../data/chatcontent.json";
-import layout from "../../data/layout.json";
-import wallpaper from "../../data/wallpapers.json";
+import Contact from "@/data/contact.json";
+import Logs from "@/data/chatcontent.json";
+import layout from "@/data/layout.json";
+import wallpaper from "@/data/wallpapers.json";
 
 export const useCommonStore = defineStore("common", () => {
  

@@ -99,17 +99,6 @@
               ><Icon name="lucide:video" size="15" height="15"></Icon
             ></a>
           </li>
-          <li>
-            <a
-              class="icon-btn btn-light button-effect apps-toggle"
-              @click="togglerightside()"
-              
-              title="All Apps"
-              href="javascript:void(0)"
-              data-tippy-content="All Apps"
-              ><i class="ti-layout-grid2"></i
-            ></a>
-          </li>
           <MessengerPageCommonProfile/>
         </ul>
       </div>

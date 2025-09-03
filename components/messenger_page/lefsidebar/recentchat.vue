@@ -20,16 +20,7 @@
                   : 'btn-outline-primary'
               "
               ><i class="ti-angle-right" @click="mobilemenu()"></i></a
-            ><a
-              class="icon-btn button-effect pull-right mainnav"
-              :class="
-                toggleleftside == 'on'
-                  ? 'btn-outline-light'
-                  : 'btn-outline-primary'
-              "
-              @click="toggleSidebar()"
-              ><i class="ti-layout-grid2"></i
-            ></a>
+            >
           </div>
         </div>
       </div>
