@@ -8,7 +8,7 @@
             <div class="landing-title">
               <div class="sub-title">
                 <div>
-                  <h2 class="text-white">Platform Features</h2>
+                  <h2 class="text-white">Free vs Premium Membership</h2>
                 </div>
               </div>
             </div>
@@ -64,7 +64,6 @@
 import { Swiper, SwiperSlide } from "swiper/vue";
 import { Pagination } from "swiper/modules";
 import "swiper/css";
-const config = useRuntimeConfig();
 
 let swiperOption=ref({
         breakpoints: {
@@ -89,39 +88,44 @@ let swiperOption=ref({
 let plans = ([
   {
     img: "/images/landing/pricing-plan/1.png",
-    plan: "Free Plan",
-    price: "$0",
+    plan: "Basic",
+    price: "£0/month",
+    price: "Free",
     palne: "Basic Features",
-    feature1: "Basic Secure Messaging",
-    feature2: "Limited Video Calls (5 mins)",
-    feature3: "Basic Security Verification"
+    feature1: "Location sharing (up to 10 people)",
+    feature2: "No video uploads/playback",
+    feature3: "Upload up to 3 pictures/day",
+    feature4: "Send up to 50 text-only messages/day",
+    feature5: "No video calls",
+    feature6: "No emojis",
+    feature7: "Can only view public profile pictures",
   },
   {
     img: "/images/landing/pricing-plan/2.png",
-    plan: "Professional",
-    price: "$59",
+    plan: "Basic+",
+    price: "£5/month",
     palne: "Enhanced Features",
-    feature1: "Unlimited Secure Messaging with Media",
-    feature2: "HD Video Calls (No Time Limit)",
-    feature3: "Advanced Security & Trust Score"
+    feature1: "Full location sharing (no cap)",
+    feature2: "Unlimited text messages with emojis",
+    feature3: "Upload up to 10 pictures/day"
   },
   {
     img: "/images/landing/pricing-plan/3.png",
-    plan: "Advanced",
-    price: "$99",
+    plan: "Plus",
+    price: "£9/month",
     palne: "Premium Features",
-    feature1: "Priority Secure Messaging & Storage",
-    feature2: "Group Video Calls & Screen Sharing",
-    feature3: "Premium Verification Badge"
+    feature1: "Audio/video calls with PIN (30 min/day)",
+    feature2: "Roulette: 350 spins/day",
+    feature3: "HD photo & video upload & view"
   },
   {
     img: "/images/landing/pricing-plan/2.png",
-    plan: "Enterprise",
-    price: "$159",
+    plan: "Elite",
+    price: "£12.50/month",
     palne: "Complete Package",
-    feature1: "All Premium Messaging Features",
-    feature2: "Unlimited Video Conference Tools",
-    feature3: "Custom Security Solutions"
+    feature1: "Everything in Plus",
+    feature2: "Elite-only Roulette with gender filters",
+    feature3: "Full location sharing access"
   }
 ])
 let modules= [Pagination]

@@ -3,6 +3,6 @@
 </template>
 <script setup>
 useHead({
-    title: "Chitchat - Chat Messenger Nuxt Template"
+    title: "LinkSwinger – Discover Like-Minded Connections"
 })
 </script>

@@ -7,7 +7,7 @@
           <div class="landing-header" v-bind:class="fixedheader ? 'fixed' : ''">
             <div class="main-menu">
               <nav class="navbar navbar-expand-sm navbar-light">
-                  <CommonLogo/>
+                  <CommonLogo :fixedheader="true" :logo="fixedheader ? 'logo-white.png' : 'landing-logo.png'"/>
                   <button class="navbar-toggler d-xl-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="true" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
                   <CommonNavbar/>
                </nav>
