@@ -42,19 +42,6 @@
         <li>
           <a
             class="icon-btn btn-light button-effect"
-            :class="{ active: activesidebar === 3 }"
-            href="javascript:void(0)"
-            @click="activemenu(3)"
-            
-            title="Document"
-            data-tippy-content="Document"
-          >
-            <i class="fa fa-file-text"></i>
-          </a>
-        </li>
-        <li>
-          <a
-            class="icon-btn btn-light button-effect"
             :class="{ active: activesidebar === 4 }"
             href="javascript:void(0)"
             @click="activemenu(4)"
@@ -96,19 +83,6 @@
         </li>
       </ul>
       <ul class="sidebar-bottom">
-        <li>
-          <a
-            class="icon-btn btn-light button-effect mode"
-            href="javascript:void(0)"
-            
-            title="Theme Mode"
-            data-tippy-content="Theme Mode"
-            data-intro="Change mode"
-            @click="customizeMixLayout"
-          >
-            <i class="fa" :class="mixLayout === '' ? 'fa-moon-o' : 'fa-lightbulb-o'"></i>
-          </a>
-        </li>
         <li>
           <nuxt-link to="/authentication/login" class="icon-btn btn-light button-effect">
             <i class="fa fa-power-off"  title="SignOut" data-tippy-content="SignOut"></i>

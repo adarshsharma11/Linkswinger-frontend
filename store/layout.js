@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
-import { ref, reactive } from "vue";
-import Layout from "../../data/layout.json";
+import { reactive } from "vue";
+import Layout from "@/data/layout.json";
 
 export const useLayoutStore = defineStore("layout", () => {
   const layout = reactive(Layout.config);

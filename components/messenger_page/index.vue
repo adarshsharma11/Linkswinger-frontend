@@ -6,8 +6,6 @@
         <MessengerPageNav />
         <MessengerPageLeftSidebar />
         <MessengerPageChat/>
-        <MessengerPageRightsidebarProfile/>
-        <MessengerPageRightsidebar/>
       </div>
       <MessengerPageModalsAudiocall1 ref="audioComponent" />
       <MessengerPageModalsVediocall/>
@@ -23,8 +21,7 @@
 <MessengerPageModalsNewContact/>
 <MessengerPageModalsNewCall/>
 <MessengerPageModalsNewChat/>
-      <MessengerPageCustomizerCustomizesetting/>
-      <MessengerPageCustomizer/>
+<MessengerPageCustomizer/>
      
     </client-only>
   </div>
@@ -32,8 +29,8 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted, watchEffect } from "vue";
-import layout from "../../data/layout.json";
+import { ref, onMounted, onUnmounted, watchEffect } from "vue";
+import layout from "@/data/layout.json";
 import { useCommonStore } from "@/store/common";
 import { MessengerPageModalsConfigurationmodel, MessengerPageModalsCreatetodo, MessengerPageModalsSetreminder } from "#components";
 
@@ -86,7 +83,7 @@ onUnmounted(() => {
 
 useHead({
   bodyAttrs: {
-    class: `sidebar-active main-page ${layout.config.sidebar_layout}`,
+    class: `main-page ${layout.config.sidebar_layout}`,
     id: "body",
   },
   htmlAttrs: {
