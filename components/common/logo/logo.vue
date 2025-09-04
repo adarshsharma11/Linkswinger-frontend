@@ -1,6 +1,6 @@
 <template>
 
-  <nuxt-link class="navbar-brand" to="/messenger/messenger">
+  <nuxt-link class="navbar-brand" to="/">
       <div class="logo-block">
         <img
           class="img-fluid"

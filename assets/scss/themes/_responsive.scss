@@ -840,7 +840,7 @@
       }
     }
     .message-input {
-      width: calc(100% - 300px);
+      width: calc(100% - 0px);
     }
     .messages{
       .contact-details{
@@ -1064,7 +1064,7 @@
       display: block;
     }
     .chitchat-main .messages .contact-details {
-      width: calc(100vw - 390px);
+      width: calc(100vw - 70px);
     }
     header {
       .landing-header {

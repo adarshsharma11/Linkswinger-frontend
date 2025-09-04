@@ -1,17 +1,14 @@
 <template>
 
-  <section class="section-py-space subscribe-main dark-bg" id="subscribe">
+  <section class="section-py-space subscribe-main bg-dark" id="subscribe">
     <div class="container-fluid">
       <div class="row">
         <div class="col-12">
           <div class="landing-title">
-            <div>
-              <h1>subscribe</h1>
-            </div>
             <div class="sub-title">
               <div>
                 <h4>Subscribe Newsletter</h4>
-                <h2>Subscribe to receive updates</h2>
+                <h2 class="text-white">Subscribe to receive updates</h2>
               </div>
             </div>
           </div>
@@ -32,12 +29,12 @@
         <div class="col-md-6">
           <div class="subscribe-content">
             <div>
-              <h1>Subscribe our Newsletter get new update.</h1>
+              <h1 class="text-white">Subscribe our Newsletter get new update.</h1>
               <form class="form-inline d-flex">
-                <input class="form-control" placeholder="email" />
+                <input class="form-control" placeholder="email" type="email" name="email" />
                 <button class="btn">Submit</button>
               </form>
-              <h4>Check Features. <span><nuxt-link to="/messenger/messenger">Learn More </nuxt-link></span></h4>
+              <h4 class="text-white">Check Features. <span><nuxt-link to="/messenger/messenger">Learn More </nuxt-link></span></h4>
             </div>
           </div>
         </div>

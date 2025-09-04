@@ -9,22 +9,10 @@
     <div class="chat-frind-content" :style="commonStore.showprofilemenu?'display: block;':'display: none;'">
       <ul>
         <li>
-          <a class="icon-btn btn-outline-primary button-effect btn-sm" href="#"
-            ><Icon name="lucide:user"></Icon
+          <a class="icon-btn btn-outline-primary button-effect btn-sm" href="/"
+            ><Icon name="lucide:circle-slash-2"></Icon
           ></a>
-          <h5>profile</h5>
-        </li>
-        <li>
-          <a class="icon-btn btn-outline-success button-effect btn-sm" href="#"
-            ><Icon name="lucide:circle-plus"></Icon
-          ></a>
-          <h5>archive</h5>
-        </li>
-        <li>
-          <a class="icon-btn btn-outline-danger button-effect btn-sm" href="#"
-            ><Icon name="lucide:trash-2"></Icon
-          ></a>
-          <h5>delete</h5>
+          <h5>Close</h5>
         </li>
         <li>
           <a class="icon-btn btn-outline-light button-effect btn-sm" href="#"

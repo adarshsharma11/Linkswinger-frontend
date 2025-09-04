@@ -45,7 +45,7 @@
 		margin-bottom: 50px;
 		h4 {
 			font-size: calc(12px + (17 - 12) * ((100vw - 320px) / (1920 - 320)));
-			color: $light-blue;
+			color: $primary-color;
 			font-family: $font-2;
 			font-weight: 400;
 			text-transform: capitalize;
@@ -164,10 +164,10 @@ header {
 		}
 		&.fixed {
 			position: fixed;
-			width: 100%;
+			width: 85%;
 			background-color: $primary-color;
 			z-index: 9;
-			padding: 5px 100px;
+			padding: 0px 40px;
 			max-width: 1600px;
 			left: 50%;
 			transform: translateX(-50%);

@@ -27,7 +27,6 @@
                 },
                 styleObject,
               ]"
-              @click="openprofile()"
             ></div>
           </div>
           <div class="flex-grow-1">
@@ -38,38 +37,6 @@
             >
               {{ currentChat.online ? "Active" : "InActive" }}
             </div>
-          </div>
-          <div class="media-right">
-            <ul>
-              <li>
-                <a
-                  class="icon-btn btn-light button-effect mute"
-                  href="javascript:void(0)"
-                  @click="showvolume = !showvolume"
-                  ><span v-if="showvolume" class="effect-wave"></span
-                  ><i
-                    class="fa"
-                    :class="showvolume ? 'fa-volume-up' : 'fa-volume-up off'"
-                  ></i
-                ></a>
-              </li>
-              <li>
-                <a
-                  class="icon-btn btn-light search-right"
-                  href="javascript:void(0)"
-                  @click="toggleSearchbar()"
-                  ><Icon name="lucide:search" size="15" height="15"></Icon
-                ></a>
-              </li>
-              <li>
-                <a
-                  class="icon-btn btn-light button-effect mobile-sidebar"
-                  @click="backtochat()"
-                  href="javascript:void(0)"
-                  ><Icon name="lucide:chevron-left" size="15" height="15"></Icon
-                ></a>
-              </li>
-            </ul>
           </div>
         </div>
       </div>
@@ -132,7 +99,7 @@ const currentChat = computed(() => {
 });
 
 
-const getImgUrl = (path) => `${config.public.baseURL}/images/${path}`;
+const getImgUrl = (path) => `/images/${path}`;
 
 const toggleSearchbar = () => {
   openSearch.value = !openSearch.value;

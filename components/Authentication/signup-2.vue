@@ -39,8 +39,8 @@
             alt="sign-logo"
           />
         </div>
-        <h3>Hello Everyone , We are Chitchat</h3>
-        <h4>Welcome to chitchat please signup to your account.</h4>
+        <h3>Hello Everyone , We are Linkswinger</h3>
+        <h4>Welcome to Linkswinger please signup to your account.</h4>
         <form class="form2">
           <div class="form-group">
             <label class="col-form-label" for="inputname">Username</label>
@@ -72,30 +72,6 @@
               placeholder="Password"
             />
           </div>
-          <ul class="medialogo">
-            <li>
-              <a
-                class="icon-btn btn-facebook button-effect rouded15"
-                href="https://www.facebook.com/"
-                ><i class="fa fa-facebook-f"></i
-              ></a>
-            </li>
-            <li>
-              <a
-                class="icon-btn btn-danger button-effect rouded15"
-                href="https://www.google.com/"
-                ><i class="fa fa-google"></i
-              ></a>
-            </li>
-            <li>
-              <a
-                class="icon-btn btn-primary button-effect rouded15"
-                href="https://twitter.com/"
-              >
-                <i class="fa fa-twitter"></i
-              ></a>
-            </li>
-          </ul>
           <div class="form-group mb-0">
             <div class="buttons">
               <a
