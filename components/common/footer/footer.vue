@@ -3,7 +3,7 @@
   <footer>
     <div class="container footer-main">
       <div class="row footer-block">
-        <div class="col-lg-3 col-md-6">
+        <div class="col-lg-4 col-md-6">
           <div class="footer-title footer-mobile-title">
             <h3>About</h3>
           </div>
@@ -51,7 +51,7 @@
             </ul>
           </div>
         </div>
-        <div class="col-lg-2 col-md-3">
+        <div class="col-lg-4 col-md-4">
           <div class="links">
             <div class="footer-title">
               <h3>Useful Links</h3>
@@ -73,47 +73,11 @@
                     >FAQ</nuxt-link
                   >
                 </li>
-                <li>
-                  <nuxt-link to="/bonus/elements"
-                    >Elements</nuxt-link
-                  >
-                </li>
               </ul>
             </div>
           </div>
         </div>
-        <div class="col-lg-2 col-md-3">
-          <div class="links">
-            <div class="footer-title">
-              <h3>Blog Links</h3>
-            </div>
-            <div class="footer-contant">
-              <ul>
-                <li>
-                  <nuxt-link to="/blogs/blog_no-sidebar"
-                    >No sidebar</nuxt-link
-                  >
-                </li>
-                <li>
-                  <nuxt-link to="/blogs/blog_left-sidebar"
-                    >Left sidebar</nuxt-link
-                  >
-                </li>
-                <li>
-                  <nuxt-link to="/blogs/blog_right-sidebar"
-                    >Right sidebar</nuxt-link
-                  >
-                </li>
-                <li>
-                  <nuxt-link to="/blogs/blog_details"
-                    >Details page</nuxt-link
-                  >
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-2 col-md-4">
+        <div class="col-lg-4 col-md-6">
           <div class="links">
             <div class="footer-title">
               <h3>Authentication</h3>
@@ -121,67 +85,20 @@
             <div class="footer-contant">
               <ul>
                 <li>
-                  <nuxt-link to="/authentication/login"
-                    >Signin</nuxt-link
-                  >
-                </li>
-                <li>
                   <nuxt-link to="/authentication/login-2"
-                    >Signin classic</nuxt-link
-                  >
-                </li>
-                <li>
-                  <nuxt-link to="/authentication/signup"
-                    >Signup</nuxt-link
+                    >Login</nuxt-link
                   >
                 </li>
                 <li>
                   <nuxt-link to="/authentication/signup-2"
-                    >Signup classic</nuxt-link
+                    >Create Account</nuxt-link
                   >
                 </li>
               </ul>
             </div>
           </div>
         </div>
-        <div class="col-lg-3 col-md-4">
-          <div class="downlaod">
-            <div>
-              <div class="footer-title">
-                <h3>Download Apps</h3>
-              </div>
-              <div class="footer-contant">
-                <div class="footer-btn">
-                  <a class="btn active" href="https://www.apple.com/in/itunes/"
-                    ><i class="fa fa-apple"></i>
-                    <div>
-                      <h6>Available on the</h6>
-                      <h4>App store</h4>
-                    </div></a
-                  ><a class="btn" href="https://play.google.com/store"
-                    ><i class="fa fa-play"></i>
-                    <div>
-                      <h6>Available on the</h6>
-                      <h4>Google play</h4>
-                    </div></a
-                  >
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
-    </div>
-    <div class="footer-back-block">
-      <img
-        class="img-fluid inner1"
-        src="/images/landing/footer/2.png"
-        alt="footer-back-img"
-      /><img
-        class="img-fluid inner2"
-        src="/images/landing/footer/2.png"
-        alt="footer-back-img"
-      />
     </div>
     <div class="container copyright-footer">
       <div class="row copyright">

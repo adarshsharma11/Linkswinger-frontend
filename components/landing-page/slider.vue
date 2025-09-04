@@ -6,12 +6,10 @@
         <div class="col-12">
           <div class="slider-main">
             <div class="slider-contain">
-              <h1>Easy To Use Our Chat App</h1>
-              <h4>
-                <span>Desktop App </span>– Easy to use our chat app, Attractive
-                and<br />
-                clean design, with many Features Dark & light, Recent Chat And
-                many more.......
+              <h1 class="text-white">Easy To Use Linkswinger App</h1>
+              <h4 class="text-white">
+                A private, secure adult community where verified members connect through messaging, video calls, and shared experiences.<br />
+                Your privacy and safety are our top priority.
               </h4>
               <div class="downlaod">
                 <div class="footer-btn">
@@ -23,15 +21,6 @@
         </div>
       </div>
     </div>
-    <img
-      class="img-fluid chat-slide"
-      src="/images/landing/2.png"
-      alt="inner"
-    /><img
-      class="img-fluid inner1"
-      src="/images/landing/header/1.png"
-      alt="inner1"
-    />
   </section>
  
 </template>

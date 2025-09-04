@@ -3,8 +3,6 @@
   <div>
     <client-only>
       <div class="chitchat-container sidebar-toggle">
-        <MessengerPageNav />
-        <MessengerPageLeftSidebar />
         <MessengerPageChat/>
       </div>
       <MessengerPageModalsAudiocall1 ref="audioComponent" />

@@ -23,17 +23,6 @@
         </div>
       </div>
     </div>
-    <div class="secure-back-content">
-      <img
-        class="img-fluid secure-img1"
-        src="/images/landing/parallax/1.png"
-        alt="parellex-img1"
-      /><img
-        class="img-fluid secure-img2"
-        src="/images/landing/parallax/1.png"
-        alt="parellex-img1"
-      />
-    </div>
   </section>
 
 </template>
