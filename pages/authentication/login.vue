@@ -1,7 +1,5 @@
 <template>
-  <div class="login-page1">
-    <AuthenticationLogin/>
-  </div>
+<AuthenticationLogin/>
 </template>
 
 <script setup>

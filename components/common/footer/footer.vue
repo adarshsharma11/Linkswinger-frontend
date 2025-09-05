@@ -85,12 +85,12 @@
             <div class="footer-contant">
               <ul>
                 <li>
-                  <nuxt-link to="/authentication/login-2"
+                  <nuxt-link to="/authentication/login"
                     >Login</nuxt-link
                   >
                 </li>
                 <li>
-                  <nuxt-link to="/authentication/signup-2"
+                  <nuxt-link to="/authentication/signup"
                     >Create Account</nuxt-link
                   >
                 </li>
