@@ -38,16 +38,17 @@
         </div>
         <h3>Hello Everyone , We are Linkswinger</h3>
         <h4>Welcome to Linkswinger please, login to your account.</h4>
-        <form class="form2">
+        <div class="form2">
           <div class="form-group">
             <label class="col-form-label" for="inputEmail3"
-              >Email Address</label
+              >Email or Nickname</label
             >
             <input
               class="form-control"
               id="inputEmail3"
               type="email"
-              placeholder="Demo@123gmail.com"
+              placeholder="Email or Nickname"
+              v-model="nickemail"
             />
           </div>
           <div class="form-group">
@@ -58,6 +59,7 @@
               id="inputPassword3"
               type="password"
               placeholder="Password"
+                  v-model="password"
             />
           </div>
           <div class="form-group">
@@ -74,10 +76,10 @@
           </div>
           <div class="form-group mb-0">
             <div class="buttons">
-              <button class="btn button-effect btn-primary" href="javascript:void(0)">Login <span class="btn-loader"></span></button>
+              <button class="btn button-effect btn-primary" @click="userlogin">Login <span v-if="is_login_loading" class="btn-loader"></span></button>
             </div>
           </div>
-        </form>
+        </div>
       </div>
     </div>
     <div class="animation-block">
@@ -134,3 +136,89 @@
   </div>
 
 </template>
+
+<script lang="ts" setup>
+import type { UsersModel } from '~/composables/models';
+const is_login_loading = ref(false);
+const nickemail = ref('');
+const password = ref('');
+
+function userlogin() 
+{
+  if (!checkValidation() || is_login_loading.value) {
+    return;
+  }
+  let request_mdoel = {
+        nickemail : nickemail.value,
+        password : password.value,
+      
+  } as UsersModel.LoginRequestModel
+
+    let api_url = getUrl(RequestURL.login);
+    is_login_loading.value = true;
+    $fetch<SuccessError<UsersModel.LoginResponseModel>>(api_url, {
+      method: 'POST',
+      body: request_mdoel,  
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }).then((response) => {
+      is_login_loading.value = false;
+      if (response.success) {
+        let is_email_confirmed = response.response?.is_email_confirmed ?? false;
+        if  (is_email_confirmed)
+        {
+    showalert('Login successful!',true);
+        }
+        else
+        {
+    showalert('Login successful! Please check your email to verify your account.',true);
+        }
+    
+        // Optionally, redirect to login page or clear form
+      } else {
+        showalert(response.message || 'Login failed. Please try again.');
+      }
+    }).catch((error) => {
+      is_login_loading.value = false;
+      showalert('An error occurred during login. Please try again.');
+      console.error('Signup failed:', error);
+    });
+
+  // Proceed with signup logic
+}
+
+function checkValidation(): boolean {
+ 
+  const emailVal = nickemail.value.trim();
+  const passwordVal = password.value;
+    if (emailVal.length === 0) {
+    showalert('Please enter email');
+    return false;
+  }
+  
+  else if (passwordVal.length === 0) {
+    showalert('Please enter password');
+    return false;
+  }
+  return true;
+}
+
+</script>
+
+<style scoped >
+.btn-loader {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #e5e7eb;
+  border-top-color: #3b82f6;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+</style>
