@@ -136,7 +136,7 @@
   max-height: 100%;
 }
 .right-login,.login-page2{
-  background-color:$primary-light;
+  background-color: $black;
   width: auto;
   height: 100%;
   position: relative;
@@ -385,9 +385,9 @@
       }
     }
     .login-content{
-      background-color:$white;
+      background-color:$black;
       border: 3px;
-      width : 600px;
+      width : 900px;
       padding: 50px 80px;
       z-index: 10;
       h3,h4{

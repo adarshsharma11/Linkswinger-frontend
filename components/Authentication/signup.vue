@@ -2,12 +2,13 @@
   <div class="login-page2 animat-rate">
     <div class="login-content-main">
       <div class="login-content2">
+        <!-- Tabs -->
         <div class="theme-tab">
           <ul class="nav nav-tabs" id="myTab" role="tablist">
             <li class="nav-item">
               <nuxt-link to="/authentication/login">
                 <a class="nav-link active" id="login-tab" data-toggle="tab" role="tab" aria-selected="false">
-                  login
+                  Login
                 </a>
               </nuxt-link>
             </li>
@@ -18,145 +19,187 @@
           </ul>
         </div>
       </div>
+
       <div class="login-content">
         <div class="login-content-header">
           <img src="/images/logo/landing-logo.png" alt="sign-logo" />
         </div>
-        <h3>Hello Everyone , We are Linkswinger</h3>
-        <h4>Welcome to Linkswinger please signup to your account.</h4>
-        <div class="form2">
-          <div class="form-group">
-            <label class="col-form-label" for="inputprofiletype">Profile Type</label>
-            <select class="form-control" id="inputprofiletype" v-model="profileType">
-              <option value="" disabled>Select Profile Type</option>
-              <option v-for="type in allOptions.profileTypes" :key="type" :value="type">{{ type }}</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label class="col-form-label" for="inputfirstname">First Name</label>
-            <input class="form-control" id="inputfirstname" type="text" placeholder="First Name" v-model="firstName" />
-          </div>
-          <div class="form-group">
-            <label class="col-form-label" for="inputlastname">Last Name</label>
-            <input class="form-control" id="inputlastname" type="text" placeholder="Last Name" v-model="lastName" />
-          </div>
-          <div class="form-group">
-            <label class="col-form-label" for="inputnickname">Nickname</label>
-            <input class="form-control" id="inputnickname" type="text" placeholder="DemoNick" v-model="nickName"
-              @blur="validateNickname(nickName)" :readonly="is_nick_loading" />
-            <div v-if="is_nick_loading" class="btn-loader"></div>
-          </div>
-          <div class="form-group" v-if="profileType === 'Couple'">
-            <label class="col-form-label" for="inputpartnerfirstname">Partner First Name</label>
-            <input class="form-control" id="inputpartnerfirstname" type="text" placeholder="Partner First Name"
-              v-model="partnerFirstName" />
-          </div>
-          <div class="form-group" v-if="profileType === 'Couple'">
-            <label class="col-form-label" for="inputpartnerlastname">Partner Last Name</label>
-            <input class="form-control" id="inputpartnerlastname" type="text" placeholder="Partner Last Name"
-              v-model="partnerLastName" />
-          </div>
-          <div class="form-group" v-if="profileType === 'Couple'">
-            <label class="col-form-label" for="inputpartnernickname">Partner Nickname</label>
-            <input class="form-control" id="inputpartnernickname" type="text" placeholder="Partner Nickname"
-              v-model="partnerNickName" />
+        <h3 class="text-white">Hello Everyone, We are Linkswinger</h3>
+        <h4 class="text-white">Welcome to Linkswinger, please signup to your account.</h4>
+
+        <div class="form2 text-white">
+          <!-- Row: First + Last Name -->
+          <div class="row">
+            <div class="form-group col-12 col-md-6">
+              <label for="inputfirstname">First Name</label>
+              <input class="form-control" id="inputfirstname" type="text" placeholder="First Name" v-model="firstName" />
+            </div>
+            <div class="form-group col-12 col-md-6">
+              <label for="inputlastname">Last Name</label>
+              <input class="form-control" id="inputlastname" type="text" placeholder="Last Name" v-model="lastName" />
+            </div>
           </div>
 
+          <!-- Row: Nickname + Profile Type -->
+          <div class="row">
+            <div class="form-group col-12 col-md-6">
+              <label for="inputnickname">Nickname</label>
+              <input class="form-control" id="inputnickname" type="text" placeholder="DemoNick" v-model="nickName"
+                @blur="validateNickname(nickName)" :readonly="is_nick_loading" />
+              <div v-if="is_nick_loading" class="btn-loader"></div>
+            </div>
+            <div class="form-group col-12 col-md-6">
+              <label for="inputprofiletype">Profile Type</label>
+              <select class="form-control" id="inputprofiletype" v-model="profileType">
+                <option value="" disabled>Select Profile Type</option>
+                <option v-for="type in allOptions.profileTypes" :key="type" :value="type">{{ type }}</option>
+              </select>
+            </div>
+          </div>
 
-          <div class="form-group">
-            <label class="col-form-label" for="inputEmail3">Email Address</label>
-            <input class="form-control" id="inputEmail3" type="email" placeholder="Demo@123gmail.com" v-model="email" />
+          <!-- Row: Email + Password -->
+          <div class="row">
+            <div class="form-group col-12 col-md-6">
+              <label for="inputEmail3">Email Address</label>
+              <input class="form-control" id="inputEmail3" type="email" placeholder="Demo@123gmail.com" v-model="email" />
+            </div>
+            <div class="form-group col-12 col-md-6">
+              <label for="inputPassword3">Password</label>
+              <input class="form-control" id="inputPassword3" type="password" placeholder="Password" v-model="password" />
+            </div>
           </div>
-          <div class="form-group">
-            <label class="col-form-label" for="inputPassword3">Password</label><span> </span>
-            <input class="form-control" id="inputPassword3" type="password" placeholder="Password" v-model="password" />
-          </div>
-          <div class="form-group">
-            <label class="col-form-label" for="inputdob">Date of Birth</label>
-            <input class="form-control" id="inputdob" type="date" placeholder="Date of Birth" v-model="dob"
-              :max="maxDob" />
-          </div>
-          <div class="form-group" v-if="profileType === 'Couple'">
-            <label class="col-form-label" for="inputdob">Partner Date of Birth</label>
-            <input class="form-control" id="inputdob" type="date" placeholder="Date of Birth" v-model="partnerDob"
-              :max="maxDob" />
-          </div>
-          <div class="form-group mb-0">
-            <!-- Profile Type moved to top -->
-            <div class="form-group">
-              <label class="col-form-label" for="inputsexualorientation">Sexual Orientation</label>
+
+        
+
+
+          <!-- Row: DOB + Sexual Orientation -->
+          <div class="row">
+            <div class="form-group col-12 col-md-6">
+              <label for="inputdob">Date of Birth</label>
+              <input class="form-control" id="inputdob" type="date" v-model="dob" :max="maxDob" />
+            </div>
+            <div class="form-group col-12 col-md-6">
+              <label for="inputsexualorientation">Sexual Orientation</label>
               <select class="form-control" id="inputsexualorientation" v-model="sexualOrientation">
                 <option value="">Select Sexual Orientation</option>
-                <option v-for="orientation in allOptions.orientations" :key="orientation" :value="orientation">{{
-                  orientation }}</option>
+                <option v-for="orientation in allOptions.orientations" :key="orientation" :value="orientation">
+                  {{ orientation }}
+                </option>
               </select>
             </div>
-            <div class="form-group" v-if="profileType === 'Couple'">
-              <label class="col-form-label" for="inputpartnersexualorientation">Partner Sexual Orientation</label>
-              <select class="form-control" id="inputpartnersexualorientation" v-model="partnerSexualOrientation">
-                <option value="" disabled>Select Partner Sexual Orientation</option>
-                <option v-for="orientation in allOptions.orientations" :key="orientation" :value="orientation">{{
-                  orientation }}</option>
-              </select>
+          </div>
+
+            <!-- Partner Details (only if Couple) -->
+        <div v-if="profileType === 'Couple'">
+          <h5 class="mt-3 text-white">Partner Details</h5>
+          <div class="row">
+            <div class="form-group col-12 col-md-6">
+              <label for="partnerFirstName">Partner First Name</label>
+              <input
+                class="form-control"
+                id="partnerFirstName"
+                type="text"
+                placeholder="First Name"
+                v-model="partnerFirstName"
+              />
             </div>
-            <div class="form-group">
-              <label class="col-form-label" for="inputsexualinterest">Sexual Interest</label>
-              <select class="form-control" id="inputsexualinterest" multiple v-model="sexualInterest">
-                <option value="" disabled>Select Sexual Interest</option>
-                <option v-for="interest in allOptions.interests" :key="interest.interest_id"
-                  :value="interest.interest_id">{{ interest.interest_name }}</option>
-              </select>
+            <div class="form-group col-12 col-md-6">
+              <label for="partnerLastName">Partner Last Name</label>
+              <input
+                class="form-control"
+                id="partnerLastName"
+                type="text"
+                placeholder="Last Name"
+                v-model="partnerLastName"
+              />
             </div>
-            <div class="form-group">
-              <label class="col-form-label" for="inputmeetpreference">Meet Preference</label>
-              <select class="form-control" id="inputmeetpreference" multiple v-model="meetPreference">
-                <option value="" disabled>Select Meet Preference</option>
-                <option v-for="pref in allOptions.meetPerferences" :key="pref.meet_preference_id"
-                  :value="pref.meet_preference_id">{{ pref.preference_name }}</option>
-              </select>
+          </div>
+
+          <div class="row">
+            <div class="form-group col-12 col-md-6">
+              <label for="partnerNickName">Partner Nickname</label>
+              <input
+                class="form-control"
+                id="partnerNickName"
+                type="text"
+                placeholder="Nickname"
+                v-model="partnerNickName"
+              />
             </div>
-            <div class="form-group mb-0">
-              <div class="buttons">
-                <button class="btn button-effect btn-primary signpbtn" @click="usersignup">Signup <div v-if="is_signup_loading" class="btn-loader"></div></button>
+            <div class="form-group col-12 col-md-6">
+              <label for="partnerDob">Partner Date of Birth</label>
+              <input
+                class="form-control"
+                id="partnerDob"
+                type="date"
+                v-model="partnerDob"
+                :max="maxDob"
+              />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="partnerSexualOrientation">Partner Sexual Orientation</label>
+            <select
+              class="form-control"
+              id="partnerSexualOrientation"
+              v-model="partnerSexualOrientation"
+            >
+              <option value="">Select Partner Orientation</option>
+              <option
+                v-for="orientation in allOptions.orientations"
+                :key="orientation"
+                :value="orientation"
+              >
+                {{ orientation }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+          <!-- Sexual Interest (Checkboxes) -->
+          <div class="form-group">
+            <label>Sexual Interest</label>
+            <div class="d-flex flex-wrap">
+              <div v-for="interest in allOptions.interests" :key="interest.interest_id" class="col-12 col-md-6 pl-0 mt-2">
+                <input class="form-check-input" type="checkbox" :id="'interest-' + interest.interest_id"
+                  :value="interest.interest_id" v-model="sexualInterest" />
+                <label class="form-check-label ps-4" :for="'interest-' + interest.interest_id">
+                  {{ interest.interest_name }}
+                </label>
               </div>
+            </div>
+          </div>
+
+          <!-- Meet Preference (Checkboxes) -->
+          <div class="form-group">
+            <label>Meet Preference</label>
+            <div class="d-flex flex-wrap">
+              <div v-for="pref in allOptions.meetPerferences" :key="pref.meet_preference_id" class="form-check col-12 col-md-6 pl-0 mt-2">
+                <input class="form-check-input" type="checkbox" :id="'pref-' + pref.meet_preference_id"
+                  :value="pref.meet_preference_id" v-model="meetPreference" />
+                <label class="form-check-label ps-4" :for="'pref-' + pref.meet_preference_id">
+                  {{ pref.preference_name }}
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Signup Button -->
+          <div class="form-group mb-0">
+            <div class="buttons">
+              <button class="btn button-effect btn-primary signpbtn" @click="usersignup">
+                Signup
+                <div v-if="is_signup_loading" class="btn-loader"></div>
+              </button>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <div class="animat-block">
-      <div class="bg_circle">
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-      </div>
-      <div class="cross"></div>
-      <div class="cross1"></div>
-      <div class="cross2"></div>
-      <div class="dot"></div>
-      <div class="dot1"></div>
-      <div class="top-circle"></div>
-      <div class="center-circle"></div>
-      <div class="bottom-circle1"></div>
-      <div class="right-circle"></div>
-      <div class="right-circle1"></div>
-      <div class="quarterCircle"></div>
-      <img class="cloud-logo" src="/images/login_signup/2.png" alt="login logo" /><img class="cloud-logo1"
-        src="/images/login_signup/2.png" alt="login logo" /><img class="cloud-logo2" src="/images/login_signup/2.png"
-        alt="login logo" /><img class="cloud-logo3" src="/images/login_signup/2.png" alt="login logo" /><img
-        class="cloud-logo4" src="/images/login_signup/2.png" alt="login logo" /><img class="cloud-logo5"
-        src="/images/login_signup/2.png" alt="login logo" />
-    </div>
   </div>
 </template>
+
 
 <script setup lang="ts">
 
@@ -292,7 +335,7 @@ function checkValidation(): boolean {
   const emailVal = email.value.trim();
   const passwordVal = password.value;
   const dobVal = dob.value;
-    const sexualorientation = sexualOrientation.value.trim();
+  const sexualorientation = sexualOrientation.value.trim();
         
     if (profiletype.length === 0) {
     showalert('Please select profile type');
