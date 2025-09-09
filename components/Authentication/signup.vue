@@ -1,31 +1,12 @@
 <template>
   <div class="login-page2 animat-rate">
     <div class="login-content-main">
-      <div class="login-content2">
-        <!-- Tabs -->
-        <div class="theme-tab">
-          <ul class="nav nav-tabs" id="myTab" role="tablist">
-            <li class="nav-item">
-              <nuxt-link to="/authentication/login">
-                <a class="nav-link active" id="login-tab" data-toggle="tab" role="tab" aria-selected="false">
-                  Login
-                </a>
-              </nuxt-link>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" id="signup-tab" data-toggle="tab" href="javascript:void(0)" role="tab"
-                aria-selected="true">Signup</a>
-            </li>
-          </ul>
-        </div>
-      </div>
-
       <div class="login-content">
         <div class="login-content-header">
           <img src="/images/logo/landing-logo.png" alt="sign-logo" />
         </div>
-        <h3 class="text-white">Hello Everyone, We are Linkswinger</h3>
-        <h4 class="text-white">Welcome to Linkswinger, please signup to your account.</h4>
+        <h3 class="text-white">Hello Everyone, We are LinkSwingers</h3>
+        <h4 class="text-white">Welcome to LinkSwingers, please signup to your account.</h4>
 
         <div class="form2 text-white">
           <!-- Row: First + Last Name -->
@@ -161,7 +142,7 @@
           <div class="form-group">
             <label>Sexual Interest</label>
             <div class="d-flex flex-wrap">
-              <div v-for="interest in allOptions.interests" :key="interest.interest_id" class="col-12 col-md-6 pl-0 mt-2">
+              <div v-for="interest in allOptions.interests" :key="interest.interest_id" class="form-check col-12 col-md-6 mt-2">
                 <input class="form-check-input" type="checkbox" :id="'interest-' + interest.interest_id"
                   :value="interest.interest_id" v-model="sexualInterest" />
                 <label class="form-check-label ps-4" :for="'interest-' + interest.interest_id">
@@ -186,12 +167,18 @@
           </div>
 
           <!-- Signup Button -->
-          <div class="form-group mb-0">
+          <div class="form-group mb-4">
             <div class="buttons">
               <button class="btn button-effect btn-primary signpbtn" @click="usersignup">
                 Signup
                 <div v-if="is_signup_loading" class="btn-loader"></div>
               </button>
+            </div>
+          </div>
+
+           <div class="form-group mb-0">
+            <div class="text-center">
+              <p class="text-white">Already have an account? <nuxt-link to="/authentication/login">Login</nuxt-link></p>
             </div>
           </div>
         </div>

@@ -1,26 +1,6 @@
 <template>
   <div class="login-page2 animat-rate">
     <div class="login-content-main">
-      <!-- Tabs -->
-      <div class="login-content2">
-        <div class="theme-tab">
-          <ul class="nav nav-tabs" id="myTab" role="tablist">
-            <li class="nav-item">
-              <a class="nav-link" role="tab">Login</a>
-            </li>
-            <li class="nav-item">
-              <nuxt-link
-                to="/authentication/signup"
-                class="nav-link active"
-                role="tab"
-              >
-                Signup
-              </nuxt-link>
-            </li>
-          </ul>
-        </div>
-      </div>
-
       <!-- Login Form -->
       <div class="login-content">
         <div class="login-content-header">
@@ -30,8 +10,8 @@
             alt="logo"
           />
         </div>
-        <h3 class="text-white">Hello Everyone, We are Linkswinger</h3>
-        <h4 class="text-white">Welcome to Linkswinger, please login to your account.</h4>
+        <h3 class="text-white">Hello Everyone, We are LinkSwingers</h3>
+        <h4 class="text-white">Welcome to LinkSwingers, please login to your account.</h4>
 
         <Form
           :validation-schema="schema"
@@ -84,7 +64,7 @@
           </div>
 
           <!-- Submit -->
-          <div class="form-group mb-0">
+          <div class="form-group mb-4">
             <div class="buttons">
               <button type="submit" class="btn button-effect btn-primary" :disabled="is_login_loading">
                  <template v-if="is_login_loading">
@@ -95,6 +75,9 @@
                   </template>
               </button>
             </div>
+          </div>
+            <div class="form-group mb-0 text-center">
+            <p class="text-white">Don't have an account? <nuxt-link to="/authentication/signup">Create new account</nuxt-link></p>
           </div>
         </Form>
       </div>
