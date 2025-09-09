@@ -96,7 +96,7 @@ const password = ref("");
 
 // Yup schema
 const schema = Yup.object({
-  nickemail: Yup.string().required("Email or Nickname is required"),
+  nickemail: Yup.string().trim().required("Email or Nickname is required"),
   password: Yup.string().required("Password is required"),
 });
 
