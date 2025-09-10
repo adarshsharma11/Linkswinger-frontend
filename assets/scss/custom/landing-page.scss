@@ -1,0 +1,20 @@
+/* Animated underline */
+.title-underline {
+  display: block;
+  height: 4px;
+  width: 60px;
+  margin: 8px auto 0;
+  background: $gradient-bg-color;
+  position: relative;
+  animation: moveLine 2s infinite linear;
+}
+
+@keyframes moveLine {
+  0% { transform: translateX(-20px); }
+  50% { transform: translateX(20px); }
+  100% { transform: translateX(-20px); }
+}
+
+.bg-theme-color {
+  background: $gradient-bg-color;
+}

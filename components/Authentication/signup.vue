@@ -9,18 +9,6 @@
         <h4 class="text-white">Welcome to LinkSwingers, please signup to your account.</h4>
 
         <div class="form2 text-white">
-          <!-- Row: First + Last Name -->
-          <div class="row">
-            <div class="form-group col-12 col-md-6">
-              <label for="inputfirstname">First Name</label>
-              <input class="form-control" id="inputfirstname" type="text" placeholder="First Name" v-model="firstName" />
-            </div>
-            <div class="form-group col-12 col-md-6">
-              <label for="inputlastname">Last Name</label>
-              <input class="form-control" id="inputlastname" type="text" placeholder="Last Name" v-model="lastName" />
-            </div>
-          </div>
-
           <!-- Row: Nickname + Profile Type -->
           <div class="row">
             <div class="form-group col-12 col-md-6">
@@ -141,29 +129,46 @@
           <!-- Sexual Interest (Checkboxes) -->
           <div class="form-group">
             <label>Sexual Interest</label>
-            <div class="d-flex flex-wrap">
-              <div v-for="interest in allOptions.interests" :key="interest.interest_id" class="form-check col-12 col-md-6 mt-2">
-                <input class="form-check-input" type="checkbox" :id="'interest-' + interest.interest_id"
-                  :value="interest.interest_id" v-model="sexualInterest" />
-                <label class="form-check-label ps-4" :for="'interest-' + interest.interest_id">
-                  {{ interest.interest_name }}
-                </label>
-              </div>
-            </div>
+            <Multiselect
+              v-model="sexualInterest"
+              :options="allOptions.interests"
+              track-by="interest_id"
+              label="interest_name"
+              :multiple="true"
+              :close-on-select="false"
+              placeholder="Select Sexual Interest"
+              :reduce="interestToId"
+            />
           </div>
 
           <!-- Meet Preference (Checkboxes) -->
           <div class="form-group">
             <label>Meet Preference</label>
-            <div class="d-flex flex-wrap">
-              <div v-for="pref in allOptions.meetPerferences" :key="pref.meet_preference_id" class="form-check col-12 col-md-6 pl-0 mt-2">
-                <input class="form-check-input" type="checkbox" :id="'pref-' + pref.meet_preference_id"
-                  :value="pref.meet_preference_id" v-model="meetPreference" />
-                <label class="form-check-label ps-4" :for="'pref-' + pref.meet_preference_id">
-                  {{ pref.preference_name }}
-                </label>
-              </div>
-            </div>
+            <Multiselect
+              v-model="meetPreference"
+              :options="allOptions.meetPerferences"
+              track-by="meet_preference_id"
+              label="preference_name"
+              :multiple="true"
+              :close-on-select="false"
+              placeholder="Select Meet Preference"
+              :reduce="prefToId"
+            />
+          </div>
+
+              <!-- Meet Preference (Checkboxes) -->
+          <div class="form-group">
+            <label>Looking For</label>
+            <Multiselect
+              v-model="meetPreference"
+              :options="allOptions.meetPerferences"
+              track-by="looking_for_id"
+              label="looking_for_name"
+              :multiple="true"
+              :close-on-select="false"
+              placeholder="Select Looking For"
+              :reduce="lookingForToId"
+            />
           </div>
 
           <!-- Signup Button -->
@@ -194,11 +199,15 @@
 
 
 
+import Multiselect from 'vue-multiselect';
+import 'vue-multiselect/dist/vue-multiselect.css';
 import { getToast, toast } from 'vue3-toastify';
+
+// Helper reducers for vue-multiselect to avoid implicit any
+const interestToId = (interest: { interest_id: number; interest_name: string }) => interest.interest_id;
+const prefToId = (pref: { meet_preference_id: number; preference_name: string }) => pref.meet_preference_id;
 import type { UsersModel } from '~/composables/models';
 const profileType = ref('');
-const firstName = ref('');
-const lastName = ref('');
 const partnerFirstName = ref('');
 const partnerLastName = ref('');
 const partnerNickName = ref('');
@@ -275,8 +284,6 @@ function usersignup()
   }
   let request_mdoel = {
         profile_type : profileType.value,
-        first_name : firstName.value,
-        last_name : lastName.value,
         nick_name : nickName.value,
         email : email.value,
         password : password.value,
@@ -387,26 +394,4 @@ function checkValidation(): boolean {
   // Add more checks as needed (e.g., sexual orientation, interests, meet preference)
   return true;
 }
-
-
-
-
-
 </script>
-
-<style scoped >
-.btn-loader {
-  width: 20px;
-  height: 20px;
-  border: 2px solid #e5e7eb;
-  border-top-color: #3b82f6;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-</style>
