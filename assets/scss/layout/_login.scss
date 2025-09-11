@@ -409,6 +409,9 @@
         }
       }
     }
+    .login-content-form {
+        max-width: 600px;
+    }
     .medialogo{
       display: inline-block;
       left: -4%;
@@ -540,10 +543,19 @@
     padding-bottom: 40px;
   }
 
+}
+@media (max-width:7){
+   .login-page1  {
+     .right-page {
+      width: 60%;
+    }
+  }
 
-
-
-
+  .login-page2 {
+    height: 100%;
+    padding-top: 40px;
+    padding-bottom: 40px;
+  }
 
 }
 @media (max-width: 1434px) {
@@ -868,7 +880,7 @@
 
     .login-content-header  {
       img {
-        height: 30px;
+        height: 100px;
       }
     }
   }

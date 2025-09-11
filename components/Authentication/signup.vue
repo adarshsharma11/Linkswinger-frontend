@@ -3,7 +3,7 @@
     <div class="login-content-main">
       <div class="login-content">
         <div class="login-content-header">
-          <img src="/images/logo/landing-logo.png" alt="sign-logo" />
+          <nuxt-link to="/"><img src="/images/logo/landing-logo.png" alt="sign-logo" /></nuxt-link>
         </div>
         <h3 class="text-white">Hello Everyone, We are LinkSwingers</h3>
         <h4 class="text-white">Welcome to LinkSwingers, please signup to your account.</h4>
@@ -135,6 +135,7 @@
               track-by="interest_id"
               label="interest_name"
               :multiple="true"
+              class="custom-multiselect"
               :close-on-select="false"
               placeholder="Select Sexual Interest"
               :reduce="interestToId"

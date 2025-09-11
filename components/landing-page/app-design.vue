@@ -36,7 +36,7 @@
       </p>
 
       <!-- Info Box -->
-      <div class="bg-secondary bg-opacity-25 rounded p-3 mb-5 mx-auto" style="max-width: 700px;">
+      <div class="bg-secondary bg-opacity-25 rounded-4 p-3 mb-5 mx-auto" style="max-width: 600px;">
         <p class="mb-0 text-white">
           No tier breakdown here — tiers are shown after sign-up. Explore meets, 
           chats, video calls, video roulette, and club events inside.
