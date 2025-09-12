@@ -6,10 +6,11 @@ export const getUrl = (request: RequestURL) => {
 }
 export enum RequestURL {
   fetchAllOptions = "/fetchAllOptions",
-   signup = "/signup",
-   validateNickname = "/validateNickname",
-   login = "/login",
-    activateUser = "/activateUser"
+  signup = "/signup",
+  validateNickname = "/validateNickname",
+  login = "/login",
+  activateUser = "/activateUser",
+  resendVerificationEmail = "/resendVerificationEmail"
 }
 
 export function showalert(title: string, is_success: boolean = false, timer: number = 2000) {
@@ -58,91 +59,107 @@ export interface SuccessError<T> {
 }
 
 export namespace UsersModel {
-    
-    export class LoginRequestModel {
-        nickemail?: string;
-        password?: string;
-    }
 
-    export class LoginResponseModel {
-        user_id?: number;
-        first_name?: string;
-        last_name?: string;
-        nick_name?: string;
-        email?: string;
-        password?: string;
-        profile_image?: string;
-        profile_type?: string;
-        user_type?: string;
-        is_email_confirmed?: boolean;
-    }
+  export class LoginRequestModel {
+    nickemail?: string;
+    password?: string;
+  }
 
-    export class SignUpRequestModel {
-        first_name?: string;
-        last_name?: string;
-        nick_name?: string;
-        email?: string;
-        password?: string;
-        profile_image?: string;
-        profile_type?: string;
-        user_type?: string;
-        is_email_confirmed?: boolean;
-        dob?: string;
-        orientation?: string;
-        partner_first_name?: string;
-        partner_last_name?: string;
-        partner_nick_name?: string;
-        partner_orientation?: string;
-        partner_dob?: string;
-         interest_ids?: number[];
-         meet_preference_ids?: number[];
-    }
+  export class LoginResponseModel {
+    user_id?: number;
+    first_name?: string;
+    last_name?: string;
+    nick_name?: string;
+    email?: string;
+    password?: string;
+    profile_image?: string;
+    profile_type?: string;
+    user_type?: string;
+    is_email_confirmed?: boolean;
+  }
 
-    export class SignUpResponseModel {
-        user_id?: number;
-        first_name?: string;
-        last_name?: string;
-        nick_name?: string;
-        email?: string;
-        password?: string;
-        profile_image?: string;
-        profile_type?: string;
-        user_type?: string;
-        is_email_confirmed?: boolean;
-        asset_base_url?: string;
-    }
+  export class SignUpRequestModel {
+    first_name?: string;
+    last_name?: string;
+    nick_name?: string;
+    email?: string;
+    password?: string;
+    profile_image?: string;
+    profile_type?: string;
+    user_type?: string;
+    is_email_confirmed?: boolean;
+    dob?: string;
+    orientation?: string;
+    partner_first_name?: string;
+    partner_last_name?: string;
+    partner_nick_name?: string;
+    partner_orientation?: string;
+    partner_dob?: string;
+    interest_ids?: number[];
+    meet_preference_ids?: number[];
+    height_unit?: string;
+    height?: string;
+    partner_height?: string;
+    looking_for?: string[];
+    town_id?: number;
+    ethnicity?: string;
+    partner_ethnicity?: string;
+    body_type?: string;
+    partner_body_type?: string;
+  }
 
-    export class ValidateNicknameRequestModel {
-        nick_name?: string;
-    }
+  export class SignUpResponseModel {
+    user_id?: number;
+    first_name?: string;
+    last_name?: string;
+    nick_name?: string;
+    email?: string;
+    password?: string;
+    profile_image?: string;
+    profile_type?: string;
+    user_type?: string;
+    is_email_confirmed?: boolean;
+    asset_base_url?: string;
+  }
 
-    export class ValidateNicknameResponseModel {}
+  export class ValidateNicknameRequestModel {
+    nick_name?: string;
+  }
 
-    export class InterestsModel {
-        interest_id?: number;
-        interest_name?: string;
-    }
+  export class ValidateNicknameResponseModel { }
 
-    export class MeetPreferencesModel {
-        meet_preference_id?: number;
-        preference_name?: string;
-    }
+  export class InterestsModel {
+    interest_id?: number;
+    interest_name?: string;
+  }
 
-    export class FetchOptionsResponseModel {
-        orientations?: string[];
-        profileTypes?: string[];
-        interests?: InterestsModel[];
-        meetPerferences?: MeetPreferencesModel[];
-    }
+  export class MeetPreferencesModel {
+    meet_preference_id?: number;
+    preference_name?: string;
+  }
 
-     
+  export class BodyTypeModel {
+    profileTypes?: string[];
+    bodyType?: string;
+  }
 
-        export class ActivateUserRequestModel {
-        user_udid?: string;
-    }
-    export class ActivateUserResponseModel {
-    
-    }
- 
-    
+  export class FetchOptionsResponseModel {
+    orientations?: string[];
+    profileTypes?: string[];
+    lookingFor?: string[];
+    ethnicity?: string[];
+    heightUnits?: string[];
+    interests?: InterestsModel[];
+    meetPerferences?: MeetPreferencesModel[];
+    bodyTypes?: BodyTypeModel[];
+  }
+
+  export class ActivateUserRequestModel {
+    user_udid?: string;
+  }
+  export class ActivateUserResponseModel {
+
+  }
+
+
 }
