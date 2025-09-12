@@ -8,7 +8,8 @@ export enum RequestURL {
   fetchAllOptions = "/fetchAllOptions",
    signup = "/signup",
    validateNickname = "/validateNickname",
-   login = "/login"
+   login = "/login",
+    activateUser = "/activateUser"
 }
 
 export function showalert(title: string, is_success: boolean = false, timer: number = 2000) {
@@ -133,5 +134,15 @@ export namespace UsersModel {
         interests?: InterestsModel[];
         meetPerferences?: MeetPreferencesModel[];
     }
+
+     
+
+        export class ActivateUserRequestModel {
+        user_udid?: string;
+    }
+    export class ActivateUserResponseModel {
+    
+    }
+ 
     
 }
