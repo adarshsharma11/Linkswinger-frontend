@@ -2,13 +2,13 @@
   <div class="login-page2 animat-rate">
     <div class="login-content-main">
       <!-- Login Form -->
-      <div class="login-content">
+      <div class="login-content login-content-form">
         <div class="login-content-header">
-          <img
+          <nuxt-link to="/"><img
             class="img-fluid"
             src="/images/logo/landing-logo.png"
             alt="logo"
-          />
+          /></nuxt-link>
         </div>
         <h3 class="text-white">Hello Everyone, We are LinkSwingers</h3>
         <h4 class="text-white">Welcome to LinkSwingers, please login to your account.</h4>
