@@ -142,6 +142,7 @@
 .right-login,.login-page2{
   background-color: $black;
   width: auto;
+  min-height: 100vh;
   height: 100%;
   position: relative;
   .login-img{

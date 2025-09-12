@@ -10,7 +10,8 @@ export enum RequestURL {
   validateNickname = "/validateNickname",
   login = "/login",
   activateUser = "/activateUser",
-  resendVerificationEmail = "/resendVerificationEmail"
+  resendVerificationEmail = "/resendVerificationEmail",
+  fetchTowns = "/fetchTowns"
 }
 
 export function showalert(title: string, is_success: boolean = false, timer: number = 2000) {
@@ -49,6 +50,18 @@ export function addSecondsToDate(date: Date, seconds: number): Date {
   newDate.setSeconds(newDate.getSeconds() + seconds);
   return newDate;
 }
+
+export function convertToCm(feet: number): number {
+  const cm = feet * 30.48;
+  return Math.round(cm); // return as integer
+}
+export function convertToInches(cm: number): { feet: number; inches: number } {
+  const totalInches = cm / 2.54;
+  const feet = Math.floor(totalInches / 12);
+  const inches = Math.round(totalInches % 12);
+  return { feet, inches };
+}
+
 
 export interface SuccessError<T> {
   success: boolean;
@@ -146,12 +159,13 @@ export namespace UsersModel {
   export class FetchOptionsResponseModel {
     orientations?: string[];
     profileTypes?: string[];
+    interests?: InterestsModel[];
+    meetPerferences?: MeetPreferencesModel[];
+
+    bodyTypes?: BodyTypeModel[];
     lookingFor?: string[];
     ethnicity?: string[];
     heightUnits?: string[];
-    interests?: InterestsModel[];
-    meetPerferences?: MeetPreferencesModel[];
-    bodyTypes?: BodyTypeModel[];
   }
 
   export class ActivateUserRequestModel {
@@ -160,6 +174,14 @@ export namespace UsersModel {
   export class ActivateUserResponseModel {
 
   }
-
-
+  export class FetchTownRequestModel
+  {
+     search?: string;
+  }
+  export class FetchTownResponseModel
+  {
+     town_id?: number;
+     town?: string;
+  }
+  
 }
