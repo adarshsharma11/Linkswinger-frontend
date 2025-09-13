@@ -58,7 +58,7 @@
                 Remember Me
               </label>
               <h6 class="pull-right">
-                <nuxt-link to="/authentication/login">Forgot Password?</nuxt-link>
+                <nuxt-link to="/authentication/forget_password">Forgot Password?</nuxt-link>
               </h6>
             </div>
           </div>
