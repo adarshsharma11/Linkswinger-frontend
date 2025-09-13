@@ -340,8 +340,7 @@ function fetchTowns(query:string)
   }).then((response) => {
   
     if (response.success) {
-     allTowns.value = response.result as UsersModel.FetchTownResponseModel[]
-       console.log("Search Query:", response.result);
+     allTowns.value = (response.result ?? []) as UsersModel.FetchTownResponseModel[] 
     } 
      is_town_loading.value = false;
   }).catch((error) => {
