@@ -130,7 +130,11 @@ async function userlogin() {
         response.response?.is_email_confirmed ?? false;
 
       if (is_email_confirmed) {
-        showalert("Login successful!", true);
+     //   showalert("Login successful!", true);
+     reloadNuxtApp({
+        path: "/profile",
+        ttl: 1000
+      })
       } else {
         showalert(
           "Login successful! Please check your email to verify your account.",
