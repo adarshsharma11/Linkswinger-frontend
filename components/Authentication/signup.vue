@@ -357,8 +357,8 @@ function usersignup() {
   }
 
   const unit = height_unit.value ?? ""
-  let height = cm_height.value ?? ""
-  let partner_height = partner_cm_height.value ?? ""
+  let height = cm_height.value.toString() ?? ""
+  let partner_height = partner_cm_height.value.toString() ?? ""
   if (unit !== 'cm') 
   {
     
@@ -398,11 +398,12 @@ function usersignup() {
     height_unit: height_unit.value,
     height: height,
     partner_height: partner_height,
-    town_id : town_id
+    town_id : town_id,
+    device_id : ""
   } as UsersModel.SignUpRequestModel
 
 console.log("Signup Request Model:", request_mdoel);
-  return;
+
   let api_url = getUrl(RequestURL.signup);
   is_signup_loading.value = true;
   $fetch<SuccessError<UsersModel.SignUpResponseModel>>(api_url, {
