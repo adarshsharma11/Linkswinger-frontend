@@ -150,4 +150,9 @@ async function userlogin() {
     console.error("Login failed:", error);
   }
 }
+
+async function resendEmail() 
+{
+   
+}
 </script>

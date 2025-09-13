@@ -416,7 +416,7 @@ function usersignup() {
       showalert('Signup successful! Please check your email to verify your account.', true);
       // Optionally, redirect to login page or clear form
         reloadNuxtApp({
-        path: "/login",
+        path: "/authentication/login",
         ttl: 1000
       })
     } else {
