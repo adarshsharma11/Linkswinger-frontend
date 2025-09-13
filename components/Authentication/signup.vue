@@ -401,7 +401,8 @@ function usersignup() {
     town_id : town_id
   } as UsersModel.SignUpRequestModel
 
-
+console.log("Signup Request Model:", request_mdoel);
+  return;
   let api_url = getUrl(RequestURL.signup);
   is_signup_loading.value = true;
   $fetch<SuccessError<UsersModel.SignUpResponseModel>>(api_url, {

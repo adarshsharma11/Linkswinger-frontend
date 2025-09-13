@@ -1,5 +1,6 @@
 import Swal from 'sweetalert2'
 
+
 export const getUrl = (request: RequestURL) => {
   const runtimeConfig = useRuntimeConfig();
   return runtimeConfig.public.API_BASE_URL + request;
@@ -13,6 +14,8 @@ export enum RequestURL {
   resendVerificationEmail = "/resendVerificationEmail",
   fetchTowns = "/fetchTowns"
 }
+
+
 
 export function showalert(title: string, is_success: boolean = false, timer: number = 2000) {
   if (is_success) {
@@ -61,6 +64,8 @@ export function convertToInches(cm: number): { feet: number; inches: number } {
   const inches = Math.round(totalInches % 12);
   return { feet, inches };
 }
+
+
 
 
 export interface SuccessError<T> {
