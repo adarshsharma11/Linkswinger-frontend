@@ -14,10 +14,12 @@ export function initworker() {
 
   const id_store = idStore();
   var vendorId = id_store.getVendorId
+  
   if (vendorId.length === 0) {
     vendorId = uniqueId
     id_store.setVendorId(uniqueId)
   }
+  
   sharedWorker = new SharedWorker(
     new URL('@/workers/shared-worker.ts', import.meta.url),
     { name: 'mySharedWorker' }
