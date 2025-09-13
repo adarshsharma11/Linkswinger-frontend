@@ -18,7 +18,7 @@
             </div>
           </div>
         </div>
-        <span class="badge bg-danger fs-6 mt-3 mt-md-0">Elite</span>
+        <span class="badge bg-theme-color fs-6 mt-3 mt-md-0">Elite</span>
       </div>
 
       <!-- Action buttons -->
@@ -31,7 +31,7 @@
 
       <div class="row g-3">
         <!-- Photos -->
-        <div class="col-md-6">
+        <div class="col-md-6 col-lg-4">
           <div class="card bg-black text-white h-100">
             <div class="card-body">
               <h5 class="text-white mb-3">Photos</h5>
@@ -44,37 +44,70 @@
           </div>
         </div>
 
-        <!-- Info -->
-        <div class="col-md-6">
-          <div class="card bg-black text-white h-100">
-            <div class="card-body">
-              <h5 class="text-white mb-3">Information</h5>
-              <ul class="list-unstyled mb-0">
-                <li><strong>Gender:</strong> Male</li>
-                <li><strong>Orientation:</strong> Straight</li>
-                <li><strong>Looking for:</strong> Friendship, Casual, Networking</li>
-                <li><strong>Height:</strong> 5ft 10in</li>
-                <li><strong>Ethnicity:</strong> Asian</li>
-                <li><strong>Body Type:</strong> Athletic</li>
-                <li><strong>Town:</strong> New York</li>
-              </ul>
-            </div>
+       <!-- Info -->
+      <div class="col-md-6 col-lg-4">
+        <div class="card bg-black text-white h-100">
+          <div class="card-body">
+            <h5 class="text-white mb-3">Personal Information</h5>
+            <ul class="list-unstyled mb-0 info-list">
+              <li><strong>Gender:</strong> Male</li>
+              <li><strong>Orientation:</strong> Straight</li>
+              <li><strong>Looking for:</strong> Friendship, Casual, Networking</li>
+              <li><strong>Height:</strong> 5ft 10in</li>
+              <li><strong>Ethnicity:</strong> Asian</li>
+              <li><strong>Body Type:</strong> Athletic</li>
+              <li><strong>Town:</strong> New York</li>
+            </ul>
           </div>
         </div>
+      </div>
+
+      <!-- Partner Info -->
+      <div class="col-md-6 col-lg-4">
+        <div class="card bg-black text-white h-100">
+          <div class="card-body">
+            <h5 class="text-white mb-3">Partner Information</h5>
+            <ul class="list-unstyled mb-0 info-list">
+              <li><strong>Nickname:</strong> Olivia</li>
+              <li><strong>Gender:</strong> Female</li>
+              <li><strong>Orientation:</strong> Bisexual</li>
+              <li><strong>Height:</strong> 5ft 6in</li>
+              <li><strong>Ethnicity:</strong> Caucasian</li>
+              <li><strong>Body Type:</strong> Slim</li>
+              <li><strong>Town:</strong> Los Angeles</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Account Info -->
+      <div class="col-md-6 col-lg-6">
+        <div class="card bg-black text-white h-100">
+          <div class="card-body">
+            <h5 class="text-white mb-3">Account Details</h5>
+            <ul class="list-unstyled mb-0 info-list">
+              <li><strong>Email:</strong> alex@example.com</li>
+              <li><strong>Password:</strong> ••••••••</li>
+              <li><strong>Date of Birth:</strong> 12 Jan 1996</li>
+              <li><strong>Membership:</strong> Elite</li>
+            </ul>
+          </div>
+        </div>
+      </div>
 
         <!-- Meet Preferences -->
-        <div class="col-md-6">
+        <div class="col-md-6 col-lg-6">
           <div class="card bg-black text-white h-100">
             <div class="card-body">
               <h5 class="text-white mb-3">Meet Preferences</h5>
-              <p>Coffee, Drinks</p>
+              <p>Coffee, Drinks, Travel, Parties</p>
             </div>
           </div>
         </div>
 
         <!-- About Me -->
-        <div class="col-md-6">
-          <div class="card bg-black text-white h-100">
+        <div class="col-12">
+          <div class="card bg-black text-white">
             <div class="card-body">
               <h5 class="text-white mb-3">About Me</h5>
               <p>
@@ -85,6 +118,7 @@
                 <span class="badge bg-secondary">Travel</span>
                 <span class="badge bg-secondary">Fitness</span>
                 <span class="badge bg-secondary">Photography</span>
+                <span class="badge bg-secondary">Wine</span>
               </div>
             </div>
           </div>
@@ -93,25 +127,8 @@
 
       <!-- Save -->
       <div class="mt-4 text-center">
-        <button class="btn btn-danger btn-lg">Save Profile</button>
+        <button class="btn btn-primary btn-lg">Save Profile</button>
       </div>
     </div>
   </section>
 </template>
-
-<style scoped>
-.card {
-  border-radius: 12px;
-  border: 1px solid #333;
-}
-
-.photo-box {
-  flex: 1 1 45%;
-  background: #222;
-  border-radius: 10px;
-  padding: 1.2rem;
-  text-align: center;
-  font-size: 0.9rem;
-  color: white;
-}
-</style>

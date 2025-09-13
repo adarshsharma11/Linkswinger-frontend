@@ -1,0 +1,26 @@
+.card {
+  border-radius: 12px;
+  border: 1px solid #333;
+}
+
+.photo-box {
+  flex: 1 1 45%;
+  background: #222;
+  border-radius: 10px;
+  padding: 1.2rem;
+  text-align: center;
+  font-size: 0.9rem;
+  color: white;
+}
+.info-list li {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  border-bottom: 1px solid #333;
+}
+.info-list li:last-child {
+  border-bottom: none;
+}
+.info-list strong {
+  min-width: 140px;
+}
