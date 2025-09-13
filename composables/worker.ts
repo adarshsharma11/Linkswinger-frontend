@@ -7,9 +7,7 @@ var is_connected = false
 let sharedWorker: SharedWorker
 const emitter = mitt<Events>()
 type Events = {
-    advisorTick: Date ,
-  headerTick: Date ,
-  sessionTick: Date ,
+  serverTime: Date ,
 }
 
 export function initworker() {
@@ -26,7 +24,7 @@ export function initworker() {
   );
 
   sharedWorker.port.onmessage = async (event) => {
-  //  await handleworkerevent(event)
+    await handleworkerevent(event)
   };
   
   sharedWorker.port.start();
@@ -37,11 +35,12 @@ export function sendmsgtoworker(message: any) {
 }
 export function useServerTime(initialServerTime : string) {
    let serverTime = new Date(initialServerTime)
-   emitter.emit('advisorTick', serverTime)
-   emitter.emit('headerTick', serverTime)
-   emitter.emit('sessionTick', serverTime)
+   emitter.emit('serverTime', serverTime)
 }
 export function isSocketConnected()
 {
   return is_connected
+}
+async function handleworkerevent(event: MessageEvent<any>) {
+
 }

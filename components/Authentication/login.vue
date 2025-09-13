@@ -137,7 +137,7 @@ async function userlogin() {
       })
       } else {
         showalert(
-          "Login successful! Please check your email to verify your account.",
+          "Email Verification is Pending.Please check your email to verify your account.",
           true
         );
       }
