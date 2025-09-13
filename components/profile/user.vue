@@ -2,27 +2,27 @@
   <section class="profile-page bg-dark text-white min-vh-100 py-4">
     <div class="container">
       <!-- Header -->
-      <div class="d-flex align-items-center justify-content-between mb-4">
-        <div class="d-flex align-items-center">
+      <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap text-center text-md-start">
+        <div class="d-flex align-items-center flex-wrap gap-3">
           <img
             src="/images/avtar/1.jpg"
             alt="Profile"
-            class="rounded-circle me-3"
+            class="rounded-circle"
             style="width: 90px; height: 90px; object-fit: cover"
           />
           <div>
-            <h3 class="mb-1">{{ profile.nickname }}, {{ profile.age }}</h3>
-            <div class="d-flex gap-2">
+            <h3 class="mb-2 text-white">Alex, 29</h3>
+            <div class="d-flex flex-wrap gap-2">
               <span class="badge bg-success">ID Verified</span>
               <span class="badge bg-success">Photo Verified</span>
             </div>
           </div>
         </div>
-        <span class="badge bg-danger fs-6">Elite</span>
+        <span class="badge bg-danger fs-6 mt-3 mt-md-0">Elite</span>
       </div>
 
       <!-- Action buttons -->
-      <div class="d-flex gap-3 mb-4">
+      <div class="d-flex gap-3 mb-4 flex-wrap justify-content-center justify-content-md-start">
         <button class="btn btn-outline-light"><i class="bi bi-chat-dots"></i></button>
         <button class="btn btn-outline-light"><i class="bi bi-person"></i></button>
         <button class="btn btn-outline-light"><i class="bi bi-telephone"></i></button>
@@ -34,7 +34,7 @@
         <div class="col-md-6">
           <div class="card bg-black text-white h-100">
             <div class="card-body">
-              <h5>Photos</h5>
+              <h5 class="text-white mb-3">Photos</h5>
               <div class="d-flex flex-wrap gap-2">
                 <div class="photo-box">Public Photos</div>
                 <div class="photo-box">Friends-Only</div>
@@ -48,24 +48,26 @@
         <div class="col-md-6">
           <div class="card bg-black text-white h-100">
             <div class="card-body">
-              <h5>Information</h5>
+              <h5 class="text-white mb-3">Information</h5>
               <ul class="list-unstyled mb-0">
-                <li><strong>Gender:</strong> {{ profile.gender }}</li>
-                <li><strong>Orientation:</strong> {{ profile.orientation }}</li>
-                <li><strong>Looking for:</strong> {{ profile.lookingFor }}</li>
-                <li><strong>Membership:</strong> {{ profile.membership }}</li>
-                <li><strong>Last Active:</strong> {{ profile.lastActive }}</li>
+                <li><strong>Gender:</strong> Male</li>
+                <li><strong>Orientation:</strong> Straight</li>
+                <li><strong>Looking for:</strong> Friendship, Casual, Networking</li>
+                <li><strong>Height:</strong> 5ft 10in</li>
+                <li><strong>Ethnicity:</strong> Asian</li>
+                <li><strong>Body Type:</strong> Athletic</li>
+                <li><strong>Town:</strong> New York</li>
               </ul>
             </div>
           </div>
         </div>
 
-        <!-- Events -->
+        <!-- Meet Preferences -->
         <div class="col-md-6">
           <div class="card bg-black text-white h-100">
             <div class="card-body">
-              <h5>Meet Events</h5>
-              <p>{{ profile.event }} <br /><small>{{ profile.tickets }} tickets left</small></p>
+              <h5 class="text-white mb-3">Meet Preferences</h5>
+              <p>Coffee, Drinks</p>
             </div>
           </div>
         </div>
@@ -74,41 +76,28 @@
         <div class="col-md-6">
           <div class="card bg-black text-white h-100">
             <div class="card-body">
-              <h5>About Me</h5>
-              <p>{{ profile.about }}</p>
+              <h5 class="text-white mb-3">About Me</h5>
+              <p>
+                I’m open-minded and love meaningful connections. Exploring new
+                experiences and meeting amazing people is what excites me!
+              </p>
               <div class="d-flex gap-2 flex-wrap">
-                <span v-for="tag in profile.tags" :key="tag" class="badge bg-secondary">{{ tag }}</span>
+                <span class="badge bg-secondary">Travel</span>
+                <span class="badge bg-secondary">Fitness</span>
+                <span class="badge bg-secondary">Photography</span>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Save / Validation -->
+      <!-- Save -->
       <div class="mt-4 text-center">
-        <button class="btn btn-danger btn-lg" @click="saveProfile">Save Profile</button>
+        <button class="btn btn-danger btn-lg">Save Profile</button>
       </div>
     </div>
   </section>
 </template>
-
-<script lang="ts" setup>
-const profile = reactive({
-  nickname: "Olivia",
-  age: 29,
-  gender: "Female",
-  orientation: "Bisexual",
-  lookingFor: "Relationship",
-  membership: "Elite",
-  lastActive: "Today",
-  event: "Spring Fever Party",
-  tickets: 10,
-  about:
-    "I’m an open-minded and adventurous woman who loves exploring new experiences together. Let’s enjoy some wine and travel the world!",
-  tags: ["Bisexual", "Wine", "Travel"],
-});
-
-</script>
 
 <style scoped>
 .card {
@@ -123,5 +112,6 @@ const profile = reactive({
   padding: 1.2rem;
   text-align: center;
   font-size: 0.9rem;
+  color: white;
 }
 </style>
