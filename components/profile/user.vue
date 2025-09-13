@@ -44,56 +44,56 @@
           </div>
         </div>
 
-        <!-- Info -->
-        <div class="col-md-6 col-lg-4">
-          <div class="card bg-black text-white h-100">
-            <div class="card-body">
-              <h5 class="text-white mb-3">Personal Information</h5>
-              <ul class="list-unstyled mb-0">
-                <li><strong>Gender:</strong> Male</li>
-                <li><strong>Orientation:</strong> Straight</li>
-                <li><strong>Looking for:</strong> Friendship, Casual, Networking</li>
-                <li><strong>Height:</strong> 5ft 10in</li>
-                <li><strong>Ethnicity:</strong> Asian</li>
-                <li><strong>Body Type:</strong> Athletic</li>
-                <li><strong>Town:</strong> New York</li>
-              </ul>
-            </div>
+       <!-- Info -->
+      <div class="col-md-6 col-lg-4">
+        <div class="card bg-black text-white h-100">
+          <div class="card-body">
+            <h5 class="text-white mb-3">Personal Information</h5>
+            <ul class="list-unstyled mb-0 info-list">
+              <li><strong>Gender:</strong> Male</li>
+              <li><strong>Orientation:</strong> Straight</li>
+              <li><strong>Looking for:</strong> Friendship, Casual, Networking</li>
+              <li><strong>Height:</strong> 5ft 10in</li>
+              <li><strong>Ethnicity:</strong> Asian</li>
+              <li><strong>Body Type:</strong> Athletic</li>
+              <li><strong>Town:</strong> New York</li>
+            </ul>
           </div>
         </div>
+      </div>
 
-        <!-- Partner Info -->
-        <div class="col-md-6 col-lg-4">
-          <div class="card bg-black text-white h-100">
-            <div class="card-body">
-              <h5 class="text-white mb-3">Partner Information</h5>
-              <ul class="list-unstyled mb-0">
-                <li><strong>Nickname:</strong> Olivia</li>
-                <li><strong>Gender:</strong> Female</li>
-                <li><strong>Orientation:</strong> Bisexual</li>
-                <li><strong>Height:</strong> 5ft 6in</li>
-                <li><strong>Ethnicity:</strong> Caucasian</li>
-                <li><strong>Body Type:</strong> Slim</li>
-                <li><strong>Town:</strong> Los Angeles</li>
-              </ul>
-            </div>
+      <!-- Partner Info -->
+      <div class="col-md-6 col-lg-4">
+        <div class="card bg-black text-white h-100">
+          <div class="card-body">
+            <h5 class="text-white mb-3">Partner Information</h5>
+            <ul class="list-unstyled mb-0 info-list">
+              <li><strong>Nickname:</strong> Olivia</li>
+              <li><strong>Gender:</strong> Female</li>
+              <li><strong>Orientation:</strong> Bisexual</li>
+              <li><strong>Height:</strong> 5ft 6in</li>
+              <li><strong>Ethnicity:</strong> Caucasian</li>
+              <li><strong>Body Type:</strong> Slim</li>
+              <li><strong>Town:</strong> Los Angeles</li>
+            </ul>
           </div>
         </div>
+      </div>
 
-        <!-- Account Info -->
-        <div class="col-md-6 col-lg-6">
-          <div class="card bg-black text-white h-100">
-            <div class="card-body">
-              <h5 class="text-white mb-3">Account Details</h5>
-              <ul class="list-unstyled mb-0">
-                <li><strong>Email:</strong> alex@example.com</li>
-                <li><strong>Password:</strong> ••••••••</li>
-                <li><strong>Date of Birth:</strong> 12 Jan 1996</li>
-                <li><strong>Membership:</strong> Elite</li>
-              </ul>
-            </div>
+      <!-- Account Info -->
+      <div class="col-md-6 col-lg-6">
+        <div class="card bg-black text-white h-100">
+          <div class="card-body">
+            <h5 class="text-white mb-3">Account Details</h5>
+            <ul class="list-unstyled mb-0 info-list">
+              <li><strong>Email:</strong> alex@example.com</li>
+              <li><strong>Password:</strong> ••••••••</li>
+              <li><strong>Date of Birth:</strong> 12 Jan 1996</li>
+              <li><strong>Membership:</strong> Elite</li>
+            </ul>
           </div>
         </div>
+      </div>
 
         <!-- Meet Preferences -->
         <div class="col-md-6 col-lg-6">
