@@ -41,7 +41,7 @@ self.onconnect = (e: MessageEvent) => {
 function setupWebSocket(socketId: string) {
 
     var initsocket = new WebSocket(websocketURL + `?socketId=${socketId}`);
-     
+
     initsocket.onopen = () => {
         is_reconnecting = false
         console.log("websocket connected. we are ready to go")
@@ -54,7 +54,7 @@ function setupWebSocket(socketId: string) {
         })
     };
 
-    
+
     initsocket.onmessage = async (event) => {
         let eventdata = event.data as Blob
         await handlesocketevent(eventdata)
@@ -90,6 +90,28 @@ async function handlesocketevent(eventdata: Blob) {
             element.postMessage(json)
         })
     }
+    else if (event_name === "logout") {
+        let json = JSON.parse(jsontext) as OnlineEventResponse
+        connections.forEach((element) => {
+            element.postMessage(json)
+        })
+        logoutself()
+    }
+    else if (event_name === "online") {
+    let json = JSON.parse(jsontext) as OnlineEventResponse
+    if (json.success) {
+      connections.forEach((element) => {
+        element.postMessage(json)
+      })
+    }
+    else {
+      json.event_name = "logout"
+      connections.forEach((element) => {
+        element.postMessage(json)
+      })
+      logoutself()
+    }
+  }
 }
 
 function detectonline() {
@@ -118,23 +140,23 @@ function detectonline() {
 }
 
 function useServerTime(initialServerTime: string) {
-  if (intervalId) {
+    if (intervalId) {
 
-    clearInterval(intervalId)
-  }
-  let serverTime = new Date(initialServerTime)
-  intervalId = setTimeout(() => {
-    if (serverTime) {
-      let newTime = new Date(serverTime.getTime() + 1000)
-      let connectedmodel = new ServerDateSocketModel()
-      connectedmodel.server_date = newTime.toString()
-      connectedmodel.event_name = "worker_timer"
-      connections.forEach((element) => {
-        element.postMessage(connectedmodel)
-      })
-      useServerTime(newTime.toString())
+        clearInterval(intervalId)
     }
-  }, 1000)
+    let serverTime = new Date(initialServerTime)
+    intervalId = setTimeout(() => {
+        if (serverTime) {
+            let newTime = new Date(serverTime.getTime() + 1000)
+            let connectedmodel = new ServerDateSocketModel()
+            connectedmodel.server_date = newTime.toString()
+            connectedmodel.event_name = "worker_timer"
+            connections.forEach((element) => {
+                element.postMessage(connectedmodel)
+            })
+            useServerTime(newTime.toString())
+        }
+    }, 1000)
 }
 
 
@@ -181,22 +203,22 @@ function opendatabase() {
 
 
 class SocketEventModel {
-  event_name?: string
+    event_name?: string
 }
 class OnlineSocketModel implements SocketEventModel {
-  role: string = "user";
-  socket_id: string = "";
-  vendor_id: string = "";
-  role_id: number = 0;
-  event_name?: string;
-  online: number = 0;
+    role: string = "user";
+    socket_id: string = "";
+    vendor_id: string = "";
+    role_id: number = 0;
+    event_name?: string;
+    online: number = 0;
 }
 class SocketConnectionModel {
-  event_name!: string
-  is_connected?: boolean
+    event_name!: string
+    is_connected?: boolean
 }
 
 class ServerDateSocketModel implements SocketEventModel {
-  event_name?: string
-  server_date?: string
+    event_name?: string
+    server_date?: string
 }
