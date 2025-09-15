@@ -15,6 +15,8 @@ export enum RequestURL {
   fetchTowns = "/fetchTowns",
   getProfileDetails = "/getProfileDetails",
   logout = "/logout",
+  forgotPassword = "/forgotPassword",
+  resetPassword = "/resetPassword",
 }
 
 

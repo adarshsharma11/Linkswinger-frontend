@@ -22,3 +22,6 @@
       </div>
     </div>
 </template>
+<script setup lang="ts">
+import type { UsersModel } from '~/composables/models';
+</script>
