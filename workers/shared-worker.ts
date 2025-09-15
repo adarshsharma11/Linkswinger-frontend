@@ -98,7 +98,7 @@ async function handlesocketevent(eventdata: Blob) {
     let jsontext = await eventdata.text()
     let json = JSON.parse(jsontext) as SocketEventModel
     let event_name = json.event_name
-    console.log("event_name", event_name)
+
     if (event_name === "server_date") {
         let json = JSON.parse(jsontext) as ServerDateSocketModel
         useServerTime(json.server_date ?? "")
