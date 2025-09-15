@@ -8,6 +8,7 @@ let sharedWorker: SharedWorker
 const emitter = mitt<Events>()
 type Events = {
   serverTime: Date ,
+    socketConnection : boolean,
 }
 
 export function initworker() {
@@ -44,5 +45,46 @@ export function isSocketConnected()
   return is_connected
 }
 async function handleworkerevent(event: MessageEvent<any>) {
+let json = event.data as SocketEventModel
 
+  if (json.event_name === "connection") {
+    let onlinemodel = event.data as SocketConnectionModel
+    is_connected = onlinemodel.is_connected ?? false
+    emitter.emit('socketConnection', is_connected)
+  }
+  else if (json.event_name === "server_date") {
+    let onlinemodel = event.data as ServerDateSocketModel
+    useServerTime(onlinemodel.server_date ?? '')
+  }
+  else if (json.event_name === "worker_timer") {
+    let onlinemodel = event.data as ServerDateSocketModel
+    useServerTime(onlinemodel.server_date ?? '')
+  }
+  else if (json.event_name === "logout") {
+    // let onlinemodel = event.data as OnlineEventResponse
+    // showalert(onlinemodel.message ?? '')
+    // const user_store = userStore();
+    // user_store.clear()
+    // await clearloginstore()
+    // setTimeout(() => {
+    //   reloadNuxtApp({
+    //     path: "/",
+    //     ttl: 1000
+    //   })
+    // }, 1000);
+
+  }
+  else if (json.event_name === "logoutself") {
+    // const user_store = userStore();
+    // user_store.clear()
+    // await clearloginstore()
+    // reloadNuxtApp({
+    //   path: "/",
+    //   ttl: 1000
+    // })
+  }
+
+     else if (json.event_name === "online") {
+    // onlinemodel = event.data as OnlineEventResponse
+  }
 }

@@ -11,7 +11,9 @@ export function useDatabase() {
         const DBOpenRequest = window.indexedDB.open('linkswinger', 2);
         DBOpenRequest.addEventListener("upgradeneeded", (event) => {
             const db = DBOpenRequest.result;
-            console.log(`Upgrading to version ${db.version}`);
+            if (!db.objectStoreNames.contains('login_store')) {
+                db.createObjectStore('login_store', { keyPath: 'id' });
+            }
         });
 
         DBOpenRequest.onblocked = (event) => {
@@ -19,13 +21,37 @@ export function useDatabase() {
         }
         DBOpenRequest.onsuccess = (event) => {
             dbInstance = DBOpenRequest.result;
-            console.log("db success")
-            // const objectStore = dbInstance.createObjectStore("toDoList", {
-            //     keyPath: "taskTitle",
-            // });
         }
         DBOpenRequest.onerror = (event) => {
+
         }
     }
 
+}
+export async function storerole(roleId: number, role: string) {
+  return new Promise<void>((resolve, reject) => {
+    if (!dbInstance) return reject("Database not initialized");
+
+    const tx = dbInstance.transaction("login_store", "readwrite");
+    const store = tx.objectStore("login_store");
+
+    const req = store.put({ id: 1, roleId, role });
+
+    req.onsuccess = () => resolve();
+    req.onerror = () => reject(req.error);
+  });
+}
+
+export async function clearloginstore() {
+  return new Promise<void>((resolve, reject) => {
+    if (!dbInstance) return reject("Database not initialized");
+
+    const tx = dbInstance.transaction("login_store", "readwrite");
+    const store = tx.objectStore("login_store");
+
+    const req = store.clear();
+
+    req.onsuccess = () => resolve();
+    req.onerror = () => reject(req.error);
+  });
 }

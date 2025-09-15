@@ -7,16 +7,16 @@
 
 <script setup lang="ts">
 import { NuxtLoadingIndicator } from '#components';
-
+const id_store = idStore()
 
 onMounted(() => 
 {
     initworker()
     useDatabase();
-    // let socketmodel = new SocketIdModel()
-    // socketmodel.event_name = "socketId"
-    // socketmodel.socketId = id_store.vendor_id
-    // sendmsgtoworker(socketmodel)
+    let socketmodel = new SocketIdModel()
+    socketmodel.event_name = "socketId"
+    socketmodel.socketId = id_store.device_id
+    sendmsgtoworker(socketmodel)
 });
 
 </script>

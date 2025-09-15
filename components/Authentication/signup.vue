@@ -326,8 +326,6 @@ function fetchTowns(query:string)
     allTowns.value = []
     return;
   }
-  console.log("Search Query:", query);
-
  let api_url = getUrl(RequestURL.fetchTowns);
   is_town_loading.value = true;
   allTowns.value = []
