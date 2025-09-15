@@ -24,4 +24,28 @@ export const idStore  = defineStore('idStore', {
     }
   }
 });
+export const userStore  = defineStore('userInfo', { 
+    state: () => {
+    return {
+      login_id: useCookie('userInfo', { default: () => ({ login_id: 0 }) }).value.login_id ?? 0
+    }
+  },
+   getters: {
+    getLoginId: (state : any) => {
+      return state.login_id ?? 0
+    },
+  },
+   actions: {
+    setLoginId(login_id: number) {
+      const userCookie = useCookie('userInfo', { default: () => ({ login_id: 0 }) });
+      this.login_id = login_id;
+      userCookie.value.login_id = login_id
+    },
+    clear() {
+      const authCookie = useCookie('userInfo')
+      authCookie.value = null
+      this.login_id = 0;
+    }
+  }
+});
 

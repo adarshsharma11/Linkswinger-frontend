@@ -5,4 +5,7 @@
 useHead({
     title: "Forget Password- Chat Messenger Nuxt Template"
 })
+ definePageMeta({
+        middleware:'validateuser'
+    })
 </script>
