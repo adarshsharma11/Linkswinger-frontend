@@ -24,4 +24,55 @@
 </template>
 <script setup lang="ts">
 import type { UsersModel } from '~/composables/models';
+
+const is_reset_loading = ref(false);
+const password = ref("");
+const confirm_password = ref("");
+
+async function resetPassword() {
+
+  if (is_reset_loading.value)
+  {
+return;
+  }
+  if (checkValidation()) {
+    is_reset_loading.value = true;
+    let api_url = getUrl(RequestURL.resetPassword);
+    let postData = {
+      password: password.value,
+      token: useRoute().params.id
+    }
+    let response = await $fetch<SuccessError<UsersModel.LoginRequestModel>>(api_url, {
+      method: 'POST',
+      body: postData,
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+    is_reset_loading.value = false;
+    if (response.success) {
+      showToastSuccess(response.message ?? "Password reset successfully");
+      await navigateTo('/login');
+    }
+    else {
+      showToastError(response.message ?? "Something went wrong");
+    }
+  }
+}
+function checkValidation(): boolean {
+  if (password.value.trim().length === 0) {
+    showToastError('Please enter password');
+    return false;
+  }
+  else if (confirm_password.value.trim().length === 0) {
+    showToastError('Please enter password');
+    return false;
+  }
+  else if (password.value.trim() !== confirm_password.value.trim())
+   {
+    showToastError('Passwords do not match');
+    return false;
+  }
+  return true;
+}
 </script>

@@ -28,13 +28,16 @@ const is_forgot_loading = ref(false);
 const email = ref("");
 
 async function forgetPassword() {
+  if (is_forgot_loading.value)
+  {
+return;
+  }
   if (checkValidation()) {
     is_forgot_loading.value = true;
     let api_url = getUrl(RequestURL.forgotPassword);
     let postData = {
       email: email.value.trim()
     }
-    console.log("Post Data:", postData);
     let response = await $fetch<SuccessError<UsersModel.LoginRequestModel>>(api_url, {
       method: 'POST',
       body: postData,
