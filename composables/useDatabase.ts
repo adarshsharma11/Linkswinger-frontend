@@ -2,6 +2,11 @@
 
 let dbInstance: IDBDatabase | null = null;
 
+export class LoginDBStore
+{
+    id! : number
+    loginId! : number
+}
 
 export function useDatabase() {
     if (!import.meta.client) return null;
@@ -28,14 +33,14 @@ export function useDatabase() {
     }
 
 }
-export async function storerole(roleId: number, role: string) {
+export async function storerole(loginId: number) {
   return new Promise<void>((resolve, reject) => {
     if (!dbInstance) return reject("Database not initialized");
 
     const tx = dbInstance.transaction("login_store", "readwrite");
     const store = tx.objectStore("login_store");
 
-    const req = store.put({ id: 1, roleId, role });
+    const req = store.put({ id: 1, loginId });
 
     req.onsuccess = () => resolve();
     req.onerror = () => reject(req.error);

@@ -32,6 +32,20 @@ self.onconnect = (e: MessageEvent) => {
             }
             socketId = socketidModel.socketId ?? ''
         }
+        else if (event_name === "online") {
+
+            let online_model = event.data as OnlineSocketModel
+            onlinerole(online_model)
+        }
+
+        else if (event_name === "logoutself") {
+            let connectedmodel = new SocketConnectionModel()
+            connectedmodel.event_name = "logoutself"
+            connections.forEach((element) => {
+                element.postMessage(connectedmodel)
+            })
+            logoutself();
+        }
 
 
     }
@@ -98,20 +112,24 @@ async function handlesocketevent(eventdata: Blob) {
         logoutself()
     }
     else if (event_name === "online") {
-    let json = JSON.parse(jsontext) as OnlineEventResponse
-    if (json.success) {
-      connections.forEach((element) => {
-        element.postMessage(json)
-      })
+        let json = JSON.parse(jsontext) as OnlineEventResponse
+        if (json.success) {
+            connections.forEach((element) => {
+                element.postMessage(json)
+            })
+        }
+        else {
+            json.event_name = "logout"
+            connections.forEach((element) => {
+                element.postMessage(json)
+            })
+            logoutself()
+        }
     }
-    else {
-      json.event_name = "logout"
-      connections.forEach((element) => {
-        element.postMessage(json)
-      })
-      logoutself()
-    }
-  }
+}
+async function onlinerole(model: OnlineSocketModel) {
+  const blob = new Blob([JSON.stringify(model)], { type: "application/json" });
+  socket?.send(blob)
 }
 
 function detectonline() {
@@ -122,14 +140,12 @@ function detectonline() {
         idbrequest.onsuccess = (event) => {
             if (idbrequest) {
                 if (idbrequest.result) {
-                    //   let socketmodel = idbrequest.result as LoginDBStore
-                    //   const onlinemodel = new OnlineSocketModel()
-                    //   onlinemodel.event_name = "online"
-                    //   onlinemodel.role = socketmodel.role
-                    //   onlinemodel.role_id = socketmodel.roleId
-                    //   onlinemodel.socket_id = socketId
-                    //   onlinemodel.vendor_id = socketId
-                    //   onlinerole(onlinemodel)
+                       let socketmodel = idbrequest.result as LoginDBStore
+                       const onlinemodel = new OnlineSocketModel()
+                       onlinemodel.event_name = "online"
+                       onlinemodel.login_id = socketmodel.loginId
+                       onlinemodel.socket_id = socketId
+                       onlinerole(onlinemodel)
                 }
             }
         }
@@ -206,10 +222,8 @@ class SocketEventModel {
     event_name?: string
 }
 class OnlineSocketModel implements SocketEventModel {
-    role: string = "user";
     socket_id: string = "";
-    vendor_id: string = "";
-    role_id: number = 0;
+    login_id: number = 0;
     event_name?: string;
     online: number = 0;
 }

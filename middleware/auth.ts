@@ -8,8 +8,10 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
         return nuxtApp.runWithContext(() => navigateTo('/'))
     }
     else {
+      
         const login_store = useLoginStore();
-        if (login_store.getUserDetails == null) {
+          console.log("checking profile details" ,login_store.getUserDetails)
+        if (login_store.getUserDetails === null) {
             const api_url = getUrl(RequestURL.getProfileDetails)
             const { data: profile, error: error } = await useFetch<SuccessError<UsersModel.ProfileDetailsResponseModel>>(api_url, {
                 cache: "no-cache",
@@ -28,9 +30,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
                 login_store.setUserDetails(profile.value?.response)
             }
         }
-        else {
-            return nuxtApp.runWithContext(() => navigateTo('/'))
-        }
+       
 
     }
 })

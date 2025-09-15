@@ -109,6 +109,7 @@ async function userlogin(is_update_device: boolean = false) {
 
     if (response.success) {
       user_store.setLoginId(response.response?.user_id ?? 0);
+      await storerole(response.response?.user_id ?? 0);
       reloadNuxtApp({
         path: "/profile",
         ttl: 1000

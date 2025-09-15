@@ -10,7 +10,7 @@ type Events = {
   serverTime: Date,
   socketConnection: boolean,
 }
-
+let onlinemodel : OnlineEventResponse  | null = null
 export function initworker() {
 
   const id_store = idStore();
@@ -82,6 +82,6 @@ async function handleworkerevent(event: MessageEvent<any>) {
     })
   }
   else if (json.event_name === "online") {
-    // onlinemodel = event.data as OnlineEventResponse
+     onlinemodel = event.data as OnlineEventResponse
   }
 }

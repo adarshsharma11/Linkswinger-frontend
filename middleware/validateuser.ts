@@ -5,4 +5,5 @@ export default defineNuxtRouteMiddleware((to, from) => {
     if (user_store.getLoginId !== 0) {
        return navigateTo('/profile');
     }
+     console.log("defineNuxtRouteMiddleware")
 })
