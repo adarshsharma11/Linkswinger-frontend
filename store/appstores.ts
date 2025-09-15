@@ -1,4 +1,5 @@
 import { defineStore } from "pinia";
+import type { UsersModel } from "~/composables/models";
 
 export const idStore  = defineStore('idStore', { 
     state: () => {
@@ -49,3 +50,25 @@ export const userStore  = defineStore('userInfo', {
   }
 });
 
+export const useLoginStore = defineStore('login_details', {
+    state: () => {
+      return {
+        user: null as UsersModel.ProfileDetailsResponseModel | null | undefined,
+      }
+    },
+    getters: {
+      getUserDetails: state => {
+        return state.user 
+     }
+    },
+    actions: {
+       setUserDetails(user : UsersModel.ProfileDetailsResponseModel | null | undefined)
+       {
+           this.user = user
+       },
+       clear()
+      {
+        this.setUserDetails(null)
+      },
+    }
+  })

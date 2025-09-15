@@ -90,9 +90,6 @@ async function userlogin(is_update_device: boolean = false) {
     device_id: id_store.getDeviceId,
     is_update_device: is_update_device
   } as UsersModel.LoginRequestModel;
-
-console.log("Login Request Model:", request_model);
-
   const api_url = getUrl(RequestURL.login);
   is_login_loading.value = true;
 
@@ -111,16 +108,11 @@ console.log("Login Request Model:", request_model);
     is_login_loading.value = false;
 
     if (response.success) {
-      const is_email_confirmed =
-        response.response?.is_email_confirmed ?? false;
-
-      if (is_email_confirmed) {
-        //   showalert("Login successful!", true);
-        reloadNuxtApp({
-          path: "/profile",
-          ttl: 1000
-        })
-      } 
+      user_store.setLoginId(response.response?.user_id ?? 0);
+      reloadNuxtApp({
+        path: "/profile",
+        ttl: 1000
+      })
     } else {
       if (response.code === 100) {
         showmultiple(response.message);

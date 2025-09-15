@@ -12,7 +12,8 @@ export enum RequestURL {
   login = "/login",
   activateUser = "/activateUser",
   resendVerificationEmail = "/resendVerificationEmail",
-  fetchTowns = "/fetchTowns"
+  fetchTowns = "/fetchTowns",
+  getProfileDetails = "/getProfileDetails",
 }
 
 
@@ -190,6 +191,21 @@ export namespace UsersModel {
   {
      town_id?: number;
      town?: string;
+  }
+   export class ProfileDetailsRequestModel {
+    user_id?: number;
+  }
+   export class ProfileDetailsResponseModel {
+    user_id?: number;
+    first_name?: string;
+    last_name?: string;
+    nick_name?: string;
+    email?: string;
+    password?: string;
+    profile_image?: string;
+    profile_type?: string;
+    user_type?: string;
+    is_email_confirmed?: boolean;
   }
   
 }
