@@ -4,33 +4,19 @@
       <!-- Login Form -->
       <div class="login-content login-content-form">
         <div class="login-content-header">
-          <nuxt-link to="/"><img
-            class="img-fluid"
-            src="/images/logo/landing-logo.png"
-            alt="logo"
-          /></nuxt-link>
+          <nuxt-link to="/"><img class="img-fluid" src="/images/logo/landing-logo.png" alt="logo" /></nuxt-link>
         </div>
         <h3 class="text-white">Hello Everyone, We are LinkSwingers</h3>
         <h4 class="text-white">Welcome to LinkSwingers, please login to your account.</h4>
 
-        <Form
-          :validation-schema="schema"
-          @submit="userlogin"
-          class="form2"
-        >
+        <Form :validation-schema="schema" @submit="userlogin" class="form2">
           <!-- Email / Nickname -->
           <div class="form-group">
             <label class="col-form-label text-white" for="nickemail">
               Email or Nickname
             </label>
-            <Field
-              id="nickemail"
-              name="nickemail"
-              type="text"
-              class="form-control"
-              placeholder="Email or Nickname"
-              v-model="nickemail"
-            />
+            <Field id="nickemail" name="nickemail" type="text" class="form-control" placeholder="Email or Nickname"
+              v-model="nickemail" />
             <ErrorMessage name="nickemail" class="text-danger small" />
           </div>
 
@@ -39,14 +25,8 @@
             <label class="col-form-label text-white" for="password">
               Password
             </label>
-            <Field
-              id="password"
-              name="password"
-              type="password"
-              class="form-control"
-              placeholder="Password"
-              v-model="password"
-            />
+            <Field id="password" name="password" type="password" class="form-control" placeholder="Password"
+              v-model="password" />
             <ErrorMessage name="password" class="text-danger small" />
           </div>
 
@@ -67,17 +47,18 @@
           <div class="form-group mb-4">
             <div class="buttons">
               <button type="submit" class="btn button-effect btn-primary" :disabled="is_login_loading">
-                 <template v-if="is_login_loading">
-                    <span class="btn-loader"></span>
-                  </template>
-                  <template v-else>
-                    Login
-                  </template>
+                <template v-if="is_login_loading">
+                  <span class="btn-loader"></span>
+                </template>
+                <template v-else>
+                  Login
+                </template>
               </button>
             </div>
           </div>
-            <div class="form-group mb-0 text-center">
-            <p class="text-white">Don't have an account? <nuxt-link to="/authentication/signup">Create new account</nuxt-link></p>
+          <div class="form-group mb-0 text-center">
+            <p class="text-white">Don't have an account? <nuxt-link to="/authentication/signup">Create new
+                account</nuxt-link></p>
           </div>
         </Form>
       </div>
@@ -86,6 +67,7 @@
 </template>
 
 <script lang="ts" setup>
+import Swal from "sweetalert2";
 import { Form, Field, ErrorMessage } from "vee-validate";
 import * as Yup from "yup";
 import type { UsersModel } from "~/composables/models";
@@ -93,19 +75,22 @@ import type { UsersModel } from "~/composables/models";
 const is_login_loading = ref(false);
 const nickemail = ref("");
 const password = ref("");
-
+const user_store = userStore()
+const id_store = idStore()
 // Yup schema
 const schema = Yup.object({
   nickemail: Yup.string().trim().required("Email or Nickname is required"),
   password: Yup.string().required("Password is required"),
 });
 
-async function userlogin() {
+async function userlogin(is_update_device: boolean = false) {
   if (is_login_loading.value) return;
 
   const request_model = {
     nickemail: nickemail.value,
     password: password.value,
+    device_id: id_store.device_id,
+    is_update_device: is_update_device
   } as UsersModel.LoginRequestModel;
 
   const api_url = getUrl(RequestURL.login);
@@ -130,19 +115,20 @@ async function userlogin() {
         response.response?.is_email_confirmed ?? false;
 
       if (is_email_confirmed) {
-     //   showalert("Login successful!", true);
-     reloadNuxtApp({
-        path: "/profile",
-        ttl: 1000
-      })
-      } else {
-        showalert(
-          "Email Verification is Pending.Please check your email to verify your account.",
-          false
-        );
-      }
+        //   showalert("Login successful!", true);
+        reloadNuxtApp({
+          path: "/profile",
+          ttl: 1000
+        })
+      } 
     } else {
-      showalert(response.message || "Login failed. Please try again.");
+      if (response.code === 100) {
+        showmultiple(response.message);
+      }
+      else {
+        showalert(response.message || "Login failed. Please try again.");
+      }
+
     }
   } catch (error) {
     is_login_loading.value = false;
@@ -151,8 +137,23 @@ async function userlogin() {
   }
 }
 
-async function resendEmail() 
-{
-   
+function showmultiple(message: string) {
+  Swal.fire({
+    title: "",
+    text: message,
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Procced"
+  }).then(async (result) => {
+    if (result.isConfirmed) {
+      await userlogin(true);
+    }
+  });
+}
+
+async function resendEmail() {
+
 }
 </script>

@@ -81,6 +81,8 @@ export namespace UsersModel {
   export class LoginRequestModel {
     nickemail?: string;
     password?: string;
+    device_id?: string;
+    is_update_device?: boolean;
   }
 
   export class LoginResponseModel {
