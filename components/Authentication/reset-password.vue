@@ -5,19 +5,19 @@
           <div class="login-content-header"><nuxt-link to="/"><img src="/images/logo/landing-logo.png" alt="sign-logo"></nuxt-link></div>
           <h3 class="text-white">Hello Everyone, Please Reset Your Password</h3>
           <h4 class="text-white">Welcome to LinkSwingers, please reset your password.</h4>
-          <form class="form2 text-white">
+          <div class="form2 text-white">
             <div class="form-group">
               <label class="col-form-label text-white" for="inputPassword3">New Password</label><span> </span>
-              <input class="form-control" id="inputPassword3" type="password" name="login[password]" required placeholder="*********">
+              <input v-model="password" class="form-control" id="inputPassword3" type="password" name="login[password]" required placeholder="*********">
             </div>
             <div class="form-group">
               <label class="col-form-label text-white" for="inputPassword3">Retype Password</label><span> </span>
-              <input class="form-control" id="inputPassword4" type="password" name="login[password]" required placeholder="*********">
+              <input v-model="confirm_password" class="form-control" id="inputPassword4" type="password" name="login[password]" required placeholder="*********">
             </div>
             <div class="form-group mb-0">
-              <div class="buttons"><nuxt-link class="btn button-effect btn-primary signpbtn" to="/">Reset Password</nuxt-link></div>
+              <div class="buttons btn button-effect btn-primary signpbtn" @click="resetPassword()">Reset Password <span class="btn-loader" v-if="is_reset_loading"></span></div>
             </div>
-          </form>
+          </div>
         </div>
       </div>
     </div>
@@ -65,7 +65,7 @@ function checkValidation(): boolean {
     return false;
   }
   else if (confirm_password.value.trim().length === 0) {
-    showToastError('Please enter password');
+    showToastError('Please enter confirm password');
     return false;
   }
   else if (password.value.trim() !== confirm_password.value.trim())
