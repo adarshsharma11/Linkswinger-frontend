@@ -24,3 +24,42 @@
 .info-list strong {
   min-width: 140px;
 }
+
+.profile-grid {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 1rem;
+}
+.info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  height: 100%;
+}
+.card {
+  height: 100%;
+}
+.photo-list li {
+  font-size: 0.95rem;
+  padding: 0.4rem 0;
+  border-bottom: 1px solid #333;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.photo-list li:last-child {
+  border-bottom: none;
+}
+.badge-icon {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+}
+@media (max-width: 991px) {
+  .profile-grid {
+    grid-template-columns: 1fr;
+  }
+  .info-grid {
+    grid-template-columns: 1fr;
+  }
+}
