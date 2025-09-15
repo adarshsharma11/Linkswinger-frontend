@@ -2,17 +2,11 @@
   <section class="profile-page bg-dark text-white min-vh-100 py-4">
     <div class="container">
       <!-- Header -->
-      <div
-        class="d-flex align-items-center justify-content-between mb-4 flex-wrap text-center text-md-start"
-      >
+      <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap text-center text-md-start">
         <!-- Left: Avatar + Info -->
         <div class="d-flex align-items-center flex-wrap gap-3">
-          <img
-            src="/images/avtar/1.jpg"
-            alt="Profile"
-            class="rounded-circle"
-            style="width: 90px; height: 90px; object-fit: cover"
-          />
+          <img src="/images/avtar/1.jpg" alt="Profile" class="rounded-circle"
+            style="width: 90px; height: 90px; object-fit: cover" />
           <div>
             <h3 class="mb-2 text-white">Alex, 29</h3>
             <div class="d-flex flex-wrap gap-2">
@@ -28,13 +22,8 @@
 
         <!-- Right: Settings Dropdown -->
         <div class="dropdown mt-3 mt-md-0">
-          <button
-            class="btn btn-outline-light dropdown-toggle"
-            type="button"
-            id="settingsMenu"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-          >
+          <button class="btn btn-outline-light dropdown-toggle" type="button" id="settingsMenu"
+            data-bs-toggle="dropdown" aria-expanded="false">
             <i class="bi bi-gear"></i> Settings
           </button>
           <ul class="dropdown-menu dropdown-menu-end bg-dark text-white" aria-labelledby="settingsMenu">
@@ -44,18 +33,18 @@
               </a>
             </li>
             <li>
-              <a class="dropdown-item text-white" href="/logout">
+              <button class="dropdown-item text-white" @click="logout" :disabled="is_logout_loading">
                 <i class="bi bi-box-arrow-right me-2"></i> Logout
-              </a>
+                <span class="btn-loader" v-if="is_logout_loading"></span>
+              </button>
+
             </li>
           </ul>
         </div>
       </div>
 
       <!-- Action buttons -->
-      <div
-        class="d-flex gap-3 mb-4 flex-wrap justify-content-center justify-content-md-start"
-      >
+      <div class="d-flex gap-3 mb-4 flex-wrap justify-content-center justify-content-md-start">
         <button class="btn btn-outline-light">
           <i class="bi bi-chat-dots"></i>
         </button>
@@ -169,3 +158,43 @@
     </div>
   </section>
 </template>
+<script setup lang="ts">
+import type { UsersModel } from '~/composables/models';
+
+const user_store = userStore()
+const is_logout_loading = ref(false);
+
+async function logout() {
+
+  if (is_logout_loading.value) {
+    return;
+  }
+
+  const api_url = getUrl(RequestURL.logout);
+  is_logout_loading.value = true;
+  const response = await $fetch<SuccessError<UsersModel.LoginResponseModel>>(
+    api_url,
+    {
+      method: "POST",
+      body: {
+        user_id: user_store.getLoginId,
+      },
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+  is_logout_loading.value = false;
+  if (response.success) {
+    let socketmodel = new OnlineSocketModel()
+    socketmodel.event_name = "logoutself"
+    sendmsgtoworker(socketmodel)
+  }
+  else {
+    showToastError("Logout failed. Please try again.");
+  }
+
+
+}
+
+</script>

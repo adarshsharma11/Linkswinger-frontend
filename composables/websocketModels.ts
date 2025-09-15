@@ -21,7 +21,7 @@ export class OnlineEventResponse implements SocketEventModel {
   server_date?: string
 }
 
-class OnlineSocketModel implements SocketEventModel {
+export class OnlineSocketModel implements SocketEventModel {
     socket_id: string = "";
     login_id: number = 0;
     event_name?: string;

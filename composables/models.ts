@@ -14,6 +14,7 @@ export enum RequestURL {
   resendVerificationEmail = "/resendVerificationEmail",
   fetchTowns = "/fetchTowns",
   getProfileDetails = "/getProfileDetails",
+  logout = "/logout",
 }
 
 
