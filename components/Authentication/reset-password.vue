@@ -52,7 +52,7 @@ return;
     is_reset_loading.value = false;
     if (response.success) {
       showToastSuccess(response.message ?? "Password reset successfully");
-      await navigateTo('/login');
+      await navigateTo('/authentication/login');
     }
     else {
       showToastError(response.message ?? "Something went wrong");
