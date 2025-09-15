@@ -9,7 +9,7 @@
         <h3 class="text-white">Hello Everyone, We are LinkSwingers</h3>
         <h4 class="text-white">Welcome to LinkSwingers, please login to your account.</h4>
 
-        <Form :validation-schema="schema" @submit="userlogin" class="form2">
+        <Form :validation-schema="schema" @submit="userlogin(false)" class="form2">
           <!-- Email / Nickname -->
           <div class="form-group">
             <label class="col-form-label text-white" for="nickemail">
@@ -74,7 +74,7 @@ const is_login_loading = ref(false);
 const nickemail = ref("");
 const password = ref("");
 const user_store = userStore()
-const id_store = idStore()
+const id_store = idStore();
 // Yup schema
 const schema = Yup.object({
   nickemail: Yup.string().trim().required("Email or Nickname is required"),
@@ -87,9 +87,11 @@ async function userlogin(is_update_device: boolean = false) {
   const request_model = {
     nickemail: nickemail.value,
     password: password.value,
-    device_id: id_store.device_id,
+    device_id: id_store.getDeviceId,
     is_update_device: is_update_device
   } as UsersModel.LoginRequestModel;
+
+console.log("Login Request Model:", request_model);
 
   const api_url = getUrl(RequestURL.login);
   is_login_loading.value = true;

@@ -7,7 +7,7 @@ export const idStore  = defineStore('idStore', {
     }
   },
    getters: {
-    getVendorId: (state : any) => {
+    getDeviceId: (state : any) => {
       return state.device_id ?? ''
     },
   },

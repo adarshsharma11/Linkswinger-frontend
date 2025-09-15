@@ -14,7 +14,7 @@ type Events = {
 export function initworker() {
 
   const id_store = idStore();
-  var vendorId = id_store.getVendorId
+  var vendorId = id_store.getDeviceId
   
   if (vendorId.length === 0) {
     vendorId = uniqueId
