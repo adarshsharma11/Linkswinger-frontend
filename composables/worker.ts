@@ -61,27 +61,27 @@ let json = event.data as SocketEventModel
     useServerTime(onlinemodel.server_date ?? '')
   }
   else if (json.event_name === "logout") {
-    // let onlinemodel = event.data as OnlineEventResponse
-    // showalert(onlinemodel.message ?? '')
-    // const user_store = userStore();
-    // user_store.clear()
-    // await clearloginstore()
-    // setTimeout(() => {
-    //   reloadNuxtApp({
-    //     path: "/",
-    //     ttl: 1000
-    //   })
-    // }, 1000);
+     let onlinemodel = event.data as OnlineEventResponse
+     showalert(onlinemodel.message ?? '')
+     const user_store = userStore();
+     user_store.clear()
+     await clearloginstore()
+    setTimeout(() => {
+      reloadNuxtApp({
+        path: "/",
+        ttl: 1000
+      })
+    }, 1000);
 
   }
   else if (json.event_name === "logoutself") {
-    // const user_store = userStore();
-    // user_store.clear()
-    // await clearloginstore()
-    // reloadNuxtApp({
-    //   path: "/",
-    //   ttl: 1000
-    // })
+    const user_store = userStore();
+    user_store.clear()
+    await clearloginstore()
+    reloadNuxtApp({
+      path: "/",
+      ttl: 1000
+    })
   }
 
      else if (json.event_name === "online") {

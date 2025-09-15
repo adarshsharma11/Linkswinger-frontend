@@ -13,3 +13,11 @@ export class ServerDateSocketModel implements SocketEventModel {
   event_name?: string
   server_date?: string
 }
+
+export class OnlineEventResponse implements SocketEventModel {
+  event_name?: string
+  success?: boolean
+  message?: string
+  server_date?: string
+}
+
