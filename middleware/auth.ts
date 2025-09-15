@@ -8,9 +8,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
         return nuxtApp.runWithContext(() => navigateTo('/'))
     }
     else {
-      
         const login_store = useLoginStore();
-          console.log("checking profile details" ,login_store.getUserDetails)
         if (login_store.getUserDetails === null) {
             const api_url = getUrl(RequestURL.getProfileDetails)
             const { data: profile, error: error } = await useFetch<SuccessError<UsersModel.ProfileDetailsResponseModel>>(api_url, {
