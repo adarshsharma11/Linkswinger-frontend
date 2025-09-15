@@ -33,10 +33,7 @@
           <!-- Remember + Forgot -->
           <div class="form-group">
             <div class="rememberchk">
-              <input class="form-check-input" id="remember" type="checkbox" />
-              <label class="form-check-label ps-4 text-white" for="remember">
-                Remember Me
-              </label>
+              <label class="form-check-label ps-4 text-white" for="remember" />
               <h6 class="pull-right">
                 <nuxt-link to="/authentication/forget_password">Forgot Password?</nuxt-link>
               </h6>
@@ -68,6 +65,7 @@
 
 <script lang="ts" setup>
 import Swal from "sweetalert2";
+import { showToastError } from "~/utils/toast";
 import { Form, Field, ErrorMessage } from "vee-validate";
 import * as Yup from "yup";
 import type { UsersModel } from "~/composables/models";
@@ -126,13 +124,13 @@ async function userlogin(is_update_device: boolean = false) {
         showmultiple(response.message);
       }
       else {
-        showalert(response.message || "Login failed. Please try again.");
+        showToastError(response.message || "Login failed. Please try again.");
       }
 
     }
   } catch (error) {
     is_login_loading.value = false;
-    showalert("An error occurred during login. Please try again.");
+    showToastError("An error occurred during login. Please try again.");
     console.error("Login failed:", error);
   }
 }
