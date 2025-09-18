@@ -224,9 +224,16 @@ async function logout() {
   );
   is_logout_loading.value = false;
   if (response.success) {
-    let socketmodel = new OnlineSocketModel()
-    socketmodel.event_name = "logoutself"
-    sendmsgtoworker(socketmodel)
+    // let socketmodel = new OnlineSocketModel()
+    // socketmodel.event_name = "logoutself"
+    // sendmsgtoworker(socketmodel)
+      const user_store = userStore();
+    user_store.clear()
+    await clearloginstore()
+    reloadNuxtApp({
+      path: "/",
+      ttl: 1000
+    })
   }
   else {
     showToastError("Logout failed. Please try again.");
