@@ -227,7 +227,7 @@ async function logout() {
     // let socketmodel = new OnlineSocketModel()
     // socketmodel.event_name = "logoutself"
     // sendmsgtoworker(socketmodel)
-      const user_store = userStore();
+    const user_store = userStore();
     user_store.clear()
     await clearloginstore()
     reloadNuxtApp({
