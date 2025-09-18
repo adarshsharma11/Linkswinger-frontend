@@ -3,10 +3,10 @@
     <div class="login-content-main">
       <div class="login-content">
         <div class="login-content-header">
-          <nuxt-link to="/"><img src="/images/logo/landing-logo.png" alt="sign-logo" /></nuxt-link>
+          <nuxt-link to="/"><img src="/images/logo/landing-logo.gif" alt="sign-logo" /></nuxt-link>
         </div>
-        <h3 class="text-white">Hello Everyone, We are LinkSwingers</h3>
-        <h4 class="text-white">Welcome to LinkSwingers, please signup to your account.</h4>
+        <h3 class="text-white">Join LinkSwingers – Where Open Minds Connect</h3>
+        <h4 class="text-white">Sign Up Now and Start Connecting</h4>
 
         <div class="form2 text-white">
           <!-- Row: Nickname + Profile Type -->
@@ -179,6 +179,7 @@
                   :close-on-select="true" placeholder="Select Inch" />
               </div>
             </div>
+            
 
           </div>
 
@@ -191,6 +192,8 @@
               </button>
             </div>
           </div>
+
+
 
           <div class="form-group mb-0">
             <div class="text-center">
