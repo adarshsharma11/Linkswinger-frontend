@@ -199,6 +199,7 @@ async function handleworkerevent(event: MessageEvent<any>) {
   }
     else if (json.event_name === "loginsuccess") {
         reloadNuxtApp({ path: "/profile", ttl: 1000 });
+        detectonline();
     }
   else if (json.event_name === "server_date") {
     let onlinemodel = event.data as ServerDateSocketModel
