@@ -52,7 +52,7 @@ function useServerTimeFromSocket(initialServerTime: string) {
             connectedmodel.server_date = newTime.toString()
             connectedmodel.event_name = "worker_timer"
             sendmsgtoworker(connectedmodel, true)
-            useServerTime(newTime.toString())
+            useServerTimeFromSocket(newTime.toString())
         }
     }, 1000)
 }

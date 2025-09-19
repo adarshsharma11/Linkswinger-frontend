@@ -207,6 +207,7 @@ async function handleworkerevent(event: MessageEvent<any>) {
   else if (json.event_name === "worker_timer") {
     let onlinemodel = event.data as ServerDateSocketModel
     useServerTime(onlinemodel.server_date ?? '')
+    console.log("worker timer event", onlinemodel.server_date)
   }
   else if (json.event_name === "logout") {
     let onlinemodel = event.data as OnlineEventResponse
