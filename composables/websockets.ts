@@ -9,7 +9,6 @@ export function setupWebSocket() {
     const id_store = idStore();
     var socketId = id_store.getDeviceId
     var initsocket = new WebSocket(websocketURL + `?socketId=${socketId}`);
-
     initsocket.onopen = () => {
         is_reconnecting = false
         console.log("websocket connected. we are ready to go")
