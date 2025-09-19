@@ -2,6 +2,8 @@ import { v4 as uuid } from 'uuid';
 import { idStore } from '~/store/appstores'
 import mitt from 'mitt'
 import { LeaderEventModel } from './websocketModels';
+import { detectonline } from './useDatabase';
+import { setupWebSocket } from './websockets';
 
 const uniqueId = uuid();
 let tab_id = uuid();

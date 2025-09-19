@@ -1,3 +1,5 @@
+import { detectonline } from "./useDatabase";
+
 var is_reconnecting = false
 let websocketURL = "wss://linkswingers.co.uk/websocket"
 let socket: WebSocket | null = null;
