@@ -2,112 +2,90 @@
   <section class="profile-page bg-dark text-white min-vh-100 py-4">
     <div class="container">
       <!-- Header -->
-     <!-- Header -->
-<div class="profile-header container-fluid px-3 px-md-4">
-  <!-- First Row -->
-  <div class="row gy-3 align-items-center">
-    <!-- Left: Avatar + Badge -->
-    <div class="col-12 col-md-3 d-flex justify-content-center justify-content-md-start">
-      <div class="d-flex flex-column align-items-center align-items-md-start">
-        <img
-          src="/images/avtar/1.jpg"
-          alt="Profile"
-          class="rounded-circle mb-2"
-          style="width: 90px; height: 90px; object-fit: cover"
-        />
-        <span class="badge bg-theme-color fs-6 mt-2">Elite</span>
-      </div>
-    </div>
+      <!-- Header -->
+      <div class="profile-header container-fluid px-3 px-md-4">
+        <!-- First Row -->
+        <div class="row gy-3 align-items-center">
+          <!-- Left: Avatar + Badge -->
+          <div class="col-12 col-md-3 d-flex justify-content-center justify-content-md-start">
+            <div class="d-flex flex-column align-items-center align-items-md-start">
+              <img src="/images/avtar/1.jpg" alt="Profile" class="rounded-circle mb-2"
+                style="width: 90px; height: 90px; object-fit: cover" />
+              <span class="badge bg-theme-color fs-6 mt-2">Elite</span>
+            </div>
+          </div>
 
-    <!-- Center: User Info -->
-    <div class="col-12 col-md-6 text-center">
-      <h3 class="mb-2 text-white fs-4 fs-md-3">Alex, Man 32 from London</h3>
-      <span class="badge bg-success fs-6">Active</span>
-    </div>
+          <!-- Center: User Info -->
+          <div class="col-12 col-md-6 text-center">
+            <h3 class="mb-2 text-white fs-4 fs-md-3">Alex, Man 32 from London</h3>
+            <span class="badge bg-success fs-6">Active</span>
+          </div>
 
-    <!-- Right: Settings Dropdown -->
-    <div class="col-12 col-md-3 d-flex justify-content-center justify-content-md-end">
-      <div class="dropdown">
-        <button
-          id="settingsMenu"
-          class="btn p-0 border-0 bg-transparent"
-          data-bs-toggle="dropdown"
-          aria-expanded="false"
-        >
-          <img
-            src="/images/badges/settings.png"
-            alt="Settings"
-            class="rounded-circle"
-            style="width: 50px; height: 50px; object-fit: cover"
-          />
-        </button>
+          <!-- Right: Settings Dropdown -->
+          <div class="col-12 col-md-3 d-flex justify-content-center justify-content-md-end">
+            <div class="dropdown">
+              <button id="settingsMenu" class="btn p-0 border-0 bg-transparent" data-bs-toggle="dropdown"
+                aria-expanded="false">
+                <img src="/images/badges/settings.png" alt="Settings" class="rounded-circle"
+                  style="width: 50px; height: 50px; object-fit: cover" />
+              </button>
 
-        <ul
-          class="dropdown-menu dropdown-menu-end bg-dark text-white mt-2"
-          aria-labelledby="settingsMenu"
-        >
-          <li>
-            <button
-              class="dropdown-item text-white d-flex align-items-center"
-              @click="logout"
-              :disabled="is_logout_loading"
-            >
-              <img
-                src="/images/badges/logout.png"
-                alt="Logout"
-                class="rounded-circle me-2"
-                style="width: 30px; height: 30px; object-fit: cover"
-              />
-              <span class="text-white">Logout</span>
-              <span class="btn-loader ms-2" v-if="is_logout_loading"></span>
-            </button>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </div>
-
-  <!-- Second Row: Membership + Actions -->
-  <div class="row gy-3 align-items-center mb-2">
-    <!-- Left: Membership badges -->
-    <div class="col-12 col-md-3 d-flex justify-content-center justify-content-md-start">
-      <div class="d-flex gap-2 flex-wrap">
-        <img src="/images/badges/elite.png" alt="Elite" class="badge-icon" />
-        <img src="/images/badges/basic-plus.png" alt="Gold" class="badge-icon" />
-        <img src="/images/badges/photo-verified.png" alt="Silver" class="badge-icon" />
-      </div>
-    </div>
-
-    <!-- Center: Action icons -->
-    <div class="col-12 col-md-6 d-flex justify-content-center">
-      <div class="d-flex gap-4 flex-wrap text-center">
-        <div class="d-flex flex-column align-items-center">
-          <img src="/images/badges/chat.png" alt="Chat" class="badge-icon" />
-          <small>Chat</small>
+              <ul class="dropdown-menu dropdown-menu-end bg-dark text-white mt-2" aria-labelledby="settingsMenu">
+                <li>
+                  <button class="dropdown-item text-white d-flex align-items-center" @click="logout"
+                    :disabled="is_logout_loading">
+                    <img src="/images/badges/logout.png" alt="Logout" class="rounded-circle me-2"
+                      style="width: 30px; height: 30px; object-fit: cover" />
+                    <span class="text-white">Logout</span>
+                    <span class="btn-loader ms-2" v-if="is_logout_loading"></span>
+                  </button>
+                </li>
+              </ul>
+            </div>
+          </div>
         </div>
-        <div class="d-flex flex-column align-items-center">
-          <img src="/images/badges/call.png" alt="Call" class="badge-icon" />
-          <small>Call</small>
-        </div>
-        <div class="d-flex flex-column align-items-center">
-          <img src="/images/badges/video-call.png" alt="Video Call" class="badge-icon" />
-          <small>Video</small>
-        </div>
-        <div class="d-flex flex-column align-items-center">
-          <img src="/images/badges/like-button.png" alt="Like" class="badge-icon" />
-          <small>Like</small>
-        </div>
-        <div class="d-flex flex-column align-items-center">
-          <img src="/images/badges/public-photos.png" alt="VIP" class="badge-icon" />
-          <small>VIP</small>
+
+        <!-- Second Row: Membership + Actions -->
+        <div class="row gy-3 align-items-center mb-2">
+          <!-- Left: Membership badges -->
+          <div class="col-12 col-md-3 d-flex justify-content-center justify-content-md-start">
+            <div class="d-flex gap-2 flex-wrap">
+              <img src="/images/badges/elite.png" alt="Elite" class="badge-icon" />
+              <img src="/images/badges/basic-plus.png" alt="Gold" class="badge-icon" />
+              <img src="/images/badges/photo-verified.png" alt="Silver" class="badge-icon" />
+            </div>
+          </div>
+
+          <!-- Center: Action icons -->
+          <div class="col-12 col-md-6 d-flex justify-content-center">
+            <div class="d-flex gap-4 flex-wrap text-center">
+              <div class="d-flex flex-column align-items-center">
+                <img src="/images/badges/chat.png" alt="Chat" class="badge-icon" />
+                <small>Chat</small>
+              </div>
+              <div class="d-flex flex-column align-items-center">
+                <img src="/images/badges/call.png" alt="Call" class="badge-icon" />
+                <small>Call</small>
+              </div>
+              <div class="d-flex flex-column align-items-center">
+                <img src="/images/badges/video-call.png" alt="Video Call" class="badge-icon" />
+                <small>Video</small>
+              </div>
+              <div class="d-flex flex-column align-items-center">
+                <img src="/images/badges/like-button.png" alt="Like" class="badge-icon" />
+                <small>Like</small>
+              </div>
+              <div class="d-flex flex-column align-items-center">
+                <img src="/images/badges/public-photos.png" alt="VIP" class="badge-icon" />
+                <small>VIP</small>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: Empty spacer (keeps alignment with header row) -->
+          <div class="col-12 col-md-3 d-flex justify-content-center justify-content-md-end"></div>
         </div>
       </div>
-    </div>
-
-    <!-- Right: Empty spacer (keeps alignment with header row) -->
-    <div class="col-12 col-md-3 d-flex justify-content-center justify-content-md-end"></div>
-  </div>
-</div>
 
 
       <!-- Grid Layout -->
@@ -224,16 +202,9 @@ async function logout() {
   );
   is_logout_loading.value = false;
   if (response.success) {
-    // let socketmodel = new OnlineSocketModel()
-    // socketmodel.event_name = "logoutself"
-    // sendmsgtoworker(socketmodel)
-    const user_store = userStore();
-    user_store.clear()
-    await clearloginstore()
-    reloadNuxtApp({
-      path: "/",
-      ttl: 1000
-    })
+    let socketmodel = new OnlineSocketModel()
+    socketmodel.event_name = "logoutself"
+    sendmsgtoworker(socketmodel,true)
   }
   else {
     showToastError("Logout failed. Please try again.");

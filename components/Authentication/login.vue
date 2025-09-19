@@ -165,7 +165,8 @@ async function userlogin(values: any, { resetForm }: any) {
     if (response.success) {
       user_store.setLoginId(response.response?.user_id ?? 0);
       await storerole(response.response?.user_id ?? 0);
-      reloadNuxtApp({ path: "/profile", ttl: 1000 });
+      sendmsgtoworker({ event_name: "loginsuccess"},true);
+      
     } else {
       if (response.code === 100) {
         showmultiple(response.message);

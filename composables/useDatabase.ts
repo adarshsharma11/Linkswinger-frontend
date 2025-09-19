@@ -1,3 +1,4 @@
+import { onlinerole } from "./websockets";
 
 
 let dbInstance: IDBDatabase | null = null;
@@ -59,4 +60,29 @@ export async function clearloginstore() {
     req.onsuccess = () => resolve();
     req.onerror = () => reject(req.error);
   });
+}
+
+export function detectonline() {
+    const id_store = idStore();
+    var socketId = id_store.getDeviceId
+    var transaction = dbInstance?.transaction('login_store');
+    var list = transaction?.objectStore('login_store');
+    var idbrequest = list?.get(1)
+    if (idbrequest) {
+        idbrequest.onsuccess = (event) => {
+            if (idbrequest) {
+                if (idbrequest.result) {
+                       let socketmodel = idbrequest.result as LoginDBStore
+                       const onlinemodel = new OnlineSocketModel()
+                       onlinemodel.event_name = "online"
+                       onlinemodel.login_id = socketmodel.loginId
+                       onlinemodel.socket_id = socketId
+                       onlinerole(onlinemodel)
+                }
+            }
+        }
+        idbrequest.onerror = (event) => {
+            console.log("eooror")
+        }
+    }
 }

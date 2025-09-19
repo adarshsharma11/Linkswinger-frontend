@@ -10,15 +10,13 @@ import { NuxtLoadingIndicator } from '#components';
 const id_store = idStore()
 
 onMounted(() => {
-     useDatabase();
-    if (typeof SharedWorker !== 'undefined') {
-        initworker()
-       
-        let socketmodel = new SocketIdModel()
-        socketmodel.event_name = "socketId"
-        socketmodel.socketId = id_store.device_id
-        sendmsgtoworker(socketmodel)
-    }
+    useDatabase();
+
+    initworker()
+    let socketmodel = new SocketIdModel()
+    socketmodel.event_name = "socketId"
+    socketmodel.socketId = id_store.device_id
+    sendmsgtoworker(socketmodel)
 
 });
 

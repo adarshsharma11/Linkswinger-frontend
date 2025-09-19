@@ -1,6 +1,13 @@
 export class SocketEventModel {
   event_name?: string
 }
+
+export class LeaderEventModel implements SocketEventModel {
+  event_name!: string
+  is_asking?: boolean
+  tab_id!: string
+}
+
 export class SocketConnectionModel {
   event_name!: string
   is_connected?: boolean
