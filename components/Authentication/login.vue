@@ -98,10 +98,10 @@
                 </template>
               </button>
             </div>
-             <p class="text-white">
+             <!-- <p class="text-white">
               Don't have an account?
               <nuxt-link to="/authentication/signup">Create new account</nuxt-link>
-            </p>
+            </p> -->
           </div>
 
           <div class="form-group mb-0 text-center">
