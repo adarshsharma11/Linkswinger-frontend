@@ -1,9 +1,14 @@
 <template>
-  <section class="bg-dark text-white min-vh-100 d-flex flex-column justify-content-center">
+  <section class="bg-darker text-white min-vh-100 d-flex flex-column justify-content-center">
     <!-- Top Red Strip -->
-    <div class="w-100 bg-theme-color" style="height: 40px;"></div>
+    <div class="w-100 bg-theme-color" style="height: 70px;"></div>
 
     <div class="container text-center py-5">
+      <div class="row justify-content-center landing-logo">
+         <nuxt-link to="/">
+            <img class="img-fluid" src="/images/logo/landing-logo.gif" alt="logo" />
+          </nuxt-link>
+      </div>
       <!-- Title -->
       <h1 class="fw-bold display-5 mb-3 position-relative d-inline-block text-white">
         Welcome to LinkSwingers (LS)
@@ -23,7 +28,7 @@
 
         <nuxt-link 
           to="/authentication/login" 
-          class="btn btn-outline-light btn-lg"
+          class="btn btn-lg bg-success text-white"
         >
           Log in
         </nuxt-link>
@@ -35,17 +40,9 @@
         <a href="#" class="text-decoration-underline text-white">Terms & Privacy</a>
       </p>
 
-      <!-- Info Box -->
-      <div class="bg-secondary bg-opacity-25 rounded-4 p-3 mb-5 mx-auto" style="max-width: 600px;">
-        <p class="mb-0 text-white">
-          No tier breakdown here — tiers are shown after sign-up. Explore meets, 
-          chats, video calls, video roulette, and club events inside.
-        </p>
-      </div>
-
       <!-- Join the community -->
       <div class="text-start mx-auto" style="max-width: 800px;">
-        <h3 class="fw-bold mb-3 text-white">Join the community</h3>
+        <h3 class="fw-bold mb-3 text-white text-center">Join the community</h3>
         <p class="text-white-50">
           Join a community built on trust, respect, and open minds. LinkSwingers (LS) is more 
           than just a platform — it’s a welcoming space where people can meet, explore, and enjoy 

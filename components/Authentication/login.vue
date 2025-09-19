@@ -87,7 +87,7 @@
             <div class="buttons">
               <button
                 type="submit"
-                class="btn button-effect btn-primary"
+                class="btn button-effect btn-primary mt-4"
                 :disabled="is_login_loading || !meta.valid"
               >
                 <template v-if="is_login_loading">
@@ -98,6 +98,10 @@
                 </template>
               </button>
             </div>
+             <p class="text-white">
+              Don't have an account?
+              <nuxt-link to="/authentication/signup">Create new account</nuxt-link>
+            </p>
           </div>
 
           <div class="form-group mb-0 text-center">
