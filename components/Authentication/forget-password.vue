@@ -2,9 +2,9 @@
   <div class="login-page2 animat-rate">
     <div class="login-content-main">
       <div class="login-content login-content-form">
-        <div class="login-content-header"><nuxt-link to="/"><img src="/images/logo/landing-logo.png"
+        <div class="login-content-header"><nuxt-link to="/"><img src="/images/logo/landing-logo.gif"
               alt="sign-logo"></nuxt-link></div>
-        <h3 class="text-white">Hello Everyone , We are LinkSwingers</h3>
+        <h3 class="text-white">Join LinkSwingers – Where Open Minds Connect</h3>
         <h4 class="text-white">Please enter your email to reset your password.</h4>
         <div class="form2 text-white">
           <div class="form-group">

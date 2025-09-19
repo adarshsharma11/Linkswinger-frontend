@@ -2,7 +2,7 @@
      <div class="login-page2 animat-rate">
       <div class="login-content-main"> 
         <div class="login-content login-content-form">
-          <div class="login-content-header"><nuxt-link to="/"><img src="/images/logo/landing-logo.png" alt="sign-logo"></nuxt-link></div>
+          <div class="login-content-header"><nuxt-link to="/"><img src="/images/logo/landing-logo.gif" alt="sign-logo"></nuxt-link></div>
           <h3 class="text-white">Hello Everyone, Please Reset Your Password</h3>
           <h4 class="text-white">Welcome to LinkSwingers, please reset your password.</h4>
           <div class="form2 text-white">
