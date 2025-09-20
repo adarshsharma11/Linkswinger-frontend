@@ -179,8 +179,43 @@
                   :close-on-select="true" placeholder="Select Inch" />
               </div>
             </div>
-            
 
+          </div>
+
+           <div class="form-group">
+            <div class="rememberchk">
+              <div class="checkbox-wrapper">
+                <input
+                  type="checkbox"
+                  id="gridCheck1"
+                  name="confirmAge"
+                  class="form-check-input custom-theme-checkbox"
+                />
+                <label class="form-check-label ps-4 text-white" for="gridCheck1">
+                  I confirm that I am 18 years or older
+                </label>
+              </div>
+            </div>
+            <ErrorMessage name="confirmAge" class="text-danger small" />
+          </div>
+          <!-- Terms acceptance -->
+          <div class="form-group">
+            <div class="rememberchk">
+              <div class="checkbox-wrapper">
+              <input
+                type="checkbox"
+                id="gridCheck2"
+                name="agreeTerms"
+                class="form-check-input custom-theme-checkbox"
+              />
+              <label class="form-check-label ps-4 text-white" for="gridCheck2">
+                I agree to the
+                <nuxt-link to="/terms">Terms & Conditions</nuxt-link> and
+                <nuxt-link to="/privacy">Privacy Policy</nuxt-link>, and confirm that I am 18 years or older
+              </label>
+              </div>
+            </div>
+            <ErrorMessage name="agreeTerms" class="text-danger small" />
           </div>
 
           <!-- Signup Button -->
