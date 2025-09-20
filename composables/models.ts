@@ -178,6 +178,7 @@ export namespace UsersModel {
     lookingFor?: string[];
     ethnicity?: string[];
     heightUnits?: string[];
+    genders?: string[];
   }
 
   export class ActivateUserRequestModel {

@@ -60,10 +60,17 @@
             </div>
           </div>
 
-           <div class="form-group ">
+          <div class="form-group ">
+            <label>Select Gender</label>
+            <Multiselect v-model="gender" :options="allOptions.genders" :multiple="false" :close-on-select="true"
+              placeholder="Select Gender" :disabled="is_gender_disabled" />
+          </div>
+
+          <div class="form-group ">
             <label>Town/City</label>
-            <Multiselect v-model="selectedTown" :options="allTowns" :multiple="false"
-              :close-on-select="true" placeholder="Select Town" :loading="is_town_loading"   @search-change="fetchTowns" label="town" track_by="town_id" />
+            <Multiselect v-model="selectedTown" :options="allTowns" :multiple="false" :close-on-select="true"
+              placeholder="Select Town" :loading="is_town_loading" @search-change="fetchTowns" label="town"
+              track_by="town_id" />
           </div>
 
           <div class="form-group ">
@@ -95,7 +102,7 @@
             <label>Sexual Interest</label>
             <Multiselect v-model="sexualInterest" :options="allOptions.interests" track-by="interest_id"
               label="interest_name" :multiple="true" class="custom-multiselect" :close-on-select="false"
-              placeholder="Select Sexual Interest" :reduce="(opt : any) => opt.interest_id" />
+              placeholder="Select Sexual Interest" :reduce="(opt: any) => opt.interest_id" />
           </div>
 
           <!-- Meet Preference (Checkboxes) -->
@@ -103,14 +110,14 @@
             <label>Meet Preference</label>
             <Multiselect v-model="meetPreference" :options="allOptions.meetPerferences" track-by="meet_preference_id"
               label="preference_name" :multiple="true" :close-on-select="false" placeholder="Select Meet Preference"
-              :reduce="(opt : any) => opt.meet_preference_id" />
+              :reduce="(opt: any) => opt.meet_preference_id" />
           </div>
 
           <!-- Meet Preference (Checkboxes) -->
           <div class="form-group">
             <label>Looking For</label>
             <Multiselect v-model="lookingFor" :options="allOptions.lookingFor" :multiple="true" :close-on-select="false"
-              placeholder="Select Looking For"  />
+              placeholder="Select Looking For" />
           </div>
 
           <div class="form-group">
@@ -149,6 +156,11 @@
                 </option>
               </select>
             </div>
+            <div class="form-group ">
+              <label>Select Partner Gender</label>
+              <Multiselect v-model="partner_gender" :options="allOptions.genders" :multiple="false" :close-on-select="true"
+                placeholder="Select Partner Gender" :disabled="is_gender_disabled" />
+            </div>
             <div class="form-group">
               <label>Partner Ethnicity</label>
               <Multiselect v-model="partner_ethnicity" :options="allOptions.ethnicity" :multiple="false"
@@ -182,15 +194,11 @@
 
           </div>
 
-           <div class="form-group">
+          <div class="form-group">
             <div class="rememberchk">
               <div class="checkbox-wrapper">
-                <input
-                  type="checkbox"
-                  id="gridCheck1"
-                  name="confirmAge"
-                  class="form-check-input custom-theme-checkbox"
-                />
+                <input type="checkbox" id="gridCheck1" name="confirmAge"
+                  class="form-check-input custom-theme-checkbox" />
                 <label class="form-check-label ps-4 text-white" for="gridCheck1">
                   I confirm that I am 18 years or older
                 </label>
@@ -202,17 +210,13 @@
           <div class="form-group">
             <div class="rememberchk">
               <div class="checkbox-wrapper">
-              <input
-                type="checkbox"
-                id="gridCheck2"
-                name="agreeTerms"
-                class="form-check-input custom-theme-checkbox"
-              />
-              <label class="form-check-label ps-4 text-white" for="gridCheck2">
-                I agree to the
-                <nuxt-link to="/terms">Terms & Conditions</nuxt-link> and
-                <nuxt-link to="/privacy">Privacy Policy</nuxt-link>, and confirm that I am 18 years or older
-              </label>
+                <input type="checkbox" id="gridCheck2" name="agreeTerms"
+                  class="form-check-input custom-theme-checkbox" />
+                <label class="form-check-label ps-4 text-white" for="gridCheck2">
+                  I agree to the
+                  <nuxt-link to="/terms">Terms & Conditions</nuxt-link> and
+                  <nuxt-link to="/privacy">Privacy Policy</nuxt-link>, and confirm that I am 18 years or older
+                </label>
               </div>
             </div>
             <ErrorMessage name="agreeTerms" class="text-danger small" />
@@ -292,6 +296,9 @@ const is_nick_valid = ref(false);
 
 const cmToInch = 0.393701;
 
+const gender = ref('');
+const partner_gender = ref('');
+const is_gender_disabled = ref(true);
 // Arrays to hold values
 let cmArray: number[] = [];
 let feetArray: number[] = [];
@@ -358,27 +365,26 @@ function getBodyType(): string[] {
   return bodyTypes
 }
 
-function fetchTowns(query:string) 
-{
+function fetchTowns(query: string) {
   if (query.length === 0) {
     allTowns.value = []
     return;
   }
- let api_url = getUrl(RequestURL.fetchTowns);
+  let api_url = getUrl(RequestURL.fetchTowns);
   is_town_loading.value = true;
   allTowns.value = []
   $fetch<SuccessError<UsersModel.SignUpResponseModel>>(api_url, {
     method: 'POST',
-    body: {"search":query},
+    body: { "search": query },
     headers: {
       'Content-Type': 'application/json',
     },
   }).then((response) => {
-  
+
     if (response.success) {
-     allTowns.value = (response.result ?? []) as UsersModel.FetchTownResponseModel[] 
-    } 
-     is_town_loading.value = false;
+      allTowns.value = (response.result ?? []) as UsersModel.FetchTownResponseModel[]
+    }
+    is_town_loading.value = false;
   }).catch((error) => {
     is_town_loading.value = false;
   });
@@ -386,7 +392,7 @@ function fetchTowns(query:string)
 
 function usersignup() {
 
-  
+
 
   if (!checkValidation() || is_signup_loading.value) {
     return;
@@ -395,10 +401,9 @@ function usersignup() {
   const unit = height_unit.value ?? ""
   let height = cm_height.value.toString() ?? ""
   let partner_height = partner_cm_height.value.toString() ?? ""
-  if (unit !== 'cm') 
-  {
-    
-   const f = feet_height.value ?? '0'
+  if (unit !== 'cm') {
+
+    const f = feet_height.value ?? '0'
     const i = inch_height.value ?? '0'
     const concat = f + '.' + i
     const f_i = parseFloat(concat)
@@ -411,7 +416,7 @@ function usersignup() {
 
     partner_height = convertToCm(p_f_i).toString()
   }
- const town_id = selectedTown.value?.town_id ?? 0
+  const town_id = selectedTown.value?.town_id ?? 0
   let request_mdoel = {
     profile_type: profileType.value,
     nick_name: nickName.value,
@@ -434,10 +439,12 @@ function usersignup() {
     height_unit: height_unit.value,
     height: height,
     partner_height: partner_height,
-    town_id : town_id,
-    device_id : ""
+    town_id: town_id,
+    device_id: "",
+    gender: gender.value,
+    partner_gender: partner_gender.value
   } as UsersModel.SignUpRequestModel
-  
+
   let api_url = getUrl(RequestURL.signup);
   is_signup_loading.value = true;
   $fetch<SuccessError<UsersModel.SignUpResponseModel>>(api_url, {
@@ -451,7 +458,7 @@ function usersignup() {
     if (response.success) {
       showalert('Signup successful! Please check your email to verify your account.', true);
       // Optionally, redirect to login page or clear form
-        reloadNuxtApp({
+      reloadNuxtApp({
         path: "/authentication/login",
         ttl: 1000
       })
@@ -479,6 +486,16 @@ for (let feet = 4; feet <= 8; feet++) {
 for (let inch = 0; inch <= 11; inch++) {
   inchesArray.push(inch);
 }
+watch(profileType, () => {
+  gender.value = ''
+  partner_gender.value = ''
+  is_gender_disabled.value = false
+  if (profileType.value === 'Man' || profileType.value === 'Woman') {
+    gender.value = profileType.value
+    is_gender_disabled.value = true
+  }
+
+});
 
 function checkValidation(): boolean {
   const profiletype = profileType.value.trim();
@@ -533,7 +550,11 @@ function checkValidation(): boolean {
     showalert('Please select sexual orientation');
     return false;
   }
-   else if (town_id === 0) {
+  else if ((gender.value ?? '').length === 0) {
+    showalert('Please select gender');
+    return false;
+  }
+  else if (town_id === 0) {
     showalert('Please select town');
     return false;
   }
@@ -594,6 +615,10 @@ function checkValidation(): boolean {
   }
   else if (profileType.value === 'Couple' && (partnerSexualOrientation.value ?? '').trim().length === 0) {
     showalert('Please select partner sexual orientation');
+    return false;
+  }
+  else if (profileType.value === 'Couple' && (partner_gender.value ?? '').trim().length === 0) {
+    showalert('Please select partner gender');
     return false;
   }
   else if (profileType.value === 'Couple' && (partner_ethnicity.value ?? '').trim().length === 0) {
