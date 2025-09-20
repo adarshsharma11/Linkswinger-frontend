@@ -44,7 +44,7 @@
           v-model="acceptedTerms"
         />
         18+ only · By continuing you agree to our 
-        <a href="#" class="text-decoration-underline text-white ms-1">Terms & Privacy</a>
+        <nuxt-link to="/terms" class="text-decoration-underline text-white ms-1">Terms & Privacy</nuxt-link>
       </p>
 
       <div class="d-flex justify-content-center align-items-center gap-3 my-4 flex-wrap">
