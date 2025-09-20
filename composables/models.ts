@@ -225,6 +225,8 @@ export namespace UsersModel {
     body_type?: string;
     partner_body_type?: string;
     town?: string;
+      interests?: InterestsModel[];
+    meet_perferences?: MeetPreferencesModel[];
   }
   
 }

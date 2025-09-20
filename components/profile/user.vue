@@ -148,7 +148,7 @@
           <div class="card bg-black text-white">
             <div class="card-body">
               <h5 class="text-white mb-3">Meet Preferences</h5>
-              <p>Coffee, Drinks, Travel, Parties</p>
+              <p>{{login_store.getUserDetails?.meet_perferences?.map(it => it.preference_name).join(',')}}</p>
             </div>
           </div>
         </div>
@@ -163,10 +163,7 @@
             experiences and meeting amazing people is what excites me!
           </p>
           <div class="d-flex gap-2 flex-wrap">
-            <span class="badge bg-secondary">Travel</span>
-            <span class="badge bg-secondary">Fitness</span>
-            <span class="badge bg-secondary">Photography</span>
-            <span class="badge bg-secondary">Wine</span>
+            <span v-for="interest in login_store.getUserDetails?.interests" class="badge bg-secondary">{{interest.interest_name}}</span>
           </div>
         </div>
       </div>
