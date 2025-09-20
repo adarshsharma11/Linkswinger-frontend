@@ -31,7 +31,7 @@
       <div class="d-flex justify-content-center gap-3 mb-5 flex-wrap" v-if="!loading">
         <nuxt-link
           v-if="verified"
-          to="/login"
+          to="/authentication/login"
           class="btn bg-theme-color btn-lg fw-bold"
         >
           Go to Login
