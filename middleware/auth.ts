@@ -22,7 +22,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
                 }
             });
             if (error.value != null) {
-                return nuxtApp.runWithContext(() => navigateTo('/'))
+              //  return nuxtApp.runWithContext(() => navigateTo('/profile'))
             }
             else {
                 login_store.setUserDetails(profile.value?.response)

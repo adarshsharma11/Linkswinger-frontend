@@ -17,7 +17,7 @@
 
           <!-- Center: User Info -->
           <div class="col-12 col-md-6 text-center">
-            <h3 class="mb-2 text-white fs-4 fs-md-3">Alex, Man 32 from London</h3>
+            <h3 class="mb-2 text-white fs-4 fs-md-3">{{ login_store.getUserDetails?.nick_name }}, Man 32 from London</h3>
             <span class="badge bg-success fs-6">Active</span>
           </div>
 
@@ -125,7 +125,7 @@
             <div class="card-body">
               <h5 class="text-white mb-3">Partner Information</h5>
               <ul class="list-unstyled mb-0 info-list">
-                <li><strong>Nickname:</strong> Olivia</li>
+                <li><strong>Nickname:</strong> {{ login_store.getUserDetails?.nick_name }}</li>
                 <li><strong>Gender:</strong> Female</li>
                 <li><strong>Orientation:</strong> Bisexual</li>
                 <li><strong>Height:</strong> 5ft 6in</li>
@@ -139,10 +139,10 @@
             <div class="card-body">
               <h5 class="text-white mb-3">Account Details</h5>
               <ul class="list-unstyled mb-0 info-list">
-                <li><strong>Email:</strong> alex@example.com</li>
+                <li><strong>Email:</strong>{{ login_store.getUserDetails?.email }}</li>
                 <li><strong>Password:</strong> ••••••••</li>
-                <li><strong>Date of Birth:</strong> 12 Jan 1996</li>
-                <li><strong>Membership:</strong> Elite</li>
+                <li><strong>Date of Birth:</strong>{{ login_store.getUserDetails?.dob }}</li>
+                <li><strong>Membership:</strong> None</li>
               </ul>
             </div>
           </div>
@@ -178,7 +178,24 @@
 import type { UsersModel } from '~/composables/models';
 
 const user_store = userStore()
+const login_store = useLoginStore();
 const is_logout_loading = ref(false);
+
+function getAge(dobStr: string): number {
+  const dob = new Date(dobStr);
+  const today = new Date();
+  let age = today.getFullYear() - dob.getFullYear();
+  const monthDiff = today.getMonth() - dob.getMonth();
+  const dayDiff = today.getDate() - dob.getDate();
+
+  // If birthday hasn't happened yet this year, subtract 1
+  if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
+    age--;
+  }
+
+  return age;
+}
+
 
 async function logout() {
 
@@ -200,17 +217,16 @@ async function logout() {
       },
     }
   );
+
   is_logout_loading.value = false;
   if (response.success) {
     let socketmodel = new OnlineSocketModel()
     socketmodel.event_name = "logoutself"
-    sendmsgtoworker(socketmodel,true)
+    sendmsgtoworker(socketmodel, true)
   }
   else {
     showToastError("Logout failed. Please try again.");
   }
-
-
 }
 
 </script>

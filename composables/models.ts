@@ -200,15 +200,30 @@ export namespace UsersModel {
   }
    export class ProfileDetailsResponseModel {
     user_id?: number;
-    first_name?: string;
-    last_name?: string;
+    user_udid?: string;
     nick_name?: string;
     email?: string;
-    password?: string;
     profile_image?: string;
     profile_type?: string;
     user_type?: string;
     is_email_confirmed?: boolean;
+    dob?: string;
+    is_dob_changed?: boolean;
+    orientation?: string;
+    partner_nick_name?: string;
+    partner_profile_image?: string;
+    partner_orientation?: string;
+    partner_dob?: string;
+    is_partner_dob_changed?: boolean;
+    height_unit?: string;
+    height?: string;
+    partner_height?: string;
+    looking_for?: string[];
+    town_id?: number;
+    ethnicity?: string;
+    partner_ethnicity?: string;
+    body_type?: string;
+    partner_body_type?: string;
   }
   
 }
