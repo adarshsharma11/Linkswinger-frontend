@@ -224,6 +224,7 @@ export namespace UsersModel {
     partner_ethnicity?: string;
     body_type?: string;
     partner_body_type?: string;
+    town?: string;
   }
   
 }

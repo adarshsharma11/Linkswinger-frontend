@@ -17,7 +17,7 @@
 
           <!-- Center: User Info -->
           <div class="col-12 col-md-6 text-center">
-            <h3 class="mb-2 text-white fs-4 fs-md-3">{{ login_store.getUserDetails?.nick_name }}, {{login_store.getUserDetails?.profile_type}} {{getAge(login_store.getUserDetails?.dob ?? '')}} from London</h3>
+            <h3 class="mb-2 text-white fs-4 fs-md-3">{{ login_store.getUserDetails?.nick_name }}, {{login_store.getUserDetails?.profile_type}} {{getAge(login_store.getUserDetails?.dob ?? '')}} from {{login_store.getUserDetails?.town ?? ''}}</h3>
             <span class="badge bg-success fs-6">Active</span>
           </div>
 
@@ -112,26 +112,25 @@
               <h5 class="text-white mb-3">Personal Information</h5>
               <ul class="list-unstyled mb-0 info-list">
                 <li><strong>Gender:</strong> Male</li>
-                <li><strong>Orientation:</strong> Straight</li>
-                <li><strong>Looking for:</strong> Friendship, Casual, Networking</li>
-                <li><strong>Height:</strong> 5ft 10in</li>
-                <li><strong>Ethnicity:</strong> Asian</li>
-                <li><strong>Body Type:</strong> Athletic</li>
-                <li><strong>Town:</strong> New York</li>
+                <li><strong>Orientation:</strong> {{ login_store.getUserDetails?.orientation }}</li>
+                <li><strong>Looking for:</strong> {{ login_store.getUserDetails?.looking_for?.join(',') }}</li>
+                <li><strong>Height:</strong> {{getHeight()}}</li>
+                <li><strong>Ethnicity:</strong> {{ login_store.getUserDetails?.ethnicity}}</li>
+                <li><strong>Body Type:</strong> {{ login_store.getUserDetails?.body_type}}</li>
+                <li><strong>Town:</strong> {{ login_store.getUserDetails?.town}}</li>
               </ul>
             </div>
           </div>
-          <div class="card bg-black text-white">
+          <div class="card bg-black text-white" v-if="login_store.getUserDetails?.profile_type === 'Couple'">
             <div class="card-body">
               <h5 class="text-white mb-3">Partner Information</h5>
               <ul class="list-unstyled mb-0 info-list">
-                <li><strong>Nickname:</strong> {{ login_store.getUserDetails?.nick_name }}</li>
-                <li><strong>Gender:</strong> Female</li>
-                <li><strong>Orientation:</strong> Bisexual</li>
-                <li><strong>Height:</strong> 5ft 6in</li>
-                <li><strong>Ethnicity:</strong> Caucasian</li>
-                <li><strong>Body Type:</strong> Slim</li>
-                <li><strong>Town:</strong> Los Angeles</li>
+                <li><strong>Nickname:</strong> {{ login_store.getUserDetails?.partner_nick_name }}</li>
+                <li><strong>Gender:</strong> {{ login_store.getUserDetails?.partner_nick_name }}</li>
+                <li><strong>Orientation:</strong> {{ login_store.getUserDetails?.partner_orientation }}</li>
+                <li><strong>Height:</strong>{{ getPartnerHeight() }}</li>
+                <li><strong>Ethnicity:</strong> {{ login_store.getUserDetails?.ethnicity }}</li>
+                <li><strong>Body Type:</strong> {{ login_store.getUserDetails?.body_type }}</li>
               </ul>
             </div>
           </div>
@@ -195,7 +194,32 @@ function getAge(dobStr: string): number {
 
   return age;
 }
-
+function getHeight(): string 
+{
+  let height = login_store.getUserDetails?.height ?? ''
+  let height_unit = login_store.getUserDetails?.height_unit ?? 'cm'
+  if (height_unit === 'cm') {
+    return height + ' cm'
+  }
+  else {
+    let parseHeight = parseFloat(height)
+    let feet_inch = convertToInches(parseHeight)
+    return feet_inch.feet + 'ft ' + feet_inch.inches + 'in'
+  }
+}
+function getPartnerHeight(): string 
+{
+  let height = login_store.getUserDetails?.partner_height ?? ''
+  let height_unit = login_store.getUserDetails?.height_unit ?? 'cm'
+  if (height_unit === 'cm') {
+    return height + ' cm'
+  }
+  else {
+    let parseHeight = parseFloat(height)
+    let feet_inch = convertToInches(parseHeight)
+    return feet_inch.feet + 'ft ' + feet_inch.inches + 'in'
+  }
+}
 
 async function logout() {
 

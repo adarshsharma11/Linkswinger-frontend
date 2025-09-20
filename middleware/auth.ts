@@ -11,24 +11,26 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
         const login_store = useLoginStore();
         if (login_store.getUserDetails === null) {
             const api_url = getUrl(RequestURL.getProfileDetails)
-            const { data: profile, error: error } = await useFetch<SuccessError<UsersModel.ProfileDetailsResponseModel>>(api_url, {
-                cache: "no-cache",
-                method: "post",
-                body: {
-                    "user_id": user_store.getLoginId,
-                },
-                headers: {
-                    "content-type": "application/json"
+            try {
+               const response = await $fetch<SuccessError<UsersModel.ProfileDetailsResponseModel>>(api_url, {
+                    cache: "no-cache",
+                    method: "post",
+                    body: {
+                        "user_id": user_store.getLoginId,
+                    },
+                    headers: {
+                        "content-type": "application/json"
+                    }
+                });
+                if (response.success) {
+                    login_store.setUserDetails(response.response)
                 }
-            });
-            if (error.value != null) {
-              //  return nuxtApp.runWithContext(() => navigateTo('/profile'))
             }
-            else {
-                login_store.setUserDetails(profile.value?.response)
+            catch (error) {
+                console.error("Login failed:", error);
             }
         }
-       
+
 
     }
 })
