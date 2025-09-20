@@ -1,14 +1,15 @@
 <template>
   <section class="bg-darker text-white min-vh-100 d-flex flex-column justify-content-center">
     <!-- Top Red Strip -->
-    <div class="w-100 bg-theme-color" style="height: 70px;"></div>
+    <div class="w-100 bg-theme-color fixed-top" style="height: 70px;"></div>
 
-    <div class="container text-center py-5">
-      <div class="row justify-content-center landing-logo">
-         <nuxt-link to="/">
-            <img class="img-fluid" src="/images/logo/landing-logo.gif" alt="logo" />
-          </nuxt-link>
+    <div class="container text-center py-5 mt-4">
+      <div class="row justify-content-center landing-logo mt-4">
+        <nuxt-link to="/">
+          <img class="img-fluid" src="/images/logo/landing-logo.gif" alt="logo" />
+        </nuxt-link>
       </div>
+
       <!-- Title -->
       <h1 class="fw-bold display-5 mb-3 position-relative d-inline-block text-white">
         Welcome to LinkSwingers (LS)
@@ -19,26 +20,48 @@
 
       <!-- Buttons -->
       <div class="d-flex justify-content-center gap-3 mb-3 flex-wrap">
-        <nuxt-link 
-          to="/authentication/signup" 
+        <button 
+          @click="goToSignup"
           class="btn bg-theme-color btn-lg fw-bold"
         >
           Sign up free
-        </nuxt-link>
+        </button>
 
-        <nuxt-link 
-          to="/authentication/login" 
+        <button 
+          @click="goToLogin"
           class="btn btn-lg bg-success text-white"
         >
           Log in
-        </nuxt-link>
+        </button>
       </div>
 
       <!-- Small note -->
       <p class="small text-white-50 mb-5">
+        <input
+          class="form-check-input me-2"
+          type="checkbox"
+          id="termsCheck"
+          v-model="acceptedTerms"
+        />
         18+ only · By continuing you agree to our 
         <a href="#" class="text-decoration-underline text-white">Terms & Privacy</a>
       </p>
+
+      <div class="d-flex justify-content-center align-items-center gap-3 my-4">
+            <img src="/images/badges/18-plus.png" alt="Chat" class="badge-icon" />
+            <img src="/images/badges/chat.png" alt="Call" class="badge-icon" />
+            <img src="/images/badges/call.png" alt="Video" class="badge-icon" />
+            <img src="/images/badges/video-call.png" alt="Like" class="badge-icon" />
+            <img src="/images/badges/video-roulette-available.png" alt="Photo" class="badge-icon" />
+            <img src="/images/badges/location.png" alt="Elite" class="badge-icon" />
+            <img src="/images/badges/elite.png" alt="VIP" class="badge-icon" />
+      </div>
+
+       <div class="d-flex justify-content-center align-items-center mb-4">
+           <h4 class="text-success">
+            <strong>Meets. Chats. Private calls. Video roulette. Club events. All in one place.</strong>
+           </h4>
+      </div>
 
       <!-- Join the community -->
       <div class="text-start mx-auto" style="max-width: 800px;">
@@ -62,6 +85,26 @@
   </section>
 </template>
 
-<script>
-export default {};
+<script setup lang="ts">
+import { useRouter } from 'vue-router';
+import { showToastError } from '~/utils/toast';
+
+const router = useRouter();
+const acceptedTerms = ref(false);
+
+function goToSignup() {
+  if (!acceptedTerms.value) {
+    showToastError("You must accept Terms & Privacy to continue.");
+    return;
+  }
+  router.push('/authentication/signup');
+}
+
+function goToLogin() {
+  if (!acceptedTerms.value) {
+    showToastError("You must accept Terms & Privacy to continue.");
+    return;
+  }
+  router.push('/authentication/login');
+}
 </script>

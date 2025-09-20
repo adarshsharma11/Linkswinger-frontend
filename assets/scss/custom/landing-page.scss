@@ -2,18 +2,23 @@
 .title-underline {
   display: block;
   height: 4px;
-  width: 90%;
+  width: 20%;
   margin: 8px auto 0;
-  background: $gradient-bg-color;
+  background: linear-gradient(90deg, #800020, #E50914);
+  border-radius: 2px;
   position: relative;
-  animation: moveLine 2s infinite linear;
+  animation: moveLine 8s infinite linear alternate;
 }
 
 @keyframes moveLine {
-  0% { transform: translateX(-20px); }
-  50% { transform: translateX(20px); }
-  100% { transform: translateX(-20px); }
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
 }
+
 
 .bg-theme-color {
   background: $gradient-bg-color;
