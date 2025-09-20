@@ -17,7 +17,7 @@
 
           <!-- Center: User Info -->
           <div class="col-12 col-md-6 text-center">
-            <h3 class="mb-2 text-white fs-4 fs-md-3">{{ login_store.getUserDetails?.nick_name }}, Man 32 from London</h3>
+            <h3 class="mb-2 text-white fs-4 fs-md-3">{{ login_store.getUserDetails?.nick_name }}, {{login_store.getUserDetails?.profile_type}} {{getAge(login_store.getUserDetails?.dob ?? '')}} from London</h3>
             <span class="badge bg-success fs-6">Active</span>
           </div>
 
