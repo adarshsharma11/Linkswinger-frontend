@@ -38,23 +38,27 @@
       <!-- Small note -->
       <p class="small text-white-50 mb-5">
         <input
-          class="form-check-input me-2"
+          class="form-check-input me-2 custom-theme-checkbox"
           type="checkbox"
           id="termsCheck"
           v-model="acceptedTerms"
         />
         18+ only · By continuing you agree to our 
-        <a href="#" class="text-decoration-underline text-white">Terms & Privacy</a>
+        <a href="#" class="text-decoration-underline text-white ms-1">Terms & Privacy</a>
       </p>
 
-      <div class="d-flex justify-content-center align-items-center gap-3 my-4">
-            <img src="/images/badges/18-plus.png" alt="Chat" class="badge-icon" />
-            <img src="/images/badges/chat.png" alt="Call" class="badge-icon" />
-            <img src="/images/badges/call.png" alt="Video" class="badge-icon" />
-            <img src="/images/badges/video-call.png" alt="Like" class="badge-icon" />
-            <img src="/images/badges/video-roulette-available.png" alt="Photo" class="badge-icon" />
-            <img src="/images/badges/location.png" alt="Elite" class="badge-icon" />
-            <img src="/images/badges/elite.png" alt="VIP" class="badge-icon" />
+      <div class="d-flex justify-content-center align-items-center gap-3 my-4 flex-wrap">
+        <div class="d-flex gap-3 justify-content-center">
+            <img src="/images/badges/18-plus.png" alt="Chat" />
+            <img src="/images/badges/chat.png" alt="Call" />
+            <img src="/images/badges/call.png" alt="Video" />
+            <img src="/images/badges/video-call.png" alt="Like" />
+        </div>
+        <div class="d-flex gap-3 justify-content-center">
+            <img src="/images/badges/video-roulette-available.png" alt="Photo" />
+            <img src="/images/badges/location.png" alt="Elite" />
+            <img src="/images/badges/elite.png" alt="VIP" />
+        </div>
       </div>
 
        <div class="d-flex justify-content-center align-items-center mb-4">
