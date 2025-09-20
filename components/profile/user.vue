@@ -2,13 +2,34 @@
   <section class="profile-page bg-dark text-white min-vh-100 py-4">
     <div class="container">
       <!-- Header -->
-      <!-- Header -->
       <div class="profile-header container-fluid px-3 px-md-4">
         <!-- First Row -->
         <div class="row gy-3 align-items-center">
+          <!-- Mobile Settings Menu -->
+          <div class="col-12 d-md-none mb-2">
+            <div class="dropdown d-flex justify-content-end">
+              <button id="settingsMenuMobile" class="btn p-0 border-0 bg-transparent" data-bs-toggle="dropdown"
+                aria-expanded="false">
+                <img src="/images/badges/settings.png" alt="Settings" class="rounded-circle"
+                  style="width: 40px; height: 40px; object-fit: cover" />
+              </button>
+              <ul class="dropdown-menu dropdown-menu-end bg-dark text-white" aria-labelledby="settingsMenuMobile">
+                <li>
+                  <button class="dropdown-item text-white d-flex align-items-center" @click="logout"
+                    :disabled="is_logout_loading">
+                    <img src="/images/badges/logout.png" alt="Logout" class="rounded-circle me-2"
+                      style="width: 30px; height: 30px; object-fit: cover" />
+                    <span class="text-white">Logout</span>
+                    <span class="btn-loader ms-2" v-if="is_logout_loading"></span>
+                  </button>
+                </li>
+              </ul>
+            </div>
+          </div>
+
           <!-- Left: Avatar + Badge -->
           <div class="col-12 col-md-3 d-flex justify-content-center justify-content-md-start">
-            <div class="d-flex flex-column align-items-center align-items-md-start">
+            <div class="d-flex flex-column align-items-center">
               <img src="/images/avtar/1.jpg" alt="Profile" class="rounded-circle mb-2"
                 style="width: 90px; height: 90px; object-fit: cover" />
               <span class="badge bg-theme-color fs-6 mt-2">Elite</span>
@@ -17,19 +38,18 @@
 
           <!-- Center: User Info -->
           <div class="col-12 col-md-6 text-center">
-            <h3 class="mb-2 text-white fs-4 fs-md-3">{{ login_store.getUserDetails?.nick_name }}, {{login_store.getUserDetails?.profile_type}} {{getAge(login_store.getUserDetails?.dob ?? '')}} from {{login_store.getUserDetails?.town ?? ''}}</h3>
+            <h3 class="mb-2 text-white fs-5 fs-md-4">{{ login_store.getUserDetails?.nick_name }}, {{login_store.getUserDetails?.profile_type}} {{getAge(login_store.getUserDetails?.dob ?? '')}} from {{login_store.getUserDetails?.town ?? ''}}</h3>
             <span class="badge bg-success fs-6">Active</span>
           </div>
 
-          <!-- Right: Settings Dropdown -->
-          <div class="col-12 col-md-3 d-flex justify-content-center justify-content-md-end">
+          <!-- Right: Settings Dropdown (Desktop only) -->
+          <div class="col-md-3 d-none d-md-flex justify-content-end">
             <div class="dropdown">
               <button id="settingsMenu" class="btn p-0 border-0 bg-transparent" data-bs-toggle="dropdown"
                 aria-expanded="false">
                 <img src="/images/badges/settings.png" alt="Settings" class="rounded-circle"
                   style="width: 50px; height: 50px; object-fit: cover" />
               </button>
-
               <ul class="dropdown-menu dropdown-menu-end bg-dark text-white mt-2" aria-labelledby="settingsMenu">
                 <li>
                   <button class="dropdown-item text-white d-flex align-items-center" @click="logout"
@@ -46,10 +66,10 @@
         </div>
 
         <!-- Second Row: Membership + Actions -->
-        <div class="row gy-3 align-items-center mb-2">
+        <div class="row gy-3 align-items-center mb-2 mt-3">
           <!-- Left: Membership badges -->
           <div class="col-12 col-md-3 d-flex justify-content-center justify-content-md-start">
-            <div class="d-flex gap-2 flex-wrap">
+            <div class="d-flex gap-2 flex-wrap justify-content-center">
               <img src="/images/badges/elite.png" alt="Elite" class="badge-icon" />
               <img src="/images/badges/basic-plus.png" alt="Gold" class="badge-icon" />
               <img src="/images/badges/photo-verified.png" alt="Silver" class="badge-icon" />
@@ -57,8 +77,8 @@
           </div>
 
           <!-- Center: Action icons -->
-          <div class="col-12 col-md-6 d-flex justify-content-center">
-            <div class="d-flex gap-4 flex-wrap text-center">
+          <div class="col-12 col-md-6">
+            <div class="d-flex gap-3 gap-md-4 flex-wrap justify-content-center">
               <div class="d-flex flex-column align-items-center">
                 <img src="/images/badges/chat.png" alt="Chat" class="badge-icon" />
                 <small>Chat</small>
@@ -82,8 +102,8 @@
             </div>
           </div>
 
-          <!-- Right: Empty spacer (keeps alignment with header row) -->
-          <div class="col-12 col-md-3 d-flex justify-content-center justify-content-md-end"></div>
+          <!-- Right: Empty spacer (desktop only) -->
+          <div class="col-md-3 d-none d-md-block"></div>
         </div>
       </div>
 
