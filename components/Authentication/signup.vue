@@ -393,7 +393,7 @@ function usersignup() {
     meet_preference_ids: meetPreference.value.map(p => p.meet_preference_id),
     ethnicity: ethnicity.value,
     partner_ethnicity: partner_ethnicity.value,
-    lookingFor: lookingFor.value.map(l => l),
+    looking_for: lookingFor.value.map(l => l),
     body_type: body_type.value,
     partner_body_type: partner_body_type.value,
     height_unit: height_unit.value,
