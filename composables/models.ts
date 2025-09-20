@@ -227,6 +227,8 @@ export namespace UsersModel {
     town?: string;
       interests?: InterestsModel[];
     meet_perferences?: MeetPreferencesModel[];
+    gender?:string
+     partner_gender?:string
   }
   
 }

@@ -111,7 +111,7 @@
             <div class="card-body">
               <h5 class="text-white mb-3">Personal Information</h5>
               <ul class="list-unstyled mb-0 info-list">
-                <li><strong>Gender:</strong> Male</li>
+                <li><strong>Gender:</strong> {{login_store.getUserDetails?.gender}}</li>
                 <li><strong>Orientation:</strong> {{ login_store.getUserDetails?.orientation }}</li>
                 <li><strong>Looking for:</strong> {{ login_store.getUserDetails?.looking_for?.join(',') }}</li>
                 <li><strong>Height:</strong> {{getHeight()}}</li>
@@ -126,7 +126,7 @@
               <h5 class="text-white mb-3">Partner Information</h5>
               <ul class="list-unstyled mb-0 info-list">
                 <li><strong>Nickname:</strong> {{ login_store.getUserDetails?.partner_nick_name }}</li>
-                <li><strong>Gender:</strong> {{ login_store.getUserDetails?.partner_nick_name }}</li>
+                <li><strong>Gender:</strong> {{ login_store.getUserDetails?.partner_gender }}</li>
                 <li><strong>Orientation:</strong> {{ login_store.getUserDetails?.partner_orientation }}</li>
                 <li><strong>Height:</strong>{{ getPartnerHeight() }}</li>
                 <li><strong>Ethnicity:</strong> {{ login_store.getUserDetails?.ethnicity }}</li>
