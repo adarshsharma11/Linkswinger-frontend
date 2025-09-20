@@ -521,51 +521,51 @@ function checkValidation(): boolean {
     return false;
   }
 
-  else if (sexualInterest.value.length === 0) {
+  else if ((sexualInterest.value ?? []).length === 0) {
     showalert('Please select sexual interest');
     // toDate((item.created_at ?? ''),'yyyy-MM-dd')?.toISOString().split('T')[0] }}
     return false;
   }
-  else if (meetPreference.value.length === 0) {
+  else if ((meetPreference.value ?? []).length === 0) {
     showalert('Please select meet preference');
     // toDate((item.created_at ?? ''),'yyyy-MM-dd')?.toISOString().split('T')[0] }}
     return false;
   }
 
-  else if (lookingFor.value.length === 0) {
+  else if ((lookingFor.value ?? []).length === 0) {
     showalert('Please select looking for');
     // toDate((item.created_at ?? ''),'yyyy-MM-dd')?.toISOString().split('T')[0] }}
     return false;
   }
 
-  else if (ethnicity.value.length === 0) {
+  else if ((ethnicity.value ?? '').trim().length === 0) {
     showalert('Please select ethnicity');
     // toDate((item.created_at ?? ''),'yyyy-MM-dd')?.toISOString().split('T')[0] }}
     return false;
   }
-  else if (body_type.value.length === 0) {
+  else if ((body_type.value ?? '').trim().length === 0) {
     showalert('Please select body type');
     // toDate((item.created_at ?? ''),'yyyy-MM-dd')?.toISOString().split('T')[0] }}
     return false;
   }
 
-  else if (profileType.value === 'Couple' && partnerNickName.value.trim().length === 0) {
+  else if (profileType.value === 'Couple' && (partnerNickName.value ?? '').trim().length === 0) {
     showalert('Please enter partner nickname');
     return false;
   }
-  else if (profileType.value === 'Couple' && partnerDob.value.length === 0) {
+  else if (profileType.value === 'Couple' && (partnerDob.value ?? '').length === 0) {
     showalert('Please enter partner date of birth');
     return false;
   }
-  else if (profileType.value === 'Couple' && partnerSexualOrientation.value.trim().length === 0) {
+  else if (profileType.value === 'Couple' && (partnerSexualOrientation.value ?? '').trim().length === 0) {
     showalert('Please select partner sexual orientation');
     return false;
   }
-  else if (profileType.value === 'Couple' && partner_ethnicity.value.trim().length === 0) {
+  else if (profileType.value === 'Couple' && (partner_ethnicity.value ?? '').trim().length === 0) {
     showalert('Please select partner ethnicity');
     return false;
   }
-  else if (profileType.value === 'Couple' && partner_body_type.value.trim().length === 0) {
+  else if (profileType.value === 'Couple' && (partner_body_type.value ?? '').trim().length === 0) {
     showalert('Please select partner body type');
     return false;
   }
