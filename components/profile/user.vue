@@ -50,14 +50,25 @@
                 <img src="/images/badges/settings.png" alt="Settings" class="rounded-circle"
                   style="width: 50px; height: 50px; object-fit: cover" />
               </button>
-              <ul class="dropdown-menu dropdown-menu-end bg-dark text-white mt-2" aria-labelledby="settingsMenu">
+              <ul class="dropdown-menu dropdown-menu-end bg-dark text-white" aria-labelledby="settingsMenu">
+              <li>
+              <button
+                class="dropdown-item text-white d-flex align-items-center"
+                data-bs-toggle="modal"
+                data-bs-target="#photoVerificationModal"
+              >
+                <img src="/images/badges/photo-verified.png" alt="Verify" class="rounded-circle me-2"
+                  style="width: 30px; height: 30px; object-fit: cover" />
+                <span class="text-white">Verify Photo</span>
+              </button>
+              </li>
                 <li>
                   <button class="dropdown-item text-white d-flex align-items-center" @click="logout"
                     :disabled="is_logout_loading">
                     <img src="/images/badges/logout.png" alt="Logout" class="rounded-circle me-2"
                       style="width: 30px; height: 30px; object-fit: cover" />
                     <span class="text-white">Logout</span>
-                    <span class="btn-loader ms-2" v-if="is_logout_loading"></span>
+                    <span class="tbtn-loader ms-2" v-if="is_logout_loading"></span>
                   </button>
                 </li>
               </ul>

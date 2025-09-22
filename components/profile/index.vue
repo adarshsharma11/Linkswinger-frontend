@@ -1,5 +1,6 @@
 <template>
     <div class="theme-landing">
         <ProfileUser/>
-        </div>
+    </div>
+   <ProfilePhotoVerifyModal/>
 </template>
