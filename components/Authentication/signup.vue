@@ -3,7 +3,7 @@
     <div class="login-content-main">
       <div class="login-content">
         <div class="login-content-header">
-          <nuxt-link to="/"><img src="/images/logo/landing-logo.gif" alt="sign-logo" /></nuxt-link>
+          <CommonLogo :logo="'landing-logo.gif'" />
         </div>
         <h3 class="text-white">Join LinkSwingers – Where Open Minds Connect</h3>
         <h4 class="text-white">Sign Up Now and Start Connecting</h4>
