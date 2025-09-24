@@ -5,9 +5,7 @@
 
     <div class="container text-center py-5 mt-4">
       <div class="row justify-content-center landing-logo mt-4">
-        <nuxt-link to="/">
-          <img class="img-fluid" src="/images/logo/landing-logo.gif" alt="logo" />
-        </nuxt-link>
+        <CommonLogo :logo="'landing-logo.gif'" />
       </div>
 
       <!-- Title -->
@@ -48,13 +46,13 @@
       </p>
 
       <div class="d-flex justify-content-center align-items-center gap-3 my-4 flex-wrap">
-        <div class="d-flex gap-3 justify-content-center">
+        <div class="d-flex justify-content-center">
             <img src="/images/badges/18-plus.png" alt="Chat" />
             <img src="/images/badges/chat.png" alt="Call" />
             <img src="/images/badges/call.png" alt="Video" />
             <img src="/images/badges/video-call.png" alt="Like" />
         </div>
-        <div class="d-flex gap-3 justify-content-center">
+        <div class="d-flex justify-content-center">
             <img src="/images/badges/video-roulette-available.png" alt="Photo" />
             <img src="/images/badges/location.png" alt="Elite" />
             <img src="/images/badges/elite.png" alt="VIP" />

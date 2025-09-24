@@ -4,9 +4,7 @@
       <!-- Login Form -->
       <div class="login-content login-content-form">
         <div class="login-content-header">
-          <nuxt-link to="/">
-            <img class="img-fluid" src="/images/logo/landing-logo.gif" alt="logo" />
-          </nuxt-link>
+          <CommonLogo :logo="'landing-logo.gif'" />
         </div>
         <h4 class="text-white">Welcome to LinkSwingers – Please log in to your account.</h4>
 
