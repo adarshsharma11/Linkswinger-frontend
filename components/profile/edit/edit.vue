@@ -7,7 +7,7 @@
         <button class="btn btn-secondary btn-sm">Back to Profile</button>
       </div>
       <!-- Photos & Videos -->
-       <div class="card bg-black text-white mb-4">
+       <div class="card bg-black text-white mb-4 edit-card">
           <div class="card-body">
             <h5 class="mb-3">Photos & Videos</h5>
             <div class="row g-3">
@@ -128,13 +128,3 @@
     </div>
   </section>
 </template>
-
-<script setup lang="ts">
-// Static dummy implementation for now
-</script>
-
-<style scoped>
-.card {
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-</style>
