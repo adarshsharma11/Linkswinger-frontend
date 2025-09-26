@@ -1,11 +1,13 @@
 <template>
     <ProfileEdit/>
 </template>
-<script setup>
+<script setup lang="ts">
+import { ProfileEdit } from '#components';
+
 useHead({
     title: "Profile- Chat Messenger LinkSwingers"
 })
  definePageMeta({
-        middleware:'validateuser'
+        middleware:'auth'
     })
 </script>
