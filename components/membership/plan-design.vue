@@ -29,7 +29,7 @@
             class="swiper-wrapper"
           >
             <swiper-slide
-              v-for="(item, index) in plans"
+              v-for="(item, index) in allMemberships"
               :key="index"
               class="swiper-slide"
             >
@@ -39,37 +39,35 @@
                   <div class="pricing-icon text-center mb-3">
                     <img
                       class="img-fluid"
-                      :src="item.icon"
                       alt="plan-icon"
+                      :src="getIcon(item.tier_name ?? '')"
                     />
                   </div>
 
                   <!-- Plan Info -->
                   <div class="pricing-content text-center mb-3">
-                    <h3 class="text-theme">{{ item.plan }}</h3>
-                    <p class="small text-white-50">{{ item.desc }}</p>
+                    <h3 class="text-theme">{{ item.tier_name }}</h3>
                   </div>
 
                   <!-- Features -->
                   <ul class="avb-price list-unstyled text-start flex-grow-1">
                     <li
-                      v-for="(feature, i) in item.features"
+                      v-for="(feature, i) in item.tier_features?.filter(f => (f.notes?.trim().length !== 0)) ?? []"
                       :key="i"
                       class="d-flex align-items-start mb-2 text-white"
                     >
-                      <i class="fa fa-check text-success me-2 mt-1"></i>
-                      <span class="text-white">{{ feature }}</span>
+                      <span class="text-white"> {{ feature.notes }}</span>
                     </li>
                   </ul>
 
                   <!-- Button -->
                   <div class="text-center mt-3">
-                    <nuxt-link
-                      class="btn bg-theme-color w-100 fw-bold"
-                      to="/bonus/price"
+                    <button
+                      class="btn bg-theme-color w-100 fw-bold" :disabled="isDowngrade(item.price ?? 0)" @click="fetchMembership(item.tier_id ?? 0,item.price ?? 0)" v-if="(item.price ?? 0) !== 0"
                     >
                       Get Started
-                    </nuxt-link>
+                      <span class="btn-loader" v-if="is_fetching"></span>
+                  </button>
                   </div>
                 </div>
               </div>
@@ -81,11 +79,30 @@
   </section>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { Swiper, SwiperSlide } from "swiper/vue";
 import { Pagination, Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
+import type { MembershipsModel, SuccessError, UsersModel } from "~/composables/models";
+const user_store = userStore();
+const login_store = useLoginStore();
+const allMemberships = ref([] as MembershipsModel.FetchMembershipsResponseModel[])
+const is_fetching = ref(false);
+const fetchMemberShips = async () => {
+  const api_url = getUrl(RequestURL.fetchMemberShips);
+  const { data: mem_response, error: option_error } = await useFetch<SuccessError<MembershipsModel.FetchMembershipsResponseModel>>(api_url, {
+    cache: "no-cache",
+    method: "post",
+    body: {},
+    headers: {
+      "content-type": "application/json"
+    }
+  });
+  return mem_response.value?.result ?? []
+}
+allMemberships.value = await fetchMemberShips() as MembershipsModel.FetchMembershipsResponseModel[]
+const modules = [Pagination, Navigation];
 
 const swiperOption = ref({
   breakpoints: {
@@ -97,61 +114,90 @@ const swiperOption = ref({
   },
 });
 
-const plans = [
-  {
-    plan: "Free",
-    desc: "Perfect for exploring the basics.",
-    icon: "/images/badges/free.png",
-    features: [
-      "Location sharing → see up to 10 people nearby",
-      "Send up to 100 messages/day (text only)",
-      "Upload 3 pictures/day (max 50)",
-      "No video calls or Roulette",
-      "View public pictures only",
-      "Attach only approved photos in messages",
-    ],
-  },
-  {
-    plan: "Basic Plus",
-    desc: "Unlock messaging freedom & live features.",
-    icon: "/images/badges/basic-plus.png",
-    features: [
-      "Location sharing → full view",
-      "Unlimited text messages",
-      "Emojis enabled",
-      "Upload 10 pictures/day (max 120)",
-      "Watch videos (no uploads)",
-      "Attach photos in messages from device",
-      "See who’s live & type in chat",
-    ],
-  },
-  {
-    plan: "Plus",
-    desc: "Enjoy full messaging + calls + Roulette spins.",
-    icon: "/images/badges/plus.png",
-    features: [
-      "Location sharing → full access",
-      "Unlimited messages",
-      "Attach content (photos/videos)",
-      "Audio/video calls with PIN (30 mins/day)",
-      "Video Roulette → 200 spins/day",
-    ],
-  },
-  {
-    plan: "Elite",
-    desc: "Everything unlimited + Go Live!",
-    icon: "/images/badges/elite.png",
-    features: [
-      "Everything in Plus",
-      "No limits on messaging, uploads, calls, Roulette",
-      "Roulette with gender & location filters",
-      "Go Live → host own livestreams",
-      "Unlimited Roulette session length",
-      "Upload 20 pictures/day (max 200)",
-      "Upload 20 videos/day (max 50)",
-    ],
-  },
-];
+function getIcon(tier_name:string) : string
+{
+  if (tier_name.includes ("Elite")) return "/images/badges/elite.png";
+  if (tier_name.includes("Basic+")) return "/images/badges/basic-plus.png";
+  if (tier_name.includes ("Plus")) return "/images/badges/plus.png";
+  return "/images/badges/free.png";
+}
 
-const modules = [Pagination, Navigation];
+function isDowngrade(price:number) : boolean
+{
+  const currentPrice = login_store.getUserDetails?.price ?? 0;
+  if (currentPrice > price) return true;
+  return false;
+}
+
+async function fetchMembership(tier_id:number,price:number) 
+{
+    if (user_store.getLoginId === 0)
+    {
+      showToastError("You need to be logged in to perform this action");
+      return;
+    }
+  if (is_fetching.value) return;
+  is_fetching.value = true;
+  const api_url = getUrl(RequestURL.fetchUserMembership);
+ let response = await $fetch<SuccessError<UsersModel.FetchMembershipResponseModel>>(api_url, {
+    cache: "no-cache",
+    method: "post",
+    body: { user_id: user_store.getLoginId , tier_id : tier_id},
+    headers: {
+      "content-type": "application/json"
+    }
+  })
+   
+  if (response.success)
+  {
+      let price_difference = response.response?.price_difference ?? 0
+      if (price_difference > 0)
+      {
+        createMembership(price_difference,tier_id)
+      }
+      else
+      {
+        is_fetching.value = false;
+      }
+  }
+  else
+  {
+    if (response.code === 500)
+    {
+      is_fetching.value = false;
+     showToastError(response.message ?? "Something went wrong");
+    }
+    else
+    {
+      createMembership(price,tier_id)
+    }
+  }
+}
+
+async function createMembership(price:number,tier_id:number)
+{
+    const api_url = getUrl(RequestURL.createUserMembership);
+let response = await $fetch<SuccessError<UsersModel.CreateMembershipResponseModel>>(api_url, {
+    cache: "no-cache",
+    method: "post",
+    body: { user_id: user_store.getLoginId , tier_id : tier_id , price : price},
+    headers: {
+      "content-type": "application/json"
+    }
+  })
+  is_fetching.value = false;
+  if (response.success)
+  {
+     await navigateTo(response.response?.session_url,{
+      external : true
+     })
+  }
+  else
+  {
+    showToastError(response.message)
+  }
+  
+}
+
+
 </script>

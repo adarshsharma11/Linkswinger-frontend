@@ -3,5 +3,5 @@ Content-Type: application/json
 
 ###
 
-POST http://0.0.0.0:8080/api/fetchMemberShips
+POST https://linkswingers.co.uk/api/fetchMemberShips
 Content-Type: application/json

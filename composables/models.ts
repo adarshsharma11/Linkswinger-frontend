@@ -17,6 +17,9 @@ export enum RequestURL {
   logout = "/logout",
   forgotPassword = "/forgotPassword",
   resetPassword = "/resetPassword",
+  fetchMemberShips = "/fetchMemberShips",
+  fetchUserMembership = "/fetchUserMembership",
+  createUserMembership = "/createUserMembership",
 }
 
 
@@ -226,10 +229,74 @@ export namespace UsersModel {
     body_type?: string;
     partner_body_type?: string;
     town?: string;
-      interests?: InterestsModel[];
+    interests?: InterestsModel[];
     meet_perferences?: MeetPreferencesModel[];
     gender?:string
-     partner_gender?:string
+    partner_gender?:string
+    tier_id?:number
+    tier_name?:string
+    price?:number
   }
+
+  export class FetchMembershipRequestModel {
+    user_id?: number;
+    tier_id?: number;
+}
+
+export class FetchMembershipResponseModel {
+    user_membership_id?: number;
+    user_id?: number;
+    tier_id?: number;
+    start_date?: string;
+    end_date?: string;
+    tier_price?: number;
+    price_difference?: number;
+}
+
+export class CreateMembershipRequestModel {
+    user_id?: number;
+    tier_id?: number;
+}
+
+export class CreateMembershipResponseModel {
+    user_membership_id?: number;
+    user_id?: number;
+    tier_id?: number;
+    start_date?: string;
+    end_date?: string;
+    tier_price?: number;
+    price_difference?: number;
+    session_url?:string
+}
   
+}
+export namespace MembershipsModel {
+
+export class FetchMembershipsResponseModel {
+    tier_id?: number;
+    tier_name?: string;
+    price?: number;
+    tier_features?: TierFeaturesModel[];
+}
+
+export class TierFeaturesModel {
+    tier_feature_id?: number;
+    tier_id?: number;
+    feature_id?: number;
+    feature_name?: string;
+    is_enabled?: boolean;
+    limit_per_day?: number;
+    max_total?: number;
+    duration_minutes?: number;
+    quality?: string;
+    notes?: string;
+    supports_media?: boolean;
+    is_unlimited?: boolean;
+    can_attach_photos?: boolean;
+    can_attach_videos?: boolean;
+    can_view_livestream?: boolean;
+    can_chat_in_livestream?: boolean;
+    can_host_livestream?: boolean;
+}
+
 }
