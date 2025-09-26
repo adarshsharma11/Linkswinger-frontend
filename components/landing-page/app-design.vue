@@ -14,7 +14,7 @@
         <!-- Animated Underline -->
         <span class="title-underline"></span>
       </h1>
-      <p class="lead mb-4 text-white-50">Where open minds connects</p>
+      <p class="lead mb-4 text-white-50">Where open minds connect</p>
 
       <!-- Buttons -->
       <div class="d-flex justify-content-center gap-3 mb-3 flex-wrap">
