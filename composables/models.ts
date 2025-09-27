@@ -20,7 +20,8 @@ export enum RequestURL {
   fetchMemberShips = "/fetchMemberShips",
   fetchUserMembership = "/fetchUserMembership",
   createUserMembership = "/createUserMembership",
-  uploadVerifyPhoto = "/uploadVerifyPhoto"
+  uploadVerifyPhoto = "/uploadVerifyPhoto",
+  updateUserProfile = "/updateUserProfile"
 }
 
 
@@ -107,6 +108,7 @@ export namespace UsersModel {
   }
 
   export class SignUpRequestModel {
+    user_id? : number
     first_name?: string;
     last_name?: string;
     nick_name?: string;

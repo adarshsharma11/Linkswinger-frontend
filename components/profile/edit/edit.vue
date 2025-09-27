@@ -323,8 +323,6 @@ function usersignup() {
         return;
     }
 
-    return;
-
     const unit = height_unit.value ?? ""
     let height = cm_height.value.toString() ?? ""
     let partner_height = partner_cm_height.value.toString() ?? ""
@@ -345,6 +343,7 @@ function usersignup() {
     }
     const town_id = selectedTown.value?.town_id ?? 0
     let request_mdoel = {
+        user_id : login_store.getUserDetails?.user_id,
         profile_type: profileType.value,
         nick_name: nickName.value,
         email: email.value,
@@ -370,7 +369,7 @@ function usersignup() {
         partner_gender: partner_gender.value
     } as UsersModel.SignUpRequestModel
 
-    let api_url = getUrl(RequestURL.signup);
+    let api_url = getUrl(RequestURL.updateUserProfile);
     is_signup_loading.value = true;
     $fetch<SuccessError<UsersModel.SignUpResponseModel>>(api_url, {
         method: 'POST',
@@ -381,10 +380,10 @@ function usersignup() {
     }).then((response) => {
         is_signup_loading.value = false;
         if (response.success) {
-            showalert('Signup successful! Please check your email to verify your account.', true);
+            showToastSuccess('Profile Updated', true);
             // Optionally, redirect to login page or clear form
             reloadNuxtApp({
-                path: "/authentication/login",
+                path: "/profile",
                 ttl: 1000
             })
         } else {
@@ -451,49 +450,17 @@ watch(profileType, () => {
 });
 
 function checkValidation(): boolean {
-    const profiletype = profileType.value.trim();
-    const nickname = nickName.value.trim();
-    const emailVal = email.value.trim();
-    const passwordVal = password.value;
     const dobVal = dob.value;
     const sexualorientation = sexualOrientation.value.trim();
     const unit = height_unit.value ?? ""
-
     const cmheight = cm_height.value ?? ""
     const feetheight = feet_height.value ?? ""
     const inchheight = inch_height.value ?? ""
-
     const partnercmheight = partner_cm_height.value ?? ""
     const partnerfeetheight = partner_feet_height.value ?? ""
     const partnerinchheight = partner_inch_height.value ?? ""
     const town_id = selectedTown.value?.town_id ?? 0
-
-    if (nickname.length === 0) {
-        showalert('Please enter nickname');
-        return false;
-    }
-    else if (!is_nick_valid.value) {
-        showalert('Please enter valid nickname');
-        return false;
-    }
-    else if (profiletype.length === 0) {
-        showalert('Please select profile type');
-        return false;
-    }
-
-    else if (emailVal.length === 0) {
-        showalert('Please enter email');
-        return false;
-    }
-    else if (!validateEmail(emailVal)) {
-        showalert('Please enter valid email');
-        return false;
-    }
-    else if (passwordVal.length === 0) {
-        showalert('Please enter password');
-        return false;
-    }
-    else if (dobVal.length === 0) {
+     if (dobVal.length === 0) {
         showalert('Please enter date of birth');
         // toDate((item.created_at ?? ''),'yyyy-MM-dd')?.toISOString().split('T')[0] }}
         return false;
@@ -503,16 +470,11 @@ function checkValidation(): boolean {
         showalert('Please select sexual orientation');
         return false;
     }
-    else if ((gender.value ?? '').length === 0) {
-        showalert('Please select gender');
-        return false;
-    }
+    
     else if (town_id === 0) {
         showalert('Please select town');
         return false;
     }
-
-
     else if (unit.length === 0) {
         showalert('Please select height unit');
         return false;
@@ -570,10 +532,6 @@ function checkValidation(): boolean {
         showalert('Please select partner sexual orientation');
         return false;
     }
-    else if (profileType.value === 'Couple' && (partner_gender.value ?? '').trim().length === 0) {
-        showalert('Please select partner gender');
-        return false;
-    }
     else if (profileType.value === 'Couple' && (partner_ethnicity.value ?? '').trim().length === 0) {
         showalert('Please select partner ethnicity');
         return false;
@@ -595,8 +553,6 @@ function checkValidation(): boolean {
         showalert('Please select partner inches');
         return false;
     }
-
-    // Add more checks as needed (e.g., sexual orientation, interests, meet preference)
     return true;
 }
 </script>
