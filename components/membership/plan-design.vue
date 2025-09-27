@@ -124,9 +124,10 @@ function getIcon(tier_name:string) : string
 
 function isDowngrade(price:number) : boolean
 {
-  const currentPrice = login_store.getUserDetails?.price ?? 0;
-  if (currentPrice > price) return true;
-  return false;
+  const currentPrice = price - (login_store.getUserDetails?.price ?? 0);
+  
+  if (currentPrice > 0) return false;
+  return true;
 }
 
 async function fetchMembership(tier_id:number,price:number) 

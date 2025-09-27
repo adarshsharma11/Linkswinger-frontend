@@ -38,7 +38,9 @@
 
           <!-- Center: User Info -->
           <div class="col-12 col-md-6 text-center">
-            <h3 class="mb-2 text-white fs-5 fs-md-4">{{ login_store.getUserDetails?.nick_name }}, {{login_store.getUserDetails?.profile_type}} {{getAge(login_store.getUserDetails?.dob ?? '')}} from {{login_store.getUserDetails?.town ?? ''}}</h3>
+            <h3 class="mb-2 text-white fs-5 fs-md-4">{{ login_store.getUserDetails?.nick_name }},
+              {{ login_store.getUserDetails?.profile_type }} {{ getAge(login_store.getUserDetails?.dob ?? '') }} from
+              {{ login_store.getUserDetails?.town ?? '' }}</h3>
             <span class="badge bg-success fs-6">Active</span>
           </div>
 
@@ -51,17 +53,28 @@
                   style="width: 50px; height: 50px; object-fit: cover" />
               </button>
               <ul class="dropdown-menu dropdown-menu-end bg-dark text-white" aria-labelledby="settingsMenu">
-              <li>
-              <button
-                class="dropdown-item text-white d-flex align-items-center"
-                data-bs-toggle="modal"
-                data-bs-target="#photoVerificationModal"
-              >
-                <img src="/images/badges/photo-verified.png" alt="Verify" class="rounded-circle me-2"
-                  style="width: 30px; height: 30px; object-fit: cover" />
-                <span class="text-white">Verify Photo</span>
-              </button>
-              </li>
+                <li>
+                  <button class="dropdown-item text-white d-flex align-items-center" @click="navigateTo('/membership')">
+                    <img src="/images/badges/photo-verified.png" alt="Verify" class="rounded-circle me-2"
+                      style="width: 30px; height: 30px; object-fit: cover" />
+                    <span class="text-white">Membership</span>
+                  </button>
+                </li>
+                <li>
+                  <button class="dropdown-item text-white d-flex align-items-center" @click="navigateTo(`/edit-profile`)">
+                    <img src="/images/badges/photo-verified.png" alt="Verify" class="rounded-circle me-2"
+                      style="width: 30px; height: 30px; object-fit: cover" />
+                    <span class="text-white">Edit Profile</span>
+                  </button>
+                </li>
+                <li>
+                  <button class="dropdown-item text-white d-flex align-items-center" data-bs-toggle="modal"
+                    data-bs-target="#photoVerificationModal">
+                    <img src="/images/badges/photo-verified.png" alt="Verify" class="rounded-circle me-2"
+                      style="width: 30px; height: 30px; object-fit: cover" />
+                    <span class="text-white">Verify Photo</span>
+                  </button>
+                </li>
                 <li>
                   <button class="dropdown-item text-white d-flex align-items-center" @click="logout"
                     :disabled="is_logout_loading">
@@ -142,13 +155,13 @@
             <div class="card-body">
               <h5 class="text-white mb-3">Personal Information</h5>
               <ul class="list-unstyled mb-0 info-list">
-                <li><strong>Gender:</strong> {{login_store.getUserDetails?.gender}}</li>
+                <li><strong>Gender:</strong> {{ login_store.getUserDetails?.gender }}</li>
                 <li><strong>Orientation:</strong> {{ login_store.getUserDetails?.orientation }}</li>
                 <li><strong>Looking for:</strong> {{ login_store.getUserDetails?.looking_for?.join(',') }}</li>
-                <li><strong>Height:</strong> {{getHeight()}}</li>
-                <li><strong>Ethnicity:</strong> {{ login_store.getUserDetails?.ethnicity}}</li>
-                <li><strong>Body Type:</strong> {{ login_store.getUserDetails?.body_type}}</li>
-                <li><strong>Town:</strong> {{ login_store.getUserDetails?.town}}</li>
+                <li><strong>Height:</strong> {{ getHeight() }}</li>
+                <li><strong>Ethnicity:</strong> {{ login_store.getUserDetails?.ethnicity }}</li>
+                <li><strong>Body Type:</strong> {{ login_store.getUserDetails?.body_type }}</li>
+                <li><strong>Town:</strong> {{ login_store.getUserDetails?.town }}</li>
               </ul>
             </div>
           </div>
@@ -172,7 +185,8 @@
                 <li><strong>Email:</strong>{{ login_store.getUserDetails?.email }}</li>
                 <li><strong>Password:</strong> ••••••••</li>
                 <li><strong>Date of Birth:</strong>{{ login_store.getUserDetails?.dob }}</li>
-                <li><strong>Membership:</strong>{{ (login_store.getUserDetails?.tier_name ?? '').length === 0 ? 'Free' : (login_store.getUserDetails?.tier_name ?? '') }}</li>
+                <li><strong>Membership:</strong>{{ (login_store.getUserDetails?.tier_name ?? '').length === 0 ? 'Free' :
+                  (login_store.getUserDetails?.tier_name ?? '') }}</li>
               </ul>
             </div>
           </div>
@@ -194,7 +208,8 @@
             experiences and meeting amazing people is what excites me!
           </p>
           <div class="d-flex gap-2 flex-wrap">
-            <span v-for="interest in login_store.getUserDetails?.interests" class="badge bg-secondary">{{interest.interest_name}}</span>
+            <span v-for="interest in login_store.getUserDetails?.interests"
+              class="badge bg-secondary">{{ interest.interest_name }}</span>
           </div>
         </div>
       </div>
@@ -222,8 +237,7 @@ function getAge(dobStr: string): number {
 
   return age;
 }
-function getHeight(): string 
-{
+function getHeight(): string {
   let height = login_store.getUserDetails?.height ?? ''
   let height_unit = login_store.getUserDetails?.height_unit ?? 'cm'
   if (height_unit === 'cm') {
@@ -235,8 +249,7 @@ function getHeight(): string
     return feet_inch.feet + 'ft ' + feet_inch.inches + 'in'
   }
 }
-function getPartnerHeight(): string 
-{
+function getPartnerHeight(): string {
   let height = login_store.getUserDetails?.partner_height ?? ''
   let height_unit = login_store.getUserDetails?.height_unit ?? 'cm'
   if (height_unit === 'cm') {
