@@ -7,7 +7,7 @@
                     <div class="row">
                         <div class="form-group col-12 col-md-6">
                             <label for="inputdob">Date of Birth</label>
-                            <input class="form-control" id="inputdob" type="date" v-model="dob" :max="maxDob" />
+                            <input class="form-control" id="inputdob" type="date" v-model="dob" :max="maxDob" :disabled="login_store.getUserDetails?.is_dob_changed ?? false" />
                         </div>
                         <div class="form-group col-12 col-md-6">
                             <label for="inputsexualorientation">Sexual Orientation</label>
@@ -106,7 +106,7 @@
                             <div class="form-group col-12 col-md-6">
                                 <label for="partnerDob">Partner Date of Birth</label>
                                 <input class="form-control" id="partnerDob" type="date" v-model="partnerDob"
-                                    :max="maxDob" />
+                                    :max="maxDob" :disabled="login_store.getUserDetails?.is_partner_dob_changed ?? false"/>
                             </div>
                         </div>
 
