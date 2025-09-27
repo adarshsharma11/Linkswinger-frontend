@@ -20,6 +20,7 @@ export enum RequestURL {
   fetchMemberShips = "/fetchMemberShips",
   fetchUserMembership = "/fetchUserMembership",
   createUserMembership = "/createUserMembership",
+  uploadVerifyPhoto = "/uploadVerifyPhoto"
 }
 
 

@@ -24,7 +24,7 @@
                             </div>
 
                             <!-- Video Upload -->
-                            <div class="col-12 col-md-6">
+                            <!-- <div class="col-12 col-md-6">
                                 <label class="form-label">Profile Video</label>
                                 <input type="file" accept="video/*"
                                     class="form-control bg-dark text-white border-secondary" />
@@ -32,7 +32,7 @@
                                     <video src="/videos/sample.mp4" controls class="w-100 rounded shadow"
                                         style="max-height: 200px; object-fit: cover"></video>
                                 </div>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                 </div>
