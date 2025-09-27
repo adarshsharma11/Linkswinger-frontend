@@ -135,7 +135,6 @@ export namespace UsersModel {
     partner_body_type?: string;
     device_id?: string;
   }
-
   export class SignUpResponseModel {
     user_id?: number;
     first_name?: string;
@@ -236,6 +235,10 @@ export namespace UsersModel {
     tier_id?:number
     tier_name?:string
     price?:number
+     about_me?: string;
+    is_photo_verified?: boolean;
+    verified_photo?:string;
+    assets_path?:string;
   }
 
   export class FetchMembershipRequestModel {

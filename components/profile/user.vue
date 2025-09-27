@@ -67,7 +67,7 @@
                     <span class="text-white">Edit Profile</span>
                   </button>
                 </li>
-                <li>
+                <li v-if="(login_store.getUserDetails?.is_photo_verified ?? false) === false">
                   <button class="dropdown-item text-white d-flex align-items-center" data-bs-toggle="modal"
                     data-bs-target="#photoVerificationModal">
                     <img src="/images/badges/photo-verified.png" alt="Verify" class="rounded-circle me-2"
