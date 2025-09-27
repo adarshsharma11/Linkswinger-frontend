@@ -172,7 +172,7 @@
                 <li><strong>Email:</strong>{{ login_store.getUserDetails?.email }}</li>
                 <li><strong>Password:</strong> ••••••••</li>
                 <li><strong>Date of Birth:</strong>{{ login_store.getUserDetails?.dob }}</li>
-                <li><strong>Membership:</strong> None</li>
+                <li><strong>Membership:</strong>{{ (login_store.getUserDetails?.tier_name ?? '').length === 0 ? 'Free' : (login_store.getUserDetails?.tier_name ?? '') }}</li>
               </ul>
             </div>
           </div>
