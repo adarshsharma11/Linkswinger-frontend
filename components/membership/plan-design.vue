@@ -56,18 +56,27 @@
                       :key="i"
                       class="d-flex align-items-start mb-2 text-white"
                     >
+                     <i
+                        :class="[
+                          'me-2',
+                          i % 2 === 0 ? 'fa fa-check text-success' : 'fa fa-times text-danger'
+                        ]"
+                        style="margin-top: 3px"
+                      ></i>
                       <span class="text-white"> {{ feature.notes }}</span>
                     </li>
                   </ul>
 
                   <!-- Button -->
                   <div class="text-center mt-3">
-                    <button
-                      class="btn bg-theme-color w-100 fw-bold" :disabled="isDowngrade(item.price ?? 0)" @click="fetchMembership(item.tier_id ?? 0,item.price ?? 0)" v-if="(item.price ?? 0) !== 0"
+                  <button
+                      class="btn w-100 fw-bold bg-theme-color"
+                      :disabled="(item.price ?? 0) === 0 || isDowngrade(item.price ?? 0)"
+                      @click="(item.price ?? 0) !== 0 && fetchMembership(item.tier_id ?? 0, item.price ?? 0)"
                     >
-                      Get Started
-                      <span class="btn-loader" v-if="is_fetching"></span>
-                  </button>
+                      {{ (item.price ?? 0) === 0 ? 'Current Plan' : 'Get Started' }}
+                      <span class="btn-loader" v-if="is_fetching && (item.price ?? 0) !== 0"></span>
+                    </button>
                   </div>
                 </div>
               </div>
@@ -76,12 +85,19 @@
         </div>
       </div>
     </div>
+      <!-- Static comparison table -->
+    <div class="comparison-table-container">
+    <ComparisonTable />
+    </div>
   </section>
+  
 </template>
 
 <script setup lang="ts">
 import { Swiper, SwiperSlide } from "swiper/vue";
 import { Pagination, Navigation } from "swiper/modules";
+import ComparisonTable from "./comparison-table.vue";
+
 import "swiper/css";
 import "swiper/css/navigation";
 import type { MembershipsModel, SuccessError, UsersModel } from "~/composables/models";

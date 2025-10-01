@@ -5,9 +5,63 @@
                 <div class="form2 text-white">
                     <!-- Row: DOB + Sexual Orientation -->
                     <div class="row">
+                      <div class="form-group">
+                      <div class="d-flex flex-column align-items-center justify-content-center position-relative">
+  <!-- Avatar Wrapper -->
+                        <div class="position-relative d-inline-block" style="width: 120px; height: 120px;">
+                          <!-- Avatar -->
+                          <img
+                            :src="previewUrl || '/images/avtar/1.jpg'"
+                            alt="Profile"
+                            class="rounded-circle"
+                            style="width: 120px; height: 120px; object-fit: cover; display: block; margin: 0 auto;"
+                          />
+
+                          <!-- Edit Icon -->
+                          <button
+                            type="button"
+                            class="btn btn-theme-color rounded-circle position-absolute"
+                            style="top: -12px; right: -8px; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;"
+                            @click="triggerFileInput"
+                          >
+                            <i class="fa fa-pencil text-white fa-lg"></i>
+                          </button>
+                        </div>
+
+                        <!-- Hidden File Input -->
+                        <input
+                          type="file"
+                          accept="image/*"
+                          class="d-none"
+                          ref="fileInput"
+                          @change="handleFileUpload"
+                        />
+                      </div>
+
+
+
+                      </div>
+                       <div class="form-group ">
+                        <label>About Me</label>
+                        <textarea
+                            class="form-control"
+                            id="exampleFormControlTextarea1"
+                            placeholder="Write about yourself"
+                            rows="4"
+                            style="resize:none;"
+                          ></textarea>
+                        </div>
                         <div class="form-group col-12 col-md-6">
                             <label for="inputdob">Date of Birth</label>
-                            <input class="form-control" id="inputdob" type="date" v-model="dob" :max="maxDob" :disabled="login_store.getUserDetails?.is_dob_changed ?? false" />
+                            <input
+                              class="form-control"
+                              id="inputdob"
+                              type="date"
+                              v-model="dob"
+                              :max="maxDob"
+                              :disabled="login_store.getUserDetails?.is_dob_changed ?? false"
+                              :class="{ 'disabled-input': login_store.getUserDetails?.is_dob_changed }"
+                            />
                         </div>
                         <div class="form-group col-12 col-md-6">
                             <label for="inputsexualorientation">Sexual Orientation</label>
@@ -223,6 +277,20 @@ const is_nick_valid = ref(false);
 const gender = ref('');
 const partner_gender = ref('');
 const is_gender_disabled = ref(true);
+const previewUrl = ref<string | null>(null);
+const fileInput = ref<HTMLInputElement | null>(null);
+
+function triggerFileInput() {
+  fileInput.value?.click();
+}
+
+function handleFileUpload(event: Event) {
+  const target = event.target as HTMLInputElement;
+  const file = target.files?.[0];
+  if (file) {
+    previewUrl.value = URL.createObjectURL(file); // shows preview
+  }
+}
 // Arrays to hold values
 let cmArray: number[] = [];
 let feetArray: number[] = [];
