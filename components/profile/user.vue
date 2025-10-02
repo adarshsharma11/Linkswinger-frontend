@@ -205,8 +205,7 @@
         <div class="card-body">
           <h5 class="text-white mb-3">About Me</h5>
           <p>
-            I’m open-minded and love meaningful connections. Exploring new
-            experiences and meeting amazing people is what excites me!
+            {{ login_store.getUserDetails?.about_me }}
           </p>
           <div class="d-flex gap-2 flex-wrap">
             <span v-for="interest in login_store.getUserDetails?.interests"

@@ -44,6 +44,7 @@
                        <div class="form-group ">
                         <label>About Me</label>
                         <textarea
+                            v-model="about_me"
                             class="form-control"
                             id="exampleFormControlTextarea1"
                             placeholder="Write about yourself"
@@ -249,6 +250,8 @@ const partner_body_type = ref(login_store.getUserDetails?.partner_body_type ?? '
 const nickName = ref('');
 const email = ref('');
 const password = ref('');
+const about_me = ref('');
+
 
 const cm_height = ref('');
 const feet_height = ref('');
@@ -434,7 +437,8 @@ function usersignup() {
         town_id: town_id,
         device_id: "",
         gender: gender.value,
-        partner_gender: partner_gender.value
+        partner_gender: partner_gender.value,
+        about_me : about_me.value
     } as UsersModel.SignUpRequestModel
 
     let api_url = getUrl(RequestURL.updateUserProfile);
