@@ -21,7 +21,8 @@ export enum RequestURL {
   fetchUserMembership = "/fetchUserMembership",
   createUserMembership = "/createUserMembership",
   uploadVerifyPhoto = "/uploadVerifyPhoto",
-  updateUserProfile = "/updateUserProfile"
+  updateUserProfile = "/updateUserProfile",
+  fetchPromotion = "/fetchPromotion"
 }
 
 
@@ -83,6 +84,15 @@ export interface SuccessError<T> {
   message: string;
   result?: [T];
   response?: T;
+}
+
+export namespace PromotionsModel {
+    export class AddRequestModel{
+         text? : string
+    }
+    export class FetchResponseModel {
+       text? : string
+    }
 }
 
 export namespace UsersModel {
