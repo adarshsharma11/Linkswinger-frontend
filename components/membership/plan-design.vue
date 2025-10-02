@@ -132,10 +132,10 @@ const swiperOption = ref({
 
 function getIcon(tier_name:string) : string
 {
-  if (tier_name.includes ("Elite")) return "/images/badges/elite.png";
-  if (tier_name.includes("Basic+")) return "/images/badges/basic-plus.png";
-  if (tier_name.includes ("Plus")) return "/images/badges/plus.png";
-  return "/images/badges/free.png";
+  if (tier_name.includes ("Elite")) return "/images/badges/elite.gif";
+  if (tier_name.includes("Basic+")) return "/images/badges/basic.gif";
+  if (tier_name.includes ("Plus")) return "/images/badges/plus.gif";
+  return "/images/badges/free.gif";
 }
 
 function isDowngrade(price:number) : boolean
