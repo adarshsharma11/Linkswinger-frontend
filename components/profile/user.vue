@@ -32,14 +32,15 @@
             <div class="d-flex flex-column align-items-center">
               <img src="/images/avtar/1.jpg" alt="Profile" class="rounded-circle mb-2"
                 style="width: 90px; height: 90px; object-fit: cover" />
-              <span class="badge bg-theme-color fs-6 mt-2">Elite</span>
+              <span class="badge bg-theme-color fs-6 mt-2">{{(login_store.getUserDetails?.tier_name ?? '').length === 0 ? 'Free' :
+                  (login_store.getUserDetails?.tier_name ?? '') }}</span>
             </div>
           </div>
 
           <!-- Center: User Info -->
           <div class="col-12 col-md-6 text-center">
             <h3 class="mb-2 text-white fs-5 fs-md-4">{{ login_store.getUserDetails?.nick_name }},
-              {{ login_store.getUserDetails?.profile_type }} {{ getAge(login_store.getUserDetails?.dob ?? '') }} from
+              {{ getGender()}} {{ getAge(login_store.getUserDetails?.dob ?? '') }} from
               {{ login_store.getUserDetails?.town ?? '' }}</h3>
             <span class="badge bg-success fs-6">Active</span>
           </div>
@@ -292,6 +293,38 @@ async function logout() {
   else {
     showToastError("Logout failed. Please try again.");
   }
+}
+
+function getGender()
+{
+    let profile_type = login_store.getUserDetails?.profile_type ?? ''
+    let gender = login_store.getUserDetails?.gender ?? ''
+    let partner_gender = login_store.getUserDetails?.partner_gender ?? ''
+    if (profile_type === 'Couple')
+    { 
+      let genderShot = 'M';
+      let partnerGenderShot = 'M';
+        if (gender === 'Woman')
+        {
+           genderShot = 'F'
+        }
+        else if (gender === 'Others')
+        {
+           genderShot = 'TS'
+        }
+
+if (partner_gender === 'Woman')
+        {
+           partnerGenderShot = 'F'
+        }
+        else if (partner_gender === 'Others')
+        {
+           partnerGenderShot = 'TS'
+        }
+
+         return genderShot + partnerGenderShot
+    }
+return gender
 }
 
 </script>
