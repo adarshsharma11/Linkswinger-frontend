@@ -52,14 +52,14 @@
                   <!-- Features -->
                   <ul class="avb-price list-unstyled text-start flex-grow-1">
                     <li
-                      v-for="(feature, i) in item.tier_features?.filter(f => (f.notes?.trim().length !== 0)) ?? []"
+                      v-for="(feature, i) in sortMemberShips(item.tier_features ?? [])"
                       :key="i"
                       class="d-flex align-items-start mb-2 text-white"
                     >
                      <i
                         :class="[
                           'me-2',
-                          i % 2 === 0 ? 'fa fa-check text-success' : 'fa fa-times text-danger'
+                          feature.is_enabled ? 'fa fa-check text-success' : 'fa fa-times text-danger'
                         ]"
                         style="margin-top: 3px"
                       ></i>
@@ -213,7 +213,13 @@ let response = await $fetch<SuccessError<UsersModel.CreateMembershipResponseMode
   {
     showToastError(response.message)
   }
-  
+}
+
+function sortMemberShips(features : MembershipsModel.TierFeaturesModel[]) : MembershipsModel.TierFeaturesModel[]
+{
+    let enabledfeature = features.filter(f => (f.is_enabled ?? false) )
+    let disabledfeature = features.filter(f => (!(f.is_enabled ?? false)) )
+    return enabledfeature.concat(disabledfeature)
 }
 
 
