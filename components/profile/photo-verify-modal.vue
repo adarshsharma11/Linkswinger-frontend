@@ -6,7 +6,7 @@
       <div class="modal-content bg-dark text-white">
         <!-- Header -->
         <div class="modal-header border-0">
-          <h2 class="modal-title text-white">Photo Verification</h2>
+          <h2 class="modal-title text-white">Your Photo verification code is {{ login_store.getUserDetails?.user_udid?.toUpperCase().replace(/-/g, "").slice(-4) }}</h2>
           <button class="close text-danger fs-3 fw-bold" type="button" data-bs-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -89,6 +89,7 @@ const rippleX = ref(0);
 const rippleY = ref(0);
 const is_uploading = ref(false)
 const user_store = userStore();
+const login_store = useLoginStore();
 var verifyModalSub: any = null
 onMounted(() => {
  verifyModalSub = new ($bootstrap as any).Modal(document.getElementById('photoVerificationModal'));

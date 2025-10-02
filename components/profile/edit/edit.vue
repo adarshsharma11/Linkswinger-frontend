@@ -250,7 +250,7 @@ const partner_body_type = ref(login_store.getUserDetails?.partner_body_type ?? '
 const nickName = ref('');
 const email = ref('');
 const password = ref('');
-const about_me = ref('');
+const about_me = ref(login_store.getUserDetails?.about_me ?? '');
 
 
 const cm_height = ref('');
