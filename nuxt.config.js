@@ -14,15 +14,15 @@ export default defineNuxtConfig({
     },
     baseURL: "/"
   },
-  vite:{
-    plugins : [
-      //  visualizer({
-      //   filename: 'stats.html',  // output file
-      //   template: 'treemap',     // sunburst | treemap | network
-      //   open: false               // auto-open in browser after build
-      // })
-    ]
-  },
+  // vite:{
+  //   plugins : [
+  //      visualizer({
+  //       filename: 'stats.html',  // output file
+  //       template: 'treemap',     // sunburst | treemap | network
+  //       open: false               // auto-open in browser after build
+  //     })
+  //   ]
+  // },
   css: [
     '@/assets/scss/app.scss',
   ],
