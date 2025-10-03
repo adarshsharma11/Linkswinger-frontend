@@ -3,10 +3,10 @@
     <div class="container">
       <!-- Header -->
       <div class="profile-header container-fluid px-3 px-md-4">
-        <!-- First Row -->
-        <div class="row gy-3 align-items-center">
+
+         <div class="row align-items-center d-md-none">
           <!-- Mobile Settings Menu -->
-          <div class="col-12 d-md-none mb-2">
+          <div class="col-12 mb-2">
             <div class="dropdown d-flex justify-content-end">
               <button id="settingsMenuMobile" class="btn p-0 border-0 bg-transparent" data-bs-toggle="dropdown"
                 aria-expanded="false">
@@ -26,9 +26,12 @@
               </ul>
             </div>
           </div>
-
-          <!-- Left: Avatar + Badge -->
-          <div class="col-12 col-md-3 d-flex justify-content-center justify-content-md-start">
+        </div>
+        <!-- First Row -->
+        <div class="row align-items-center">
+    
+         <!-- Left: Avatar + Badge -->
+          <div class="col-12 col-md-4 d-flex justify-content-center justify-content-md-start">
             <div class="d-flex flex-column align-items-center">
               <img src="/images/avtar/1.jpg" alt="Profile" class="rounded-circle mb-2"
                 style="width: 90px; height: 90px; object-fit: cover" />
@@ -38,7 +41,7 @@
           </div>
 
           <!-- Center: User Info -->
-          <div class="col-12 col-md-6 text-center">
+          <div class="col-12 col-md-4 text-center">
             <h3 class="mb-2 text-white fs-5 fs-md-4">{{ login_store.getUserDetails?.nick_name }},
               {{ getGender()}} {{ getAge(login_store.getUserDetails?.dob ?? '') }} from
               {{ login_store.getUserDetails?.town ?? '' }}</h3>
@@ -46,7 +49,7 @@
           </div>
 
           <!-- Right: Settings Dropdown (Desktop only) -->
-          <div class="col-md-3 d-none d-md-flex justify-content-end">
+          <div class="col-md-4 d-none d-md-flex justify-content-end">
             <div class="dropdown">
               <button id="settingsMenu" class="btn p-0 border-0 bg-transparent" data-bs-toggle="dropdown"
                 aria-expanded="false">
