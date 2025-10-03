@@ -96,7 +96,7 @@
           <div class="col-12 col-md-3 d-flex justify-content-center justify-content-md-start">
             <div class="d-flex gap-2 flex-wrap justify-content-center">
               <img :src="getmembershipIcon()" alt="Elite" class="badge-icon" />
-              <img src="/images/badges/photo-verified.png" v-if="(login_store.getUserDetails?.is_photo_verified ?? false) === true" alt="Silver" class="badge-icon" />
+              <img src="/images/badges/photo-verified.gif" v-if="(login_store.getUserDetails?.is_photo_verified ?? false) === true" alt="Silver" class="badge-icon" />
             </div>
           </div>
 
@@ -328,9 +328,9 @@ return gender
 function getmembershipIcon() : string
 {
   let  tier_name = login_store.getUserDetails?.tier_name ?? ''
-  if (tier_name.includes ("Elite")) return "/images/badges/elite.png";
-  if (tier_name.includes("Basic+")) return "/images/badges/basic-plus.png";
-  if (tier_name.includes ("Plus")) return "/images/badges/plus.png";
-  return "/images/badges/free.png";
+  if (tier_name.includes ("Elite")) return "/images/badges/elite.gif";
+  if (tier_name.includes("Basic+")) return "/images/badges/basic.gif";
+  if (tier_name.includes ("Plus")) return "/images/badges/plus.gif";
+  return "/images/badges/free.gif";
 }
 </script>

@@ -3,7 +3,7 @@
     <!-- Top Red Strip -->
     <div class="w-100 bg-theme-color fixed-top" style="height: 70px;">
       <div class="marquee" v-if="promotion_text.length !== 0">
-        <span> {{ promotion_text }}</span>
+        <span class="text-black"> {{ promotion_text }}</span>
       </div>
     </div>
 
