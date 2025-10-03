@@ -124,11 +124,10 @@ const handleSubmit = async () => {
               />
               <button type="submit">Join the early-access list</button>
             </div>
-
-            <label class="tick">
+            <label class="tick d-flex align-items-center gap-2">
               <input type="checkbox" v-model="consent" required />
-              I agree to receive a one-off invite email and launch updates. You
-              can unsubscribe any time.
+              <span class="text-sm text-white">I agree to receive a one-off invite email and launch updates. You
+              can unsubscribe any time.</span>
             </label>
 
             <div v-if="success" class="success">
