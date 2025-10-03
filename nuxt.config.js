@@ -1,6 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 
-
+import { visualizer } from 'rollup-plugin-visualizer'
 export default defineNuxtConfig({
   compatibilityDate: '2024-11-01',
   app:{
@@ -13,6 +13,15 @@ export default defineNuxtConfig({
       ]
     },
     baseURL: "/"
+  },
+  vite:{
+    plugins : [
+      //  visualizer({
+      //   filename: 'stats.html',  // output file
+      //   template: 'treemap',     // sunburst | treemap | network
+      //   open: false               // auto-open in browser after build
+      // })
+    ]
   },
   css: [
     '@/assets/scss/app.scss',
