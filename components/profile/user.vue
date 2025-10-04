@@ -6,7 +6,7 @@
 
          <div class="row align-items-center d-md-none">
           <!-- Mobile Settings Menu -->
-          <div class="col-12 mb-2">
+          <div class="col-12 mb-2 d-md-none">
             <div class="dropdown d-flex justify-content-end">
               <button id="settingsMenuMobile" class="btn p-0 border-0 bg-transparent" data-bs-toggle="dropdown"
                 aria-expanded="false">
@@ -41,7 +41,7 @@
           </div>
 
           <!-- Center: User Info -->
-          <div class="col-12 col-md-4 text-center">
+          <div class="col-12 col-md-5 text-center">
             <h3 class="mb-2 text-white fs-5 fs-md-4">{{ login_store.getUserDetails?.nick_name }},
               {{ getGender()}} {{ getAge(login_store.getUserDetails?.dob ?? '') }} from
               {{ login_store.getUserDetails?.town ?? '' }}</h3>
@@ -49,7 +49,7 @@
           </div>
 
           <!-- Right: Settings Dropdown (Desktop only) -->
-          <div class="col-md-4 d-none d-md-flex justify-content-end">
+          <div class="col-md-2 d-none d-md-flex justify-content-end">
             <div class="dropdown">
               <button id="settingsMenu" class="btn p-0 border-0 bg-transparent" data-bs-toggle="dropdown"
                 aria-expanded="false">
