@@ -492,16 +492,13 @@ async function uploadPhoto()
     formData.append("file", previewUrlFile.value);
   }
     let url = response.response?.url ?? ""
-      console.log(url)
+    console.log(url)
       try {
   let uploadmodel = await $fetch(url,{
         method : 'PUT',
-        body : formData,
-        headers: {
-            'Content-Type': 'multipart/form-data',
-            'Access-Control-Allow-Origin':"*"
-        }
+        body : previewUrlFile.value
     })
+        console.log(uploadmodel)
       }
       catch (error) {
         console.log("testing..",error);
