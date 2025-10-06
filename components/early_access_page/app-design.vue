@@ -111,8 +111,8 @@ const handleSubmit = async () => {
         </div>
 
         <div class="cta">
-          <form @submit.prevent="handleSubmit">
-            <div class="row">
+          <form @submit.prevent="handleSubmit" class="access-form">
+            <div class="access-row">
               <input
                 id="email"
                 v-model="email"
