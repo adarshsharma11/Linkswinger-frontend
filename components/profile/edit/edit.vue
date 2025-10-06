@@ -31,7 +31,7 @@
                         <!-- Hidden File Input -->
                         <input
                           type="file"
-                          accept="image/*"
+                          accept="image/png,image/jpeg"
                           class="d-none"
                           ref="fileInput"
                           @change="handleFileUpload"
@@ -251,14 +251,13 @@ const nickName = ref('');
 const email = ref('');
 const password = ref('');
 const about_me = ref(login_store.getUserDetails?.about_me ?? '');
-
-
 const cm_height = ref('');
 const feet_height = ref('');
 const inch_height = ref('0');
 const partner_cm_height = ref('');
 const partner_feet_height = ref('');
 const partner_inch_height = ref('0');
+
 
 const height_unit = ref(login_store.getUserDetails?.height_unit ?? 'cm');
 
@@ -280,19 +279,22 @@ const is_nick_valid = ref(false);
 const gender = ref('');
 const partner_gender = ref('');
 const is_gender_disabled = ref(true);
-const previewUrl = ref<string | null>(null);
+const previewUrlFile = ref<Blob | null>(null);
 const fileInput = ref<HTMLInputElement | null>(null);
-
+const previewUrl = ref<string | null>(null);
 function triggerFileInput() {
   fileInput.value?.click();
 }
 
-function handleFileUpload(event: Event) {
+async function handleFileUpload(event: Event) {
   const target = event.target as HTMLInputElement;
   const file = target.files?.[0];
   if (file) {
-    previewUrl.value = URL.createObjectURL(file); // shows preview
+    const profile_image = await file.arrayBuffer()
+    previewUrl.value = URL.createObjectURL(file)
+    previewUrlFile.value = new Blob([profile_image])
   }
+  target.value = ''
 }
 // Arrays to hold values
 let cmArray: number[] = [];
