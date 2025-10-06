@@ -22,7 +22,7 @@
         <a href="#live" data-route="live" @click.prevent="setActiveNav('live')" :class="{ active: activeNav === 'live' }" class="text-white"><span class="icon">🔴</span>Live / On Cam</a>
       </nav>
       <div class="spacer" />
-      <button class="btn primary" id="btnUpload" @click="fakeUpload">＋ Upload/Post</button>
+      <button class="dash-button primary" id="dash-buttonUpload" @click="fakeUpload">＋ Upload/Post</button>
     </aside>
 
     <!-- MAIN COLUMN -->
@@ -32,13 +32,13 @@
           <strong id="routeTitle" class="text-white">{{ routeTitle }}</strong>
           <div class="search">
             <input type="search" placeholder="Quick search people, photos, videos…" class="text-white"/>
-            <button class="btn text-white" id="btnOpenAdvanced" @click="openAdvanced">Advanced</button>
+            <button class="dash-button text-white" id="dash-buttonOpenAdvanced" @click="openAdvanced">Advanced</button>
           </div>
         </div>
         <div class="quick">
-          <button @click="showAdvancedSearch = true" class="btn text-white">Verified ✅</button>
-          <button @click="showAdvancedSearch = true" class="btn text-white">Nearby 📍</button>
-          <button @click="showAdvancedSearch = true" class="btn text-white">Who’s live 🔴</button>
+          <button @click="showAdvancedSearch = true" class="dash-button text-white">Verified ✅</button>
+          <button @click="showAdvancedSearch = true" class="dash-button text-white">Nearby 📍</button>
+          <button @click="showAdvancedSearch = true" class="dash-button text-white">Who’s live 🔴</button>
         </div>
       </header>
 
@@ -79,17 +79,17 @@
               <div class="item">
                 <div class="avatar" />
                 <div style="flex:1; font-size: 13px;" class="text-white">Alex & Sam • 2 km • Verified ✅</div>
-                <button class="btn" style="font-size: 12px; padding: 6px 10px;">Message</button>
+                <button class="dash-button" style="font-size: 12px; padding: 6px 10px;">Message</button>
               </div>
               <div class="item">
                 <div class="avatar" />
                 <div style="flex:1; font-size: 13px;" class="text-white">Jess • 5 km • Online 🟢</div>
-                <button class="btn" style="font-size: 12px; padding: 6px 10px;">Call</button>
+                <button class="dash-button" style="font-size: 12px; padding: 6px 10px;">Call</button>
               </div>
               <div class="item">
                 <div class="avatar" />
                 <div style="flex:1; font-size: 13px;" class="text-white">D & M • 12 km • New ✨</div>
-                <button class="btn" style="font-size: 12px; padding: 6px 10px;">Message</button>
+                <button class="dash-button" style="font-size: 12px; padding: 6px 10px;">Message</button>
               </div>
             </div>
           </div>
@@ -140,12 +140,12 @@
                 <div class="item">
                   <div class="avatar" />
                   <div style="flex:1" class="text-white">Alex & Sam <div class="muted">Hey, free tonight?</div></div>
-                  <button class="btn">Open</button>
+                  <button class="dash-button">Open</button>
                 </div>
                 <div class="item">
                   <div class="avatar" />
                   <div style="flex:1" class="text-white">Jess <div class="muted">Send verification call PIN: 4321</div></div>
-                  <button class="btn">Call</button>
+                  <button class="dash-button">Call</button>
                 </div>
               </div>
 
@@ -153,8 +153,8 @@
                 <h2 class="text-white">Start a New Chat / Call</h2>
                 <div class="composer">
                   <input type="text" placeholder="Search user…" class="text-white"/>
-                  <button class="btn">Chat</button>
-                  <button class="btn">Video Call</button>
+                  <button class="dash-button">Chat</button>
+                  <button class="dash-button">Video Call</button>
                 </div>
                 <p class="muted" style="margin-top:8px">Calls require 4‑digit PIN confirmation.</p>
               </div>
@@ -168,9 +168,9 @@
                 <div class="video"><span class="tag">Partner</span></div>
               </div>
               <div class="ctrls">
-                <button class="btn">⏭ Next</button>
-                <button class="btn">⏮ Back</button>
-                <button class="btn">⚠️ Report</button>
+                <button class="dash-button">⏭ Next</button>
+                <button class="dash-button">⏮ Back</button>
+                <button class="dash-button">⚠️ Report</button>
                 <span class="pill text-white">Gender: Any</span>
                 <span class="pill text-white">Location: Nearby</span>
                 <span class="pill text-white">Accurate location</span>
@@ -189,14 +189,14 @@
               <div class="item">
                 <div class="avatar" />
                 <div style="flex:1; font-size: 13px;" class="text-white">Jamie • 4 km • Verified ✅</div>
-                <button class="btn" style="font-size: 12px; padding: 6px 10px;">Message</button>
-                <button class="btn" style="font-size: 12px; padding: 6px 10px;">Remove</button>
+                <button class="dash-button" style="font-size: 12px; padding: 6px 10px;">Message</button>
+                <button class="dash-button" style="font-size: 12px; padding: 6px 10px;">Remove</button>
               </div>
               <div class="item">
                 <div class="avatar" />
                 <div style="flex:1; font-size: 13px;" class="text-white">Taylor • 9 km • Online 🟢</div>
-                <button class="btn" style="font-size: 12px; padding: 6px 10px;">Message</button>
-                <button class="btn" style="font-size: 12px; padding: 6px 10px;">Remove</button>
+                <button class="dash-button" style="font-size: 12px; padding: 6px 10px;">Message</button>
+                <button class="dash-button" style="font-size: 12px; padding: 6px 10px;">Remove</button>
               </div>
             </div>
             <!-- Empty state -->
@@ -215,12 +215,12 @@
               <div class="item">
                 <div class="avatar" />
                 <div style="flex:1; font-size: 13px;" class="text-white">User A • 1.2 km • Online 🟢</div>
-                <button class="btn" style="font-size: 12px; padding: 6px 10px;">Message</button>
+                <button class="dash-button" style="font-size: 12px; padding: 6px 10px;">Message</button>
               </div>
               <div class="item">
                 <div class="avatar" />
                 <div style="flex:1; font-size: 13px;" class="text-white">Couple B • 3.5 km • Verified ✅</div>
-                <button class="btn" style="font-size: 12px; padding: 6px 10px;">Call</button>
+                <button class="dash-button" style="font-size: 12px; padding: 6px 10px;">Call</button>
               </div>
             </div>
             <!-- Empty state -->
@@ -238,12 +238,12 @@
               <div class="item">
                 <div class="avatar" />
                 <div style="flex:1; font-size: 13px;" class="text-white">Jess • last active 5m</div>
-                <button class="btn" style="font-size: 12px; padding: 6px 10px;">Open chat</button>
+                <button class="dash-button" style="font-size: 12px; padding: 6px 10px;">Open chat</button>
               </div>
               <div class="item">
                 <div class="avatar" />
                 <div style="flex:1; font-size: 13px;" class="text-white">Alex & Sam • last active 1h</div>
-                <button class="btn" style="font-size: 12px; padding: 6px 10px;">Open chat</button>
+                <button class="dash-button" style="font-size: 12px; padding: 6px 10px;">Open chat</button>
               </div>
             </div>
             <!-- Empty state -->
@@ -293,7 +293,7 @@
           <div class="dashboard-card glow">
             <div class="dash-row" style="margin-bottom: 16px;">
               <h2 class="text-white">Meet Events</h2>
-              <button class="btn" style="font-size: 12px; padding: 6px 12px;">Create meet event</button>
+              <button class="dash-button" style="font-size: 12px; padding: 6px 12px;">Create meet event</button>
             </div>
             <ul style="padding-left: 20px; line-height: 1.6;">
               <li style="margin-bottom: 8px;">Tonight 9pm • City Centre meet • 8 attending</li>
@@ -311,7 +311,7 @@
             <h2 class="text-white">Club Events</h2>
             <p class="muted" style="margin-bottom: 16px;">Events hosted by clubs you are a member of.</p>
             <div class="dash-row" style="margin-bottom: 16px;">
-              <button class="btn" style="font-size: 12px; padding: 6px 10px;">Create Club Event</button>
+              <button class="dash-button" style="font-size: 12px; padding: 6px 10px;">Create Club Event</button>
             </div>
             <!-- Empty state -->
             <div v-if="false" class="empty-state">
@@ -334,8 +334,8 @@
               <div class="video"><span class="tag">New — 1 km</span></div>
             </div>
             <div class="ctrls">
-              <a href="#messages" class="btn" @click.prevent="setActiveNav('messages')">Open roulette</a>
-              <a href="#search" class="btn" @click.prevent="setActiveNav('search')">Filters</a>
+              <a href="#messages" class="dash-button" @click.prevent="setActiveNav('messages')">Open roulette</a>
+              <a href="#search" class="dash-button" @click.prevent="setActiveNav('search')">Filters</a>
             </div>
             <p class="muted" style="margin-top:8px">Hook this to your "who’s live" data source (WebRTC presence / signalling). Thumbnails are placeholders.</p>
           </div>
@@ -361,7 +361,7 @@
           <div class="dashboard-card glow">
             <div class="dash-row">
               <h2 class="text-white">My Profile</h2>
-              <button class="btn">Edit profile</button>
+              <button class="dash-button">Edit profile</button>
             </div>
             <div class="tabs mt-4">
               <button class="tab active text-white" data-ptab="posts">Posts</button>
@@ -393,7 +393,7 @@
     <div class="inner">
       <div class="dash-row">
         <h2 class="text-white">Advanced Search</h2>
-        <button class="btn text-white" id="btnCloseAdvanced" @click="closeAdvanced">Close</button>
+        <button class="dash-button text-white" id="dash-buttonCloseAdvanced" @click="closeAdvanced">Close</button>
       </div>
       <div class="grid-2">
         <div class="field">
@@ -435,8 +435,8 @@
         </div>
       </div>
       <div class="dash-row" style="margin-top: 16px;">
-        <button class="btn primary text-white">Apply Filters</button>
-        <button class="btn text-white">Clear Filters</button>
+        <button class="dash-button primary text-white">Apply Filters</button>
+        <button class="dash-button text-white">Clear Filters</button>
       </div>
     </div>
   </div>
