@@ -139,7 +139,7 @@ h1 {
   margin-top: 6px;
 }
 
-form {
+.access-form {
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -155,13 +155,13 @@ form {
     0 0 22px rgba(16, 185, 129, 0.35);
 }
 
-.row {
+.access-row {
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
 }
 
-input[type='email'] {
+.access-row input[type='email'] {
   flex: 1 1 320px;
   background: #0f0f12;
   border: 1px solid var(--border);
@@ -176,7 +176,7 @@ input[type='email'] {
   }
 }
 
-button[type='submit'] {
+.access-row button[type='submit'] {
   flex: 0 0 auto;
   padding: 14px 18px;
   border-radius: 12px;

@@ -28,7 +28,7 @@
     <!-- MAIN COLUMN -->
     <div class="dashboard-main">
       <header class="dashboard-header">
-        <div class="row" style="gap:10px;flex:1">
+        <div class="dash-row" style="gap:10px;flex:1">
           <strong id="routeTitle" class="text-white">{{ routeTitle }}</strong>
           <div class="search">
             <input type="search" placeholder="Quick search people, photos, videos…" class="text-white"/>
@@ -52,7 +52,7 @@
             <button class="tab text-white" data-feed="events">Events</button>
           </div>
 
-          <div class="row" style="flex-wrap:wrap;gap:8px;margin:8px 0 12px">
+          <div class="dash-row" style="flex-wrap:wrap;gap:8px;margin:8px 0 12px">
             <a href="#nearby" class="pill text-white" @click.prevent="setActiveNav('nearby')">📍 Nearby people</a>
             <a href="#friends" class="pill text-white" @click.prevent="setActiveNav('friends')">👥 My friends</a>
             <a href="#new-photos" class="pill text-white" @click.prevent="setActiveNav('new-photos')">🖼 New photos</a>
@@ -71,7 +71,7 @@
           </div>
 
           <div class="dashboard-card mt-4">
-            <div class="row" style="margin-bottom: 12px;">
+            <div class="dash-row" style="margin-bottom: 12px;">
               <h2 class="text-white">Suggested Profiles</h2>
               <a href="#search" class="muted text-white" @click.prevent="setActiveNav('search')">See all →</a>
             </div>
@@ -106,7 +106,7 @@
 
           <div class="dashboard-card glow">
             <h2>Quick Filters</h2>
-            <div class="row" style="flex-wrap:wrap;gap:8px">
+            <div class="dash-row" style="flex-wrap:wrap;gap:8px">
               <span class="pill">📍 Accurate location</span>
               <span class="pill">✅ Verified</span>
               <span class="pill">🟢 Online now</span>
@@ -291,7 +291,7 @@
 
         <section id="view-meet-events" :hidden="activeNav !== 'meet-events'">
           <div class="dashboard-card glow">
-            <div class="row" style="margin-bottom: 16px;">
+            <div class="dash-row" style="margin-bottom: 16px;">
               <h2 class="text-white">Meet Events</h2>
               <button class="btn" style="font-size: 12px; padding: 6px 12px;">Create meet event</button>
             </div>
@@ -310,7 +310,7 @@
           <div class="dashboard-card glow">
             <h2 class="text-white">Club Events</h2>
             <p class="muted" style="margin-bottom: 16px;">Events hosted by clubs you are a member of.</p>
-            <div class="row" style="margin-bottom: 16px;">
+            <div class="dash-row" style="margin-bottom: 16px;">
               <button class="btn" style="font-size: 12px; padding: 6px 10px;">Create Club Event</button>
             </div>
             <!-- Empty state -->
@@ -323,7 +323,7 @@
         <!-- LIVE / ON CAM -->
         <section id="view-live" :hidden="activeNav !== 'live'">
           <div class="dashboard-card glow">
-            <div class="row">
+            <div class="dash-row">
               <h2 class="text-white">Live / On Cam</h2>
               <span class="pill">🟢 Online now</span>
             </div>
@@ -359,7 +359,7 @@
         <!-- PROFILE -->
         <section id="view-profile" :hidden="activeNav !== 'profile'">
           <div class="dashboard-card glow">
-            <div class="row">
+            <div class="dash-row">
               <h2 class="text-white">My Profile</h2>
               <button class="btn">Edit profile</button>
             </div>
@@ -391,7 +391,7 @@
   <!-- ADVANCED SEARCH DRAWER -->
   <div class="drawer" id="advDrawer" :class="{ open: drawerOpen }" aria-hidden="false">
     <div class="inner">
-      <div class="row">
+      <div class="dash-row">
         <h2 class="text-white">Advanced Search</h2>
         <button class="btn text-white" id="btnCloseAdvanced" @click="closeAdvanced">Close</button>
       </div>
@@ -405,7 +405,7 @@
         </div>
         <div class="field">
           <label class="text-white">Age between</label>
-          <div class="row">
+          <div class="dash-row">
             <input type="number" value="18" class="text-white"/>
             <input type="number" value="99" class="text-white"/>
           </div>
@@ -434,7 +434,7 @@
           <input type="text" placeholder="e.g. hiking, movies" class="text-white"/>
         </div>
       </div>
-      <div class="row" style="margin-top: 16px;">
+      <div class="dash-row" style="margin-top: 16px;">
         <button class="btn primary text-white">Apply Filters</button>
         <button class="btn text-white">Clear Filters</button>
       </div>
