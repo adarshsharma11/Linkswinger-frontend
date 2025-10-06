@@ -22,7 +22,8 @@ export enum RequestURL {
   createUserMembership = "/createUserMembership",
   uploadVerifyPhoto = "/uploadVerifyPhoto",
   updateUserProfile = "/updateUserProfile",
-  fetchPromotion = "/fetchPromotion"
+  fetchPromotion = "/fetchPromotion",
+  getProfilePhotoURL = "/getProfilePhotoURL"
 }
 
 
@@ -284,7 +285,17 @@ export class CreateMembershipResponseModel {
     price_difference?: number;
     session_url?:string
 }
-  
+
+export class ProfilePhotoRequestModel
+{
+  user_id?: number;
+}
+export class ProfilePhotoResponseModel
+{
+  url?: string;
+}
+
+
 }
 export namespace MembershipsModel {
 

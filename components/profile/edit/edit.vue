@@ -274,6 +274,7 @@ const maxDob = `${today.getFullYear() - 18}-${String(today.getMonth() + 1).padSt
 const is_town_loading = ref(false);
 const is_nick_loading = ref(false);
 const is_signup_loading = ref(false);
+const is_photo_uploading = ref(false);
 const is_nick_valid = ref(false);
 
 const gender = ref('');
@@ -293,6 +294,7 @@ async function handleFileUpload(event: Event) {
     const profile_image = await file.arrayBuffer()
     previewUrl.value = URL.createObjectURL(file)
     previewUrlFile.value = new Blob([profile_image])
+    await uploadPhoto()
   }
   target.value = ''
 }
@@ -471,6 +473,43 @@ function usersignup() {
 
     // Proceed with signup logic
 }
+
+async function uploadPhoto()
+{
+    let api_url = getUrl(RequestURL.getProfilePhotoURL);
+    is_photo_uploading.value = true;
+    let response = await $fetch<SuccessError<UsersModel.ProfilePhotoResponseModel>>(api_url, {
+        method: 'POST',
+        body: {
+            "user_id" : login_store.getUserDetails?.user_id
+        },
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    })
+ const formData = new FormData();
+  if (previewUrlFile.value) {
+    formData.append("file", previewUrlFile.value);
+  }
+    let url = response.response?.url ?? ""
+      console.log(url)
+      try {
+  let uploadmodel = await $fetch(url,{
+        method : 'PUT',
+        body : formData,
+        headers: {
+            'Content-Type': 'multipart/form-data',
+            'Access-Control-Allow-Origin':"*"
+        }
+    })
+      }
+      catch (error) {
+        console.log("testing..",error);
+      }
+  
+  
+}
+
 
 
 
