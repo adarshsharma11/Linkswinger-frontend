@@ -1,4 +1,5 @@
 <template>
+  <img src="https://media.linkswingers.co.uk/high-quality-images/hand.jpg"></img>
   <section class="profile-page bg-dark text-white min-vh-100 py-4">
     <div class="container">
       <!-- Header -->

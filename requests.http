@@ -5,3 +5,6 @@ Content-Type: application/json
 
 POST http://0.0.0.0:8080/api/getProfileURL
 Content-Type: application/json
+
+###
+POST https://ScalerBucket.s3.us-east-005.backblazeb2.com/uploads/389FA94E-0A1A-4486-A132-9AB45677620D.jpeg
