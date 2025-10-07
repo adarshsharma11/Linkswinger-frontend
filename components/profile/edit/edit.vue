@@ -487,10 +487,6 @@ async function uploadPhoto()
             'Content-Type': 'application/json',
         },
     })
- const formData = new FormData();
-  if (previewUrlFile.value) {
-    formData.append("file", previewUrlFile.value);
-  }
     let url = response.response?.url ?? ""
       try {
   let uploadmodel = await $fetch(url,{
