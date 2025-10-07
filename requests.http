@@ -3,7 +3,8 @@ Content-Type: application/json
 
 ###
 
-POST http://0.0.0.0:8080/api/getProfileURL
+POST http://0.0.0.0:8080/api/getProfilePhotoURL
 Content-Type: application/json
+
 
 
