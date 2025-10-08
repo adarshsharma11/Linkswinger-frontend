@@ -8,12 +8,35 @@
           <!-- Mobile Settings Menu -->
           <div class="col-12 mb-2 d-md-none">
             <div class="dropdown d-flex justify-content-end">
-              <button id="settingsMenuMobile" class="btn p-0 border-0 bg-transparent" data-bs-toggle="dropdown"
+              <button id="settingsMenuMobile" class="btn p-0 border-0 bg-transparent d-flex flex-column align-items-center text-white mr-2" data-bs-toggle="dropdown"
                 aria-expanded="false">
                 <img src="/images/badges/settings.png" alt="Settings" class="rounded-circle"
                   style="width: 40px; height: 40px; object-fit: cover" />
+                  <small>Settings</small>
               </button>
-              <ul class="dropdown-menu dropdown-menu-end bg-dark text-white" aria-labelledby="settingsMenuMobile">
+              <ul class="dropdown-menu dropdown-menu-end bg-dark text-white setting-dropdown-menu" aria-labelledby="settingsMenuMobile">
+                 <li>
+                  <button class="dropdown-item text-white d-flex align-items-center" @click="navigateTo('/membership')">
+                    <img src="/images/badges/photo-verified.png" alt="Verify" class="rounded-circle me-2"
+                      style="width: 30px; height: 30px; object-fit: cover" />
+                    <span class="text-white">Membership</span>
+                  </button>
+                </li>
+                <li>
+                  <button class="dropdown-item text-white d-flex align-items-center" @click="navigateTo(`/edit-profile`)">
+                    <img src="/images/badges/edit-profile.png" alt="Verify" class="rounded-circle me-2"
+                      style="width: 30px; height: 30px; object-fit: cover" />
+                    <span class="text-white">Edit Profile</span>
+                  </button>
+                </li>
+                <li v-if="(login_store.getUserDetails?.is_photo_verified ?? false) === false">
+                  <button class="dropdown-item text-white d-flex align-items-center" data-bs-toggle="modal"
+                    data-bs-target="#photoVerificationModal">
+                    <img src="/images/badges/photo-verified.png" alt="Verify" class="rounded-circle me-2"
+                      style="width: 30px; height: 30px; object-fit: cover" />
+                    <span class="text-white">Verify Photo</span>
+                  </button>
+                </li>
                 <li>
                   <button class="dropdown-item text-white d-flex align-items-center" @click="logout"
                     :disabled="is_logout_loading">
@@ -24,8 +47,15 @@
                   </button>
                 </li>
               </ul>
+              <div class="ml-2">
+              <nuxt-link to="/dashboard" class="d-flex flex-column align-items-center">
+                <img src="/images/badges/home.png" alt="Home" class="badge-icon" />
+                <small>Home</small>
+              </nuxt-link>
+              </div>
             </div>
           </div>
+          
         </div>
         <!-- First Row -->
         <div class="row align-items-center">
@@ -33,7 +63,7 @@
          <!-- Left: Avatar + Badge -->
           <div class="col-12 col-md-3 d-flex justify-content-center justify-content-md-start">
             <div class="d-flex flex-column align-items-center">
-              <img src="/images/avtar/1.jpg" alt="Profile" class="rounded-circle mb-2"
+              <img :src="getProfilePlaceholder()" alt="Profile" class="rounded-circle mb-2"
                 style="width: 90px; height: 90px; object-fit: cover" />
               <span class="badge bg-theme-color fs-6 mt-2">{{(login_store.getUserDetails?.tier_name ?? '').length === 0 ? 'Free' :
                   (login_store.getUserDetails?.tier_name ?? '') }}</span>
@@ -41,22 +71,24 @@
           </div>
 
           <!-- Center: User Info -->
-          <div class="col-12 col-md-6 text-center">
+          <div class="col-12 col-md-6 text-center mt-2">
             <h3 class="mb-2 text-white fs-5 fs-md-4">{{ login_store.getUserDetails?.nick_name }},
               {{ getGender()}} {{ getAge(login_store.getUserDetails?.dob ?? '') }} from
               {{ login_store.getUserDetails?.town ?? '' }}</h3>
             <span class="badge bg-success fs-6">Active</span>
+            <p class="mb-0 mt-2 text-white">😊 If you dream it, you can do it</p>
           </div>
 
           <!-- Right: Settings Dropdown (Desktop only) -->
           <div class="col-md-3 d-none d-md-flex justify-content-center">
             <div class="dropdown">
-              <button id="settingsMenu" class="btn p-0 border-0 bg-transparent" data-bs-toggle="dropdown"
+              <button id="settingsMenu" class="btn p-0 border-0 bg-transparent d-flex flex-column align-items-center text-white" data-bs-toggle="dropdown"
                 aria-expanded="false">
                 <img src="/images/badges/settings.png" alt="Settings" class="rounded-circle"
                   style="width: 50px; height: 50px; object-fit: cover" />
+                  <small>Settings</small>
               </button>
-              <ul class="dropdown-menu dropdown-menu-end bg-dark text-white" aria-labelledby="settingsMenu">
+              <ul class="dropdown-menu dropdown-menu-end bg-dark text-white setting-dropdown-menu" aria-labelledby="settingsMenu">
                 <li>
                   <button class="dropdown-item text-white d-flex align-items-center" @click="navigateTo('/membership')">
                     <img src="/images/badges/photo-verified.png" alt="Verify" class="rounded-circle me-2"
@@ -66,7 +98,7 @@
                 </li>
                 <li>
                   <button class="dropdown-item text-white d-flex align-items-center" @click="navigateTo(`/edit-profile`)">
-                    <img src="/images/badges/photo-verified.png" alt="Verify" class="rounded-circle me-2"
+                    <img src="/images/badges/edit-profile.png" alt="Verify" class="rounded-circle me-2"
                       style="width: 30px; height: 30px; object-fit: cover" />
                     <span class="text-white">Edit Profile</span>
                   </button>
@@ -130,7 +162,7 @@
           </div>
 
           <!-- Right: Empty spacer (desktop only) -->
-          <div class="col-md-3 d-md-block">
+          <div class="col-md-3 d-md-block d-none">
                 <nuxt-link to="/dashboard" class="d-flex flex-column align-items-center">
                 <img src="/images/badges/home.png" alt="Home" class="badge-icon" />
                 <small>Home</small>
@@ -187,15 +219,20 @@
             </div>
           </div>
           <div class="card bg-black text-white">
-            <div class="card-body">
-              <h5 class="text-white mb-3">Account Details</h5>
-              <ul class="list-unstyled mb-0 info-list">
-                <li><strong>Email:</strong>{{ login_store.getUserDetails?.email }}</li>
-                <li><strong>Password:</strong> ••••••••</li>
-                <li><strong>Date of Birth:</strong>{{ login_store.getUserDetails?.dob }}</li>
-                <li><strong>Membership:</strong>{{ (login_store.getUserDetails?.tier_name ?? '').length === 0 ? 'Free' :
-                  (login_store.getUserDetails?.tier_name ?? '') }}</li>
-              </ul>
+          <div class="card-body">
+          <h5 class="text-white mb-3">About Me</h5>
+          <p>
+            {{ login_store.getUserDetails?.about_me }}
+          </p>
+            </div>
+          </div>
+          <div class="card bg-black text-white">
+          <div class="card-body">
+          <h5 class="text-white mb-3">Sexual Preferences</h5>
+          <div class="d-flex gap-2 flex-wrap">
+            <span v-for="interest in login_store.getUserDetails?.interests"
+              class="badge bg-secondary">{{ interest.interest_name }}</span>
+          </div>
             </div>
           </div>
           <div class="card bg-black text-white">
@@ -204,19 +241,14 @@
               <p>{{login_store.getUserDetails?.meet_perferences?.map(it => it.preference_name).join(',')}}</p>
             </div>
           </div>
-        </div>
-      </div>
-
-      <!-- About Me -->
-      <div class="card bg-black text-white mt-3">
-        <div class="card-body">
-          <h5 class="text-white mb-3">About Me</h5>
-          <p>
-            {{ login_store.getUserDetails?.about_me }}
-          </p>
-          <div class="d-flex gap-2 flex-wrap">
-            <span v-for="interest in login_store.getUserDetails?.interests"
-              class="badge bg-secondary">{{ interest.interest_name }}</span>
+           <div class="card bg-black text-white">
+            <div class="card-body">
+              <h5 class="text-white mb-3">Meet Verification</h5>
+              <p><strong>Username:</strong> something_username</p>
+              <p><strong>Username:</strong> something_username</p>
+              <p><strong>Username:</strong> something_username</p>
+              <button class="btn btn-sm btn-outline-light mt-2">See more</button>
+            </div>
           </div>
         </div>
       </div>
@@ -340,5 +372,15 @@ function getmembershipIcon() : string
   if (tier_name.includes("Basic+")) return "/images/badges/basic.gif";
   if (tier_name.includes ("Plus")) return "/images/badges/plus.gif";
   return "/images/badges/free.gif";
+}
+
+function getProfilePlaceholder() : string
+{
+  let profile_type = login_store.getUserDetails?.profile_type ?? ''
+  if (profile_type === 'Couple') return "/images/profile-placeholders/MF-COUPLE.png";
+  if (profile_type === 'Others') return "/images/profile-placeholders/TRANS.png";
+  if (profile_type === 'Woman') return "/images/profile-placeholders/WOMAN.png";
+  if (profile_type === 'Man') return "/images/profile-placeholders/man.png";
+  return "/images/profile-placeholders/man.png"
 }
 </script>
