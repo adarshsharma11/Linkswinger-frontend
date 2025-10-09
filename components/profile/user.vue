@@ -228,7 +228,7 @@
           </div>
           <div class="card bg-black text-white">
           <div class="card-body">
-          <h5 class="text-white mb-3">Sexual Preferences</h5>
+          <h5 class="text-white mb-3">Sexual Interest</h5>
           <div class="d-flex gap-2 flex-wrap">
             <span v-for="interest in login_store.getUserDetails?.interests"
               class="badge bg-secondary">{{ interest.interest_name }}</span>

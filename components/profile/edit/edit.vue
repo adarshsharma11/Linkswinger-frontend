@@ -53,16 +53,23 @@
                           ></textarea>
                         </div>
                         <div class="form-group col-12 col-md-6">
-                            <label for="inputdob">Date of Birth</label>
-                            <input
-                              class="form-control"
-                              id="inputdob"
-                              type="date"
-                              v-model="dob"
-                              :max="maxDob"
-                              :disabled="login_store.getUserDetails?.is_dob_changed ?? false"
-                              :class="{ 'disabled-input': login_store.getUserDetails?.is_dob_changed }"
-                            />
+                            <label for="inputdob">Date of Birth 
+                                <i class="fa fa-info-circle text-info ms-1" 
+                                   v-tooltip="login_store.getUserDetails?.is_dob_changed ? 'You can only change your date of birth once. This field is now locked.' : 'You can only change your date of birth once. Make sure it\'s correct!'"
+                                   style="cursor: help; font-size: 14px;"></i>
+                            </label>
+                            <div class="dob-tooltip-wrapper">
+                                <input
+                                  class="form-control"
+                                  id="inputdob"
+                                  type="date"
+                                  v-model="dob"
+                                  :max="maxDob"
+                                  :disabled="login_store.getUserDetails?.is_dob_changed ?? false"
+                                  :class="{ 'disabled-input': login_store.getUserDetails?.is_dob_changed }"
+                                  title="Date of Birth"
+                                />
+                            </div>
                         </div>
                         <div class="form-group col-12 col-md-6">
                             <label for="inputsexualorientation">Sexual Orientation</label>
@@ -159,9 +166,16 @@
                                     v-model="partnerNickName" />
                             </div>
                             <div class="form-group col-12 col-md-6">
-                                <label for="partnerDob">Partner Date of Birth</label>
-                                <input class="form-control" id="partnerDob" type="date" v-model="partnerDob"
-                                    :max="maxDob" :disabled="login_store.getUserDetails?.is_partner_dob_changed ?? false"/>
+                                <label for="partnerDob">Partner Date of Birth 
+                                    <i class="fa fa-info-circle text-info ms-1" 
+                                       v-tooltip="login_store.getUserDetails?.is_partner_dob_changed ? 'You can only change your partner\'s date of birth once. This field is now locked.' : 'You can only change your partner\'s date of birth once. Make sure it\'s correct!'"
+                                       style="cursor: help; font-size: 14px;"></i>
+                                </label>
+                                <div class="dob-tooltip-wrapper">
+                                    <input class="form-control" id="partnerDob" type="date" v-model="partnerDob"
+                                        :max="maxDob" :disabled="login_store.getUserDetails?.is_partner_dob_changed ?? false"
+                                        title="Partner Date of Birth"/>
+                                </div>
                             </div>
                         </div>
 
@@ -661,3 +675,35 @@ function checkValidation(): boolean {
     return true;
 }
 </script>
+
+<style scoped>
+.dob-tooltip-wrapper {
+    display: block;
+    width: 100%;
+}
+
+.form-group label {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.form-group label i {
+    margin-left: 4px;
+}
+
+/* Ensure tooltip appears above other elements */
+.form-group label i:hover {
+    z-index: 9999;
+}
+
+/* Add subtle animation to info icon */
+.form-group label i {
+    transition: transform 0.2s ease-in-out;
+}
+
+.form-group label i:hover {
+    transform: scale(1.1);
+    color: #17a2b8;
+}
+</style>

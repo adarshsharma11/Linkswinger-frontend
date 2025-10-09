@@ -1,11 +1,7 @@
 <template>
   <section class="bg-darker text-white min-vh-100 d-flex flex-column justify-content-center">
     <!-- Top Red Strip -->
-    <div class="w-100 bg-theme-color fixed-top" style="height: 70px;">
-      <div class="marquee" v-if="promotion_text.length !== 0">
-        <span class="text-black"> {{ promotion_text }}</span>
-      </div>
-    </div>
+    <CommonPromotionStrip :text="promotion_text" />
 
     <div class="container text-center py-5 mt-4">
       <div class="row justify-content-center landing-logo mt-4">
@@ -23,7 +19,7 @@
       <!-- Buttons -->
       <div class="d-flex justify-content-center gap-3 mb-3 flex-wrap">
         <button @click="goToSignup" class="btn bg-theme-color btn-lg fw-bold">
-          Sign up free
+          Join Waitlist
         </button>
 
         <button @click="goToLogin" class="btn btn-lg bg-success text-white">
@@ -121,29 +117,4 @@ function goToLogin() {
 }
 </script>
 <style scoped>
-.marquee {
-  overflow: hidden;
-  white-space: nowrap;
-  box-sizing: border-box;
-}
-
-.marquee span {
-  display: inline-block;
-  padding-left: 100%;
-  animation: scroll 100s linear infinite;
-   color: white;       /* ✅ white text */
-  font-size: 1rem;    /* ✅ bigger font (adjust as needed) */
-  font-weight: bold;  /* (optional) make it bold */
-   margin-top: 25px;
-}
-
-@keyframes scroll {
-  0% {
-    transform: translateX(0%);
-  }
-
-  100% {
-    transform: translateX(-100%);
-  }
-}
 </style>
