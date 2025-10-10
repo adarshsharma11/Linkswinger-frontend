@@ -1,7 +1,7 @@
 <template>
   <div class="w-100 bg-theme-color fixed-top" style="height: 70px;">
     <div class="marquee" v-if="text.length !== 0">
-      <span class="text-black">{{ text }}</span>
+      <span class="text-black" v-html="text"></span>
     </div>
   </div>
 </template>
