@@ -18,7 +18,7 @@
 
       <!-- Buttons -->
       <div class="d-flex justify-content-center gap-3 mb-3 flex-wrap">
-        <button @click="goToSignup" class="btn bg-theme-color btn-lg fw-bold">
+        <button @click="goToSignup" class="btn bg-theme-color btn-lg fw-bold  text-white">
           Join Waitlist
         </button>
 
