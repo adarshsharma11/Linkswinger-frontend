@@ -130,11 +130,14 @@
             <Multiselect v-model="body_type" :options="getBodyType()" :multiple="false" :close-on-select="true"
               placeholder="Select Partner Body Type" />
           </div>
-
+          <div class="form-group ">
+            <label>About Me</label>
+            <textarea v-model="about_me" class="form-control" id="exampleFormControlTextarea1"
+              placeholder="Write about yourself" rows="4" style="resize:none;"></textarea>
+          </div>
 
           <div v-if="profileType === 'Couple'">
             <h5 class="mt-3 text-white">Partner Details</h5>
-
             <div class="row">
               <div class="form-group col-12 col-md-6">
                 <label for="partnerNickName">Partner Nickname</label>
@@ -158,8 +161,8 @@
             </div>
             <div class="form-group ">
               <label>Select Partner Gender</label>
-              <Multiselect v-model="partner_gender" :options="allOptions.genders" :multiple="false" :close-on-select="true"
-                placeholder="Select Partner Gender" :disabled="is_gender_disabled" />
+              <Multiselect v-model="partner_gender" :options="allOptions.genders" :multiple="false"
+                :close-on-select="true" placeholder="Select Partner Gender" :disabled="is_gender_disabled" />
             </div>
             <div class="form-group">
               <label>Partner Ethnicity</label>
@@ -278,6 +281,9 @@ const inch_height = ref('0');
 const partner_cm_height = ref('');
 const partner_feet_height = ref('');
 const partner_inch_height = ref('0');
+const about_me = ref('');
+
+
 
 const height_unit = ref('cm');
 const sexualInterest = ref<UsersModel.InterestsModel[]>([]);
@@ -442,7 +448,8 @@ function usersignup() {
     town_id: town_id,
     device_id: "",
     gender: gender.value,
-    partner_gender: partner_gender.value
+    partner_gender: partner_gender.value,
+    about_me: about_me.value
   } as UsersModel.SignUpRequestModel
 
   let api_url = getUrl(RequestURL.signup);
