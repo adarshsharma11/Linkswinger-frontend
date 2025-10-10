@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import type { EarlyAccessModel } from '~/composables/models'
 
 // reactive state
 const email = ref('')
@@ -19,17 +20,19 @@ const handleSubmit = async () => {
   }
 
   try {
-    const res = await $fetch('/api/early-access', {
+    let url = getUrl(RequestURL.addEarlyAccess)
+    const res = await $fetch<SuccessError<EarlyAccessModel.AddResponseModel>>(url, {
       method: 'POST',
-      body: { email: email.value }
+      body: { email: email.value , should_receive_updates: consent.value },
     })
 
-    if (res) {
+    if (res.success)
+     {
       success.value = true
       email.value = ''
       consent.value = false
     } else {
-      error.value = 'That didn’t work. Please try again.'
+      error.value = res.message || 'That didn’t work. Please try again.'
     }
   } catch (e) {
     error.value = 'That didn’t work. Please try again.'
