@@ -6,7 +6,8 @@
       <div class="modal-content bg-dark text-white">
         <!-- Header -->
         <div class="modal-header border-0">
-          <h2 class="modal-title text-white">Your Photo verification code is {{ login_store.getUserDetails?.user_udid?.toUpperCase().replace(/-/g, "").slice(-4) }}</h2>
+          <h2 class="modal-title text-white">Your Photo verification code is {{
+            login_store.getUserDetails?.user_udid?.toUpperCase().replace(/-/g, "").slice(-4) }}</h2>
           <button class="close text-danger fs-3 fw-bold" type="button" data-bs-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -16,15 +17,16 @@
         <div class="modal-body">
           <!-- Example Images Row -->
           <div class="row mb-4 g-3">
-            <div class="col-12 col-md-6 text-center">
+            <!-- <div class="col-12 col-md-6 text-center">
               <p class="small text-white fw-bold">Normal Photo Example</p>
               <img src="/images/samples/normal-sample.png" alt="Normal Example"
                 class="img-fluid rounded shadow sample-photo" />
-            </div>
+            </div> -->
             <div class="col-12 col-md-6 text-center">
               <p class="small text-white fw-bold">Code-in-Hand Example</p>
-              <img src="/images/samples/code-sample.png" alt="Code Example"
-                class="img-fluid rounded shadow sample-photo" />
+              <img :src="getCodeImage()"
+                alt="Code Example" class="img-fluid rounded shadow sample-photo" />
+             
             </div>
           </div>
 
@@ -92,8 +94,8 @@ const user_store = userStore();
 const login_store = useLoginStore();
 var verifyModalSub: any = null
 onMounted(() => {
- verifyModalSub = new ($bootstrap as any).Modal(document.getElementById('photoVerificationModal'));
- console.log("verifyModalSub",verifyModalSub)
+  verifyModalSub = new ($bootstrap as any).Modal(document.getElementById('photoVerificationModal'));
+  console.log("verifyModalSub", verifyModalSub)
 })
 function triggerFileInput() {
   fileInput.value?.click();
@@ -142,6 +144,44 @@ function handleDrop(event: DragEvent) {
   }
 }
 
+function getCodeImage() : string
+{
+  let gender = getGender()
+  return "/images/samples/" + gender + "_code" + ".png"
+}
+
+function getGender() : string
+{
+    let profile_type = login_store.getUserDetails?.profile_type ?? ''
+    let gender = login_store.getUserDetails?.gender ?? ''
+    let partner_gender = login_store.getUserDetails?.partner_gender ?? ''
+    if (profile_type === 'Couple')
+    { 
+      let genderShot = 'M';
+      let partnerGenderShot = 'M';
+        if (gender === 'Woman')
+        {
+           genderShot = 'F'
+        }
+        else if (gender === 'Others')
+        {
+           genderShot = 'TS'
+        }
+
+if (partner_gender === 'Woman')
+        {
+           partnerGenderShot = 'F'
+        }
+        else if (partner_gender === 'Others')
+        {
+           partnerGenderShot = 'TS'
+        }
+
+         return genderShot + partnerGenderShot
+    }
+return gender
+}
+
 function removePhoto() {
   previewUrl.value = null;
 }
@@ -161,20 +201,20 @@ async function submitVerification() {
     formData.append("verify_photo", previewUrlFile.value);
   }
   const api_url = getUrl(RequestURL.uploadVerifyPhoto)
- let response_model = await $fetch<SuccessError<UsersModel.ValidateNicknameResponseModel>>(api_url, {
+  let response_model = await $fetch<SuccessError<UsersModel.ValidateNicknameResponseModel>>(api_url, {
     cache: "no-cache",
     method: "post",
     body: formData,
   });
   is_uploading.value = false
-      if (response_model.success) {
-        previewUrlFile.value = null
-        showToastSuccess(response_model.message)
-         verifyModalSub.hide()
-      }
-      else {
-        showToastError(response_model.message)
-      }
+  if (response_model.success) {
+    previewUrlFile.value = null
+    showToastSuccess(response_model.message)
+    verifyModalSub.hide()
+  }
+  else {
+    showToastError(response_model.message)
+  }
 }
 
 </script>
