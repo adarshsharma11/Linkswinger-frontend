@@ -7,18 +7,19 @@
         <h1 class="text-white">LinkSwingers</h1>
       </div>
       <nav class="nav" id="sideNav">
-        <a href="#profile" data-route="profile" @click.prevent="setActiveNav('profile')" :class="{ active: activeNav === 'profile' }" class="text-white"><span class="icon">👤</span>My Profile</a>
-        <a href="#home" data-route="home" class="active text-white" @click.prevent="setActiveNav('home')" :class="{ active: activeNav === 'home' }"><span class="icon">🏠</span>Home</a>
-        <a href="#messages" data-route="messages" @click.prevent="setActiveNav('messages')" :class="{ active: activeNav === 'messages' }" class="text-white"><span class="icon">💬</span>Messages/Calls</a>
-        <a href="#notifications" data-route="notifications" @click.prevent="setActiveNav('notifications')" :class="{ active: activeNav === 'notifications' }" class="text-white"><span class="icon">🔔</span>Notifications</a>
-        <a href="#nearby" data-route="nearby" @click.prevent="setActiveNav('nearby')" :class="{ active: activeNav === 'nearby' }" class="text-white"><span class="icon">📍</span>Nearby People</a>
-        <a href="#friends" data-route="friends" @click.prevent="setActiveNav('friends')" :class="{ active: activeNav === 'friends' }" class="text-white"><span class="icon">👥</span>My Friends</a>
-        <a href="#crush" data-route="crush" @click.prevent="setActiveNav('crush')" :class="{ active: activeNav === 'crush' }" class="text-white"><span class="icon">⭐</span>Crush List</a>
-        <a href="#search" data-route="search" @click.prevent="setActiveNav('search')" :class="{ active: activeNav === 'search' }" class="text-white"><span class="icon">🔍</span>Search</a>
-        <a href="#new-photos" data-route="new-photos" @click.prevent="setActiveNav('new-photos')" :class="{ active: activeNav === 'new-photos' }" class="text-white"><span class="icon">🖼</span>New Photos</a>
-        <a href="#new-video" data-route="new-video" @click.prevent="setActiveNav('new-video')" :class="{ active: activeNav === 'new-video' }" class="text-white"><span class="icon">🎞</span>New Videos</a>
-        <a href="#meet-events" data-route="meet-events" @click.prevent="setActiveNav('meet-events')" :class="{ active: activeNav === 'meet-events' }" class="text-white"><span class="icon">📅</span>Meet Events</a>
-        <a href="#club-events" data-route="club-events" @click.prevent="setActiveNav('club-events')" :class="{ active: activeNav === 'club-events' }" class="text-white"><span class="icon">🏷</span>Club Events</a>
+        <a href="#profile" data-route="profile" @click.prevent="setActiveNav('profile')" :class="{ active: activeNav === 'profile' }" class="text-white"><span class="icon"><!--👤--> <img class="sidebar-ic" :src="`/images/badges/user.png`" /></span>My Profile</a>
+        <a href="#home" data-route="home" class="active text-white" @click.prevent="setActiveNav('home')" :class="{ active: activeNav === 'home' }"><span class="icon"><!--🏠--> <img class="sidebar-ic" :src="`/images/badges/home.png`" /></span>Home</a>
+        <a href="#messages" data-route="messages" @click.prevent="setActiveNav('messages')" :class="{ active: activeNav === 'messages' }" class="text-white"><span class="icon"><!--💬-->  <img class="sidebar-ic" :src="`/images/badges/chat.png`" /></span>Messages/Calls</a>
+        <a href="#notifications" data-route="notifications" @click.prevent="setActiveNav('notifications')" :class="{ active: activeNav === 'notifications' }" class="text-white"><span class="icon"><!--🔔-->  <img class="sidebar-ic" :src="`/images/badges/notification.png`" /></span>Notifications</a>
+        <a href="#nearby" data-route="nearby" @click.prevent="setActiveNav('nearby')" :class="{ active: activeNav === 'nearby' }" class="text-white"><span class="icon"><!--📍-->  <img class="sidebar-ic" :src="`/images/badges/location.png`" /></span>Nearby People</a>
+        <a href="#friends" data-route="friends" @click.prevent="setActiveNav('friends')" :class="{ active: activeNav === 'friends' }" class="text-white"><span class="icon"><!--👥-->  <img class="sidebar-ic" :src="`/images/badges/friends.png`" /></span>My Friends</a>
+        <a href="#crush" data-route="crush" @click.prevent="setActiveNav('crush')" :class="{ active: activeNav === 'crush' }" class="text-white"><span class="icon"><!--⭐-->  <img class="sidebar-ic" :src="`/images/badges/star.png`" /></span>Crush List</a>
+        <a href="#search" data-route="search" @click.prevent="setActiveNav('search')" :class="{ active: activeNav === 'search' }" class="text-white"><span class="icon"><!--🔍-->  <img class="sidebar-ic" :src="`/images/badges/search.png`" /></span>Search</a>
+        <a href="#new-photos" data-route="new-photos" @click.prevent="setActiveNav('new-photos')" :class="{ active: activeNav === 'new-photos' }" class="text-white"><span class="icon"><!--🖼-->  <img class="sidebar-ic" :src="`/images/badges/public-photos.png`" /></span>New Photos</a>
+        <a href="#new-video" data-route="new-video" @click.prevent="setActiveNav('new-video')" :class="{ active: activeNav === 'new-video' }" class="text-white"><span class="icon"><!--🎞-->  <img class="sidebar-ic" :src="`/images/badges/video-call.png`" /></span>New Videos</a>
+        <a href="#meet-events" data-route="meet-events" @click.prevent="setActiveNav('meet-events')" :class="{ active: activeNav === 'meet-events' }" class="text-white"><span class="icon"><!--📅-->  <img class="sidebar-ic" :src="`/images/badges/calender.png`" /></span>Meet Events</a>
+        <a href="#club-events" data-route="club-events" @click.prevent="setActiveNav('club-events')" :class="{ active: activeNav === 'club-events' }" class="text-white"><span class="icon"><!--🏷--> <img class="sidebar-ic" :src="`/images/badges/club.png`" /> </span>Club Events</a>
+        <a href="#video-roullet" data-route="video-roullet" @click.prevent="setActiveNav('video-roullet')" :class="{ active: activeNav === 'video-roullet' }" class="text-white"><span class="icon"> <img class="sidebar-ic" :src="`/images/badges/video-roulette-available.png`" /></span>Video Roullet</a>
         <a href="#live" data-route="live" @click.prevent="setActiveNav('live')" :class="{ active: activeNav === 'live' }" class="text-white"><span class="icon">🔴</span>Live / On Cam</a>
       </nav>
       <div class="spacer" />
@@ -27,6 +28,10 @@
 
     <!-- MAIN COLUMN -->
     <div class="dashboard-main">
+      <div class="dash-logo"><div class="brand">
+        <div class="brand-logo" title="Swap src to your local path once deployed" />
+        <h1 class="text-white">LinkSwingers</h1>
+      </div></div>
       <header class="dashboard-header">
         <div class="dash-row" style="gap:10px;flex:1">
           <strong id="routeTitle" class="text-white">{{ routeTitle }}</strong>
