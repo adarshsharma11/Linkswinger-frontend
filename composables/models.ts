@@ -23,7 +23,8 @@ export enum RequestURL {
   uploadVerifyPhoto = "/uploadVerifyPhoto",
   updateUserProfile = "/updateUserProfile",
   fetchPromotion = "/fetchPromotion",
-  getProfilePhotoURL = "/getProfilePhotoURL"
+  getProfilePhotoURL = "/getProfilePhotoURL",
+  addEarlyAccess = "/addEarlyAccess"
 }
 
 
@@ -326,4 +327,16 @@ export class TierFeaturesModel {
     can_host_livestream?: boolean;
 }
 
+}
+
+
+export namespace EarlyAccessModel {
+    export class AddRequestModel {
+         email? : string
+         should_receive_updates? : boolean
+    }
+    export class AddResponseModel {
+        
+    }
+ 
 }
