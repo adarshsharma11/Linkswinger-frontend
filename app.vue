@@ -29,7 +29,8 @@ const fetchOptions = async () => {
 }
 let response_model = await fetchOptions() as PromotionsModel.FetchResponseModel
 promotion_text.value = response_model.text ?? ''
-speed.value = response_model.speed ?? 50
+speed.value = response_model.speed ?? 5
+
 
 onMounted(() => {
     useDatabase();
