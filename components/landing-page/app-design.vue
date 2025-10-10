@@ -100,12 +100,13 @@ const fetchOptions = async () => {
 }
 promotion_text.value = await fetchOptions()
 
-function goToSignup() {
+async function goToSignup() {
   if (!acceptedTerms.value) {
     showToastError("You must accept Terms & Privacy to continue.");
     return;
   }
-  router.push('/authentication/signup');
+  await navigateTo('/early-access');
+  // router.push('/early-access');
 }
 
 function goToLogin() {
