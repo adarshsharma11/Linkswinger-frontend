@@ -1,6 +1,6 @@
 <template>
   <NuxtLoadingIndicator color="#FF0000" />
-  <CommonPromotionStrip :text="promotion_text" />
+  <CommonPromotionStrip :text="promotion_text" :speed = "speed" />
   <div class="mb-6">
     <NuxtLayout>
       <NuxtPage />
@@ -13,6 +13,7 @@ import { NuxtLoadingIndicator } from '#components';
 import type { PromotionsModel } from './composables/models';
 const id_store = idStore()
 const promotion_text = ref('')
+const speed = ref(50)
 
 const fetchOptions = async () => {
   const api_url = getUrl(RequestURL.fetchPromotion);
@@ -24,9 +25,11 @@ const fetchOptions = async () => {
       "content-type": "application/json"
     }
   });
-  return fetch_response.value?.response?.text ?? ''
+  return fetch_response.value?.response 
 }
-promotion_text.value = await fetchOptions()
+let response_model = await fetchOptions() as PromotionsModel.FetchResponseModel
+promotion_text.value = response_model.text ?? ''
+speed.value = response_model.speed ?? 50
 
 onMounted(() => {
     useDatabase();
