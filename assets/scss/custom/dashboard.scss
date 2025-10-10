@@ -4,16 +4,17 @@
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--text);font:14px/1.4 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif}
 a{color:inherit;text-decoration:none}
-.dashboard-container{display:grid;grid-template-columns:260px 1fr;min-height:100dvh;background:var(--bg);color:var(--text);font:14px/1.4 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif}
+.dashboard-container{display:grid; margin-top: 70px; grid-template-columns:260px 1fr;min-height:100dvh;background:var(--bg);color:var(--text);font:14px/1.4 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif}
 /* SIDEBAR (desktop) */
 .dashboard-sidebar{background:var(--panel);border-right:1px solid #222;display:flex;flex-direction:column;padding:16px;gap:8px;position:sticky;top:0;max-height:100dvh;overflow-y:auto}
 .brand{display:flex;align-items:center;gap:12px;margin-bottom:12px}
 .brand-logo{width:42px;height:42px;border-radius:10px;background:#000 url('/images/logo/landing-logo.gif') center/cover no-repeat;outline:1px solid #222;box-shadow:var(--glow)}
 .brand h1{font-size:16px;margin:0;letter-spacing:.4px}
 .nav{display:flex;flex-direction:column;gap:6px;margin-top:8px}
-.nav a{padding:10px 12px;border-radius:12px;display:flex;align-items:center;gap:10px;background:transparent;border:1px solid transparent}
+.nav a{padding:5px 12px;border-radius:12px;display:flex;align-items:center;gap:10px;background:transparent;border:1px solid transparent}
 .nav a.active,.nav a:hover{background:var(--panel-2);border-color:#1e1e1e;box-shadow:var(--glow)}
-.nav .icon{width:20px;text-align:center;opacity:.9}
+.nav .icon{width:30px;text-align:center;opacity:.9}
+.sidebar-ic { width: 30px; }
 .subnav-label{margin:8px 12px 2px;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.06em}
 .nav .sub{padding-left:36px}
 .spacer{flex:1}
@@ -55,6 +56,8 @@ select,input[type=number]{background:#0f0f0f;border:1px solid #222;border-radius
 /* COMPOSER */
 .composer{display:flex;gap:8px}
 .composer input{flex:1}
+.dash-logo .brand { justify-content: center; margin: 0; } 
+.dash-logo { padding: 15px 0 5px; }
 /* MOBILE */
 @media (max-width: 980px){
   .dashboard-container{grid-template-columns:1fr}
