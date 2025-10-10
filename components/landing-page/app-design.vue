@@ -1,7 +1,7 @@
 <template>
   <section class="bg-darker text-white min-vh-100 d-flex flex-column justify-content-center">
     <!-- Top Red Strip -->
-    <CommonPromotionStrip :text="promotion_text" />
+    <!-- <CommonPromotionStrip :text="promotion_text" /> -->
 
     <div class="container text-center py-5 mt-4">
       <div class="row justify-content-center landing-logo mt-4">
@@ -86,19 +86,19 @@ const router = useRouter();
 const acceptedTerms = ref(false);
 const promotion_text = ref('')
 
-const fetchOptions = async () => {
-  const api_url = getUrl(RequestURL.fetchPromotion);
-  const { data: fetch_response, error: option_error } = await useFetch<SuccessError<PromotionsModel.FetchResponseModel>>(api_url, {
-    cache: "no-cache",
-    method: "post",
-    body: {},
-    headers: {
-      "content-type": "application/json"
-    }
-  });
-  return fetch_response.value?.response?.text ?? ''
-}
-promotion_text.value = await fetchOptions()
+// const fetchOptions = async () => {
+//   const api_url = getUrl(RequestURL.fetchPromotion);
+//   const { data: fetch_response, error: option_error } = await useFetch<SuccessError<PromotionsModel.FetchResponseModel>>(api_url, {
+//     cache: "no-cache",
+//     method: "post",
+//     body: {},
+//     headers: {
+//       "content-type": "application/json"
+//     }
+//   });
+//   return fetch_response.value?.response?.text ?? ''
+// }
+// promotion_text.value = await fetchOptions()
 
 async function goToSignup() {
   if (!acceptedTerms.value) {

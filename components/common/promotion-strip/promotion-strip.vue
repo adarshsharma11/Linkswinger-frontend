@@ -28,7 +28,7 @@ const props = defineProps<Props>()
   color: white;
   font-size: 1rem;
   font-weight: bold;
-  margin-top: 25px;
+  margin-top: 10px;
 }
 
 @keyframes scroll {
