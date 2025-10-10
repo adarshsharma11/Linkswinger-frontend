@@ -94,6 +94,7 @@ export namespace PromotionsModel {
     }
     export class FetchResponseModel {
        text? : string
+       speed?: number
     }
 }
 
