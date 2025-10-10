@@ -1,5 +1,6 @@
 <template>
    <Profile/>
+   <CommonFooter/>
 </template>
 <script setup>
 useHead({
