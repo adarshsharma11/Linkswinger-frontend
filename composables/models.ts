@@ -255,6 +255,7 @@ export namespace UsersModel {
     is_photo_verified?: boolean;
     verified_photo?:string;
     assets_path?:string;
+    media_path?:string;
   }
 
   export class FetchMembershipRequestModel {

@@ -91,6 +91,11 @@ export async function onlinerole(model: OnlineSocketModel) {
     const blob = new Blob([JSON.stringify(model)], { type: "application/json" });
     socket?.send(blob)
 }
+export async function sendtosocket(model: any) 
+{
+      const blob = new Blob([JSON.stringify(model)], { type: "application/json" });
+      socket?.send(blob)
+}
 
 function logoutself() {
     is_reconnecting = false
