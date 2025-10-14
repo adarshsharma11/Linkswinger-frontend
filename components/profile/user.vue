@@ -380,7 +380,6 @@ function getProfilePlaceholder() : string
   let profile_image = login_store.getUserDetails?.profile_image ?? ''
   if (media_path.length > 0 && profile_image.length > 0)
   {
-    console.log("Profile Image Path: " + media_path + profile_image)
     return media_path + profile_image
   }
   let profile_type = login_store.getUserDetails?.profile_type ?? ''
