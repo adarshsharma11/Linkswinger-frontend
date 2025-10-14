@@ -223,6 +223,8 @@ export namespace UsersModel {
     nick_name?: string;
     email?: string;
     profile_image?: string;
+    sd_profile_image?: string;
+    hd_profile_image?: string;
     profile_type?: string;
     user_type?: string;
     is_email_confirmed?: boolean;
