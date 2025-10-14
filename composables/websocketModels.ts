@@ -34,3 +34,12 @@ export class OnlineSocketModel implements SocketEventModel {
     event_name?: string;
     online: number = 0;
 }
+
+export class WorkerModel implements SocketEventModel
+{
+     event_name?: string;
+     user_id?: number
+     type? : string
+     url? : string
+     progress? : number
+}

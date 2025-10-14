@@ -376,6 +376,13 @@ function getmembershipIcon() : string
 
 function getProfilePlaceholder() : string
 {
+  let media_path = login_store.getUserDetails?.media_path ?? ''
+  let profile_image = login_store.getUserDetails?.profile_image ?? ''
+  if (media_path.length > 0 && profile_image.length > 0)
+  {
+    console.log("Profile Image Path: " + media_path + profile_image)
+    return media_path + profile_image
+  }
   let profile_type = login_store.getUserDetails?.profile_type ?? ''
   if (profile_type === 'Couple') return "/images/profile-placeholders/MF-COUPLE.png";
   if (profile_type === 'Others') return "/images/profile-placeholders/TRANS.png";

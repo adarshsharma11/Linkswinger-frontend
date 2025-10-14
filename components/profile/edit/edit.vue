@@ -5,70 +5,48 @@
                 <div class="form2 text-white">
                     <!-- Row: DOB + Sexual Orientation -->
                     <div class="row">
-                      <div class="form-group">
-                      <div class="d-flex flex-column align-items-center justify-content-center position-relative">
-  <!-- Avatar Wrapper -->
-                        <div class="position-relative d-inline-block" style="width: 120px; height: 120px;">
-                          <!-- Avatar -->
-                          <img
-                            :src="previewUrl || '/images/avtar/1.jpg'"
-                            alt="Profile"
-                            class="rounded-circle"
-                            style="width: 120px; height: 120px; object-fit: cover; display: block; margin: 0 auto;"
-                          />
+                        <div class="form-group">
+                            <div class="d-flex flex-column align-items-center justify-content-center position-relative">
+                                <!-- Avatar Wrapper -->
+                                <div class="position-relative d-inline-block" style="width: 120px; height: 120px;">
+                                    <!-- Avatar -->
+                                    <img :src="previewUrl || '/images/avtar/1.jpg'" alt="Profile" class="rounded-circle"
+                                        style="width: 120px; height: 120px; object-fit: cover; display: block; margin: 0 auto;" />
+                                    <span class="btn-loader" v-if="is_photo_uploading"></span>
 
-                          <!-- Edit Icon -->
-                          <button
-                            type="button"
-                            class="btn btn-theme-color rounded-circle position-absolute"
-                            style="top: -12px; right: -8px; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;"
-                            @click="triggerFileInput"
-                          >
-                            <i class="fa fa-pencil text-white fa-lg"></i>
-                          </button>
+                                    <!-- Edit Icon -->
+                                    <button v-if="!is_photo_uploading" type="button"
+                                        class="btn btn-theme-color rounded-circle position-absolute"
+                                        style="top: -12px; right: -8px; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;"
+                                        @click="triggerFileInput">
+                                        <i class="fa fa-pencil text-white fa-lg"></i>
+                                    </button>
+                                </div>
+
+                                <!-- Hidden File Input -->
+                                <input type="file" accept="image/png,image/jpeg" class="d-none" ref="fileInput"
+                                    @change="handleFileUpload" />
+                            </div>
+
+
+
                         </div>
-
-                        <!-- Hidden File Input -->
-                        <input
-                          type="file"
-                          accept="image/png,image/jpeg"
-                          class="d-none"
-                          ref="fileInput"
-                          @change="handleFileUpload"
-                        />
-                      </div>
-
-
-
-                      </div>
-                       <div class="form-group ">
-                        <label>About Me</label>
-                        <textarea
-                            v-model="about_me"
-                            class="form-control"
-                            id="exampleFormControlTextarea1"
-                            placeholder="Write about yourself"
-                            rows="4"
-                            style="resize:none;"
-                          ></textarea>
+                        <div class="form-group ">
+                            <label>About Me</label>
+                            <textarea v-model="about_me" class="form-control" id="exampleFormControlTextarea1"
+                                placeholder="Write about yourself" rows="4" style="resize:none;"></textarea>
                         </div>
                         <div class="form-group col-12 col-md-6">
-                            <label for="inputdob">Date of Birth 
-                                <i class="fa fa-info-circle text-info ms-1" 
-                                   v-tooltip="login_store.getUserDetails?.is_dob_changed ? 'You can only change your date of birth once. This field is now locked.' : 'You can only change your date of birth once. Make sure it\'s correct!'"
-                                   style="cursor: help; font-size: 14px;"></i>
+                            <label for="inputdob">Date of Birth
+                                <i class="fa fa-info-circle text-info ms-1"
+                                    v-tooltip="login_store.getUserDetails?.is_dob_changed ? 'You can only change your date of birth once. This field is now locked.' : 'You can only change your date of birth once. Make sure it\'s correct!'"
+                                    style="cursor: help; font-size: 14px;"></i>
                             </label>
                             <div class="dob-tooltip-wrapper">
-                                <input
-                                  class="form-control"
-                                  id="inputdob"
-                                  type="date"
-                                  v-model="dob"
-                                  :max="maxDob"
-                                  :disabled="login_store.getUserDetails?.is_dob_changed ?? false"
-                                  :class="{ 'disabled-input': login_store.getUserDetails?.is_dob_changed }"
-                                  title="Date of Birth"
-                                />
+                                <input class="form-control" id="inputdob" type="date" v-model="dob" :max="maxDob"
+                                    :disabled="login_store.getUserDetails?.is_dob_changed ?? false"
+                                    :class="{ 'disabled-input': login_store.getUserDetails?.is_dob_changed }"
+                                    title="Date of Birth" />
                             </div>
                         </div>
                         <div class="form-group col-12 col-md-6">
@@ -166,15 +144,16 @@
                                     v-model="partnerNickName" />
                             </div>
                             <div class="form-group col-12 col-md-6">
-                                <label for="partnerDob">Partner Date of Birth 
-                                    <i class="fa fa-info-circle text-info ms-1" 
-                                       v-tooltip="login_store.getUserDetails?.is_partner_dob_changed ? 'You can only change your partner\'s date of birth once. This field is now locked.' : 'You can only change your partner\'s date of birth once. Make sure it\'s correct!'"
-                                       style="cursor: help; font-size: 14px;"></i>
+                                <label for="partnerDob">Partner Date of Birth
+                                    <i class="fa fa-info-circle text-info ms-1"
+                                        v-tooltip="login_store.getUserDetails?.is_partner_dob_changed ? 'You can only change your partner\'s date of birth once. This field is now locked.' : 'You can only change your partner\'s date of birth once. Make sure it\'s correct!'"
+                                        style="cursor: help; font-size: 14px;"></i>
                                 </label>
                                 <div class="dob-tooltip-wrapper">
                                     <input class="form-control" id="partnerDob" type="date" v-model="partnerDob"
-                                        :max="maxDob" :disabled="login_store.getUserDetails?.is_partner_dob_changed ?? false"
-                                        title="Partner Date of Birth"/>
+                                        :max="maxDob"
+                                        :disabled="login_store.getUserDetails?.is_partner_dob_changed ?? false"
+                                        title="Partner Date of Birth" />
                                 </div>
                             </div>
                         </div>
@@ -223,7 +202,7 @@
 
                     </div>
 
-                   
+
                     <!-- Signup Button -->
                     <div class="form-group mb-4">
                         <div class="buttons">
@@ -298,19 +277,19 @@ const previewUrlFile = ref<Blob | null>(null);
 const fileInput = ref<HTMLInputElement | null>(null);
 const previewUrl = ref<string | null>(null);
 function triggerFileInput() {
-  fileInput.value?.click();
+    fileInput.value?.click();
 }
 
 async function handleFileUpload(event: Event) {
-  const target = event.target as HTMLInputElement;
-  const file = target.files?.[0];
-  if (file) {
-    const profile_image = await file.arrayBuffer()
-    previewUrl.value = URL.createObjectURL(file)
-    previewUrlFile.value = new Blob([profile_image])
-    await uploadPhoto()
-  }
-  target.value = ''
+    const target = event.target as HTMLInputElement;
+    const file = target.files?.[0];
+    if (file) {
+        const profile_image = await file.arrayBuffer()
+        previewUrl.value = URL.createObjectURL(file)
+        previewUrlFile.value = new Blob([profile_image])
+        await uploadPhoto(file.type)
+    }
+    target.value = ''
 }
 // Arrays to hold values
 let cmArray: number[] = [];
@@ -331,7 +310,7 @@ const fetchOptions = async () => {
     return option_response.value?.response ?? {}
 }
 allOptions.value = await fetchOptions() as UsersModel.FetchOptionsResponseModel
-selectedTown.value = {town_id:login_store.getUserDetails?.town_id,town:login_store.getUserDetails?.town} as UsersModel.FetchTownResponseModel
+selectedTown.value = { town_id: login_store.getUserDetails?.town_id, town: login_store.getUserDetails?.town } as UsersModel.FetchTownResponseModel
 getHeight();
 getPartnerHeight();
 
@@ -432,7 +411,7 @@ function usersignup() {
     }
     const town_id = selectedTown.value?.town_id ?? 0
     let request_mdoel = {
-        user_id : login_store.getUserDetails?.user_id,
+        user_id: login_store.getUserDetails?.user_id,
         profile_type: profileType.value,
         nick_name: nickName.value,
         email: email.value,
@@ -456,7 +435,7 @@ function usersignup() {
         device_id: "",
         gender: gender.value,
         partner_gender: partner_gender.value,
-        about_me : about_me.value
+        about_me: about_me.value
     } as UsersModel.SignUpRequestModel
 
     let api_url = getUrl(RequestURL.updateUserProfile);
@@ -488,34 +467,73 @@ function usersignup() {
     // Proceed with signup logic
 }
 
-async function uploadPhoto()
-{
+async function uploadPhoto(contentType:string = 'image/jpeg') {
     let api_url = getUrl(RequestURL.getProfilePhotoURL);
     is_photo_uploading.value = true;
     let response = await $fetch<SuccessError<UsersModel.ProfilePhotoResponseModel>>(api_url, {
         method: 'POST',
         body: {
-            "user_id" : login_store.getUserDetails?.user_id
+            "user_id": login_store.getUserDetails?.user_id,
+            "contentType": contentType
         },
         headers: {
             'Content-Type': 'application/json',
         },
     })
     let url = response.response?.url ?? ""
-      try {
-  let uploadmodel = await $fetch(url,{
-        method : 'PUT',
-        body : previewUrlFile.value,
-        headers : {
-         'Content-Type': 'image/jpeg',
-        }
-    })
-      }
-      catch (error) {
-        console.log("testing..",error);
-      }
+    upload(url,contentType)
 }
 
+function upload(url: string,contentType:string = 'image/jpeg') 
+{
+    const xhr = new XMLHttpRequest()
+    xhr.upload.addEventListener('progress', (e) => {
+        if (e.lengthComputable) {
+            let value = Math.round((e.loaded / e.total) * 100)
+            let workermodel        = new WorkerModel()
+            workermodel.event_name = "uploading"
+            workermodel.type       = "profile_picture_upload"
+            workermodel.user_id    = login_store.getUserDetails?.user_id
+            workermodel.url        = url
+            workermodel.progress   = value
+            sendmsgtoworker(workermodel,true)
+        }
+    })
+
+    xhr.upload.addEventListener('error', () => {
+        // error.value = 'Upload failed'
+        // uploading.value = false
+        is_photo_uploading.value = false;
+        showToastError('Photo upload failed. Please try again.')
+
+           let workermodel = new WorkerModel()
+            workermodel.event_name = "uploading"
+            workermodel.type = "profile_picture_upload"
+            workermodel.user_id = login_store.getUserDetails?.user_id
+            workermodel.url = url
+            workermodel.progress = -1
+            sendmsgtoworker(workermodel,true)
+    })
+
+    xhr.onreadystatechange = () => {
+        if (xhr.readyState === 4) {
+            is_photo_uploading.value = false;
+            let workermodel = new WorkerModel()
+            workermodel.event_name = "uploading"
+            workermodel.type = "profile_picture_upload"
+            workermodel.user_id = login_store.getUserDetails?.user_id
+            workermodel.url = url
+            workermodel.progress = 100
+            sendmsgtoworker(workermodel,true)
+        }
+    }
+
+    xhr.open('PUT', url)
+    xhr.setRequestHeader('Content-Type', contentType)
+    // add headers if needed: xhr.setRequestHeader('Authorization', 'Bearer ...')
+   
+    xhr.send(previewUrlFile.value)
+}
 
 
 
@@ -531,30 +549,30 @@ for (let inch = 0; inch <= 11; inch++) {
 }
 
 function getHeight() {
-  let height = login_store.getUserDetails?.height ?? ''
-  let height_unit = login_store.getUserDetails?.height_unit ?? 'cm'
-  if (height_unit === 'cm') {
-   cm_height.value = height
-  }
-  else {
-    let parseHeight = parseFloat(height)
-    let feet_inch = convertToInches(parseHeight)
-    feet_height.value = feet_inch.feet.toString()
-    inch_height.value =  feet_inch.inches.toString()
-  }
+    let height = login_store.getUserDetails?.height ?? ''
+    let height_unit = login_store.getUserDetails?.height_unit ?? 'cm'
+    if (height_unit === 'cm') {
+        cm_height.value = height
+    }
+    else {
+        let parseHeight = parseFloat(height)
+        let feet_inch = convertToInches(parseHeight)
+        feet_height.value = feet_inch.feet.toString()
+        inch_height.value = feet_inch.inches.toString()
+    }
 }
 function getPartnerHeight() {
-  let height = login_store.getUserDetails?.partner_height ?? ''
-  let height_unit = login_store.getUserDetails?.height_unit ?? 'cm'
-  if (height_unit === 'cm') {
-      partner_cm_height.value = height
-  }
-  else {
-    let parseHeight = parseFloat(height)
-    let feet_inch = convertToInches(parseHeight)
-    partner_feet_height.value = feet_inch.feet.toString()
-    partner_inch_height.value =  feet_inch.inches.toString()
-  }
+    let height = login_store.getUserDetails?.partner_height ?? ''
+    let height_unit = login_store.getUserDetails?.height_unit ?? 'cm'
+    if (height_unit === 'cm') {
+        partner_cm_height.value = height
+    }
+    else {
+        let parseHeight = parseFloat(height)
+        let feet_inch = convertToInches(parseHeight)
+        partner_feet_height.value = feet_inch.feet.toString()
+        partner_inch_height.value = feet_inch.inches.toString()
+    }
 }
 
 watch(profileType, () => {
@@ -579,7 +597,7 @@ function checkValidation(): boolean {
     const partnerfeetheight = partner_feet_height.value ?? ""
     const partnerinchheight = partner_inch_height.value ?? ""
     const town_id = selectedTown.value?.town_id ?? 0
-     if (dobVal.length === 0) {
+    if (dobVal.length === 0) {
         showalert('Please enter date of birth');
         // toDate((item.created_at ?? ''),'yyyy-MM-dd')?.toISOString().split('T')[0] }}
         return false;
@@ -589,7 +607,7 @@ function checkValidation(): boolean {
         showalert('Please select sexual orientation');
         return false;
     }
-    
+
     else if (town_id === 0) {
         showalert('Please select town');
         return false;

@@ -235,6 +235,10 @@ async function handleworkerevent(event: MessageEvent<any>) {
   else if (json.event_name === "online") {
     onlinemodel = event.data as OnlineEventResponse
   }
+  else if (json.event_name === "uploading") {
+    let onlinemodel = event.data as WorkerModel
+    sendtosocket(onlinemodel)
+  }
 }
 
 
