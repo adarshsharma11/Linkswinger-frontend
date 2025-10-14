@@ -10,7 +10,7 @@
                                 <!-- Avatar Wrapper -->
                                 <div class="position-relative d-inline-block" style="width: 120px; height: 120px;">
                                     <!-- Avatar -->
-                                    <img :src="previewUrl || '/images/avtar/1.jpg'" alt="Profile" class="rounded-circle"
+                                    <img :src="getProfileImage()" alt="Profile" class="rounded-circle"
                                         style="width: 120px; height: 120px; object-fit: cover; display: block; margin: 0 auto;" />
                                     <span class="btn-loader" v-if="is_photo_uploading"></span>
 
@@ -691,6 +691,20 @@ function checkValidation(): boolean {
         return false;
     }
     return true;
+}
+function getProfileImage() : string
+{
+  let url = previewUrl.value ?? ''
+    if (url.length > 0) return url
+
+  let media_path = login_store.getUserDetails?.media_path ?? ''
+  let profile_image = login_store.getUserDetails?.profile_image ?? ''
+  if (media_path.length > 0 && profile_image.length > 0)
+  {
+    console.log("Profile Image Path: " + media_path + profile_image)
+    return media_path + profile_image
+  }
+  return "/images/avtar/1.jpg"
 }
 </script>
 
