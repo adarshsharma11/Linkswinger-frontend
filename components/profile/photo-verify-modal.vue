@@ -16,7 +16,7 @@
         <!-- Body -->
         <div class="modal-body">
           <!-- Example Images Row -->
-          <div class="row mb-4 g-3">
+          <div class="row mb-4 g-3 justify-content-center">
             <!-- <div class="col-12 col-md-6 text-center">
               <p class="small text-white fw-bold">Normal Photo Example</p>
               <img src="/images/samples/normal-sample.png" alt="Normal Example"
@@ -26,7 +26,6 @@
               <p class="small text-white fw-bold">Code-in-Hand Example</p>
               <img :src="getCodeImage()"
                 alt="Code Example" class="img-fluid rounded shadow sample-photo" />
-             
             </div>
           </div>
 
