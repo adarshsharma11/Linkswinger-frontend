@@ -81,3 +81,7 @@ select,input[type=number]{background:#0f0f0f;border:1px solid #222;border-radius
   .mobile-dashboard-nav .nav-item{display:flex;flex-direction:column;align-items:center;gap:6px;padding:8px 6px;border-radius:12px;border:1px solid transparent;color:var(--text);text-decoration:none;font-size:12px}
   .mobile-dashboard-nav .nav-item.active{border-color:#1e1e1e;box-shadow:var(--glow)}
 }
+@media (max-width:767px){
+.verify-modal .modal-header { padding-right: 50px; } 
+.verify-modal .modal-header h2.modal-title { font-size: 15px; line-height: normal; }
+}

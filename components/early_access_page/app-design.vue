@@ -47,7 +47,7 @@ const handleSubmit = async () => {
       </div>
 
     <main class="card">
-      <h1>
+      <h1 class="white-color">
         Be first in — get <span class="highlight">1 month free</span>
       </h1>
       <p class="sub">
