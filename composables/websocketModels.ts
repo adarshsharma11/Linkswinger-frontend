@@ -42,6 +42,7 @@ export class WorkerModel implements SocketEventModel
      type? : string
      url? : string
      progress? : number
+     timeStamp? : number
      media_id? : string
      media_type? : string
      feed_type? : string

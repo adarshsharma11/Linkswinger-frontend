@@ -480,8 +480,9 @@ async function uploadPhoto(contentType:string = 'image/jpeg') {
             'Content-Type': 'application/json',
         },
     })
-    let worker_model = response.response?.worker_model as WorkerModel
-    upload(worker_model,contentType)
+     let worker_model = response.response?.worker_model as WorkerModel
+     worker_model.timeStamp = Date.now()
+     upload(worker_model,contentType)
 }
 
 function upload(worker_model: WorkerModel,contentType:string = 'image/jpeg') 
@@ -491,6 +492,7 @@ function upload(worker_model: WorkerModel,contentType:string = 'image/jpeg')
         if (e.lengthComputable) {
             let value = Math.round((e.loaded / e.total) * 100)
             worker_model.progress   = value
+            console.log("Upload Progress: " + worker_model.progress )
             sendmsgtoworker(worker_model,true)
         }
     })
