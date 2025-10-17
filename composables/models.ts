@@ -297,7 +297,7 @@ export class ProfilePhotoRequestModel
 }
 export class ProfilePhotoResponseModel
 {
-  url?: string;
+  worker_model?: WorkerModel;
 }
 
 

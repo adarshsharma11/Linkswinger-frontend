@@ -480,23 +480,18 @@ async function uploadPhoto(contentType:string = 'image/jpeg') {
             'Content-Type': 'application/json',
         },
     })
-    let url = response.response?.url ?? ""
-    upload(url,contentType)
+    let worker_model = response.response?.worker_model as WorkerModel
+    upload(worker_model,contentType)
 }
 
-function upload(url: string,contentType:string = 'image/jpeg') 
+function upload(worker_model: WorkerModel,contentType:string = 'image/jpeg') 
 {
     const xhr = new XMLHttpRequest()
     xhr.upload.addEventListener('progress', (e) => {
         if (e.lengthComputable) {
             let value = Math.round((e.loaded / e.total) * 100)
-            let workermodel        = new WorkerModel()
-            workermodel.event_name = "uploading"
-            workermodel.type       = "profile_picture_upload"
-            workermodel.user_id    = login_store.getUserDetails?.user_id
-            workermodel.url        = url
-            workermodel.progress   = value
-            sendmsgtoworker(workermodel,true)
+            worker_model.progress   = value
+            sendmsgtoworker(worker_model,true)
         }
     })
 
@@ -505,30 +500,19 @@ function upload(url: string,contentType:string = 'image/jpeg')
         // uploading.value = false
         is_photo_uploading.value = false;
         showToastError('Photo upload failed. Please try again.')
-
-           let workermodel = new WorkerModel()
-            workermodel.event_name = "uploading"
-            workermodel.type = "profile_picture_upload"
-            workermodel.user_id = login_store.getUserDetails?.user_id
-            workermodel.url = url
-            workermodel.progress = -1
-            sendmsgtoworker(workermodel,true)
+            worker_model.progress = -1
+            sendmsgtoworker(worker_model,true)
     })
 
     xhr.onreadystatechange = () => {
         if (xhr.readyState === 4) {
             is_photo_uploading.value = false;
-            let workermodel = new WorkerModel()
-            workermodel.event_name = "uploading"
-            workermodel.type = "profile_picture_upload"
-            workermodel.user_id = login_store.getUserDetails?.user_id
-            workermodel.url = url
-            workermodel.progress = 100
-            sendmsgtoworker(workermodel,true)
+            worker_model.progress = 100
+            sendmsgtoworker(worker_model,true)
         }
     }
 
-    xhr.open('PUT', url)
+    xhr.open('PUT', worker_model.url ?? '')
     xhr.setRequestHeader('Content-Type', contentType)
     // add headers if needed: xhr.setRequestHeader('Authorization', 'Bearer ...')
    
