@@ -3,4 +3,5 @@
         <ProfileUser/>
     </div>
    <ProfilePhotoVerifyModal/>
+      <ProfileMediaUploadModal/>
 </template>

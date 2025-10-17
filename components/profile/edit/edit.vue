@@ -492,7 +492,6 @@ function upload(worker_model: WorkerModel,contentType:string = 'image/jpeg')
         if (e.lengthComputable) {
             let value = Math.round((e.loaded / e.total) * 100)
             worker_model.progress   = value
-            console.log("Upload Progress: " + worker_model.progress )
             sendmsgtoworker(worker_model,true)
         }
     })

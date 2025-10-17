@@ -24,7 +24,9 @@ export enum RequestURL {
   updateUserProfile = "/updateUserProfile",
   fetchPromotion = "/fetchPromotion",
   getProfilePhotoURL = "/getProfilePhotoURL",
-  addEarlyAccess = "/addEarlyAccess"
+  addEarlyAccess = "/addEarlyAccess",
+  getFeedMediaURL = "/getFeedMediaURL",
+  fetchFeeds = "/fetchFeeds"
 }
 
 
@@ -344,3 +346,18 @@ export namespace EarlyAccessModel {
     }
  
 }
+export namespace FeedsModel
+{
+   export class FeedsRequestModel
+   {
+    user_id?: number;
+    contentType?: string;
+     feed_type?: string;
+    feed_desc?: string;
+   }
+   export class FeedsResponseModel
+   {
+    worker_model?: WorkerModel;
+   }
+}
+    
