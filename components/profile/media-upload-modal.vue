@@ -21,11 +21,11 @@
                     <div class="upload-area p-4 border border-secondary rounded text-center text-white position-relative"
                         ref="uploadArea" @dragover.prevent="dragOver = true" @dragleave.prevent="dragOver = false"
                         @drop.prevent="handleDrop" :class="{ 'drag-over': dragOver }" v-if="previewUrl === null">
-                        <p class="mb-2">Drag & drop your photo here, or click to upload</p>
-                        <input type="file" accept="image/png,image/jpeg" class="form-control d-none" ref="fileInput"
+                        <p class="mb-2">Drag & drop your media here, or click to upload</p>
+                        <input type="file" accept="image/png,image/jpeg,video/mp4" class="form-control d-none" ref="fileInput"
                             @change="handleFileUpload" />
                         <button class="btn btn-outline-light btn-sm" @click="triggerFileInput">
-                            Upload Photo
+                            Upload Media
                         </button>
 
                         <!-- Ripple Effect -->

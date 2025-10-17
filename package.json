@@ -25,6 +25,7 @@
     "swiper": "^11.2.5",
     "uuid": "^13.0.0",
     "vee-validate": "^4.15.1",
+    "video.js": "^8.23.4",
     "vue": "^3.5.4",
     "vue-easy-lightbox": "^1.19.0",
     "vue-multiselect": "^3.3.1",

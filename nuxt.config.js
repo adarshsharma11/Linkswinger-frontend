@@ -35,6 +35,7 @@ export default defineNuxtConfig({
   // },
   css: [
     '@/assets/scss/app.scss',
+    'video.js/dist/video-js.css',
   ],
   modules: ['nuxt-icon','@pinia/nuxt','floating-vue/nuxt'],
   pinia: {

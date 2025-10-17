@@ -1,12 +1,16 @@
 <template>
     <div class="shorts-wrapper">
-        <Swiper :modules="[Pagination, Navigation , Mousewheel]" direction="vertical" :mousewheel="true" :slides-per-view="1"
-            class="shorts-swiper" @swiper="onSwiper" :lazy="true">
+        <Swiper :modules="[Pagination, Navigation, Mousewheel]" direction="vertical" :mousewheel="true"
+            :slides-per-view="1" class="shorts-swiper" @swiper="onSwiper" :lazy="true">
             <SwiperSlide v-for="(item, index) in allFeeds" :key="item.feed_id" class="short-slide">
                 <div class="short-container" :key="item.feed_id">
                     <div class="short-frame" :key="item.feed_id">
                         <img :key="item.feed_id" :src="`${item.media_path}${item.hd_feed_image}`" class="short-image"
-                            loading="lazy" />
+                            loading="lazy" v-if="item.media_type === 'image'" />
+                        <img :key="item.feed_id" :src="`${item.media_path}${item.feed_thumbnail}`" class="short-image"
+                            loading="lazy" v-if="item.media_type === 'video'" />
+                        <video v-if="item.media_type === 'video'" ref="videoRefs"
+                            class="video-js vjs-defaultskin short-video"></video>
                         <div class="swiper-lazy-preloader swiper-lazy-preloader-white"></div>
                         <div class="overlay">
                             <h3 style="color: white;">{{ item.feed_desc }}</h3>
@@ -20,10 +24,12 @@
 
 <script setup lang="ts">
 import { FeedsModel, RequestURL } from '~/composables/models';
+import videojs from "video.js";
 import { Swiper, SwiperSlide } from "swiper/vue";
 import { Mousewheel, Navigation, Pagination } from 'swiper/modules'
 let swiperInstance = null
-
+const videoRefs = ref([])
+const players = ref([])
 const onSwiper = (swiper: any) => {
     swiperInstance = swiper
 }
@@ -50,9 +56,58 @@ const fetchFeeds = async () => {
     return feed_response.value?.result ?? []
 }
 allFeeds.value = await fetchFeeds() as FeedsModel.FeedsResponseModel[]
+onMounted(() => {
+
+    allFeeds.value.forEach((feed, index) => {
+        const videoEl = videoRefs.value[index]
+
+        const player = videojs(videoEl, {
+            autoplay: false,
+            controls: true,
+            loop: true,
+            preload: 'auto',
+            muted: false,
+            fluid: true,
+            sources: [
+                {
+                    src: (feed.media_path ?? '') + feed.hd_feed_video,
+                    type: 'application/x-mpegURL'
+                }
+            ]
+        })
+
+        players.value.push(player)
+
+        // Pause/Play based on visibility
+        const observer = new IntersectionObserver(
+            entries => {
+                entries.forEach(entry => {
+                    const index = entry.target.querySelector('video')?.dataset.index
+                    const player = players.value[index]
+                    if (!player) return
+                    if (entry.isIntersecting) player.play().catch(() => { })
+                    else player.pause()
+                })
+            },
+            { threshold: 0.7 }
+        )
+        document.querySelectorAll('.short-slide').forEach(el => observer.observe(el))
+        onBeforeUnmount(() => {
+            console.log('Cleaning up observers and players')
+            observer.disconnect()
+            players.value.forEach(p => p.dispose())
+        })
+
+
+    })
+
+});
+
 </script>
 
-<style scoped>
+<style>
+@import "video.js/dist/video-js.css";
+
 /* ✅ Ensure body and root fill the screen */
 html,
 body,
@@ -60,7 +115,7 @@ body,
 #__layout {
     height: 100%;
     margin: 0;
-    
+
 }
 
 /* ✅ Outer wrapper: full height and centered horizontally */
@@ -108,6 +163,17 @@ body,
     background: #000;
 
     overflow: hidden;
+}
+
+.short-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  margin: 0 auto;
+  position: relative;
+    top: 50%;
+    transform: translateY(-50%);
 }
 
 /* ✅ Image fits frame */
