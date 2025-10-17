@@ -198,7 +198,7 @@ async function uploadMedia() {
     }
     let api_url = getUrl(RequestURL.getFeedMediaURL);
     is_uploading.value = true;
-    let response = await $fetch<SuccessError<FeedsModel.FeedsResponseModel>>(api_url, {
+    let response = await $fetch<SuccessError<FeedsModel.FeedsURLResponseModel>>(api_url, {
         method: 'POST',
         body: {
             "user_id": login_store.getUserDetails?.user_id,

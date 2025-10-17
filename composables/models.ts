@@ -348,16 +348,43 @@ export namespace EarlyAccessModel {
 }
 export namespace FeedsModel
 {
-   export class FeedsRequestModel
+   export class FeedsURLRequestModel
    {
     user_id?: number;
     contentType?: string;
      feed_type?: string;
     feed_desc?: string;
    }
-   export class FeedsResponseModel
+   export class FeedsURLResponseModel
    {
     worker_model?: WorkerModel;
    }
+
+    export class FeedsRequestModel
+   {
+    user_id?: number;
+    media_type?: string;
+     feed_type?: string;
+   }
+   export class FeedsResponseModel
+   {
+    media_path?: string;
+    media_type?: string;
+    feed_id?: number;
+    user_id?: number;
+    nick_name?: string;
+    profile_image?: string
+    hd_profile_image?: string
+    feed_thumbnail?: string
+     lq_feed_image?: string
+     hd_feed_image?: string
+      lq_feed_video?: string
+      sd_feed_video?: string
+      hd_feed_video?: string
+          feed_desc?: string
+          feed_type?: string
+   }
 }
+
+  
     

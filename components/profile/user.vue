@@ -195,12 +195,12 @@
           <div class="card-body">
             <h5 class="text-white mb-3">Photos & Videos</h5>
             <ul class="list-unstyled photo-list mb-0">
-              <li><img src="/images/badges/public-photos.png" class="icon" /> Public Photos</li>
-              <li><img src="/images/badges/public-photos.png" class="icon" /> Public Videos</li>
-              <li><img src="/images/badges/friends-only-photos.png" class="icon" /> Friends-Only Photos</li>
-              <li><img src="/images/badges/friends-only-photos.png" class="icon" /> Friends-Only Videos</li>
-              <li><img src="/images/badges/private-photos.png" class="icon" /> Private Photos</li>
-              <li><img src="/images/badges/private-photos.png" class="icon" /> Private Videos</li>
+              <li @click="navigateTo('/feeds/' + login_store.getUserDetails?.user_id + '?' + 'media_type=image' + '&' + 'feed_type=public')"><img src="/images/badges/public-photos.png" class="icon" /> Public Photos</li>
+              <li @click="navigateTo('/feeds/' + login_store.getUserDetails?.user_id + '?' + 'media_type=video' + '&' + 'feed_type=public')"><img src="/images/badges/public-photos.png" class="icon" /> Public Videos</li>
+              <li @click="navigateTo('/feeds/' + login_store.getUserDetails?.user_id + '?' + 'media_type=image' + '&' + 'feed_type=friends')"><img src="/images/badges/friends-only-photos.png" class="icon" /> Friends-Only Photos</li>
+              <li @click="navigateTo('/feeds/' + login_store.getUserDetails?.user_id + '?' + 'media_type=video' + '&' + 'feed_type=friends')"><img src="/images/badges/friends-only-photos.png" class="icon" /> Friends-Only Videos</li>
+              <li @click="navigateTo('/feeds/' + login_store.getUserDetails?.user_id + '?' + 'media_type=image' + '&' + 'feed_type=private')"><img src="/images/badges/private-photos.png" class="icon" /> Private Photos</li>
+              <li @click="navigateTo('/feeds/' + login_store.getUserDetails?.user_id + '?' + 'media_type=video' + '&' + 'feed_type=private')"><img src="/images/badges/private-photos.png" class="icon" /> Private Videos</li>
             </ul>
           </div>
         </div>
