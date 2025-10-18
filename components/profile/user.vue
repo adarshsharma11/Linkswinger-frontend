@@ -17,7 +17,7 @@
               <ul class="dropdown-menu dropdown-menu-end bg-dark text-white setting-dropdown-menu" aria-labelledby="settingsMenuMobile">
                  <li>
                   <button class="dropdown-item text-white d-flex align-items-center" @click="navigateTo('/membership')">
-                    <img src="/images/badges/photo-verified.png" alt="Verify" class="rounded-circle me-2"
+                    <img src="/images/badges/elite.png" alt="Verify" class="rounded-circle me-2"
                       style="width: 30px; height: 30px; object-fit: cover" />
                     <span class="text-white">Membership</span>
                   </button>
@@ -91,7 +91,7 @@
               <ul class="dropdown-menu dropdown-menu-end bg-dark text-white setting-dropdown-menu" aria-labelledby="settingsMenu">
                 <li>
                   <button class="dropdown-item text-white d-flex align-items-center" @click="navigateTo('/membership')">
-                    <img src="/images/badges/photo-verified.png" alt="Verify" class="rounded-circle me-2"
+                    <img src="/images/badges/elite.png" alt="Verify" class="rounded-circle me-2"
                       style="width: 30px; height: 30px; object-fit: cover" />
                     <span class="text-white">Membership</span>
                   </button>
