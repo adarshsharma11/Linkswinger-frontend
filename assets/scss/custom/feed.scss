@@ -1,0 +1,187 @@
+/* ✅ Ensure body and root fill the screen */
+html,
+body,
+#__nuxt,
+#__layout {
+    height: 100%;
+    margin: 0;
+
+}
+
+/* ✅ Outer wrapper: full height and centered horizontally */
+.shorts-wrapper {
+    height: 100vh;
+    width: 360px;
+    margin: 0 auto;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* ✅ Swiper must fill the wrapper fully */
+.shorts-swiper {
+    height: 100%;
+    width: 100%;
+}
+
+/* ✅ Each slide fills the swiper viewport */
+.short-slide {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    background-color: black;
+}
+
+/* ✅ Container centers the frame */
+.short-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+}
+
+/* ✅ Frame simulates 9:16 Shorts card */
+.short-frame {
+    position: relative;
+    width: 360px;
+    height: 640px;
+    /* 9:16 ratio */
+    background: #000;
+
+    overflow: hidden;
+}
+
+.short-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    margin: 0 auto;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+/* ✅ Completely disable pointer events on the Video.js player */
+.short-video,
+.video-js {
+    pointer-events: none !important;
+}
+
+/* Prevent user selecting text / long-press menus */
+.short-video,
+.video-js video {
+    user-select: none;
+    -webkit-user-drag: none;
+    -webkit-touch-callout: none;
+    touch-action: none;
+}
+
+/* --- Play / Pause Button --- */
+.play-toggle {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    font-size: 2rem;
+    border: none;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    cursor: pointer;
+
+}
+
+.play-toggle:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/* --- Fade Animation --- */
+.fade-enter-active,
+.fade-leave-active {
+    transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+    opacity: 0;
+
+}
+
+/* ✅ Image fits frame */
+.short-image {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    transform: translate(-50%, -50%);
+    object-fit: contain;
+}
+
+/* ✅ Overlay text */
+.overlay {
+    position: absolute;
+    bottom: 0px;
+    left: 5px;
+    color: white;
+    font-size: 1.2rem;
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.7);
+}
+
+/* ✅ Responsive: make full width on mobile */
+@media (max-width: 480px) {
+    .shorts-wrapper {
+        width: 100%;
+        border-radius: 0;
+        box-shadow: none;
+    }
+}
+
+.vd-name {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    padding: 10px 0;
+}
+
+.vd-img img {
+    width: 100%;
+}
+
+.vd-img {
+    width: 50px;
+    border-radius: 50px;
+    overflow: hidden;
+}
+
+.vdo-name {
+    width: calc(100% - 50px);
+    padding-left: 15px;
+}
+
+.vdo-name h3 {
+    color: #fff;
+    font-size: 16px;
+}
+.short-container .short-frame {
+    height: 100%;
+    width: 100%;
+    max-width: 400px;
+}
+.short-frame .video-js {
+    padding-top: 0 !important;
+    height: 100% !important;
+}
+.short-container .overlay {
+    left: 10px;
+    right: 10px;
+    bottom: 60px;
+    top: auto;
+}
