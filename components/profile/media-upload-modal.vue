@@ -127,8 +127,8 @@ async function handleFileUpload(event: Event) {
             video.preload = 'metadata';
 
             video.onloadedmetadata = function () {
-                if (video.duration > 3) {
-                     showToastError("Please upload video less than 3 seconds long.");
+                if (video.duration > 180) {
+                     showToastError("Please upload video less than 3 minutes long.");
                      target.value = '' // Clear the selected file
                 }
             };
