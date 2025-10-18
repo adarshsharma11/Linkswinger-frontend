@@ -22,8 +22,8 @@
                         ref="uploadArea" @dragover.prevent="dragOver = true" @dragleave.prevent="dragOver = false"
                         @drop.prevent="handleDrop" :class="{ 'drag-over': dragOver }" v-if="previewUrl === null">
                         <p class="mb-2">Drag & drop your media here, or click to upload</p>
-                        <input type="file" accept="image/png,image/jpeg,video/mp4" class="form-control d-none" ref="fileInput"
-                            @change="handleFileUpload" />
+                        <input type="file" accept="image/png,image/jpeg,video/mp4" class="form-control d-none"
+                            ref="fileInput" @change="handleFileUpload" />
                         <button class="btn btn-outline-light btn-sm" @click="triggerFileInput">
                             Upload Media
                         </button>
@@ -33,15 +33,16 @@
                             @animationend="showRipple = false"></span>
                     </div>
                     <div class="form-group" style="margin-top: 10px;">
-                            <Multiselect v-model="feedType" :options="['Public','Friends-Only','Private']" :multiple="false"
-                                :close-on-select="true" placeholder="Select Ethnicity" />
+                        <Multiselect v-model="feedType" :options="['Public', 'Friends-Only', 'Private']" :multiple="false"
+                            :close-on-select="true" placeholder="Select Ethnicity" />
                     </div>
                     <div class="form-group" style="margin-top: 10px;">
-                            <textarea v-model="feedDesc" placeholder="Write about this feed" rows="4" style="resize:none; width: 100%; height: 150px;"> </textarea>
+                        <textarea v-model="feedDesc" placeholder="Write about this feed" rows="4"
+                            style="resize:none; width: 100%; height: 150px;"> </textarea>
                     </div>
 
                     <div class="form-group" style="margin-top: 10px;">
-                           
+
                     </div>
                     <!-- Preview -->
                     <div v-if="previewUrl" class="mt-4 d-flex justify-content-center position-relative">
@@ -114,9 +115,30 @@ async function handleFileUpload(event: Event) {
     const file = files[0]
     if (file) {
         contentType.value = file.type
-        const profile_image = await file.arrayBuffer()
-        previewUrlFile.value = new Blob([profile_image])
-        previewUrl.value = URL.createObjectURL(file)
+
+        if (file.type.startsWith("image/")) {
+            const profile_image = await file.arrayBuffer()
+            previewUrlFile.value = new Blob([profile_image])
+            previewUrl.value = URL.createObjectURL(file)
+        }
+        else {
+
+            const video = document.createElement('video');
+            video.preload = 'metadata';
+
+            video.onloadedmetadata = function () {
+                if (video.duration > 3) {
+                     showToastError("Please upload video less than 3 seconds long.");
+                     target.value = '' // Clear the selected file
+                }
+            };
+            video.src = URL.createObjectURL(file);
+            const video_file = await file.arrayBuffer()
+            previewUrlFile.value = new Blob([video_file])
+            previewUrlFile.value = file
+        }
+
+
     }
     target.value = ''
 }
@@ -137,7 +159,8 @@ function handleDrop(event: DragEvent) {
     }
     showRipple.value = true;
     previewUrl.value = null
-    const file = event.dataTransfer?.files[0];
+    const file = files[0];
+    contentType.value = file.type
     if (file) {
         previewUrl.value = URL.createObjectURL(file);
 
