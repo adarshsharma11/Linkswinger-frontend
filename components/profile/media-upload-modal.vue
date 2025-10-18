@@ -33,8 +33,8 @@
                             @animationend="showRipple = false"></span>
                     </div>
                     <div class="form-group" style="margin-top: 10px;">
-                        <Multiselect v-model="feedType" :options="['Public', 'Friends-Only', 'Private']" :multiple="false"
-                            :close-on-select="true" placeholder="Select Ethnicity" />
+                        <Multiselect v-model="feedType" :options="['Public', 'Friends-Only', 'Private']"
+                            :multiple="false" :close-on-select="true" placeholder="Select Ethnicity" />
                     </div>
                     <div class="form-group" style="margin-top: 10px;">
                         <textarea v-model="feedDesc" placeholder="Write about this feed" rows="4"
@@ -125,21 +125,18 @@ async function handleFileUpload(event: Event) {
 
             const video = document.createElement('video');
             video.preload = 'metadata';
-  const video_file = await file.arrayBuffer()
+            const video_file = await file.arrayBuffer()
             video.onloadedmetadata = function () {
                 if (video.duration > 180) {
-                     showToastError("Please upload video less than 3 minutes long.");
-                     target.value = '' // Clear the selected file
+                    showToastError("Please upload video less than 3 minutes long.");
+                    target.value = '' // Clear the selected file
                 }
-                else
-                {
-              
-            previewUrlFile.value = new Blob([video_file])
-            previewUrlFile.value = file
+                else {
+                    previewUrlFile.value = new Blob([video_file])
+                    previewUrl.value = URL.createObjectURL(file)
                 }
             };
             video.src = URL.createObjectURL(file);
-          
         }
 
 
