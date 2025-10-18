@@ -11,7 +11,7 @@
                         <img :key="item.feed_id" :src="`${item.media_path}${item.feed_thumbnail}`" class="short-image"
                             loading="lazy" v-if="item.media_type === 'video'" />
                         <video v-if="item.media_type === 'video'" ref="videoRefs"
-                            class="video-js vjs-defaultskin short-video"></video>
+                            class="video-js vjs-defaultskin short-video"  playsinline webkit-playsinline x5-playsinline></video>
                         <!-- ✅ Simple Play / Pause Button -->
                         <!-- ✅ Play/Pause button with fade -->
                         <transition name="fade" v-if="item.media_type === 'video'">
@@ -79,9 +79,16 @@ onMounted(async () => {
                 {
                     src: `${feed.media_path}${feed.hd_feed_video}`,
                     type: 'application/x-mpegURL'
-
                 }
-            ]
+            ],
+            html5: {
+                vhs: {
+                    overrideNative: true
+                },
+                nativeAudioTracks: false,
+                nativeVideoTracks: false
+            }
+
         })
         players.value.push(player)
         playingStates.value.push(false)
