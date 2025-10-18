@@ -23,10 +23,10 @@
                         <div class="overlay">
                             <div class="vd-name">
                                 <div class="vd-img">
-                                    <img src="public/images/avtar/1.jpg" />
+                                    <img :src="getImagePath(item)" />
                                 </div>
                                 <div class="vdo-name">
-                                    <h3>Dummy Name</h3>
+                                    <h3>{{ item.nick_name }}</h3>
                                 </div>
                             </div>
                             <h3 style="color: white;">{{ item.feed_desc }}</h3>
@@ -211,6 +211,15 @@ const onReachEnd = () => {
         lastPlayer.pause()
         playingStates.value[lastIndex] = false
     }
+}
+
+function getImagePath(item: FeedsModel.FeedsResponseModel) {
+    let profile_image = item.profile_image  ?? '';
+    if (profile_image.length === 0) {
+        return 'public/images/avtar/1.jpg';
+    }
+
+    return `${item.media_path}${item.profile_image}`;
 }
 
 
