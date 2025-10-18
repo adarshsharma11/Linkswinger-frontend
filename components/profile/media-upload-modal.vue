@@ -125,17 +125,21 @@ async function handleFileUpload(event: Event) {
 
             const video = document.createElement('video');
             video.preload = 'metadata';
-
+  const video_file = await file.arrayBuffer()
             video.onloadedmetadata = function () {
                 if (video.duration > 180) {
                      showToastError("Please upload video less than 3 minutes long.");
                      target.value = '' // Clear the selected file
                 }
-            };
-            video.src = URL.createObjectURL(file);
-            const video_file = await file.arrayBuffer()
+                else
+                {
+              
             previewUrlFile.value = new Blob([video_file])
             previewUrlFile.value = file
+                }
+            };
+            video.src = URL.createObjectURL(file);
+          
         }
 
 
