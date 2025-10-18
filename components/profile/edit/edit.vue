@@ -36,6 +36,10 @@
                             <textarea v-model="about_me" class="form-control" id="exampleFormControlTextarea1"
                                 placeholder="Write about yourself" rows="4" style="resize:none;"></textarea>
                         </div>
+                        <div class="form-group ">
+                            <label>Status</label>
+                            <input class="form-control" id="inputstatus" type="text" />
+                        </div>
                         <div class="form-group col-12 col-md-6">
                             <label for="inputdob">Date of Birth
                                 <i class="fa fa-info-circle text-info ms-1"
