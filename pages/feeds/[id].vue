@@ -44,7 +44,7 @@ let fadeTimers = [] // store timeout IDs
 import "swiper/css";
 const route = useRoute();
 definePageMeta({
-    middleware: 'userdetails'
+    middleware: 'auth'
 })
 const allFeeds = ref([] as FeedsModel.FeedsResponseModel[])
 const fetchFeeds = async () => {
