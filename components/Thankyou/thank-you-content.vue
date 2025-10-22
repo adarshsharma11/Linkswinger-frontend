@@ -46,7 +46,7 @@
 </section>
 
       <div class="cta-row">
-        <a class="btn" href="#" onclick="event.preventDefault();" aria-label="Back to home (disabled)">Back to Home</a>
+        <a class="btn" href="/"  aria-label="Back to home (disabled)">Back to Home</a>
       </div>
 
       <div class="footer-note">

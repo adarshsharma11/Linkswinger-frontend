@@ -31,6 +31,7 @@ const handleSubmit = async () => {
       success.value = true
       email.value = ''
       consent.value = false
+      await navigateTo('/thank-you')
     } else {
       error.value = res.message || 'That didn’t work. Please try again.'
     }
