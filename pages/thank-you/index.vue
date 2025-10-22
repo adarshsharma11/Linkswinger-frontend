@@ -1,5 +1,5 @@
 <template>
-   <ThankYou/>
+   <Thankyou/>
 </template>
 <script setup>
 useHead({
