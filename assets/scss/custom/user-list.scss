@@ -1,0 +1,249 @@
+.quickbar {
+    margin: 10px 0 8px;
+    padding: 10px;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, .08);
+    background: linear-gradient(180deg, rgba(255, 255, 255, .03), rgba(255, 255, 255, 0)), #0c1113;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, .45);
+}
+.quickbar .controls {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 10px;
+    align-items: center;
+}
+.quc-search {
+    display: flex;
+    align-items: center;
+}
+.quc-frm {
+    grid-template-columns: auto 1.2fr 1fr 1fr auto auto;
+    gap: 10px;
+    display: grid
+;
+}
+.qtitle {
+    font-weight: 900;
+    letter-spacing: .3px;
+    background: linear-gradient(90deg, #ff3b3b, #ff6b6b);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: 0 0 16px rgba(255, 59, 59, .25);
+}
+.quickbar .input, .quickbar .select, .quickbar .btn {
+    background: #0c1113;
+    border: 1px solid rgba(255, 255, 255, .08);
+    color: #e8f6ef;
+    border-radius: 12px;
+    padding: 12px 12px;
+    font: inherit;
+}
+.quickbar .select {
+    appearance: none;
+    background-image: url('/public/images/user-list/dropdown-icon.png');
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    padding-right: 38px;
+}
+.quickbar .check {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #0c1113;
+    border: 1px solid rgba(255, 255, 255, .08);
+    border-radius: 12px;
+    padding: 10px 12px;
+}
+.quickbar .btn.primary {
+    background: linear-gradient(90deg, #ff3b3b, #ff6b6b);
+    color: #07110f;
+    box-shadow: 0 8px 26px rgba(255, 59, 59, 0.35);
+    font-weight: 700;
+}
+.user-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-top: 14px;
+}
+.user-grid .card {
+    position: relative;
+    background: linear-gradient(180deg, rgba(255, 255, 255, .02), rgba(255, 255, 255, 0)), #0f1416;
+    border: 1px solid rgba(255, 255, 255, .08);
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, .5);
+    padding: 0;
+}
+.user-grid .media {
+    position: relative;
+    height: 200px;
+    background: #0e0e0e;
+    overflow: hidden;
+    border-radius: 0 !important;
+    border: none;
+}
+.user-grid .media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    filter: saturate(1.05);
+}
+.online-dot {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #00ffa6;
+    box-shadow: 0 0 18px rgba(0, 255, 166, .9);
+}
+.user-grid .content {
+    padding: 12px 12px 14px;
+    position: unset !important;
+}
+.user-grid .row1 {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.user-grid .name {
+    font-weight: 800;
+    letter-spacing: 0.2px;
+    font-size: 16px;
+    color: #fff;
+}
+.user-grid .meta {
+    color: #a5b9b1;
+    font-size: 12px;
+    margin-top: 2px;
+}
+.user-grid .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 10px 0 12px;
+}
+.user-grid .chip {
+    border: 1px solid rgba(255, 255, 255, .08);
+    border-radius: 999px;
+    padding: 6px 8px;
+    font-size: 12px;
+    color: #cfe1da;
+    background: rgba(255, 255, 255, .02);
+    font-weight: 400;
+}
+.user-grid .badge-elite img {
+    width: 100%;
+    height: auto;
+    object-fit: unset;
+}
+
+.user-grid span.badge-elite {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: 30px;
+}
+.user-grid .actions {
+    display: flex;
+    gap: 8px;
+}
+.user-grid .actions .action {
+    flex: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, .08);
+    background: #0c1113;
+    padding: 10px 10px;
+    color: #dfeae5;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform .12s 
+ease, box-shadow .2s 
+ease, filter .2s 
+ease;
+}
+.user-grid .actions .action.primary {
+    background: linear-gradient(90deg, #ff3b3b, #ff6b6b);
+    color: #08110f;
+}
+
+@media only screen and (max-width:1440px){
+.dashboard-content {
+    grid-template-columns: 1fr;
+}  
+}
+@media only screen and (max-width:1200px){
+.user-grid {
+    grid-template-columns: repeat(3, 1fr);
+}  
+}
+@media only screen and (max-width:980px){
+.quc-frm {
+    grid-template-columns: auto 1.2fr 1fr 1fr auto auto;
+    gap: 10px;
+    display: grid;
+}
+
+.quc-search {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.quickbar .controls {
+    grid-template-columns: auto;
+}
+
+.quc-frm {
+    grid-template-columns: 1fr 1fr;
+}
+
+.user-grid {
+    grid-template-columns: 1fr;
+}
+
+.user-grid .card {
+    display: flex;
+    flex-direction: row;
+    height: auto;
+    grid-auto-columns: unset;
+    width: 100%;
+    align-items: center;
+    padding: 10px;
+}
+
+.user-grid .media {
+    width: 84px;
+    height: 84px;
+    border-radius: 12px !important;
+}
+
+.user-grid .content {
+    width: calc(100% - 84px) !important;
+    padding: 0 0 0 10px;
+}
+
+.user-grid .media::after {
+    display: none;
+}
+
+.user-grid .actions .action {
+    font-size: 0;
+}
+.user-grid .chip {
+    font-size: 11px;
+}
+
+.user-grid span.badge-elite {
+    display: none;
+}
+}
