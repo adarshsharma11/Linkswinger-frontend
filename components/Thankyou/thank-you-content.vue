@@ -135,9 +135,9 @@ onMounted(() => {
       r.x += r.vx;
       r.y += r.vy;
       r.vy += 0.05;
-      ctx.globalAlpha = 0.9;
-      ctx.fillStyle = r.color;
-      ctx.fillRect(r.x - 1, r.y - 1, 2, 2);
+      if (ctx) ctx.globalAlpha = 0.9;
+      if (ctx) ctx.fillStyle = r.color;
+      ctx?.fillRect(r.x - 1, r.y - 1, 2, 2);
       if (r.fuse <= 0 || r.vy > 0) {
         explode(r.x, r.y, 160);
       }
@@ -150,12 +150,12 @@ onMounted(() => {
       p.x += p.vx;
       p.y += p.vy;
       const alpha = Math.max(0, p.life / 180);
-      ctx.globalAlpha = alpha;
-      ctx.fillStyle = p.color;
-      ctx.fillRect(p.x - 1, p.y - 1, p.size * 1.8, p.size);
+      if (ctx) ctx.globalAlpha = alpha;
+      if (ctx) ctx.fillStyle = p.color;
+      if (ctx) ctx.fillRect(p.x - 1, p.y - 1, p.size * 1.8, p.size);
     });
 
-    ctx.globalAlpha = 1;
+    if (ctx) ctx.globalAlpha = 1;
     raf = requestAnimationFrame(tick);
   }
 
