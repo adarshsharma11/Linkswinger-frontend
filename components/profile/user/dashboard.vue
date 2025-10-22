@@ -8,7 +8,8 @@
       </div>
       <nav class="nav" id="sideNav">
         <a href="#profile" data-route="profile" @click.prevent="setActiveNav('profile')" :class="{ active: activeNav === 'profile' }" class="text-white"><span class="icon"><!--👤--> <img class="sidebar-ic" :src="`/images/badges/user.png`" /></span>My Profile</a>
-        <a href="#home" data-route="home" class="active text-white" @click.prevent="setActiveNav('home')" :class="{ active: activeNav === 'home' }"><span class="icon"><!--🏠--> <img class="sidebar-ic" :src="`/images/badges/home.png`" /></span>Home</a>
+        <a href="#userlist" data-route="notifications" @click.prevent="setActiveNav('userlist')" :class="{ active: activeNav === 'userlist' }" class="text-white"><span class="icon"><!--🔔-->  <img class="sidebar-ic" :src="`/images/badges/user.png`" /></span>User List</a>
+        <a href="#home" data-route="home" class="text-white" @click.prevent="setActiveNav('home')" :class="{ active: activeNav === 'home' }"><span class="icon"><!--🏠--> <img class="sidebar-ic" :src="`/images/badges/home.png`" /></span>Home</a>
         <a href="#messages" data-route="messages" @click.prevent="setActiveNav('messages')" :class="{ active: activeNav === 'messages' }" class="text-white"><span class="icon"><!--💬-->  <img class="sidebar-ic" :src="`/images/badges/chat.png`" /></span>Messages/Calls</a>
         <a href="#notifications" data-route="notifications" @click.prevent="setActiveNav('notifications')" :class="{ active: activeNav === 'notifications' }" class="text-white"><span class="icon"><!--🔔-->  <img class="sidebar-ic" :src="`/images/badges/notification.png`" /></span>Notifications</a>
         <a href="#nearby" data-route="nearby" @click.prevent="setActiveNav('nearby')" :class="{ active: activeNav === 'nearby' }" class="text-white"><span class="icon"><!--📍-->  <img class="sidebar-ic" :src="`/images/badges/location.png`" /></span>Nearby People</a>
@@ -99,6 +100,236 @@
             </div>
           </div>
         </section>
+
+        <section id="view-list" :hidden="activeNav !== 'userlist'">
+          <div class="quickbar" role="region" aria-label="Quick Search">
+            <div class="controls">
+              <div class="quc-search">
+                <div class="qtitle">Quick Search</div>
+                <input id="q" class="input" type="search" placeholder="Search by nickname…" />
+              </div>
+              <div class="quc-frm">
+                <select id="gender" class="select" aria-label="Gender">
+                  <option value="">All genders</option>
+                  <option>Woman</option>
+                  <option>Man</option>
+                  <option>Couple</option>
+                  <option>Trans</option>
+                </select>
+                <select id="distance" class="select" aria-label="Distance">
+                  <option value="">Any distance</option>
+                  <option value="10">≤ 10 km</option>
+                  <option value="25">≤ 25 km</option>
+                  <option value="50">≤ 50 km</option>
+                  <option value="100">≤ 100 km</option>
+                </select>
+                <label class="check"><input id="nearby" type="checkbox"/> Nearby</label>
+                <label class="check"><input id="onlyVerified" type="checkbox"/> Verified members</label>
+                <a class="btn primary" href="advanced-search.html" aria-label="Go to Advanced Search">Advanced Search</a>
+              </div>
+            </div>
+          </div>
+
+          <div id="grid" class="grid user-grid" aria-live="polite">
+      <article class="card" data-user-id="6">
+        <div class="media">
+          <img src="/public/images/user-list/user-1.jpg" alt="Maya" loading="lazy" decoding="async">
+          <span class="online-dot" title="Online now"></span>
+          <span class="badge-elite"><img src="/public/images/badges/elite.png"></span>
+          
+        </div>
+        <div class="content">
+          <div class="row1">
+            <div>
+              <div class="name">Maya</div>
+              <div class="meta">Birmingham • 2 km </div>
+            </div>
+          </div>
+          <div class="chips">
+            <span class="chip">hd cam</span><span class="chip">calls</span>
+          </div>
+          <div class="actions">
+            <button class="action" data-action="message" aria-label="Message Maya"><span class="act-icon">💬</span> Message</button>
+            <button class="action" data-action="call" aria-label="Voice call Maya"><span class="act-icon">📞 </span>Call</button>
+            <button class="action primary" data-action="video" aria-label="Video call Maya"><span class="act-icon">🎥 </span>Video</button>
+          </div>
+        </div>
+      </article>
+      <article class="card" data-user-id="3">
+        <div class="media">
+          <img src="/public/images/user-list/user-2.jpg" alt="Jake" loading="lazy" decoding="async">
+          <span class="online-dot" title="Online now"></span>
+          <span class="badge-elite"><img src="/public/images/badges/elite.png"></span>
+          
+        </div>
+        <div class="content">
+          <div class="row1">
+            <div>
+              <div class="name">Jake</div>
+              <div class="meta">West Bromwich • 4 km </div>
+            </div>
+          </div>
+          <div class="chips">
+            <span class="chip">chill</span><span class="chip">pub meet</span>
+          </div>
+          <div class="actions">
+            <button class="action" data-action="message" aria-label="Message Ella"><span class="act-icon">💬</span> Message</button>
+            <button class="action" data-action="call" aria-label="Voice call Ella"><span class="act-icon">📞</span> Call</button>
+            <button class="action primary" data-action="video" aria-label="Video call Ella"><span class="act-icon">🎥</span> Video</button>
+          </div>
+        </div>
+      </article>
+      <article class="card" data-user-id="1">
+        <div class="media">
+          <img src="/public/images/user-list/user-3.jpg" alt="Sophie &amp; Mark" loading="lazy" decoding="async">
+          <span class="online-dot" title="Online now"></span>
+          <span class="badge-elite"><img src="/public/images/badges/elite.png"></span>
+
+          
+        </div>
+        <div class="content">
+          <div class="row1">
+            <div>
+              <div class="name">Sophie &amp; Mark</div>
+              <div class="meta">Birmingham • 7 km </div>
+            </div>
+          </div>
+          <div class="chips">
+            <span class="chip">video</span><span class="chip">verification selfie</span><span class="chip">meet tonight</span>
+          </div>
+          <div class="actions">
+            <button class="action" data-action="message" aria-label="Message Sophie &amp; Mark"><span class="act-icon">💬 </span>Message</button>
+            <button class="action" data-action="call" aria-label="Voice call Sophie &amp; Mark"><span class="act-icon">📞</span> Call</button>
+            <button class="action primary" data-action="video" aria-label="Video call Sophie &amp; Mark"><span class="act-icon">🎥 </span>Video</button>
+          </div>
+        </div>
+      </article>
+      <article class="card" data-user-id="8">
+        <div class="media">
+          <img src="/public/images/user-list/user-4.jpg" alt="Noah" loading="lazy" decoding="async">
+          <span class="online-dot" title="Online now"></span>
+          <span class="badge-elite"><img src="/public/images/badges/elite.png"></span>
+
+          
+        </div>
+        <div class="content">
+          <div class="row1">
+            <div>
+              <div class="name">Noah</div>
+              <div class="meta">Birmingham • 8 km </div>
+            </div>
+          </div>
+          <div class="chips">
+            <span class="chip">gym</span><span class="chip">coffee</span>
+          </div>
+          <div class="actions">
+            <button class="action" data-action="message" aria-label="Message Noah"><span class="act-icon">💬</span> Message</button>
+            <button class="action" data-action="call" aria-label="Voice call Noah"><span class="act-icon">📞</span> Call</button>
+            <button class="action primary" data-action="video" aria-label="Video call Noah"><span class="act-icon">🎥</span> Video</button>
+          </div>
+        </div>
+      </article>
+      <article class="card" data-user-id="2">
+        <div class="media">
+          <img src="/public/images/user-list/user-4.jpg" alt="Ava" loading="lazy" decoding="async">
+          
+          <span class="badge-elite"><img src="/public/images/badges/elite.png"></span>
+
+          
+        </div>
+        <div class="content">
+          <div class="row1">
+            <div>
+              <div class="name">Ava</div>
+              <div class="meta">Wolverhampton • 12 km </div>
+            </div>
+          </div>
+          <div class="chips">
+            <span class="chip">hd cam</span><span class="chip">roulette</span>
+          </div>
+          <div class="actions">
+            <button class="action" data-action="message" aria-label="Message Ava"><span class="act-icon">💬 </span>Message</button>
+            <button class="action" data-action="call" aria-label="Voice call Ava"><span class="act-icon">>📞</span> Call</button>
+            <button class="action primary" data-action="video" aria-label="Video call Ava"><span class="act-icon">🎥</span> Video</button>
+          </div>
+        </div>
+      </article>
+      <article class="card" data-user-id="7">
+        <div class="media">
+          <img src="/public/images/user-list/user-3.jpg" alt="Ben &amp; Ria" loading="lazy" decoding="async">
+          
+          <span class="badge-elite"><img src="/public/images/badges/elite.png"></span>
+          
+        </div>
+        <div class="content">
+          <div class="row1">
+            <div>
+              <div class="name">Ben &amp; Ria</div>
+              <div class="meta">Kidderminster • 18 km </div>
+            </div>
+          </div>
+          <div class="chips">
+            <span class="chip">weekend only</span>
+          </div>
+          <div class="actions">
+            <button class="action" data-action="message" aria-label="Message Ben &amp; Ria"><span class="act-icon">💬</span> Message</button>
+            <button class="action" data-action="call" aria-label="Voice call Ben &amp; Ria"><span class="act-icon">📞</span> Call</button>
+            <button class="action primary" data-action="video" aria-label="Video call Ben &amp; Ria"><span class="act-icon">🎥</span> Video</button>
+          </div>
+        </div>
+      </article>
+      <article class="card" data-user-id="4">
+        <div class="media">
+          <img src="/public/images/user-list/user-2.jpg" alt="Ella" loading="lazy" decoding="async">
+          <span class="online-dot" title="Online now"></span>
+          <span class="badge-elite"><img src="/public/images/badges/elite.png"></span>
+          
+        </div>
+        <div class="content">
+          <div class="row1">
+            <div>
+              <div class="name">Ella</div>
+              <div class="meta">Coventry • 27 km </div>
+            </div>
+          </div>
+          <div class="chips">
+            <span class="chip">video</span><span class="chip">verified</span>
+          </div>
+          <div class="actions">
+            <button class="action" data-action="message" aria-label="Message Ella"><span class="act-icon">💬</span> Message</button>
+            <button class="action" data-action="call" aria-label="Voice call Ella"><span class="act-icon">📞</span> Call</button>
+            <button class="action primary" data-action="video" aria-label="Video call Ella"><span class="act-icon">🎥</span> Video</button>
+          </div>
+        </div>
+      </article>
+      <article class="card" data-user-id="5">
+        <div class="media">
+          <img src="/public/images/user-list/user-1.jpg" alt="Liam" loading="lazy" decoding="async">
+          
+          <span class="badge-elite"><img src="/public/images/badges/elite.png"></span>
+          
+        </div>
+        <div class="content">
+          <div class="row1">
+            <div>
+              <div class="name">Liam</div>
+              <div class="meta">Leicester • 52 km </div>
+            </div>
+          </div>
+          <div class="chips">
+            <span class="chip">cinema</span><span class="chip">road trip</span>
+          </div>
+          <div class="actions">
+            <button class="action" data-action="message" aria-label="Message Ella"><span class="act-icon">💬</span> Message</button>
+            <button class="action" data-action="call" aria-label="Voice call Ella"><span class="act-icon">📞</span> Call</button>
+            <button class="action primary" data-action="video" aria-label="Video call Ella"><span class="act-icon">🎥</span> Video</button>
+          </div>
+        </div>
+      </article>
+    </div>
+
+        </section>
+
 
         <!-- SEARCH / EXPLORE -->
         <section id="view-search" :hidden="activeNav !== 'search'">
