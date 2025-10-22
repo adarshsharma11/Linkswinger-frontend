@@ -42,7 +42,7 @@ export default defineNuxtConfig({
     storesDirs: ['./store/**', './custom-folder/store/**'],
   },
   plugins: [
-    { src: "~/plugins/plugin.js", mode: "client" } ],
+    { src: "~/plugins/plugin.js", mode: "client" } , { src : "~/plugins/gtag.client.ts"} ],
   devtools: { enabled: false },
   ssr: true,
   runtimeConfig: {

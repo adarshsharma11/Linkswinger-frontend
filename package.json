@@ -36,6 +36,7 @@
   },
   "devDependencies": {
     "rollup-plugin-visualizer": "^6.0.4",
-    "sass": "1.77.6"
+    "sass": "1.77.6",
+    "vue-gtag-next": "^1.14.0"
   }
 }
