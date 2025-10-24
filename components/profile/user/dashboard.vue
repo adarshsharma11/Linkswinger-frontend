@@ -180,7 +180,8 @@
                   </div>
                 </div>
                 <div class="chips">
-                  <span class="chip" v-for="interest in user.interests">{{ interest.interest_name }}</span>
+                  <span class="chip" v-for="interest in user.interests?.slice(0,3)">{{ interest.interest_name }}</span>
+                  <button class="chip" v-if = "(user.interests?.length ?? 0) > 3"> +{{ (user.interests?.length ?? 0) - 3 }} more</button>
                 </div>
                 <div class="actions">
                   <button class="action" data-action="message" aria-label="Message" @click="navigateTo('/chat')"><span
@@ -682,6 +683,8 @@ function getImagePath(user: UsersModel.ProfileDetailsResponseModel): string {
   if (profile_type === 'Man') return "/images/profile-placeholders/man.png";
   return "/images/profile-placeholders/man.png"
 }
+
+
 
 onMounted(() => {
   // Handle hash-based navigation
