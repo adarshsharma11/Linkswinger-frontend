@@ -1,5 +1,5 @@
 <template>
-   <Profile/>
+   <Profile :user_id="route.params.id"/>
    <CommonFooter/>
 </template>
 <script setup>
@@ -9,4 +9,5 @@ useHead({
  definePageMeta({
         middleware:'auth'
     })
+const route = useRoute();
 </script>

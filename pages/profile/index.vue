@@ -1,5 +1,5 @@
 <template>
-   <Profile/>
+   <Profile :user_id="login_store.getUserDetails.user_id"> </Profile>
    <CommonFooter/>
 </template>
 <script setup>
@@ -9,4 +9,5 @@ useHead({
  definePageMeta({
         middleware:'auth'
     })
+const login_store = useLoginStore();
 </script>

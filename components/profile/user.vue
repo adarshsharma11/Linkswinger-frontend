@@ -4,32 +4,35 @@
       <!-- Header -->
       <div class="profile-header container-fluid px-3 px-md-4">
 
-         <div class="row align-items-center d-md-none">
+        <div class="row align-items-center d-md-none">
           <!-- Mobile Settings Menu -->
           <div class="col-12 mb-2 d-md-none">
             <div class="dropdown d-flex justify-content-end">
-              <button id="settingsMenuMobile" class="btn p-0 border-0 bg-transparent d-flex flex-column align-items-center text-white mr-2" data-bs-toggle="dropdown"
-                aria-expanded="false">
+              <button v-if="isMine()"  id="settingsMenuMobile"
+                class="btn p-0 border-0 bg-transparent d-flex flex-column align-items-center text-white mr-2"
+                data-bs-toggle="dropdown" aria-expanded="false" >
                 <img src="/images/badges/settings.png" alt="Settings" class="rounded-circle"
                   style="width: 40px; height: 40px; object-fit: cover" />
-                  <small>Settings</small>
+                <small>Settings</small>
               </button>
-              <ul class="dropdown-menu dropdown-menu-end bg-dark text-white setting-dropdown-menu" aria-labelledby="settingsMenuMobile">
-                 <li>
-                  <button class="dropdown-item text-white d-flex align-items-center" @click="navigateTo('/membership')">
+              <ul class="dropdown-menu dropdown-menu-end bg-dark text-white setting-dropdown-menu"
+                aria-labelledby="settingsMenuMobile">
+                <li>
+                  <button  class="dropdown-item text-white d-flex align-items-center" @click="navigateTo('/membership')">
                     <img src="/images/badges/elite.png" alt="Verify" class="rounded-circle me-2"
                       style="width: 30px; height: 30px; object-fit: cover" />
                     <span class="text-white">Membership</span>
                   </button>
                 </li>
                 <li>
-                  <button class="dropdown-item text-white d-flex align-items-center" @click="navigateTo(`/edit-profile`)">
+                  <button class="dropdown-item text-white d-flex align-items-center"
+                    @click="navigateTo(`/edit-profile`)">
                     <img src="/images/badges/edit-profile.png" alt="Verify" class="rounded-circle me-2"
                       style="width: 30px; height: 30px; object-fit: cover" />
                     <span class="text-white">Edit Profile</span>
                   </button>
                 </li>
-                <li v-if="(login_store.getUserDetails?.is_photo_verified ?? false) === false">
+                <li v-if="(getUser()?.is_photo_verified ?? false) === false">
                   <button class="dropdown-item text-white d-flex align-items-center" data-bs-toggle="modal"
                     data-bs-target="#photoVerificationModal">
                     <img src="/images/badges/photo-verified.png" alt="Verify" class="rounded-circle me-2"
@@ -37,7 +40,7 @@
                     <span class="text-white">Verify Photo</span>
                   </button>
                 </li>
-                <li v-if="(login_store.getUserDetails?.is_photo_verified ?? false) === true">
+                <li v-if="(getUser()?.is_photo_verified ?? false) === true">
                   <button class="dropdown-item text-white d-flex align-items-center" data-bs-toggle="modal"
                     data-bs-target="#mediaUploadModal">
                     <img src="/images/badges/photo-verified.png" alt="Verify" class="rounded-circle me-2"
@@ -56,33 +59,34 @@
                 </li>
               </ul>
               <div class="ml-2">
-              <nuxt-link to="/dashboard" class="d-flex flex-column align-items-center">
-                <img src="/images/badges/home.png" alt="Home" class="badge-icon" />
-                <small>Home</small>
-              </nuxt-link>
+                <nuxt-link to="/dashboard" class="d-flex flex-column align-items-center">
+                  <img src="/images/badges/home.png" alt="Home" class="badge-icon" />
+                  <small>Home</small>
+                </nuxt-link>
               </div>
             </div>
           </div>
-          
+
         </div>
         <!-- First Row -->
         <div class="row align-items-center">
-    
-         <!-- Left: Avatar + Badge -->
+
+          <!-- Left: Avatar + Badge -->
           <div class="col-12 col-md-3 d-flex justify-content-center justify-content-md-start">
             <div class="d-flex flex-column align-items-center">
               <img :src="getProfilePlaceholder()" alt="Profile" class="rounded-circle mb-2"
                 style="width: 90px; height: 90px; object-fit: cover" />
-              <span class="badge bg-theme-color fs-6 mt-2">{{(login_store.getUserDetails?.tier_name ?? '').length === 0 ? 'Free' :
-                  (login_store.getUserDetails?.tier_name ?? '') }}</span>
+              <span class="badge bg-theme-color fs-6 mt-2">{{ (getUser()?.tier_name ?? '').length === 0
+                ? 'Free' :
+                (getUser()?.tier_name ?? '') }}</span>
             </div>
           </div>
 
           <!-- Center: User Info -->
           <div class="col-12 col-md-6 text-center mt-2">
-            <h3 class="mb-2 text-white fs-5 fs-md-4">{{ login_store.getUserDetails?.nick_name }},
-              {{ getGender()}} {{ getAge(login_store.getUserDetails?.dob ?? '') }} from
-              {{ login_store.getUserDetails?.town ?? '' }}</h3>
+            <h3 class="mb-2 text-white fs-5 fs-md-4">{{ getUser()?.nick_name }},
+              {{ getGender() }} {{ getAge(getUser()?.dob ?? '') }} from
+              {{ getUser()?.town ?? '' }}</h3>
             <span class="badge bg-success fs-6">Active</span>
             <p class="mb-0 mt-2 text-white">😊 If you dream it, you can do it</p>
           </div>
@@ -90,13 +94,15 @@
           <!-- Right: Settings Dropdown (Desktop only) -->
           <div class="col-md-3 d-none d-md-flex justify-content-center">
             <div class="dropdown">
-              <button id="settingsMenu" class="btn p-0 border-0 bg-transparent d-flex flex-column align-items-center text-white" data-bs-toggle="dropdown"
-                aria-expanded="false">
+              <button v-if="isMine()" id="settingsMenu"
+                class="btn p-0 border-0 bg-transparent d-flex flex-column align-items-center text-white"
+                data-bs-toggle="dropdown" aria-expanded="false">
                 <img src="/images/badges/settings.png" alt="Settings" class="rounded-circle"
                   style="width: 50px; height: 50px; object-fit: cover" />
-                  <small>Settings</small>
+                <small>Settings</small>
               </button>
-              <ul class="dropdown-menu dropdown-menu-end bg-dark text-white setting-dropdown-menu" aria-labelledby="settingsMenu">
+              <ul class="dropdown-menu dropdown-menu-end bg-dark text-white setting-dropdown-menu"
+                aria-labelledby="settingsMenu">
                 <li>
                   <button class="dropdown-item text-white d-flex align-items-center" @click="navigateTo('/membership')">
                     <img src="/images/badges/elite.png" alt="Verify" class="rounded-circle me-2"
@@ -105,13 +111,14 @@
                   </button>
                 </li>
                 <li>
-                  <button class="dropdown-item text-white d-flex align-items-center" @click="navigateTo(`/edit-profile`)">
+                  <button class="dropdown-item text-white d-flex align-items-center"
+                    @click="navigateTo(`/edit-profile`)" v-if="isMine()">
                     <img src="/images/badges/edit-profile.png" alt="Verify" class="rounded-circle me-2"
                       style="width: 30px; height: 30px; object-fit: cover" />
                     <span class="text-white">Edit Profile</span>
                   </button>
                 </li>
-                <li v-if="(login_store.getUserDetails?.is_photo_verified ?? false) === false">
+                <li v-if="(getUser()?.is_photo_verified ?? false) === false">
                   <button class="dropdown-item text-white d-flex align-items-center" data-bs-toggle="modal"
                     data-bs-target="#photoVerificationModal">
                     <img src="/images/badges/photo-verified.png" alt="Verify" class="rounded-circle me-2"
@@ -119,7 +126,7 @@
                     <span class="text-white">Verify Photo</span>
                   </button>
                 </li>
-                 <li v-if="(login_store.getUserDetails?.is_photo_verified ?? false) === true">
+                <li v-if="(getUser()?.is_photo_verified ?? false) === true && isMine()">
                   <button class="dropdown-item text-white d-flex align-items-center" data-bs-toggle="modal"
                     data-bs-target="#mediaUploadModal">
                     <img src="/images/badges/photo-verified.png" alt="Verify" class="rounded-circle me-2"
@@ -129,7 +136,7 @@
                 </li>
                 <li>
                   <button class="dropdown-item text-white d-flex align-items-center" @click="logout"
-                    :disabled="is_logout_loading">
+                    :disabled="is_logout_loading" v-if="isMine()">
                     <img src="/images/badges/logout.png" alt="Logout" class="rounded-circle me-2"
                       style="width: 30px; height: 30px; object-fit: cover" />
                     <span class="text-white">Logout</span>
@@ -147,7 +154,9 @@
           <div class="col-12 col-md-3 d-flex justify-content-center justify-content-md-start">
             <div class="d-flex gap-2 flex-wrap justify-content-center">
               <img :src="getmembershipIcon()" alt="Elite" class="badge-icon" />
-              <img src="/images/badges/photo-verified.gif" v-if="(login_store.getUserDetails?.is_photo_verified ?? false) === true" alt="Silver" class="badge-icon" />
+              <img src="/images/badges/photo-verified.gif"
+                v-if="(getUser()?.is_photo_verified ?? false) === true" alt="Silver"
+                class="badge-icon" />
             </div>
           </div>
 
@@ -179,10 +188,10 @@
 
           <!-- Right: Empty spacer (desktop only) -->
           <div class="col-md-3 d-md-block d-none">
-                <nuxt-link to="/dashboard" class="d-flex flex-column align-items-center">
-                <img src="/images/badges/home.png" alt="Home" class="badge-icon" />
-                <small>Home</small>
-              </nuxt-link>
+            <nuxt-link to="/dashboard" class="d-flex flex-column align-items-center">
+              <img src="/images/badges/home.png" alt="Home" class="badge-icon" />
+              <small>Home</small>
+            </nuxt-link>
           </div>
         </div>
       </div>
@@ -195,12 +204,24 @@
           <div class="card-body">
             <h5 class="text-white mb-3">Photos & Videos</h5>
             <ul class="list-unstyled photo-list mb-0">
-              <li @click="navigateTo('/feeds/' + login_store.getUserDetails?.user_id + '?' + 'media_type=image' + '&' + 'feed_type=public')"><img src="/images/badges/public-photos.png" class="icon" /> Public Photos</li>
-              <li @click="navigateTo('/feeds/' + login_store.getUserDetails?.user_id + '?' + 'media_type=video' + '&' + 'feed_type=public')"><img src="/images/badges/public-photos.png" class="icon" /> Public Videos</li>
-              <li @click="navigateTo('/feeds/' + login_store.getUserDetails?.user_id + '?' + 'media_type=image' + '&' + 'feed_type=friends')"><img src="/images/badges/friends-only-photos.png" class="icon" /> Friends-Only Photos</li>
-              <li @click="navigateTo('/feeds/' + login_store.getUserDetails?.user_id + '?' + 'media_type=video' + '&' + 'feed_type=friends')"><img src="/images/badges/friends-only-photos.png" class="icon" /> Friends-Only Videos</li>
-              <li @click="navigateTo('/feeds/' + login_store.getUserDetails?.user_id + '?' + 'media_type=image' + '&' + 'feed_type=private')"><img src="/images/badges/private-photos.png" class="icon" /> Private Photos</li>
-              <li @click="navigateTo('/feeds/' + login_store.getUserDetails?.user_id + '?' + 'media_type=video' + '&' + 'feed_type=private')"><img src="/images/badges/private-photos.png" class="icon" /> Private Videos</li>
+              <li
+                @click="navigateTo('/feeds/' + getUser()?.user_id + '?' + 'media_type=image' + '&' + 'feed_type=public')">
+                <img src="/images/badges/public-photos.png" class="icon" /> Public Photos</li>
+              <li
+                @click="navigateTo('/feeds/' + getUser()?.user_id + '?' + 'media_type=video' + '&' + 'feed_type=public')">
+                <img src="/images/badges/public-photos.png" class="icon" /> Public Videos</li>
+              <li
+                @click="navigateTo('/feeds/' + getUser()?.user_id + '?' + 'media_type=image' + '&' + 'feed_type=friends')">
+                <img src="/images/badges/friends-only-photos.png" class="icon" /> Friends-Only Photos</li>
+              <li
+                @click="navigateTo('/feeds/' + getUser()?.user_id + '?' + 'media_type=video' + '&' + 'feed_type=friends')">
+                <img src="/images/badges/friends-only-photos.png" class="icon" /> Friends-Only Videos</li>
+              <li
+                @click="navigateTo('/feeds/' + getUser()?.user_id + '?' + 'media_type=image' + '&' + 'feed_type=private')">
+                <img src="/images/badges/private-photos.png" class="icon" /> Private Photos</li>
+              <li
+                @click="navigateTo('/feeds/' + getUser()?.user_id + '?' + 'media_type=video' + '&' + 'feed_type=private')">
+                <img src="/images/badges/private-photos.png" class="icon" /> Private Videos</li>
             </ul>
           </div>
         </div>
@@ -211,53 +232,53 @@
             <div class="card-body">
               <h5 class="text-white mb-3">Personal Information</h5>
               <ul class="list-unstyled mb-0 info-list">
-                <li><strong>Gender:</strong> {{ login_store.getUserDetails?.gender }}</li>
-                <li><strong>Orientation:</strong> {{ login_store.getUserDetails?.orientation }}</li>
-                <li><strong>Looking for:</strong> {{ login_store.getUserDetails?.looking_for?.join(',') }}</li>
+                <li><strong>Gender:</strong> {{ getUser()?.gender }}</li>
+                <li><strong>Orientation:</strong> {{ getUser()?.orientation }}</li>
+                <li><strong>Looking for:</strong> {{ getUser()?.looking_for?.join(',') }}</li>
                 <li><strong>Height:</strong> {{ getHeight() }}</li>
-                <li><strong>Ethnicity:</strong> {{ login_store.getUserDetails?.ethnicity }}</li>
-                <li><strong>Body Type:</strong> {{ login_store.getUserDetails?.body_type }}</li>
-                <li><strong>Town:</strong> {{ login_store.getUserDetails?.town }}</li>
+                <li><strong>Ethnicity:</strong> {{ getUser()?.ethnicity }}</li>
+                <li><strong>Body Type:</strong> {{ getUser()?.body_type }}</li>
+                <li><strong>Town:</strong> {{ getUser()?.town }}</li>
               </ul>
             </div>
           </div>
-          <div class="card bg-black text-white" v-if="login_store.getUserDetails?.profile_type === 'Couple'">
+          <div class="card bg-black text-white" v-if="getUser()?.profile_type === 'Couple'">
             <div class="card-body">
               <h5 class="text-white mb-3">Partner Information</h5>
               <ul class="list-unstyled mb-0 info-list">
-                <li><strong>Nickname:</strong> {{ login_store.getUserDetails?.partner_nick_name }}</li>
-                <li><strong>Gender:</strong> {{ login_store.getUserDetails?.partner_gender }}</li>
-                <li><strong>Orientation:</strong> {{ login_store.getUserDetails?.partner_orientation }}</li>
+                <li><strong>Nickname:</strong> {{ getUser()?.partner_nick_name }}</li>
+                <li><strong>Gender:</strong> {{ getUser()?.partner_gender }}</li>
+                <li><strong>Orientation:</strong> {{ getUser()?.partner_orientation }}</li>
                 <li><strong>Height:</strong>{{ getPartnerHeight() }}</li>
-                <li><strong>Ethnicity:</strong> {{ login_store.getUserDetails?.ethnicity }}</li>
-                <li><strong>Body Type:</strong> {{ login_store.getUserDetails?.body_type }}</li>
+                <li><strong>Ethnicity:</strong> {{ getUser()?.ethnicity }}</li>
+                <li><strong>Body Type:</strong> {{ getUser()?.body_type }}</li>
               </ul>
             </div>
           </div>
           <div class="card bg-black text-white">
-          <div class="card-body">
-          <h5 class="text-white mb-3">About Me</h5>
-          <p>
-            {{ login_store.getUserDetails?.about_me }}
-          </p>
+            <div class="card-body">
+              <h5 class="text-white mb-3">About Me</h5>
+              <p>
+                {{ getUser()?.about_me }}
+              </p>
             </div>
           </div>
           <div class="card bg-black text-white">
-          <div class="card-body">
-          <h5 class="text-white mb-3">Sexual Interest</h5>
-          <div class="d-flex gap-2 flex-wrap">
-            <span v-for="interest in login_store.getUserDetails?.interests"
-              class="badge bg-secondary">{{ interest.interest_name }}</span>
-          </div>
+            <div class="card-body">
+              <h5 class="text-white mb-3">Sexual Interest</h5>
+              <div class="d-flex gap-2 flex-wrap">
+                <span v-for="interest in getUser()?.interests" class="badge bg-secondary">{{
+                  interest.interest_name }}</span>
+              </div>
             </div>
           </div>
           <div class="card bg-black text-white">
             <div class="card-body">
               <h5 class="text-white mb-3">Meet Preferences</h5>
-              <p>{{login_store.getUserDetails?.meet_perferences?.map(it => it.preference_name).join(',')}}</p>
+              <p>{{getUser()?.meet_perferences?.map(it => it.preference_name).join(',')}}</p>
             </div>
           </div>
-           <div class="card bg-black text-white">
+          <div class="card bg-black text-white">
             <div class="card-body">
               <h5 class="text-white mb-3">Meet Verification</h5>
               <p><strong>Username:</strong> something_username</p>
@@ -272,11 +293,40 @@
   </section>
 </template>
 <script setup lang="ts">
+import { number } from 'yup';
 import type { UsersModel } from '~/composables/models';
+
+interface Props {
+  user_id: number
+}
+const props = defineProps<Props>()
 
 const user_store = userStore()
 const login_store = useLoginStore();
 const is_logout_loading = ref(false);
+const userDetails = ref<UsersModel.ProfileDetailsResponseModel | null | undefined>(null);
+
+if (isMine() === false) {
+    const fetchUserDetails = async () => {
+    const api_url = getUrl(RequestURL.getProfileDetails);
+    const { data: response, error: option_error } = await useFetch<SuccessError<UsersModel.ProfileDetailsResponseModel>>(
+      api_url,
+      {
+        method: "POST",
+        body: {
+          user_id: Number(props.user_id ?? 0),
+        },
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    if (response.value?.success) {
+      userDetails.value = response.value.response;
+    }
+  };
+  fetchUserDetails();
+}
 
 function getAge(dobStr: string): number {
   const dob = new Date(dobStr);
@@ -293,8 +343,8 @@ function getAge(dobStr: string): number {
   return age;
 }
 function getHeight(): string {
-  let height = login_store.getUserDetails?.height ?? ''
-  let height_unit = login_store.getUserDetails?.height_unit ?? 'cm'
+  let height = getUser()?.height ?? ''
+  let height_unit = getUser()?.height_unit ?? 'cm'
   if (height_unit === 'cm') {
     return height + ' cm'
   }
@@ -305,8 +355,8 @@ function getHeight(): string {
   }
 }
 function getPartnerHeight(): string {
-  let height = login_store.getUserDetails?.partner_height ?? ''
-  let height_unit = login_store.getUserDetails?.height_unit ?? 'cm'
+  let height = getUser()?.partner_height ?? ''
+  let height_unit = getUser()?.height_unit ?? 'cm'
   if (height_unit === 'cm') {
     return height + ' cm'
   }
@@ -349,60 +399,63 @@ async function logout() {
   }
 }
 
-function getGender()
-{
-    let profile_type = login_store.getUserDetails?.profile_type ?? ''
-    let gender = login_store.getUserDetails?.gender ?? ''
-    let partner_gender = login_store.getUserDetails?.partner_gender ?? ''
-    if (profile_type === 'Couple')
-    { 
-      let genderShot = 'M';
-      let partnerGenderShot = 'M';
-        if (gender === 'Woman')
-        {
-           genderShot = 'F'
-        }
-        else if (gender === 'Others')
-        {
-           genderShot = 'TS'
-        }
-
-if (partner_gender === 'Woman')
-        {
-           partnerGenderShot = 'F'
-        }
-        else if (partner_gender === 'Others')
-        {
-           partnerGenderShot = 'TS'
-        }
-
-         return genderShot + partnerGenderShot
+function getGender() {
+  let profile_type = getUser()?.profile_type ?? ''
+  let gender = getUser()?.gender ?? ''
+  let partner_gender = getUser()?.partner_gender ?? ''
+  if (profile_type === 'Couple') {
+    let genderShot = 'M';
+    let partnerGenderShot = 'M';
+    if (gender === 'Woman') {
+      genderShot = 'F'
     }
-return gender
+    else if (gender === 'Others') {
+      genderShot = 'TS'
+    }
+
+    if (partner_gender === 'Woman') {
+      partnerGenderShot = 'F'
+    }
+    else if (partner_gender === 'Others') {
+      partnerGenderShot = 'TS'
+    }
+
+    return genderShot + partnerGenderShot
+  }
+  return gender
 }
 
-function getmembershipIcon() : string
-{
-  let  tier_name = login_store.getUserDetails?.tier_name ?? ''
-  if (tier_name.includes ("Elite")) return "/images/badges/elite.gif";
+function getmembershipIcon(): string {
+  let tier_name = getUser()?.tier_name ?? ''
+  if (tier_name.includes("Elite")) return "/images/badges/elite.gif";
   if (tier_name.includes("Basic+")) return "/images/badges/basic.gif";
-  if (tier_name.includes ("Plus")) return "/images/badges/plus.gif";
+  if (tier_name.includes("Plus")) return "/images/badges/plus.gif";
   return "/images/badges/free.gif";
 }
 
-function getProfilePlaceholder() : string
-{
-  let media_path = login_store.getUserDetails?.media_path ?? ''
-  let profile_image = login_store.getUserDetails?.profile_image ?? ''
-  if (media_path.length > 0 && profile_image.length > 0)
-  {
+function getProfilePlaceholder(): string {
+  let media_path = getUser()?.media_path ?? ''
+  let profile_image = getUser()?.profile_image ?? ''
+  if (media_path.length > 0 && profile_image.length > 0) {
     return media_path + profile_image
   }
-  let profile_type = login_store.getUserDetails?.profile_type ?? ''
+  let profile_type = getUser()?.profile_type ?? ''
   if (profile_type === 'Couple') return "/images/profile-placeholders/MF-COUPLE.png";
   if (profile_type === 'Others') return "/images/profile-placeholders/TRANS.png";
   if (profile_type === 'Woman') return "/images/profile-placeholders/WOMEN.png";
   if (profile_type === 'Man') return "/images/profile-placeholders/man.png";
   return "/images/profile-placeholders/man.png"
+}
+function getUser(): UsersModel.ProfileDetailsResponseModel | null | undefined {
+  if (isMine()) {
+    return login_store.getUserDetails
+  }
+  return userDetails.value
+}
+
+function isMine(): boolean {
+  let user_id = Number(props.user_id ?? 0)
+  let login_id = Number(login_store.getUserDetails?.user_id ?? 0)
+  return user_id === login_id
 }
 </script>

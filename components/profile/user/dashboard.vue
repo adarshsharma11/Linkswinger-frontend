@@ -166,7 +166,7 @@
 
           <div id="grid" class="grid user-grid" aria-live="polite">
             <article class="card" data-user-id="6" v-for="user in users" :key="user.user_id">
-              <div class="media">
+              <div class="media" @click="openProfile(user)">
                 <img :src="getImagePath(user)" alt="Maya" loading="lazy" decoding="async">
                 <span class="online-dot" title="Online now"></span>
                 <span class="badge-elite"><img :src="getmembershipIcon(user)"></span>
@@ -181,7 +181,7 @@
                 </div>
                 <div class="chips">
                   <span class="chip" v-for="interest in user.interests?.slice(0,3)">{{ interest.interest_name }}</span>
-                  <button class="chip" v-if = "(user.interests?.length ?? 0) > 3"> +{{ (user.interests?.length ?? 0) - 3 }} more</button>
+                  <button class="chip" v-if = "(user.interests?.length ?? 0) > 3" @click="openProfile(user)"> +{{ (user.interests?.length ?? 0) - 3 }} more</button>
                 </div>
                 <div class="actions">
                   <button class="action" data-action="message" aria-label="Message" @click="navigateTo('/chat')"><span
@@ -684,7 +684,10 @@ function getImagePath(user: UsersModel.ProfileDetailsResponseModel): string {
   return "/images/profile-placeholders/man.png"
 }
 
-
+async function openProfile(user: UsersModel.ProfileDetailsResponseModel) 
+{
+  await navigateTo(`/user-profile/${user.user_id}`)
+}
 
 onMounted(() => {
   // Handle hash-based navigation
