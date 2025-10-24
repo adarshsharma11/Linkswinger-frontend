@@ -401,7 +401,7 @@ function getProfilePlaceholder() : string
   let profile_type = login_store.getUserDetails?.profile_type ?? ''
   if (profile_type === 'Couple') return "/images/profile-placeholders/MF-COUPLE.png";
   if (profile_type === 'Others') return "/images/profile-placeholders/TRANS.png";
-  if (profile_type === 'Woman') return "/images/profile-placeholders/WOMAN.png";
+  if (profile_type === 'Woman') return "/images/profile-placeholders/WOMEN.png";
   if (profile_type === 'Man') return "/images/profile-placeholders/man.png";
   return "/images/profile-placeholders/man.png"
 }

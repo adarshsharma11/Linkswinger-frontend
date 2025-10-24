@@ -26,7 +26,8 @@ export enum RequestURL {
   getProfilePhotoURL = "/getProfilePhotoURL",
   addEarlyAccess = "/addEarlyAccess",
   getFeedMediaURL = "/getFeedMediaURL",
-  fetchFeeds = "/fetchFeeds"
+  fetchFeeds = "/fetchFeeds",
+  fetchallusers = "/fetchallusers"
 }
 
 
@@ -79,6 +80,24 @@ export function convertToInches(cm: number): { feet: number; inches: number } {
   return { feet, inches };
 }
 
+export function getDistanceFromLatLonInKm(lat1 : number , lon1 : number , lat2 : number , lon2 : number) : number {
+  const R = 6371 // Radius of the Earth in km
+  const dLat = deg2rad(lat2 - lat1)
+  const dLon = deg2rad(lon2 - lon1)
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(deg2rad(lat1)) *
+      Math.cos(deg2rad(lat2)) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2)
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+  const distance = R * c
+  return distance
+}
+
+function deg2rad(deg : number) {
+  return deg * (Math.PI / 180)
+}
 
 
 
@@ -260,6 +279,8 @@ export namespace UsersModel {
     verified_photo?:string;
     assets_path?:string;
     media_path?:string;
+    latitude?: number;
+    longitude?: number;
   }
 
   export class FetchMembershipRequestModel {
