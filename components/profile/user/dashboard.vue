@@ -183,11 +183,11 @@
                   <span class="chip" v-for="interest in user.interests">{{ interest.interest_name }}</span>
                 </div>
                 <div class="actions">
-                  <button class="action" data-action="message" aria-label="Message Maya"><span
+                  <button class="action" data-action="message" aria-label="Message" @click="navigateTo('/chat')"><span
                       class="act-icon">💬</span> Message</button>
-                  <button class="action" data-action="call" aria-label="Voice call Maya"><span class="act-icon">📞
+                  <button class="action" data-action="call" aria-label="Voice call"><span class="act-icon">📞
                     </span>Call</button>
-                  <button class="action primary" data-action="video" aria-label="Video call Maya"><span
+                  <button class="action primary" data-action="video" aria-label="Video call"><span
                       class="act-icon">🎥 </span>Video</button>
                 </div>
               </div>
