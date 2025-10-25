@@ -213,7 +213,10 @@ if (to_id !== 0)
         "content-type": "application/json"
       }
     });
+  
     return fetch_response.value?.result
+    ? [...fetch_response.value.result].sort((a, b) => (a.chat_id ?? 0) - (b.chat_id ?? 0))
+    : []
   }
   chatModels.value = await fetchChat() as ChatsModel.ChatResponseModel[]
 
@@ -245,7 +248,7 @@ onMounted(() => {
     let event_name = responseevent.event_name ?? ''
     if (event_name === 'chat_sent') {
       messageTxt.value = ''
-      appendLastMessagetohistory(responseevent.to_id ?? 0, responseevent.message ?? '')
+     
     }
     let chatresponse = new ChatsModel.ChatResponseModel()
     chatresponse.chat_id = responseevent.chat_id
@@ -256,6 +259,10 @@ onMounted(() => {
     chatresponse.created_at = responseevent.created_at
     chatModels.value.push(chatresponse)
 
+
+  let user_id = responseevent.from_id === login_store.getUserDetails?.user_id ? responseevent.to_id : responseevent.from_id
+
+ appendLastMessagetohistory(user_id ?? 0, responseevent.message ?? '')
     nextTick(() => {
       if (scrollContainer.value) {
         scrollContainer.value.scrollTop = scrollContainer.value.scrollHeight;
