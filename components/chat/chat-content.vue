@@ -197,6 +197,7 @@ const fetchHistory = async () => {
 chatHistoryModels.value = await fetchHistory() as ChatsModel.ChatResponseModel[]
 
 let to_id = Number(route.params.id ?? '0') ?? 0
+console.log('asdasdadsdsddsds')
 if (to_id !== 0) 
 {
   const fetchChat = async () => {
@@ -301,28 +302,28 @@ function appendLastMessagetohistory(to_id: number, message: string) {
 
 async function fetchChats(user_id: number) {
     
-  chatModels.value = []
+ // chatModels.value = []
  router.push({ path: `/chat/${user_id}` })
 
-  fetchUserDetails(user_id)
+  // fetchUserDetails(user_id)
 
-  let api_url = getUrl(RequestURL.fetchChat);
-  let postData = {
-    "from_id": user_store.getLoginId,
-    "to_id": user_id,
-    "page": 0
-  }
-  let response = await $fetch<SuccessError<ChatsModel.ChatResponseModel>>(api_url, {
-    method: 'POST',
-    body: postData,
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  });
+  // let api_url = getUrl(RequestURL.fetchChat);
+  // let postData = {
+  //   "from_id": user_store.getLoginId,
+  //   "to_id": user_id,
+  //   "page": 0
+  // }
+  // let response = await $fetch<SuccessError<ChatsModel.ChatResponseModel>>(api_url, {
+  //   method: 'POST',
+  //   body: postData,
+  //   headers: {
+  //     'Content-Type': 'application/json'
+  //   }
+  // });
 
-  if (response.success) {
-    chatModels.value = response.result ?? []
-  }
+  // if (response.success) {
+  //   chatModels.value = response.result ?? []
+  // }
 
 
 }
