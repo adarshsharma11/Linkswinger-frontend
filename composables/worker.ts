@@ -1,7 +1,7 @@
 import { v4 as uuid } from 'uuid';
 import { idStore } from '~/store/appstores'
 import mitt from 'mitt'
-import { LeaderEventModel } from './websocketModels';
+import { ChatEventSocketModel, LeaderEventModel } from './websocketModels';
 import { detectonline } from './useDatabase';
 import { setupWebSocket } from './websockets';
 
@@ -23,9 +23,13 @@ let lastLeaderHeartbeat = Date.now();
 
 
 const emitter = mitt<Events>()
+export function useMittEmitter() {
+  return emitter
+}
 type Events = {
   serverTime: Date,
   socketConnection: boolean,
+  chatEvent: ChatEventSocketModel,
 }
 let onlinemodel: OnlineEventResponse | null = null
 
@@ -125,14 +129,13 @@ function askForLeader() {
   sendmsgtoworker(leadermodel);
   //
   leaderCheckTimeout = setTimeout(() => {
-    if (!is_leader) 
-      {
+    if (!is_leader) {
       becomeLeader();
     }
   }, 1000); // wait 1s for a reply
 }
 
-export async function sendmsgtoworker(message: any,is_self : boolean = false) {
+export async function sendmsgtoworker(message: any, is_self: boolean = false) {
   // if (typeof SharedWorker === 'undefined') {
   //   sharedWorker.port.postMessage(message)
   // }
@@ -140,9 +143,8 @@ export async function sendmsgtoworker(message: any,is_self : boolean = false) {
   // {
   //   channel.postMessage(message)
   // }
-  if (is_self)
-  {
-     await handleworkerevent({data:message} as MessageEvent<any>)
+  if (is_self) {
+    await handleworkerevent({ data: message } as MessageEvent<any>)
   }
   channel.postMessage(message)
 }
@@ -181,13 +183,12 @@ async function handleworkerevent(event: MessageEvent<any>) {
       }
     }
   }
-  else if (json.event_name === "tab_open") 
-  {
+  else if (json.event_name === "tab_open") {
     if (leaderCheckTimeout) {
       clearTimeout(leaderCheckTimeout);
       leaderCheckTimeout = null;
     }
-     
+
   }
   else if (json.event_name === "alive_leader") {
     let leadermodel = event.data as LeaderEventModel
@@ -198,10 +199,10 @@ async function handleworkerevent(event: MessageEvent<any>) {
     is_connected = onlinemodel.is_connected ?? false
     emitter.emit('socketConnection', is_connected)
   }
-    else if (json.event_name === "loginsuccess") {
-        reloadNuxtApp({ path: "/profile", ttl: 1000 });
-        detectonline();
-    }
+  else if (json.event_name === "loginsuccess") {
+    reloadNuxtApp({ path: "/profile", ttl: 1000 });
+    detectonline();
+  }
   else if (json.event_name === "server_date") {
     let onlinemodel = event.data as ServerDateSocketModel
     useServerTime(onlinemodel.server_date ?? '')
@@ -238,6 +239,18 @@ async function handleworkerevent(event: MessageEvent<any>) {
   else if (json.event_name === "uploading") {
     let onlinemodel = event.data as WorkerModel
     sendtosocket(onlinemodel)
+  }
+  else if (json.event_name === "chat") {
+    let onlinemodel = event.data as WorkerModel
+    sendtosocket(onlinemodel)
+  }
+  else if (json.event_name === "chat_sent") {
+    let chatmodel = event.data as ChatEventSocketModel
+    emitter.emit('chatEvent', chatmodel)
+  }
+  else if (json.event_name === "chat_response") {
+    let chatmodel = event.data as ChatEventSocketModel
+    emitter.emit('chatEvent', chatmodel)
   }
 }
 

@@ -180,16 +180,17 @@
                   </div>
                 </div>
                 <div class="chips">
-                  <span class="chip" v-for="interest in user.interests?.slice(0,3)">{{ interest.interest_name }}</span>
-                  <button class="chip" v-if = "(user.interests?.length ?? 0) > 3" @click="openProfile(user)"> +{{ (user.interests?.length ?? 0) - 3 }} more</button>
+                  <span class="chip" v-for="interest in user.interests?.slice(0, 3)">{{ interest.interest_name }}</span>
+                  <button class="chip" v-if="(user.interests?.length ?? 0) > 3" @click="openProfile(user)"> +{{
+                    (user.interests?.length ?? 0) - 3 }} more</button>
                 </div>
                 <div class="actions">
-                  <button class="action" data-action="message" aria-label="Message" @click="navigateTo('/chat')"><span
+                  <button class="action" data-action="message" aria-label="Message" @click="openChat(user)"><span
                       class="act-icon">💬</span> Message</button>
                   <button class="action" data-action="call" aria-label="Voice call"><span class="act-icon">📞
                     </span>Call</button>
-                  <button class="action primary" data-action="video" aria-label="Video call"><span
-                      class="act-icon">🎥 </span>Video</button>
+                  <button class="action primary" data-action="video" aria-label="Video call"><span class="act-icon">🎥
+                    </span>Video</button>
                 </div>
               </div>
             </article>
@@ -573,18 +574,24 @@ const routeTitle = computed(() => {
   return path.charAt(0).toUpperCase() + path.slice(1)
 })
 
-function setActive(r) {
+function setActive(r : string) {
   const targetRoute = r === 'home' ? '/dashboard' : `/dashboard/${r}`
   router.push(targetRoute)
 }
 
-function setActiveNav(nav) {
-  activeNav.value = nav
-  window.location.hash = nav
+function setActiveNav(nav : string) {
 
-  if (activeNav.value === 'userlist') {
-    console.log('Fetching all users for user list view...')
+  if (nav === 'userlist') {
+    activeNav.value = nav
+    window.location.hash = nav
     fetchUsersList()
+  }
+  else if (nav === 'messages') {
+    openChatOnly()
+  }
+  else {
+    activeNav.value = nav
+    window.location.hash = nav
   }
 }
 
@@ -684,9 +691,14 @@ function getImagePath(user: UsersModel.ProfileDetailsResponseModel): string {
   return "/images/profile-placeholders/man.png"
 }
 
-async function openProfile(user: UsersModel.ProfileDetailsResponseModel) 
-{
+async function openProfile(user: UsersModel.ProfileDetailsResponseModel) {
   await navigateTo(`/user-profile/${user.user_id}`)
+}
+async function openChatOnly() {
+  await navigateTo(`/chat/`)
+}
+async function openChat(user: UsersModel.ProfileDetailsResponseModel) {
+  await navigateTo(`/chat/${user.user_id}`)
 }
 
 onMounted(() => {

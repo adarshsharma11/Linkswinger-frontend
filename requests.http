@@ -10,5 +10,13 @@ Content-Type: application/json
   "user_id": 1
 }
 
+###
+POST http://0.0.0.0:8080/api/chatHistory
+Content-Type: application/json
+
+{
+  "from_id": 1
+}
+
 
 

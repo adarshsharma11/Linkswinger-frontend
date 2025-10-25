@@ -48,3 +48,19 @@ export class WorkerModel implements SocketEventModel
      feed_type? : string
      feed_desc? : string
 }
+
+export class ChatEventSocketModel implements SocketEventModel
+{
+    chat_id?: number;
+    from_id?: number;
+    to_id?: number;
+    from_type?: string;
+    to_type?: string;
+    message_type?: string;
+    message?: string;
+    video?: string;
+    event_name!: string;
+    success!: boolean;
+    created_at?: string;
+    media_path?: string;
+}

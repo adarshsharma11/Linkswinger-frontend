@@ -83,6 +83,10 @@ async function handlesocketevent(eventdata: Blob) {
             logoutself()
         }
     }
+     else if (event_name === "chat_sent" || event_name === "chat_response") {
+        let json = JSON.parse(jsontext) as ChatEventSocketModel
+        sendmsgtoworker(json, true)
+    }
   
 
 }

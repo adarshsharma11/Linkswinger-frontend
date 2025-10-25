@@ -27,7 +27,9 @@ export enum RequestURL {
   addEarlyAccess = "/addEarlyAccess",
   getFeedMediaURL = "/getFeedMediaURL",
   fetchFeeds = "/fetchFeeds",
-  fetchallusers = "/fetchallusers"
+  fetchallusers = "/fetchallusers",
+  chatHistory = "/chatHistory",
+  fetchChat = "/fetchChat"
 }
 
 
@@ -407,5 +409,30 @@ export namespace FeedsModel
    }
 }
 
+export namespace ChatsModel {
+
+  export class  ChatResponseModel {
+  chat_id?: number;
+  from_id?: number;
+  to_id?: number;
+  message_type?: string;
+  message?: string;
+  created_at?: string;
+  is_read?:boolean
+
+  page?: number;
+  media_path?: string;
+  nick_name?: string;
+  profile_image?: string;
+  profile_type? : string;
+
+  tier_id? : number;
+  tier_name? : string;
+  price? : number;
+  
+  }
+
+ 
+}
   
     
