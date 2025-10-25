@@ -196,8 +196,9 @@ const fetchHistory = async () => {
 }
 chatHistoryModels.value = await fetchHistory() as ChatsModel.ChatResponseModel[]
 
-let to_id = Number(route.params.id) ?? 0
-if (to_id !== 0) {
+let to_id = Number(route.params.id ?? '0') ?? 0
+if (to_id !== 0) 
+{
   const fetchChat = async () => {
     const api_url = getUrl(RequestURL.fetchChat);
     const { data: fetch_response, error: option_error } = await useFetch<SuccessError<ChatsModel.ChatResponseModel>>(api_url, {
@@ -349,8 +350,10 @@ async function fetchUserDetails(user_id: number) {
 
 
 
-function getImagePathForUser(user: UsersModel.ProfileDetailsResponseModel): string {
-  let profile_image = user.profile_image ?? ''
+function getImagePathForUser(user: UsersModel.ProfileDetailsResponseModel | null | undefined): string {
+  if (user)
+  {
+let profile_image = user.profile_image ?? ''
   if (profile_image.length !== 0) {
     return (user.media_path ?? '') + profile_image
   }
@@ -360,6 +363,8 @@ function getImagePathForUser(user: UsersModel.ProfileDetailsResponseModel): stri
   if (profile_type === 'Woman') return "/images/profile-placeholders/WOMEN.png";
   if (profile_type === 'Man') return "/images/profile-placeholders/man.png";
   return "/images/profile-placeholders/man.png"
+  }
+  return ""
 }
 
 function getImagePath(user: ChatsModel.ChatResponseModel): string {
