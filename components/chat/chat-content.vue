@@ -19,7 +19,7 @@
             <!-- Example Conversation Items -->
             <div class="p-2 rounded-3 d-flex align-items-center justify-content-between hover-overlay chat-item"
               style="background-color:rgba(23,23,23,0.4);margin-bottom:6px;" v-for="historymodel in chatHistoryModels"
-              @click="fetchChats(historymodel.to_id ?? 0)">
+              @click="fetchChats(historymodel.from_id ?? 0,historymodel.to_id ?? 0)">
               <div class="d-flex align-items-center gap-3">
                 <div class="position-relative chat-item-left">
                   <img
@@ -197,7 +197,6 @@ const fetchHistory = async () => {
 chatHistoryModels.value = await fetchHistory() as ChatsModel.ChatResponseModel[]
 
 let to_id = Number(route.params.id ?? '0') ?? 0
-console.log('asdasdadsdsddsds')
 if (to_id !== 0) 
 {
   const fetchChat = async () => {
@@ -300,8 +299,10 @@ function appendLastMessagetohistory(to_id: number, message: string) {
   }
 }
 
-async function fetchChats(user_id: number) {
+async function fetchChats(from_id: number,to_id: number) {
     
+  let user_id = from_id === login_store.getUserDetails?.user_id ? to_id : from_id
+
  // chatModels.value = []
  router.push({ path: `/chat/${user_id}` })
 
