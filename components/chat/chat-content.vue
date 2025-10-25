@@ -18,7 +18,8 @@
           <div class="custom-scroll" style="max-height:70vh;overflow:auto;">
             <!-- Example Conversation Items -->
             <div class="p-2 rounded-3 d-flex align-items-center justify-content-between hover-overlay chat-item"
-              style="background-color:rgba(23,23,23,0.4);margin-bottom:6px;" v-for="historymodel in chatHistoryModels">
+              style="background-color:rgba(23,23,23,0.4);margin-bottom:6px;" v-for="historymodel in chatHistoryModels"
+              @click="fetchChats(historymodel.to_id ?? 0)">
               <div class="d-flex align-items-center gap-3">
                 <div class="position-relative chat-item-left">
                   <img
@@ -79,7 +80,8 @@
                   style="width:12px;height:12px;"></span>
               </div>
               <div>
-                <h6 class="mb-0"> {{ userDetails?.nick_name }} <span class="badge bg-warning text-dark ms-1">{{ userDetails?.tier_name ?? 'Free' }}</span></h6>
+                <h6 class="mb-0"> {{ userDetails?.nick_name }} <span class="badge bg-warning text-dark ms-1">{{
+                  userDetails?.tier_name ?? 'Free' }}</span></h6>
                 <small class="text-secondary">Online now • {{ userDetails?.profile_type }}</small>
               </div>
             </div>
@@ -177,6 +179,7 @@ const chatHistoryModels = ref([] as ChatsModel.ChatResponseModel[])
 const chatModels = ref([] as ChatsModel.ChatResponseModel[])
 const scrollContainer = ref<HTMLElement | null>(null);
 const userDetails = ref<UsersModel.ProfileDetailsResponseModel | null | undefined>(null);
+const router = useRouter()
 const fetchHistory = async () => {
   const api_url = getUrl(RequestURL.chatHistory);
   const { data: fetch_response, error: option_error } = await useFetch<SuccessError<ChatsModel.ChatResponseModel>>(api_url, {
@@ -213,7 +216,7 @@ if (to_id !== 0) {
   }
   chatModels.value = await fetchChat() as ChatsModel.ChatResponseModel[]
 
-    const fetchUserDetails = async () => {
+  const fetchUserDetails = async () => {
     const api_url = getUrl(RequestURL.getProfileDetails);
     const { data: response, error: option_error } = await useFetch<SuccessError<UsersModel.ProfileDetailsResponseModel>>(
       api_url,
@@ -241,6 +244,7 @@ onMounted(() => {
     let event_name = responseevent.event_name ?? ''
     if (event_name === 'chat_sent') {
       messageTxt.value = ''
+      appendLastMessagetohistory(responseevent.to_id ?? 0, responseevent.message ?? '')
     }
     let chatresponse = new ChatsModel.ChatResponseModel()
     chatresponse.chat_id = responseevent.chat_id
@@ -250,6 +254,7 @@ onMounted(() => {
     chatresponse.message = responseevent.message
     chatresponse.created_at = responseevent.created_at
     chatModels.value.push(chatresponse)
+
     nextTick(() => {
       if (scrollContainer.value) {
         scrollContainer.value.scrollTop = scrollContainer.value.scrollHeight;
@@ -258,10 +263,10 @@ onMounted(() => {
   })
 
   nextTick(() => {
-      if (scrollContainer.value) {
-        scrollContainer.value.scrollTop = scrollContainer.value.scrollHeight;
-      }
-    });
+    if (scrollContainer.value) {
+      scrollContainer.value.scrollTop = scrollContainer.value.scrollHeight;
+    }
+  });
 
 })
 onUnmounted(() => {
@@ -283,6 +288,67 @@ function sendMessage() {
   eventmodel.message = trim
   sendmsgtoworker(eventmodel, true)
 }
+
+
+
+function appendLastMessagetohistory(to_id: number, message: string) {
+  let histories = chatHistoryModels.value.filter((history: ChatsModel.ChatResponseModel) => history.to_id === to_id)
+  if (histories.length > 0) {
+    histories[0].message = message
+  }
+}
+
+async function fetchChats(user_id: number) {
+    
+  chatModels.value = []
+  router.push({ params: { id: user_id } })
+
+  fetchUserDetails(user_id)
+
+  let api_url = getUrl(RequestURL.fetchChat);
+  let postData = {
+    "from_id": user_store.getLoginId,
+    "to_id": user_id,
+    "page": 0
+  }
+  let response = await $fetch<SuccessError<ChatsModel.ChatResponseModel>>(api_url, {
+    method: 'POST',
+    body: postData,
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  });
+
+  if (response.success) {
+    chatModels.value = response.result ?? []
+  }
+
+
+}
+
+async function fetchUserDetails(user_id: number) {
+ 
+  let api_url = getUrl(RequestURL.getProfileDetails);
+  let postData = {
+    "user_id": user_id,
+  }
+  let response = await $fetch<SuccessError<UsersModel.ProfileDetailsResponseModel>>(api_url, {
+    method: 'POST',
+    body: postData,
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  });
+
+  if (response.success) {
+   userDetails.value = response.response;
+  }
+  
+
+}
+
+
+
 function getImagePathForUser(user: UsersModel.ProfileDetailsResponseModel): string {
   let profile_image = user.profile_image ?? ''
   if (profile_image.length !== 0) {
