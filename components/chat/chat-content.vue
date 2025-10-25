@@ -302,7 +302,7 @@ function appendLastMessagetohistory(to_id: number, message: string) {
 async function fetchChats(user_id: number) {
     
   chatModels.value = []
-  router.push({ params: { id: user_id } })
+ router.push({ path: `/chat/${user_id}` })
 
   fetchUserDetails(user_id)
 
