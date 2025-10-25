@@ -19,7 +19,7 @@
             <!-- Example Conversation Items -->
             <div class="p-2 rounded-3 d-flex align-items-center justify-content-between hover-overlay chat-item"
               style="background-color:rgba(23,23,23,0.4);margin-bottom:6px;" v-for="historymodel in chatHistoryModels"
-              @click="fetchChats(historymodel.from_id ?? 0,historymodel.to_id ?? 0)">
+              @click="fetchChats(historymodel.from_id ?? 0, historymodel.to_id ?? 0)">
               <div class="d-flex align-items-center gap-3">
                 <div class="position-relative chat-item-left">
                   <img
@@ -197,8 +197,7 @@ const fetchHistory = async () => {
 chatHistoryModels.value = await fetchHistory() as ChatsModel.ChatResponseModel[]
 
 let to_id = Number(route.params.id ?? '0') ?? 0
-if (to_id !== 0) 
-{
+if (to_id !== 0) {
   const fetchChat = async () => {
     const api_url = getUrl(RequestURL.fetchChat);
     const { data: fetch_response, error: option_error } = await useFetch<SuccessError<ChatsModel.ChatResponseModel>>(api_url, {
@@ -213,10 +212,10 @@ if (to_id !== 0)
         "content-type": "application/json"
       }
     });
-  
+
     return fetch_response.value?.result
-    ? [...fetch_response.value.result].sort((a, b) => (a.chat_id ?? 0) - (b.chat_id ?? 0))
-    : []
+      ? [...fetch_response.value.result].sort((a, b) => (a.chat_id ?? 0) - (b.chat_id ?? 0))
+      : []
   }
   chatModels.value = await fetchChat() as ChatsModel.ChatResponseModel[]
 
@@ -249,20 +248,26 @@ onMounted(() => {
     if (event_name === 'chat_sent') {
       messageTxt.value = ''
     }
-    
-    let chatresponse = new ChatsModel.ChatResponseModel()
-    chatresponse.chat_id = responseevent.chat_id
-    chatresponse.from_id = responseevent.from_id
-    chatresponse.to_id = responseevent.to_id
-    chatresponse.message_type = responseevent.message_type
-    chatresponse.message = responseevent.message
-    chatresponse.created_at = responseevent.created_at
-    chatModels.value.push(chatresponse)
+
+    let route_id = Number(route.params.id ?? '0') ?? 0
+    if (route_id === responseevent.from_id || route_id === responseevent.to_id) 
+    {
+      let chatresponse = new ChatsModel.ChatResponseModel()
+      chatresponse.chat_id = responseevent.chat_id
+      chatresponse.from_id = responseevent.from_id
+      chatresponse.to_id = responseevent.to_id
+      chatresponse.message_type = responseevent.message_type
+      chatresponse.message = responseevent.message
+      chatresponse.created_at = responseevent.created_at
+      chatModels.value.push(chatresponse)
+    }
 
 
-  let user_id = responseevent.from_id === login_store.getUserDetails?.user_id ? responseevent.to_id : responseevent.from_id
 
- appendLastMessagetohistory(user_id ?? 0, responseevent.message ?? '')
+
+    let user_id = responseevent.from_id === login_store.getUserDetails?.user_id ? responseevent.to_id : responseevent.from_id
+
+    appendLastMessagetohistory(user_id ?? 0, responseevent.message ?? '')
     nextTick(() => {
       if (scrollContainer.value) {
         scrollContainer.value.scrollTop = scrollContainer.value.scrollHeight;
@@ -306,12 +311,12 @@ function appendLastMessagetohistory(to_id: number, message: string) {
   }
 }
 
-async function fetchChats(from_id: number,to_id: number) {
-    
+async function fetchChats(from_id: number, to_id: number) {
+
   let user_id = from_id === login_store.getUserDetails?.user_id ? to_id : from_id
 
- // chatModels.value = []
- router.push({ path: `/chat/${user_id}` })
+  // chatModels.value = []
+  router.push({ path: `/chat/${user_id}` })
 
   // fetchUserDetails(user_id)
 
@@ -337,7 +342,7 @@ async function fetchChats(from_id: number,to_id: number) {
 }
 
 async function fetchUserDetails(user_id: number) {
- 
+
   let api_url = getUrl(RequestURL.getProfileDetails);
   let postData = {
     "user_id": user_id,
@@ -351,27 +356,26 @@ async function fetchUserDetails(user_id: number) {
   });
 
   if (response.success) {
-   userDetails.value = response.response;
+    userDetails.value = response.response;
   }
-  
+
 
 }
 
 
 
 function getImagePathForUser(user: UsersModel.ProfileDetailsResponseModel | null | undefined): string {
-  if (user)
-  {
-let profile_image = user.profile_image ?? ''
-  if (profile_image.length !== 0) {
-    return (user.media_path ?? '') + profile_image
-  }
-  let profile_type = user.profile_type ?? ''
-  if (profile_type === 'Couple') return "/images/profile-placeholders/MF-COUPLE.png";
-  if (profile_type === 'Others') return "/images/profile-placeholders/TRANS.png";
-  if (profile_type === 'Woman') return "/images/profile-placeholders/WOMEN.png";
-  if (profile_type === 'Man') return "/images/profile-placeholders/man.png";
-  return "/images/profile-placeholders/man.png"
+  if (user) {
+    let profile_image = user.profile_image ?? ''
+    if (profile_image.length !== 0) {
+      return (user.media_path ?? '') + profile_image
+    }
+    let profile_type = user.profile_type ?? ''
+    if (profile_type === 'Couple') return "/images/profile-placeholders/MF-COUPLE.png";
+    if (profile_type === 'Others') return "/images/profile-placeholders/TRANS.png";
+    if (profile_type === 'Woman') return "/images/profile-placeholders/WOMEN.png";
+    if (profile_type === 'Man') return "/images/profile-placeholders/man.png";
+    return "/images/profile-placeholders/man.png"
   }
   return ""
 }
