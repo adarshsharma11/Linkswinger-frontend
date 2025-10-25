@@ -248,8 +248,8 @@ onMounted(() => {
     let event_name = responseevent.event_name ?? ''
     if (event_name === 'chat_sent') {
       messageTxt.value = ''
-     
     }
+    
     let chatresponse = new ChatsModel.ChatResponseModel()
     chatresponse.chat_id = responseevent.chat_id
     chatresponse.from_id = responseevent.from_id
