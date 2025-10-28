@@ -1,0 +1,118 @@
+.pro-setting {
+    margin-top: 90px;
+    min-height: 100dvh;
+}
+
+.pro-setting {
+    margin-top: 70px;
+    padding: 30px 0;
+}
+
+.pro-flex {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    gap: 1rem;
+}
+
+.pro-container {
+    max-width: 1150px;
+    margin: 0 auto;
+    width: 100%;
+    padding: 0 15px;
+}
+.pro-head img {
+    max-width: 80px;
+}
+
+.pro-head {
+    text-align: center;
+    margin: 0 0 30px;
+}
+
+.pro-head h1.text-white {
+    font-size: 26px;
+    font-weight: 500;
+    margin-top: 10px;
+}
+
+.profile-left nav a {
+    font-size: 16px;
+    padding: 0.75rem;
+    background: linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01));
+    line-height: normal;
+}
+.pro-right section {
+    border: 1px solid rgb(255 255 255 / 0.1);
+    padding: 1.25rem;
+    border-radius: 1rem;
+}
+
+.tab-pannel h2 {
+    color: #fff;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.tab-pannellabel {
+    color: #fff;
+    font-size: 16px;
+}
+
+.tab-pannel input {
+    background-color: rgb(0 0 0 / 0.4);
+    padding: 10px 0.75rem !important;
+    border: 1px solid rgb(255 255 255 / 0.1) !important;
+    border-radius: 0.5rem;
+    width: 100%;
+    color: #fff;
+    font-size: 16px;
+    line-height: normal;
+}
+.cst-sticky-bar {
+    backdrop-filter: blur(6px);
+    background: rgba(10, 10, 10, .8);
+    border-top: 1px solid rgba(255,255,255,.08);
+    position: fixed;
+    z-index: 9999999;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 0.75rem;
+}
+.pro-btn-ps {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 0.75rem;
+}
+
+.pro-btn-ps button.glow-green {
+    background-color: rgba(16,185,129,.18);
+    border: 1px solid rgba(16,185,129,.35) !important;
+}
+
+.pro-btn-ps button.glow-green:hover {
+    background-color: rgba(16,185,129,1) !important;
+}
+
+button#discardBtn {
+    border: 1px solid rgba(255,255,255,.12);
+    color: #fff;
+}
+
+.tab-pannel input:focus {
+    outline-color: #fff;
+}
+
+.frm-field label {
+    color: #fff;
+    font-size: 16px;
+}
+@media only screen and (max-width:767px){
+.pro-flex {
+    grid-template-columns: 1fr;
+}
+.tab-pannel .grid {
+    grid-template-columns: 1fr;
+}
+}
