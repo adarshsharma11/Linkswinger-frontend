@@ -1,56 +1,31 @@
 <template>
-  <div class="dashboard-container">
+  <div class="dashboard-container" @click="handleBodyClick">
     <!-- Desktop Sidebar -->
-    <aside class="dashboard-sidebar">
+    <aside class="dashboard-sidebar" :class="{ active: isSidebarOpen }"
+      @click.stop >
       <div class="brand">
         <div class="brand-logo" title="Swap src to your local path once deployed" />
         <h1 class="text-white">LinkSwingers</h1>
+        <button class="cross-side-btn" @click="closeSidebar"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
+  <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
+</svg></button>
       </div>
       <nav class="nav" id="sideNav">
-        <a href="#profile" data-route="profile" @click.prevent="setActiveNav('profile')"
-          :class="{ active: activeNav === 'profile' }" class="text-white"><span class="icon"><!--👤--> <img
-              class="sidebar-ic" :src="`/images/badges/user.png`" /></span>My Profile</a>
-        <a href="#userlist" data-route="notifications" @click.prevent="setActiveNav('userlist')"
-          :class="{ active: activeNav === 'userlist' }" class="text-white"><span class="icon"><!--🔔--> <img
-              class="sidebar-ic" :src="`/images/badges/user.png`" /></span>User List</a>
-        <a href="#home" data-route="home" class="text-white" @click.prevent="setActiveNav('home')"
-          :class="{ active: activeNav === 'home' }"><span class="icon"><!--🏠--> <img class="sidebar-ic"
-              :src="`/images/badges/home.png`" /></span>Home</a>
-        <a href="#messages" data-route="messages" @click.prevent="setActiveNav('messages')"
-          :class="{ active: activeNav === 'messages' }" class="text-white"><span class="icon"><!--💬--> <img
-              class="sidebar-ic" :src="`/images/badges/chat.png`" /></span>Messages/Calls</a>
-        <a href="#notifications" data-route="notifications" @click.prevent="setActiveNav('notifications')"
-          :class="{ active: activeNav === 'notifications' }" class="text-white"><span class="icon"><!--🔔--> <img
-              class="sidebar-ic" :src="`/images/badges/notification.png`" /></span>Notifications</a>
-        <a href="#nearby" data-route="nearby" @click.prevent="setActiveNav('nearby')"
-          :class="{ active: activeNav === 'nearby' }" class="text-white"><span class="icon"><!--📍--> <img
-              class="sidebar-ic" :src="`/images/badges/location.png`" /></span>Nearby People</a>
-        <a href="#friends" data-route="friends" @click.prevent="setActiveNav('friends')"
-          :class="{ active: activeNav === 'friends' }" class="text-white"><span class="icon"><!--👥--> <img
-              class="sidebar-ic" :src="`/images/badges/friends.png`" /></span>My Friends</a>
-        <a href="#crush" data-route="crush" @click.prevent="setActiveNav('crush')"
-          :class="{ active: activeNav === 'crush' }" class="text-white"><span class="icon"><!--⭐--> <img
-              class="sidebar-ic" :src="`/images/badges/star.png`" /></span>Crush List</a>
-        <a href="#search" data-route="search" @click.prevent="setActiveNav('search')"
-          :class="{ active: activeNav === 'search' }" class="text-white"><span class="icon"><!--🔍--> <img
-              class="sidebar-ic" :src="`/images/badges/search.png`" /></span>Search</a>
-        <a href="#new-photos" data-route="new-photos" @click.prevent="setActiveNav('new-photos')"
-          :class="{ active: activeNav === 'new-photos' }" class="text-white"><span class="icon"><!--🖼--> <img
-              class="sidebar-ic" :src="`/images/badges/public-photos.png`" /></span>New Photos</a>
-        <a href="#new-video" data-route="new-video" @click.prevent="setActiveNav('new-video')"
-          :class="{ active: activeNav === 'new-video' }" class="text-white"><span class="icon"><!--🎞--> <img
-              class="sidebar-ic" :src="`/images/badges/video-call.png`" /></span>New Videos</a>
-        <a href="#meet-events" data-route="meet-events" @click.prevent="setActiveNav('meet-events')"
-          :class="{ active: activeNav === 'meet-events' }" class="text-white"><span class="icon"><!--📅--> <img
-              class="sidebar-ic" :src="`/images/badges/calender.png`" /></span>Meet Events</a>
-        <a href="#club-events" data-route="club-events" @click.prevent="setActiveNav('club-events')"
-          :class="{ active: activeNav === 'club-events' }" class="text-white"><span class="icon"><!--🏷--> <img
-              class="sidebar-ic" :src="`/images/badges/club.png`" /> </span>Club Events</a>
-        <a href="#video-roullet" data-route="video-roullet" @click.prevent="setActiveNav('video-roullet')"
-          :class="{ active: activeNav === 'video-roullet' }" class="text-white"><span class="icon"> <img
-              class="sidebar-ic" :src="`/images/badges/video-roulette-available.png`" /></span>Video Roullet</a>
-        <a href="#live" data-route="live" @click.prevent="setActiveNav('live')"
-          :class="{ active: activeNav === 'live' }" class="text-white"><span class="icon">🔴</span>Live / On Cam</a>
+        <a href="#profile" data-route="profile" @click.prevent="setActiveNav('profile')" :class="{ active: activeNav === 'profile' }" class="text-white"><span class="icon"><!--👤--> <img class="sidebar-ic" :src="`/images/badges/user.png`" /></span>My Profile</a>
+        <a href="#userlist" data-route="notifications" @click.prevent="setActiveNav('userlist')" :class="{ active: activeNav === 'userlist' }" class="text-white"><span class="icon"><!--🔔-->  <img class="sidebar-ic" :src="`/images/badges/user.png`" /></span>User List</a>
+        <a href="#home" data-route="home" class="text-white" @click.prevent="setActiveNav('home')" :class="{ active: activeNav === 'home' }"><span class="icon"><!--🏠--> <img class="sidebar-ic" :src="`/images/badges/home.png`" /></span>Home</a>
+        <a href="#messages" data-route="messages" @click.prevent="setActiveNav('messages')" :class="{ active: activeNav === 'messages' }" class="text-white"><span class="icon"><!--💬-->  <img class="sidebar-ic" :src="`/images/badges/chat.png`" /></span>Messages/Calls</a>
+        <a href="#notifications" data-route="notifications" @click.prevent="setActiveNav('notifications')" :class="{ active: activeNav === 'notifications' }" class="text-white"><span class="icon"><!--🔔-->  <img class="sidebar-ic" :src="`/images/badges/notification.png`" /></span>Notifications</a>
+        <a href="#nearby" data-route="nearby" @click.prevent="setActiveNav('nearby')" :class="{ active: activeNav === 'nearby' }" class="text-white"><span class="icon"><!--📍-->  <img class="sidebar-ic" :src="`/images/badges/location.png`" /></span>Nearby People</a>
+        <a href="#friends" data-route="friends" @click.prevent="setActiveNav('friends')" :class="{ active: activeNav === 'friends' }" class="text-white"><span class="icon"><!--👥-->  <img class="sidebar-ic" :src="`/images/badges/friends.png`" /></span>My Friends</a>
+        <a href="#crush" data-route="crush" @click.prevent="setActiveNav('crush')" :class="{ active: activeNav === 'crush' }" class="text-white"><span class="icon"><!--⭐-->  <img class="sidebar-ic" :src="`/images/badges/star.png`" /></span>Crush List</a>
+        <a href="#search" data-route="search" @click.prevent="setActiveNav('search')" :class="{ active: activeNav === 'search' }" class="text-white"><span class="icon"><!--🔍-->  <img class="sidebar-ic" :src="`/images/badges/search.png`" /></span>Search</a>
+        <a href="#new-photos" data-route="new-photos" @click.prevent="setActiveNav('new-photos')" :class="{ active: activeNav === 'new-photos' }" class="text-white"><span class="icon"><!--🖼-->  <img class="sidebar-ic" :src="`/images/badges/public-photos.png`" /></span>New Photos</a>
+        <a href="#new-video" data-route="new-video" @click.prevent="setActiveNav('new-video')" :class="{ active: activeNav === 'new-video' }" class="text-white"><span class="icon"><!--🎞-->  <img class="sidebar-ic" :src="`/images/badges/video-call.png`" /></span>New Videos</a>
+        <a href="#meet-events" data-route="meet-events" @click.prevent="setActiveNav('meet-events')" :class="{ active: activeNav === 'meet-events' }" class="text-white"><span class="icon"><!--📅-->  <img class="sidebar-ic" :src="`/images/badges/calender.png`" /></span>Meet Events</a>
+        <a href="#club-events" data-route="club-events" @click.prevent="setActiveNav('club-events')" :class="{ active: activeNav === 'club-events' }" class="text-white"><span class="icon"><!--🏷--> <img class="sidebar-ic" :src="`/images/badges/club.png`" /> </span>Club Events</a>
+        <a href="#video-roullet" data-route="video-roullet" @click.prevent="setActiveNav('video-roullet')" :class="{ active: activeNav === 'video-roullet' }" class="text-white"><span class="icon"> <img class="sidebar-ic" :src="`/images/badges/video-roulette-available.png`" /></span>Video Roullet</a>
+        <a href="#live" data-route="live" @click.prevent="setActiveNav('live')" :class="{ active: activeNav === 'live' }" class="text-white"><span class="icon">🔴</span>Live / On Cam</a>
       </nav>
       <div class="spacer" />
       <button class="dash-button primary" id="dash-buttonUpload" @click="fakeUpload">＋ Upload/Post</button>
@@ -58,17 +33,19 @@
 
     <!-- MAIN COLUMN -->
     <div class="dashboard-main">
-      <div class="dash-logo">
-        <div class="brand">
-          <div class="brand-logo" title="Swap src to your local path once deployed" />
-          <h1 class="text-white">LinkSwingers</h1>
-        </div>
+      <div class="dash-logo"><div class="brand">
+        <div class="brand-logo" title="Swap src to your local path once deployed" />
+        <h1 class="text-white">LinkSwingers</h1>
       </div>
+      <button class="toggle-side-btn"  @click.stop="openSidebar"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-list" viewBox="0 0 16 16">
+  <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5"/>
+</svg></button>
+    </div>
       <header class="dashboard-header">
         <div class="dash-row" style="gap:10px;flex:1">
           <strong id="routeTitle" class="text-white">{{ routeTitle }}</strong>
           <div class="search">
-            <input type="search" placeholder="Quick search people, photos, videos…" class="text-white" />
+            <input type="search" placeholder="Quick search people, photos, videos…" class="text-white"/>
             <button class="dash-button text-white" id="dash-buttonOpenAdvanced" @click="openAdvanced">Advanced</button>
           </div>
         </div>
@@ -94,10 +71,8 @@
             <a href="#friends" class="pill text-white" @click.prevent="setActiveNav('friends')">👥 My friends</a>
             <a href="#new-photos" class="pill text-white" @click.prevent="setActiveNav('new-photos')">🖼 New photos</a>
             <a href="#new-video" class="pill text-white" @click.prevent="setActiveNav('new-video')">🎞 New video</a>
-            <a href="#meet-events" class="pill text-white" @click.prevent="setActiveNav('meet-events')">📅 Meet
-              events</a>
-            <a href="#club-events" class="pill text-white" @click.prevent="setActiveNav('club-events')">🏷 Club
-              events</a>
+            <a href="#meet-events" class="pill text-white" @click.prevent="setActiveNav('meet-events')">📅 Meet events</a>
+            <a href="#club-events" class="pill text-white" @click.prevent="setActiveNav('club-events')">🏷 Club events</a>
           </div>
 
           <div class="dashboard-card glow">
@@ -156,45 +131,210 @@
                   <option value="50">≤ 50 km</option>
                   <option value="100">≤ 100 km</option>
                 </select>
-                <label class="check"><input id="nearby" type="checkbox" /> Nearby</label>
-                <label class="check"><input id="onlyVerified" type="checkbox" /> Verified members</label>
-                <a class="btn primary" href="advanced-search.html" aria-label="Go to Advanced Search">Advanced
-                  Search</a>
+                <label class="check"><input id="nearby" type="checkbox"/> Nearby</label>
+                <label class="check"><input id="onlyVerified" type="checkbox"/> Verified members</label>
+                <a class="btn primary" href="advanced-search.html" aria-label="Go to Advanced Search">Advanced Search</a>
               </div>
             </div>
           </div>
 
           <div id="grid" class="grid user-grid" aria-live="polite">
-            <article class="card" data-user-id="6" v-for="user in users" :key="user.user_id">
-              <div class="media" @click="openProfile(user)">
-                <img :src="getImagePath(user)" alt="Maya" loading="lazy" decoding="async">
-                <span class="online-dot" title="Online now"></span>
-                <span class="badge-elite"><img :src="getmembershipIcon(user)"></span>
-
-              </div>
-              <div class="content">
-                <div class="row1">
-                  <div>
-                    <div class="name">{{ user.nick_name }}</div>
-                    <div class="meta">{{ user.town }} • {{ getDistance(user) }} km </div>
-                  </div>
-                </div>
-                <div class="chips">
-                  <span class="chip" v-for="interest in user.interests?.slice(0, 3)">{{ interest.interest_name }}</span>
-                  <button class="chip" v-if="(user.interests?.length ?? 0) > 3" @click="openProfile(user)"> +{{
-                    (user.interests?.length ?? 0) - 3 }} more</button>
-                </div>
-                <div class="actions">
-                  <button class="action" data-action="message" aria-label="Message" @click="openChat(user)"><span
-                      class="act-icon">💬</span> Message</button>
-                  <button class="action" data-action="call" aria-label="Voice call"><span class="act-icon">📞
-                    </span>Call</button>
-                  <button class="action primary" data-action="video" aria-label="Video call"><span class="act-icon">🎥
-                    </span>Video</button>
-                </div>
-              </div>
-            </article>
+      <article class="card" data-user-id="6">
+        <div class="media">
+          <img src="/public/images/user-list/user-1.jpg" alt="Maya" loading="lazy" decoding="async">
+          <span class="online-dot" title="Online now"></span>
+          <span class="badge-elite"><img src="/public/images/badges/elite.png"></span>
+          
+        </div>
+        <div class="content">
+          <div class="row1">
+            <div>
+              <div class="name">Maya</div>
+              <div class="meta">Birmingham • 2 km </div>
+            </div>
           </div>
+          <div class="chips">
+            <span class="chip">hd cam</span><span class="chip">calls</span>
+          </div>
+          <div class="actions">
+            <button class="action" data-action="message" aria-label="Message Maya"><span class="act-icon">💬</span> Message</button>
+            <button class="action" data-action="call" aria-label="Voice call Maya"><span class="act-icon">📞 </span>Call</button>
+            <button class="action primary" data-action="video" aria-label="Video call Maya"><span class="act-icon">🎥 </span>Video</button>
+          </div>
+        </div>
+      </article>
+      <article class="card" data-user-id="3">
+        <div class="media">
+          <img src="/public/images/user-list/user-2.jpg" alt="Jake" loading="lazy" decoding="async">
+          <span class="online-dot" title="Online now"></span>
+          <span class="badge-elite"><img src="/public/images/badges/elite.png"></span>
+          
+        </div>
+        <div class="content">
+          <div class="row1">
+            <div>
+              <div class="name">Jake</div>
+              <div class="meta">West Bromwich • 4 km </div>
+            </div>
+          </div>
+          <div class="chips">
+            <span class="chip">chill</span><span class="chip">pub meet</span>
+          </div>
+          <div class="actions">
+            <button class="action" data-action="message" aria-label="Message Ella"><span class="act-icon">💬</span> Message</button>
+            <button class="action" data-action="call" aria-label="Voice call Ella"><span class="act-icon">📞</span> Call</button>
+            <button class="action primary" data-action="video" aria-label="Video call Ella"><span class="act-icon">🎥</span> Video</button>
+          </div>
+        </div>
+      </article>
+      <article class="card" data-user-id="1">
+        <div class="media">
+          <img src="/public/images/user-list/user-3.jpg" alt="Sophie &amp; Mark" loading="lazy" decoding="async">
+          <span class="online-dot" title="Online now"></span>
+          <span class="badge-elite"><img src="/public/images/badges/elite.png"></span>
+
+          
+        </div>
+        <div class="content">
+          <div class="row1">
+            <div>
+              <div class="name">Sophie &amp; Mark</div>
+              <div class="meta">Birmingham • 7 km </div>
+            </div>
+          </div>
+          <div class="chips">
+            <span class="chip">video</span><span class="chip">verification selfie</span><span class="chip">meet tonight</span>
+          </div>
+          <div class="actions">
+            <button class="action" data-action="message" aria-label="Message Sophie &amp; Mark"><span class="act-icon">💬 </span>Message</button>
+            <button class="action" data-action="call" aria-label="Voice call Sophie &amp; Mark"><span class="act-icon">📞</span> Call</button>
+            <button class="action primary" data-action="video" aria-label="Video call Sophie &amp; Mark"><span class="act-icon">🎥 </span>Video</button>
+          </div>
+        </div>
+      </article>
+      <article class="card" data-user-id="8">
+        <div class="media">
+          <img src="/public/images/user-list/user-4.jpg" alt="Noah" loading="lazy" decoding="async">
+          <span class="online-dot" title="Online now"></span>
+          <span class="badge-elite"><img src="/public/images/badges/elite.png"></span>
+
+          
+        </div>
+        <div class="content">
+          <div class="row1">
+            <div>
+              <div class="name">Noah</div>
+              <div class="meta">Birmingham • 8 km </div>
+            </div>
+          </div>
+          <div class="chips">
+            <span class="chip">gym</span><span class="chip">coffee</span>
+          </div>
+          <div class="actions">
+            <button class="action" data-action="message" aria-label="Message Noah"><span class="act-icon">💬</span> Message</button>
+            <button class="action" data-action="call" aria-label="Voice call Noah"><span class="act-icon">📞</span> Call</button>
+            <button class="action primary" data-action="video" aria-label="Video call Noah"><span class="act-icon">🎥</span> Video</button>
+          </div>
+        </div>
+      </article>
+      <article class="card" data-user-id="2">
+        <div class="media">
+          <img src="/public/images/user-list/user-4.jpg" alt="Ava" loading="lazy" decoding="async">
+          
+          <span class="badge-elite"><img src="/public/images/badges/elite.png"></span>
+
+          
+        </div>
+        <div class="content">
+          <div class="row1">
+            <div>
+              <div class="name">Ava</div>
+              <div class="meta">Wolverhampton • 12 km </div>
+            </div>
+          </div>
+          <div class="chips">
+            <span class="chip">hd cam</span><span class="chip">roulette</span>
+          </div>
+          <div class="actions">
+            <button class="action" data-action="message" aria-label="Message Ava"><span class="act-icon">💬 </span>Message</button>
+            <button class="action" data-action="call" aria-label="Voice call Ava"><span class="act-icon">>📞</span> Call</button>
+            <button class="action primary" data-action="video" aria-label="Video call Ava"><span class="act-icon">🎥</span> Video</button>
+          </div>
+        </div>
+      </article>
+      <article class="card" data-user-id="7">
+        <div class="media">
+          <img src="/public/images/user-list/user-3.jpg" alt="Ben &amp; Ria" loading="lazy" decoding="async">
+          
+          <span class="badge-elite"><img src="/public/images/badges/elite.png"></span>
+          
+        </div>
+        <div class="content">
+          <div class="row1">
+            <div>
+              <div class="name">Ben &amp; Ria</div>
+              <div class="meta">Kidderminster • 18 km </div>
+            </div>
+          </div>
+          <div class="chips">
+            <span class="chip">weekend only</span>
+          </div>
+          <div class="actions">
+            <button class="action" data-action="message" aria-label="Message Ben &amp; Ria"><span class="act-icon">💬</span> Message</button>
+            <button class="action" data-action="call" aria-label="Voice call Ben &amp; Ria"><span class="act-icon">📞</span> Call</button>
+            <button class="action primary" data-action="video" aria-label="Video call Ben &amp; Ria"><span class="act-icon">🎥</span> Video</button>
+          </div>
+        </div>
+      </article>
+      <article class="card" data-user-id="4">
+        <div class="media">
+          <img src="/public/images/user-list/user-2.jpg" alt="Ella" loading="lazy" decoding="async">
+          <span class="online-dot" title="Online now"></span>
+          <span class="badge-elite"><img src="/public/images/badges/elite.png"></span>
+          
+        </div>
+        <div class="content">
+          <div class="row1">
+            <div>
+              <div class="name">Ella</div>
+              <div class="meta">Coventry • 27 km </div>
+            </div>
+          </div>
+          <div class="chips">
+            <span class="chip">video</span><span class="chip">verified</span>
+          </div>
+          <div class="actions">
+            <button class="action" data-action="message" aria-label="Message Ella"><span class="act-icon">💬</span> Message</button>
+            <button class="action" data-action="call" aria-label="Voice call Ella"><span class="act-icon">📞</span> Call</button>
+            <button class="action primary" data-action="video" aria-label="Video call Ella"><span class="act-icon">🎥</span> Video</button>
+          </div>
+        </div>
+      </article>
+      <article class="card" data-user-id="5">
+        <div class="media">
+          <img src="/public/images/user-list/user-1.jpg" alt="Liam" loading="lazy" decoding="async">
+          
+          <span class="badge-elite"><img src="/public/images/badges/elite.png"></span>
+          
+        </div>
+        <div class="content">
+          <div class="row1">
+            <div>
+              <div class="name">Liam</div>
+              <div class="meta">Leicester • 52 km </div>
+            </div>
+          </div>
+          <div class="chips">
+            <span class="chip">cinema</span><span class="chip">road trip</span>
+          </div>
+          <div class="actions">
+            <button class="action" data-action="message" aria-label="Message Ella"><span class="act-icon">💬</span> Message</button>
+            <button class="action" data-action="call" aria-label="Voice call Ella"><span class="act-icon">📞</span> Call</button>
+            <button class="action primary" data-action="video" aria-label="Video call Ella"><span class="act-icon">🎥</span> Video</button>
+          </div>
+        </div>
+      </article>
+    </div>
 
         </section>
 
@@ -243,14 +383,12 @@
               <div class="list">
                 <div class="item">
                   <div class="avatar" />
-                  <div style="flex:1" class="text-white">Alex & Sam <div class="muted">Hey, free tonight?</div>
-                  </div>
+                  <div style="flex:1" class="text-white">Alex & Sam <div class="muted">Hey, free tonight?</div></div>
                   <button class="dash-button">Open</button>
                 </div>
                 <div class="item">
                   <div class="avatar" />
-                  <div style="flex:1" class="text-white">Jess <div class="muted">Send verification call PIN: 4321</div>
-                  </div>
+                  <div style="flex:1" class="text-white">Jess <div class="muted">Send verification call PIN: 4321</div></div>
                   <button class="dash-button">Call</button>
                 </div>
               </div>
@@ -258,7 +396,7 @@
               <div class="dashboard-card" style="margin-top:12px">
                 <h2 class="text-white">Start a New Chat / Call</h2>
                 <div class="composer">
-                  <input type="text" placeholder="Search user…" class="text-white" />
+                  <input type="text" placeholder="Search user…" class="text-white"/>
                   <button class="dash-button">Chat</button>
                   <button class="dash-button">Video Call</button>
                 </div>
@@ -281,8 +419,7 @@
                 <span class="pill text-white">Location: Nearby</span>
                 <span class="pill text-white">Accurate location</span>
               </div>
-              <p class="muted" style="margin-top:8px">Self‑view is not mirrored (no flip). Implement real media streams
-                later (Janus/WebRTC).</p>
+              <p class="muted" style="margin-top:8px">Self‑view is not mirrored (no flip). Implement real media streams later (Janus/WebRTC).</p>
             </div>
           </div>
         </section>
@@ -291,8 +428,7 @@
         <section id="view-crush" :hidden="activeNav !== 'crush'">
           <div class="dashboard-card glow">
             <h2 class="text-white" style="margin-bottom: 8px;">Crush List</h2>
-            <p class="muted" style="margin-bottom: 16px;">Save profiles you like (not friends yet). Later this becomes
-              “Add to Crush List” on profile dashboard-cards.</p>
+            <p class="muted" style="margin-bottom: 16px;">Save profiles you like (not friends yet). Later this becomes “Add to Crush List” on profile dashboard-cards.</p>
             <div class="list">
               <div class="item">
                 <div class="avatar" />
@@ -318,8 +454,7 @@
         <section id="view-nearby" :hidden="activeNav !== 'nearby'">
           <div class="dashboard-card glow">
             <h2 class="text-white">Nearby People</h2>
-            <p class="muted" style="margin-bottom: 16px;">People within your selected radius. (Hook to geolocation +
-              distance filter.)</p>
+            <p class="muted" style="margin-bottom: 16px;">People within your selected radius. (Hook to geolocation + distance filter.)</p>
             <div class="list">
               <div class="item">
                 <div class="avatar" />
@@ -446,8 +581,7 @@
               <a href="#messages" class="dash-button" @click.prevent="setActiveNav('messages')">Open roulette</a>
               <a href="#search" class="dash-button" @click.prevent="setActiveNav('search')">Filters</a>
             </div>
-            <p class="muted" style="margin-top:8px">Hook this to your "who’s live" data source (WebRTC presence /
-              signalling). Thumbnails are placeholders.</p>
+            <p class="muted" style="margin-top:8px">Hook this to your "who’s live" data source (WebRTC presence / signalling). Thumbnails are placeholders.</p>
           </div>
         </section>
 
@@ -488,18 +622,16 @@
       </main>
 
       <!-- MOBILE NAV -->
-      <nav class="mobile-dashboard-nav" id="mobileNav" :hidden="!isMobile">
-        <a href="#home" data-route="home" class="nav-item" :class="{ active: activeNav === 'home' }"
-          @click.prevent="setActiveNav('home')">🏠<small>Home</small></a>
-        <a href="#search" data-route="search" class="nav-item" :class="{ active: activeNav === 'search' }"
-          @click.prevent="setActiveNav('search')">🔍<small>Search</small></a>
-        <a href="#upload" id="mUpload" @click.prevent="fakeUpload" class="nav-item">＋<small>Post</small></a>
-        <a href="#messages" data-route="messages" class="nav-item" :class="{ active: activeNav === 'messages' }"
-          @click.prevent="setActiveNav('messages')">💬<small>Chats</small></a>
-        <a href="#profile" data-route="profile" class="nav-item" :class="{ active: activeNav === 'profile' }"
-          @click.prevent="setActiveNav('profile')">👤<small>Profile</small></a>
-      </nav>
+  <nav class="mobile-dashboard-nav" id="mobileNav" :hidden="!isMobile">
+    <a href="#home" data-route="home" class="nav-item" :class="{ active: activeNav === 'home' }" @click.prevent="setActiveNav('home')">🏠<!--<small>Home</small>--></a>
+    <a href="#search" data-route="search" class="nav-item" :class="{ active: activeNav === 'search' }" @click.prevent="setActiveNav('search')">🔍<!--<small>Search</small>--></a>
+    <a href="#upload" id="mUpload" @click.prevent="fakeUpload" class="nav-item">＋<!--<small>Post</small>--></a>
+    <a href="#friends" data-route="friends" class="nav-item" :class="{ active: activeNav === 'friends' }" @click.prevent="setActiveNav('messages')">👥<!--<small>My Friends</small>--></a>
+    <a href="#notifications" data-route="notifications" class="nav-item" :class="{ active: activeNav === 'notifications' }" @click.prevent="setActiveNav('notifications')">🔔<!--<small>My Friends</small>--></a>
+    <a href="#messages" data-route="messages" class="nav-item" :class="{ active: activeNav === 'messages' }" @click.prevent="setActiveNav('messages')">💬<!--<small>Chats</small>--></a>
+  </nav>
     </div>
+    <div class="overlay-sidebar" :class="{ active: isSidebarOpen }"></div>
   </div>
 
   <!-- ADVANCED SEARCH DRAWER -->
@@ -520,13 +652,13 @@
         <div class="field">
           <label class="text-white">Age between</label>
           <div class="dash-row">
-            <input type="number" value="18" class="text-white" />
-            <input type="number" value="99" class="text-white" />
+            <input type="number" value="18" class="text-white"/>
+            <input type="number" value="99" class="text-white"/>
           </div>
         </div>
         <div class="field">
           <label class="text-white">Distance</label>
-          <input type="number" value="50" class="text-white" />
+          <input type="number" value="50" class="text-white"/>
         </div>
         <div class="field">
           <label class="text-white">Online status</label>
@@ -545,7 +677,7 @@
         </div>
         <div class="field">
           <label class="text-white">Interests</label>
-          <input type="text" placeholder="e.g. hiking, movies" class="text-white" />
+          <input type="text" placeholder="e.g. hiking, movies" class="text-white"/>
         </div>
       </div>
       <div class="dash-row" style="margin-top: 16px;">
@@ -556,43 +688,29 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue'
-import { UsersModel } from '~/composables/models'
 
-const login_store = useLoginStore();
 const route = useRoute()
 const router = useRouter()
 const drawerOpen = ref(false)
 const isMobile = ref(false)
 const showAdvancedSearch = ref(false)
-const searchTxt = ref('')
 const activeNav = ref("home")
-const users = ref([] as UsersModel.ProfileDetailsResponseModel[])
+
 const routeTitle = computed(() => {
   const path = route.path.split('/').pop() || 'home'
   return path.charAt(0).toUpperCase() + path.slice(1)
 })
 
-function setActive(r : string) {
+function setActive(r) {
   const targetRoute = r === 'home' ? '/dashboard' : `/dashboard/${r}`
   router.push(targetRoute)
 }
 
-function setActiveNav(nav : string) {
-
-  if (nav === 'userlist') {
-    activeNav.value = nav
-    window.location.hash = nav
-    fetchUsersList()
-  }
-  else if (nav === 'messages') {
-    openChatOnly()
-  }
-  else {
-    activeNav.value = nav
-    window.location.hash = nav
-  }
+function setActiveNav(nav) {
+  activeNav.value = nav
+  window.location.hash = nav
 }
 
 function openAdvanced() {
@@ -613,119 +731,53 @@ function checkMobile() {
   isMobile.value = window.innerWidth <= 980
 }
 
-const fetchallusers = async () => {
-  const api_url = getUrl(RequestURL.fetchallusers);
-  const { data: users, error: cat_error } = await useFetch<SuccessError<UsersModel.ProfileDetailsResponseModel>>(api_url, {
-    cache: "no-cache",
-    method: "post",
-    body: {
-      page: 0,
-      search: searchTxt.value,
-      user_id: login_store.getUserDetails?.user_id ?? 0
-    },
-    headers: {
-      "content-type": "application/json"
-    }
-  });
-  return users.value?.result ?? []
-}
-let hash = route.hash
-activeNav.value = hash.slice(1) || 'home'
-
-if (hash === '#userlist') {
-  console.log('Fetching all users for user list view...')
-  users.value = await fetchallusers() as UsersModel.ProfileDetailsResponseModel[]
-}
-
-async function fetchUsersList() {
-  const api_url = getUrl(RequestURL.fetchallusers);
-  let response = await $fetch<SuccessError<UsersModel.LoginRequestModel>>(api_url, {
-    method: 'POST',
-    body: {
-      page: 0,
-      search: searchTxt.value,
-      user_id: login_store.getUserDetails?.user_id ?? 0
-    },
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  });
-
-  if (response.success) {
-    users.value = response.result as UsersModel.ProfileDetailsResponseModel[];
-    console.log(`Fetched ${users.value.length} users for user list view.`);
-  }
-  else {
-    showToastError(response.message ?? "Something went wrong");
-  }
-}
-
-function getDistance(user: UsersModel.ProfileDetailsResponseModel): string {
-  let lat = login_store.getUserDetails?.latitude ?? 0
-  let lon = login_store.getUserDetails?.longitude ?? 0
-  let distance = getDistanceFromLatLonInKm(
-    user.latitude ?? 0,
-    user.longitude ?? 0,
-    lat,
-    lon)
-  return distance.toFixed(2) as string
-}
-function getmembershipIcon(user: UsersModel.ProfileDetailsResponseModel): string {
-  let tier_name = user.tier_name ?? ''
-  if (tier_name.includes("Elite")) return "/images/badges/elite.gif";
-  if (tier_name.includes("Basic+")) return "/images/badges/basic.gif";
-  if (tier_name.includes("Plus")) return "/images/badges/plus.gif";
-  return "/images/badges/free.gif";
-}
-
-function getImagePath(user: UsersModel.ProfileDetailsResponseModel): string {
-  let profile_image = user.profile_image ?? ''
-  if (profile_image.length !== 0) {
-    return (user.media_path ?? '') + profile_image
-  }
-  let profile_type = user.profile_type ?? ''
-  if (profile_type === 'Couple') return "/images/profile-placeholders/MF-COUPLE.png";
-  if (profile_type === 'Others') return "/images/profile-placeholders/TRANS.png";
-  if (profile_type === 'Woman') return "/images/profile-placeholders/WOMEN.png";
-  if (profile_type === 'Man') return "/images/profile-placeholders/man.png";
-  return "/images/profile-placeholders/man.png"
-}
-
-async function openProfile(user: UsersModel.ProfileDetailsResponseModel) {
-  await navigateTo(`/user-profile/${user.user_id}`)
-}
-async function openChatOnly() {
-  await navigateTo(`/chat/`)
-}
-async function openChat(user: UsersModel.ProfileDetailsResponseModel) {
-  await navigateTo(`/chat/${user.user_id}`)
-}
-
 onMounted(() => {
   // Handle hash-based navigation
-  let hash = route.hash
-  activeNav.value = hash.slice(1) || 'home'
-
-  window.location.hash = activeNav.value
-
-  console.log(`Initial navigation to ${activeNav.value}`)
-
+  const handleHashChange = () => {
+    const hash = window.location.hash.slice(1) || 'home'
+    activeNav.value = hash
+  }
+  
   // Set initial state based on hash
-  //handleHashChange()
-
+  handleHashChange()
+  
   // Listen for hash changes
-  //window.addEventListener('hashchange', handleHashChange)
-
+  window.addEventListener('hashchange', handleHashChange)
+  
   checkMobile()
   window.addEventListener('resize', checkMobile)
-
+  
   // Cleanup listener on unmount
   onUnmounted(() => {
-    //window.removeEventListener('hashchange', handleHashChange)
+    window.removeEventListener('hashchange', handleHashChange)
   })
 })
 
 onUnmounted(() => {
   window.removeEventListener('resize', checkMobile)
 })
+
+
+
+
+
+const isSidebarOpen = ref(false);
+
+function openSidebar() {
+  isSidebarOpen.value = true;
+}
+
+function closeSidebar() {
+  isSidebarOpen.value = false;
+}
+
+function switchView(view) {
+  currentView.value = view;
+  closeSidebar(); // auto-close sidebar after click (mobile UX)
+}
+
+function handleBodyClick() {
+  if (isSidebarOpen.value) closeSidebar();
+}
 </script>
+
