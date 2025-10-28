@@ -3,7 +3,7 @@
 <div class="pro-setting">
   <div class="pro-container">
     <div class="pro-head">
-        <img src="public/images/badges/Profile_settings-min.png">
+        <img src="public/images/badges/Profile_settings.png">
         <h1 class="text-white">Profile Settings</h1>
     </div>
     <div class="pro-flex">
