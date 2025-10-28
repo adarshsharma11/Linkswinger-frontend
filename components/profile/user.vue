@@ -27,7 +27,7 @@
                 <li>
                   <button class="dropdown-item text-white d-flex align-items-center"
                     @click="navigateTo(`/edit-profile`)">
-                    <img src="/images/badges/edit-profile.png" alt="Verify" class="rounded-circle me-2"
+                    <img src="/images/badges/profile_settings-min.png" alt="Verify" class="rounded-circle me-2"
                       style="width: 30px; height: 30px; object-fit: cover" />
                     <span class="text-white">Edit Profile</span>
                   </button>
@@ -113,7 +113,7 @@
                 <li>
                   <button class="dropdown-item text-white d-flex align-items-center"
                     @click="navigateTo(`/edit-profile`)" v-if="isMine()">
-                    <img src="/images/badges/edit-profile.png" alt="Verify" class="rounded-circle me-2"
+                    <img src="/images/badges/profile_settings-min.png" alt="Verify" class="rounded-circle me-2"
                       style="width: 30px; height: 30px; object-fit: cover" />
                     <span class="text-white">Edit Profile</span>
                   </button>
