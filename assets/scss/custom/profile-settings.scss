@@ -1,13 +1,15 @@
 .pro-setting {
     margin-top: 90px;
-    min-height: 100dvh;
+    min-height: calc(100vh - 100px);
 }
 
 .pro-setting {
     margin-top: 70px;
     padding: 30px 0;
 }
-
+.profile-left nav {
+    margin-top: 0;
+}
 .pro-flex {
     display: grid;
     grid-template-columns: 260px 1fr;
@@ -86,13 +88,14 @@
     gap: 0.75rem;
 }
 
-.pro-btn-ps button.glow-green {
+button.glow-green {
     background-color: rgba(16,185,129,.18);
     border: 1px solid rgba(16,185,129,.35) !important;
 }
 
-.pro-btn-ps button.glow-green:hover {
+button.glow-green:hover {
     background-color: rgba(16,185,129,1) !important;
+    border-color: rgb(16, 185, 129) !important;
 }
 
 button#discardBtn {
@@ -108,6 +111,134 @@ button#discardBtn {
     color: #fff;
     font-size: 16px;
 }
+
+.font-medium {
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.vs-left .text-sm {
+    font-size: 14px;
+}
+
+.vs-left .font-medium {
+    margin: 0 0 4px;
+}
+
+.text-slate-400 {
+    color: #94a3b8;
+}
+
+.vs-toggle input[type="checkbox"].switch {
+    appearance: none;
+    width: 44px;
+    height: 26px;
+    border-radius: 9999px;
+    background: #374151;
+    position: relative;
+    outline: none;
+    transition: .15s;
+}
+
+.vs-toggle input[type="checkbox"].switch::after {
+    content: "";
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border-radius: 9999px;
+    background: white;
+    top: 2px;
+    left: 3px;
+    transition: .15s;
+}
+
+.vs-toggle input[type="checkbox"].switch:checked {
+    background: #16a34a;
+}
+
+.vs-toggle input[type="checkbox"].switch:checked::after {
+    left: 21px;
+}
+
+.border-b {
+    border-bottom: 1px solid rgb(255 255 255 / 0.05);
+}
+.tab-pannel label.font-medium {
+    color: #fff;
+    width: 100%;
+}
+
+.tab-pannel select {
+    width: 100%;
+    background-color: rgb(0 0 0 / 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 9px 0.75rem !important;
+    font-size: 16px;
+    line-height: normal;
+}
+.green-tag {
+    color: #6ee7b7;
+    border-color: rgb(52 211 153 / 0.3) !important;
+    background-color: rgb(16 185 129 / 0.15);
+    border-radius: 0.375rem;
+    font-weight: 400;
+}
+.msg-audience span {
+    color: #fff;
+    font-weight: 400;
+    font-size: 16px;
+}
+
+.text-xs {
+    font-size: 12px;
+}
+.tab-pannel button.btn {
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: #fff;
+    padding: 10px 20px;
+}
+.vs-left .tooltip {
+    opacity: 1;
+}
+.text-yellow-300 {
+    color: #fde047;
+}
+.text-sm {
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+}
+.border-yellow-400 {
+    border-color: rgb(250 204 21 / 0.3) !important;
+}
+.bg-yellow-500 {
+    background-color: rgb(234 179 8 / 0.15) ;
+}
+.rounded-md {
+    border-radius: 0.375rem;
+}
+.curnt-sts span {
+    font-weight: 400;
+    display: inline-block;
+}
+ul.list-disc-tt {
+    list-style-type: disc !important;
+    padding-left: 18px !important;
+}
+
+ul.list-disc-tt li {
+    font-size: 16px;
+}
+button.back-btn {
+    margin-right: 2px;
+}
+.ft-btm-section {
+    padding: 1.5rem 0;
+    border-top: 1px solid rgb(255 255 255 / 0.1) !important;
+    margin-bottom: 70px;
+}
+.ft-btm-section a, .ft-btm-section span {
+    color: #94a3b8 !important;
+}
 @media only screen and (max-width:767px){
 .pro-flex {
     grid-template-columns: 1fr;
@@ -115,4 +246,11 @@ button#discardBtn {
 .tab-pannel .grid {
     grid-template-columns: 1fr;
 }
+.ft-btm-section .pro-container {
+    justify-content: center;
 }
+
+.ft-btm-section {
+    padding: 15px 0;
+}
+} 

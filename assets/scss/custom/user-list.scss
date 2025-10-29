@@ -176,7 +176,17 @@ ease;
     background: linear-gradient(90deg, #ff3b3b, #ff6b6b);
     color: #08110f;
 }
-
+@media only screen and (min-width: 980px) and (max-width: 1531px) {
+.user-grid .content {
+    padding: 12px 12px 60px;
+}
+.user-grid .actions .action.primary {
+    position: absolute;
+    left: 12px;
+    right: 12px;
+    bottom: 10px;
+}
+}
 @media only screen and (max-width:1440px){
 .dashboard-content {
     grid-template-columns: 1fr;
