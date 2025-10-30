@@ -25,6 +25,7 @@ export function setupWebSocket() {
     initsocket.onerror = (error) => {
         is_reconnecting = false
         initsocket.close()
+        console.log("websocket error.")
     };
     initsocket.onclose = (event) => {
         if (!is_reconnecting) {
@@ -36,6 +37,7 @@ export function setupWebSocket() {
             connectedmodel.event_name = "connection"
             sendmsgtoworker(connectedmodel, true)
         }
+        console.log("websocket onclose.")
     };
     socket = initsocket
 }
