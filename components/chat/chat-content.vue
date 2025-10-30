@@ -181,6 +181,7 @@ const scrollContainer = ref<HTMLElement | null>(null);
 const userDetails = ref<UsersModel.ProfileDetailsResponseModel | null | undefined>(null);
 const router = useRouter()
 const pageIndex = ref(0);
+const isWSConnected = ref(false);
 var is_loading = false
 const fetchHistory = async () => {
   const api_url = getUrl(RequestURL.chatHistory);
@@ -244,6 +245,18 @@ if (to_id !== 0) {
 
 onMounted(() => {
 
+   isWSConnected.value = isSocketConnected()
+   eventBus.on('socketConnection', (is_connected) => { 
+        if (isWSConnected.value === false)
+        {
+             if(is_connected)
+             {
+               showToastSuccess('Socket Connected')
+             }
+        }
+        isWSConnected.value = is_connected
+   })
+
   eventBus.on('chatEvent', (responseevent) => {
     let event_name = responseevent.event_name ?? ''
     if (event_name === 'chat_sent') {
@@ -285,6 +298,8 @@ onMounted(() => {
 
 onUnmounted(() => {
   eventBus.off('chatEvent')
+  eventBus.off('socketConnection')
+  
 })
 
 const handleScroll = async () => {
@@ -338,6 +353,13 @@ const scrollToMessage = (messageId: number) => {
 };
 
 function sendMessage() {
+
+   if (isWSConnected.value === false)
+   {
+    showToastError('Please wait while we are connecting to server');
+    return
+   }
+
   let trim = messageTxt.value.trim()
   let to_id = Number(route.params.id) ?? 0
   if (trim.length === 0 || to_id === 0) {
@@ -362,57 +384,9 @@ function appendLastMessagetohistory(to_id: number, message: string) {
 }
 
 async function fetchChats(from_id: number, to_id: number) {
-
   let user_id = from_id === login_store.getUserDetails?.user_id ? to_id : from_id
-
-  // chatModels.value = []
   router.push({ path: `/chat/${user_id}` })
-
-  // fetchUserDetails(user_id)
-
-  // let api_url = getUrl(RequestURL.fetchChat);
-  // let postData = {
-  //   "from_id": user_store.getLoginId,
-  //   "to_id": user_id,
-  //   "page": 0
-  // }
-  // let response = await $fetch<SuccessError<ChatsModel.ChatResponseModel>>(api_url, {
-  //   method: 'POST',
-  //   body: postData,
-  //   headers: {
-  //     'Content-Type': 'application/json'
-  //   }
-  // });
-
-  // if (response.success) {
-  //   chatModels.value = response.result ?? []
-  // }
-
-
 }
-
-async function fetchUserDetails(user_id: number) {
-
-  let api_url = getUrl(RequestURL.getProfileDetails);
-  let postData = {
-    "user_id": user_id,
-  }
-  let response = await $fetch<SuccessError<UsersModel.ProfileDetailsResponseModel>>(api_url, {
-    method: 'POST',
-    body: postData,
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  });
-
-  if (response.success) {
-    userDetails.value = response.response;
-  }
-
-
-}
-
-
 
 function getImagePathForUser(user: UsersModel.ProfileDetailsResponseModel | null | undefined): string {
   if (user) {
