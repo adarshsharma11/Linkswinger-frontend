@@ -98,7 +98,7 @@
           </div>
 
           <!-- Messages -->
-          <div id="messages" ref="scrollContainer" class="flex-grow-1 p-3 custom-scroll"
+          <div id="messages" ref="scrollContainer" @scroll="handleScroll" class="flex-grow-1 p-3 custom-scroll"
             style="overflow:auto;max-height:60vh;">
             <!-- <div class="text-center text-secondary small my-3">Today</div> -->
             <div v-for="chat in chatModels" class="message-bubble" :class="{
@@ -106,7 +106,7 @@
               'message-outgoing': chat.from_id === login_store.getUserDetails?.user_id,
               'ms-auto': chat.from_id === login_store.getUserDetails?.user_id,
               'glow-red': chat.from_id === login_store.getUserDetails?.user_id
-            }">
+            }"  :id="`${chat.chat_id ?? 0}`">
               {{ chat.message }}
               <div class="message-time">{{ chat.created_at }}</div>
             </div>
@@ -180,6 +180,8 @@ const chatModels = ref([] as ChatsModel.ChatResponseModel[])
 const scrollContainer = ref<HTMLElement | null>(null);
 const userDetails = ref<UsersModel.ProfileDetailsResponseModel | null | undefined>(null);
 const router = useRouter()
+const pageIndex = ref(0);
+var is_loading = false
 const fetchHistory = async () => {
   const api_url = getUrl(RequestURL.chatHistory);
   const { data: fetch_response, error: option_error } = await useFetch<SuccessError<ChatsModel.ChatResponseModel>>(api_url, {
@@ -206,7 +208,7 @@ if (to_id !== 0) {
       body: {
         "from_id": user_store.getLoginId,
         "to_id": to_id,
-        "page": 0
+        "page": pageIndex.value
       },
       headers: {
         "content-type": "application/json"
@@ -218,7 +220,7 @@ if (to_id !== 0) {
       : []
   }
   chatModels.value = await fetchChat() as ChatsModel.ChatResponseModel[]
-
+  pageIndex.value = 0
   const fetchUserDetails = async () => {
     const api_url = getUrl(RequestURL.getProfileDetails);
     const { data: response, error: option_error } = await useFetch<SuccessError<UsersModel.ProfileDetailsResponseModel>>(
@@ -238,7 +240,6 @@ if (to_id !== 0) {
     }
   };
   fetchUserDetails();
-
 }
 
 onMounted(() => {
@@ -250,8 +251,7 @@ onMounted(() => {
     }
 
     let route_id = Number(route.params.id ?? '0') ?? 0
-    if (route_id === responseevent.from_id || route_id === responseevent.to_id) 
-    {
+    if (route_id === responseevent.from_id || route_id === responseevent.to_id) {
       let chatresponse = new ChatsModel.ChatResponseModel()
       chatresponse.chat_id = responseevent.chat_id
       chatresponse.from_id = responseevent.from_id
@@ -282,10 +282,63 @@ onMounted(() => {
   });
 
 })
+
 onUnmounted(() => {
   eventBus.off('chatEvent')
 })
 
+const handleScroll = async () => {
+  if (scrollContainer.value?.scrollTop === 0) {
+      console.log("got called",is_loading)
+    if (!is_loading) {
+    
+      is_loading = true
+      pageIndex.value = pageIndex.value + 1
+      const api_url = getUrl(RequestURL.fetchChat);
+      await $fetch<SuccessError<ChatsModel.ChatResponseModel>>(api_url, {
+        cache: "no-cache",
+        method: "post",
+        body: {
+          "from_id": user_store.getLoginId,
+          "to_id": to_id,
+          "page": pageIndex.value
+        },
+        headers: {
+          "content-type": "application/json"
+        },
+        onResponse: async ({ response }) => {
+     
+          var response_model = response._data as SuccessError<ChatsModel.ChatResponseModel>
+          if (response_model.success) {
+            let filterarray = response_model.result?.sort((firstResponse, secondResponse) => {
+              return (firstResponse.chat_id ?? 0) - (secondResponse.chat_id ?? 0);
+            });
+            const lastMessage = (filterarray ?? []).at(-1);
+            chatModels.value.push(...filterarray ?? [])
+            chatModels.value.sort((firstResponse, secondResponse) => {
+              return (firstResponse.chat_id ?? 0) - (secondResponse.chat_id ?? 0);
+            });
+            console.log("testing value chat tesr",lastMessage?.message)
+            scrollToMessage(lastMessage?.chat_id ?? 0)
+          }
+          else {
+            pageIndex.value = pageIndex.value - 1
+          }
+          is_loading = false
+        }
+      });
+    }
+
+  }
+};
+const scrollToMessage = (messageId: number) => {
+    nextTick(() => {
+        const messageElement = document.getElementById(`${messageId}`);
+        if (messageElement) {
+            messageElement.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+    });
+};
 
 function sendMessage() {
   let trim = messageTxt.value.trim()
