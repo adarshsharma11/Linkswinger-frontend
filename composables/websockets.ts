@@ -6,12 +6,24 @@ let socket: WebSocket | null = null;
 let intervalId: ReturnType<typeof setInterval> | null = null
 export function setupWebSocket() {
 
+   if (socket) {
+    socket.onopen = null;
+    socket.onmessage = null;
+    socket.onerror = null;
+    socket.onclose = null;
+    try {
+      socket.close();
+    } catch (err) {
+      console.warn("Error closing old socket:", err);
+    }
+    socket = null;
+  }
     const id_store = idStore();
     var socketId = id_store.getDeviceId
     var initsocket = new WebSocket(websocketURL + `?socketId=${socketId}`);
     initsocket.onopen = () => {
         is_reconnecting = false
-        console.log("websocket connected. we are ready to go")
+        console.log("websocket connected. we are ready to go",socketId)
         detectonline()
         let connectedmodel = new SocketConnectionModel()
         connectedmodel.is_connected = true
@@ -28,6 +40,7 @@ export function setupWebSocket() {
         console.log("websocket error.")
     };
     initsocket.onclose = (event) => {
+        console.log("websocket onclose.",is_reconnecting)
         if (!is_reconnecting) {
             clearsocket()
             is_reconnecting = false
@@ -37,7 +50,7 @@ export function setupWebSocket() {
             connectedmodel.event_name = "connection"
             sendmsgtoworker(connectedmodel, true)
         }
-        console.log("websocket onclose.")
+        
     };
     socket = initsocket
 }
@@ -85,11 +98,11 @@ async function handlesocketevent(eventdata: Blob) {
             logoutself()
         }
     }
-     else if (event_name === "chat_sent" || event_name === "chat_response") {
+    else if (event_name === "chat_sent" || event_name === "chat_response") {
         let json = JSON.parse(jsontext) as ChatEventSocketModel
         sendmsgtoworker(json, true)
     }
-  
+
 
 }
 
@@ -97,10 +110,9 @@ export async function onlinerole(model: OnlineSocketModel) {
     const blob = new Blob([JSON.stringify(model)], { type: "application/json" });
     socket?.send(blob)
 }
-export async function sendtosocket(model: any) 
-{
-      const blob = new Blob([JSON.stringify(model)], { type: "application/json" });
-      socket?.send(blob)
+export async function sendtosocket(model: any) {
+    const blob = new Blob([JSON.stringify(model)], { type: "application/json" });
+    socket?.send(blob)
 }
 
 function logoutself() {
@@ -112,6 +124,7 @@ function reconnect() {
     if (!is_reconnecting) {
         is_reconnecting = true
         setupWebSocket()
+         console.log("websocket reconnecting.")
     }
 }
 

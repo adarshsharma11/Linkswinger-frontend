@@ -63,4 +63,5 @@ export class ChatEventSocketModel implements SocketEventModel
     success!: boolean;
     created_at?: string;
     media_path?: string;
+    socket_id?:string;
 }

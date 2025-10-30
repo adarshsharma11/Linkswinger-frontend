@@ -169,7 +169,7 @@
 <script setup lang="ts">
 import { ChatsModel, UsersModel } from '~/composables/models'
 
-
+const id_store = idStore()
 const route = useRoute()
 const user_store = userStore()
 const login_store = useLoginStore()
@@ -262,7 +262,6 @@ onMounted(() => {
     if (event_name === 'chat_sent') {
       messageTxt.value = ''
     }
-
     let route_id = Number(route.params.id ?? '0') ?? 0
     if (route_id === responseevent.from_id || route_id === responseevent.to_id) {
       let chatresponse = new ChatsModel.ChatResponseModel()
@@ -363,7 +362,7 @@ function sendMessage() {
   let trim = messageTxt.value.trim()
   let to_id = Number(route.params.id) ?? 0
   if (trim.length === 0 || to_id === 0) {
-    return
+      return
   }
   let eventmodel = new ChatEventSocketModel()
   eventmodel.event_name = 'chat'
@@ -371,6 +370,7 @@ function sendMessage() {
   eventmodel.to_id = to_id
   eventmodel.message_type = 'text'
   eventmodel.message = trim
+  eventmodel.socket_id = id_store.getDeviceId
   sendmsgtoworker(eventmodel, true)
 }
 
