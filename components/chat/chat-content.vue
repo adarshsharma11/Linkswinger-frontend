@@ -289,9 +289,7 @@ onUnmounted(() => {
 
 const handleScroll = async () => {
   if (scrollContainer.value?.scrollTop === 0) {
-      console.log("got called",is_loading)
     if (!is_loading) {
-    
       is_loading = true
       pageIndex.value = pageIndex.value + 1
       const api_url = getUrl(RequestURL.fetchChat);
@@ -318,7 +316,6 @@ const handleScroll = async () => {
             chatModels.value.sort((firstResponse, secondResponse) => {
               return (firstResponse.chat_id ?? 0) - (secondResponse.chat_id ?? 0);
             });
-            console.log("testing value chat tesr",lastMessage?.message)
             scrollToMessage(lastMessage?.chat_id ?? 0)
           }
           else {
