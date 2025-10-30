@@ -1,7 +1,7 @@
 import { v4 as uuid } from 'uuid';
 import { idStore } from '~/store/appstores'
 import mitt from 'mitt'
-import { ChatEventSocketModel, LeaderEventModel } from './websocketModels';
+import { ChatEventSocketModel, GroupEventSocketModel, LeaderEventModel } from './websocketModels';
 import { detectonline } from './useDatabase';
 import { setupWebSocket } from './websockets';
 
@@ -30,6 +30,7 @@ type Events = {
   serverTime: Date,
   socketConnection: boolean,
   chatEvent: ChatEventSocketModel,
+  onlineUserIds : number[],
 }
 let onlinemodel: OnlineEventResponse | null = null
 
@@ -252,6 +253,19 @@ async function handleworkerevent(event: MessageEvent<any>) {
     let chatmodel = event.data as ChatEventSocketModel
     emitter.emit('chatEvent', chatmodel)
   }
+  else if (json.event_name === "add_user_to_group") {
+    let onlinemodel = event.data as GroupEventSocketModel
+    sendtosocket(onlinemodel)
+  }
+  else if (json.event_name === "user_updated_to_group") {
+    let json = event.data as GroupEventSocketModel
+    clearOnlineIds()
+    online_user_ids.push(...json.user_ids ?? [])
+    emitter.emit('onlineUserIds', online_user_ids)
+    
+  }
+
+   
 }
 
 

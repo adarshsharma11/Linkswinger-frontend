@@ -32,8 +32,7 @@ export enum RequestURL {
   fetchChat = "/fetchChat"
 }
 
-
-
+export var online_user_ids : number[] = []
 export function showalert(title: string, is_success: boolean = false, timer: number = 2000) {
   if (is_success) {
     Swal.fire({
@@ -57,6 +56,9 @@ export function showalert(title: string, is_success: boolean = false, timer: num
   }
 }
 
+export function clearOnlineIds() {
+online_user_ids = []
+}
 export function validateEmail(email: string): boolean {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return emailRegex.test(email);
@@ -420,6 +422,8 @@ export namespace ChatsModel {
   created_at?: string;
   is_read?:boolean
 
+  user_id?:number
+
   page?: number;
   media_path?: string;
   nick_name?: string;
@@ -434,5 +438,7 @@ export namespace ChatsModel {
 
  
 }
+
+
   
     

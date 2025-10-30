@@ -27,7 +27,7 @@
                     style="width:40px;height:40px;" :src="getImagePath(historymodel)"></img>
                   <span
                     class="position-absolute bottom-0 end-0 translate-middle rounded-circle bg-success border border-dark"
-                    style="width:12px;height:12px;"></span>
+                    style="width:12px;height:12px;" v-if="onlineUsers.includes(historymodel.user_id ?? 0)"></span>
                 </div>
                 <div class="chat-item-right">
                   <div class="d-flex align-items-center gap-2">
@@ -106,7 +106,7 @@
               'message-outgoing': chat.from_id === login_store.getUserDetails?.user_id,
               'ms-auto': chat.from_id === login_store.getUserDetails?.user_id,
               'glow-red': chat.from_id === login_store.getUserDetails?.user_id
-            }"  :id="`${chat.chat_id ?? 0}`">
+            }" :id="`${chat.chat_id ?? 0}`">
               {{ chat.message }}
               <div class="message-time">{{ chat.created_at }}</div>
             </div>
@@ -182,6 +182,8 @@ const userDetails = ref<UsersModel.ProfileDetailsResponseModel | null | undefine
 const router = useRouter()
 const pageIndex = ref(0);
 const isWSConnected = ref(false);
+const onlineUsers = ref([] as number[])
+
 var is_loading = false
 const fetchHistory = async () => {
   const api_url = getUrl(RequestURL.chatHistory);
@@ -245,17 +247,19 @@ if (to_id !== 0) {
 
 onMounted(() => {
 
-   isWSConnected.value = isSocketConnected()
-   eventBus.on('socketConnection', (is_connected) => { 
-        if (isWSConnected.value === false)
-        {
-             if(is_connected)
-             {
-               showToastSuccess('Socket Connected')
-             }
-        }
-        isWSConnected.value = is_connected
-   })
+  isWSConnected.value = isSocketConnected()
+  eventBus.on('socketConnection', (is_connected) => {
+    if (isWSConnected.value === false) {
+      if (is_connected) {
+        showToastSuccess('Socket Connected')
+      }
+    }
+    isWSConnected.value = is_connected
+    checkuseronline()
+  })
+  eventBus.on('onlineUserIds', (onlineUserIds) => {
+  onlineUsers.value = onlineUserIds
+  })
 
   eventBus.on('chatEvent', (responseevent) => {
     let event_name = responseevent.event_name ?? ''
@@ -293,12 +297,17 @@ onMounted(() => {
     }
   });
 
+checkuseronline()
+
+
+
 })
 
 onUnmounted(() => {
   eventBus.off('chatEvent')
   eventBus.off('socketConnection')
-  
+  eventBus.off('onlineUserIds')
+
 })
 
 const handleScroll = async () => {
@@ -319,7 +328,7 @@ const handleScroll = async () => {
           "content-type": "application/json"
         },
         onResponse: async ({ response }) => {
-     
+
           var response_model = response._data as SuccessError<ChatsModel.ChatResponseModel>
           if (response_model.success) {
             let filterarray = response_model.result?.sort((firstResponse, secondResponse) => {
@@ -343,26 +352,38 @@ const handleScroll = async () => {
   }
 };
 const scrollToMessage = (messageId: number) => {
-    nextTick(() => {
-        const messageElement = document.getElementById(`${messageId}`);
-        if (messageElement) {
-            messageElement.scrollIntoView({ behavior: "smooth", block: "center" });
-        }
-    });
+  nextTick(() => {
+    const messageElement = document.getElementById(`${messageId}`);
+    if (messageElement) {
+      messageElement.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  });
 };
+
+function checkuseronline() {
+  if (isWSConnected.value)
+   {
+    let user_ids = chatHistoryModels.value.map(it => it.user_id ?? 0)
+    let groupmodel = new GroupEventSocketModel()
+    groupmodel.admin_id = login_store.getUserDetails?.user_id
+    groupmodel.event_name = "add_user_to_group"
+    groupmodel.user_ids = user_ids ?? []
+    groupmodel.socket_id = id_store.getDeviceId
+    sendmsgtoworker(groupmodel, true)
+  }
+}
 
 function sendMessage() {
 
-   if (isWSConnected.value === false)
-   {
+  if (isWSConnected.value === false) {
     showToastError('Please wait while we are connecting to server');
     return
-   }
+  }
 
   let trim = messageTxt.value.trim()
   let to_id = Number(route.params.id) ?? 0
   if (trim.length === 0 || to_id === 0) {
-      return
+    return
   }
   let eventmodel = new ChatEventSocketModel()
   eventmodel.event_name = 'chat'

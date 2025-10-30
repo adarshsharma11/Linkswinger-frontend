@@ -102,6 +102,13 @@ async function handlesocketevent(eventdata: Blob) {
         let json = JSON.parse(jsontext) as ChatEventSocketModel
         sendmsgtoworker(json, true)
     }
+     else if (event_name === "user_updated_to_group") 
+    {
+        let json = JSON.parse(jsontext) as GroupEventSocketModel
+        console.log('jsons',json)
+        sendmsgtoworker(json, true)
+       
+    }
 
 
 }
