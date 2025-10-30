@@ -594,12 +594,15 @@ function setActive(r: string) {
   router.push(targetRoute)
 }
 
-function setActiveNav(nav: string) {
+async function setActiveNav(nav: string) {
 
   if (nav === 'userlist') {
     activeNav.value = nav
     window.location.hash = nav
     fetchUsersList()
+  }
+  else if (nav === 'profile') {
+     await navigateTo(`/profile`)
   }
   else if (nav === 'messages') {
     openChatOnly()
@@ -608,6 +611,7 @@ function setActiveNav(nav: string) {
     activeNav.value = nav
     window.location.hash = nav
   }
+  
 }
 
 function openAdvanced() {
