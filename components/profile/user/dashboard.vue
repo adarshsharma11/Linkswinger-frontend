@@ -175,10 +175,10 @@
           </div>
 
           <div id="grid" class="grid user-grid" aria-live="polite">
-            <article class="card"  v-for="user in users" :key="user.user_id">
+            <article class="card" v-for="user in users" :key="user.user_id">
               <div class="media" @click="openProfile(user)">
                 <img :src="getImagePath(user)" alt="Maya" loading="lazy" decoding="async">
-                <span class="online-dot" title="Online now"></span>
+                <span class="online-dot" title="Online now" v-if="onlineUsers.includes(user.user_id ?? 0)"></span>
                 <span class="badge-elite"><img :src="getmembershipIcon(user)"></span>
 
               </div>
@@ -573,7 +573,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { UsersModel } from '~/composables/models'
-
+const id_store = idStore()
 const route = useRoute()
 const router = useRouter()
 const drawerOpen = ref(false)
@@ -583,7 +583,9 @@ const activeNav = ref("home")
 const login_store = useLoginStore();
 const searchTxt = ref('')
 const users = ref([] as UsersModel.ProfileDetailsResponseModel[])
-
+const eventBus = useMittEmitter()
+const onlineUsers = ref([] as number[])
+const isWSConnected = ref(false);
 const routeTitle = computed(() => {
   const path = route.path.split('/').pop() || 'home'
   return path.charAt(0).toUpperCase() + path.slice(1)
@@ -602,7 +604,7 @@ async function setActiveNav(nav: string) {
     fetchUsersList()
   }
   else if (nav === 'profile') {
-     await navigateTo(`/profile`)
+    await navigateTo(`/profile`)
   }
   else if (nav === 'messages') {
     openChatOnly()
@@ -611,7 +613,7 @@ async function setActiveNav(nav: string) {
     activeNav.value = nav
     window.location.hash = nav
   }
-  
+
 }
 
 function openAdvanced() {
@@ -672,7 +674,7 @@ async function fetchUsersList() {
 
   if (response.success) {
     users.value = response.result as UsersModel.ProfileDetailsResponseModel[];
-    console.log(`Fetched ${users.value.length} users for user list view.`);
+    checkuseronline()
   }
   else {
     showToastError(response.message ?? "Something went wrong");
@@ -719,9 +721,30 @@ async function openChatOnly() {
 async function openChat(user: UsersModel.ProfileDetailsResponseModel) {
   await navigateTo(`/chat/${user.user_id}`)
 }
+function checkuseronline() {
+  if (isWSConnected.value) {
+    let user_ids = users.value.map(it => it.user_id ?? 0)
+    let groupmodel = new GroupEventSocketModel()
+    groupmodel.admin_id = id_store.getDeviceId
+    groupmodel.event_name = "add_user_to_group"
+    groupmodel.user_ids = user_ids ?? []
+    groupmodel.socket_id = id_store.getDeviceId
+    sendmsgtoworker(groupmodel, true)
+  }
+}
 
 onMounted(() => {
   // Handle hash-based navigation
+
+  isWSConnected.value = isSocketConnected()
+  eventBus.on('socketConnection', (is_connected) => {
+    isWSConnected.value = is_connected
+    checkuseronline()
+  })
+  eventBus.on('onlineUserIds', (onlineUserIds) => {
+    onlineUsers.value = onlineUserIds
+  })
+
   let hash = route.hash
   activeNav.value = hash.slice(1) || 'home'
 
@@ -746,6 +769,8 @@ onMounted(() => {
 
 onUnmounted(() => {
   window.removeEventListener('resize', checkMobile)
+  eventBus.off('socketConnection')
+  eventBus.off('onlineUserIds')
 })
 
 

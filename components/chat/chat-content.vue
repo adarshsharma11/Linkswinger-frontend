@@ -77,12 +77,12 @@
                   style="width:40px;height:40px;" :src="getImagePathForUser(userDetails)"></img>
                 <span
                   class="position-absolute bottom-0 end-0 translate-middle rounded-circle bg-success border border-dark"
-                  style="width:12px;height:12px;"></span>
+                  style="width:12px;height:12px;" v-if="onlineUsers.includes(userDetails?.user_id ?? 0)"></span>
               </div>
               <div>
-                <h6 class="mb-0"> {{ userDetails?.nick_name }} <span class="badge bg-warning text-dark ms-1">{{
+                <h6 class="mb-0"> {{ userDetails?.nick_name }} <span  class="badge bg-warning text-dark ms-1">{{
                   userDetails?.tier_name ?? 'Free' }}</span></h6>
-                <small class="text-secondary">Online now • {{ userDetails?.profile_type }}</small>
+                  <small class="text-secondary" v-if="onlineUsers.includes(userDetails?.user_id ?? 0)">Online now •</small> <small class="text-secondary">{{ userDetails?.profile_type }}</small>
               </div>
             </div>
             <div class="d-flex gap-2 chat-hd-btn">
@@ -365,7 +365,7 @@ function checkuseronline() {
    {
     let user_ids = chatHistoryModels.value.map(it => it.user_id ?? 0)
     let groupmodel = new GroupEventSocketModel()
-    groupmodel.admin_id = login_store.getUserDetails?.user_id
+    groupmodel.admin_id = id_store.getDeviceId
     groupmodel.event_name = "add_user_to_group"
     groupmodel.user_ids = user_ids ?? []
     groupmodel.socket_id = id_store.getDeviceId

@@ -66,7 +66,7 @@ export class ChatEventSocketModel implements SocketEventModel {
 
 export class GroupEventSocketModel implements SocketEventModel {
   event_name!: string;
-  admin_id?: number;
+  admin_id?: string;
   user_ids?: number[];
   socket_id? : string
 }

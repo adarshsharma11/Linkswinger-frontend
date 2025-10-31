@@ -6,24 +6,29 @@ let socket: WebSocket | null = null;
 let intervalId: ReturnType<typeof setInterval> | null = null
 export function setupWebSocket() {
 
-   if (socket) {
-    socket.onopen = null;
-    socket.onmessage = null;
-    socket.onerror = null;
-    socket.onclose = null;
-    try {
-      socket.close();
-    } catch (err) {
-      console.warn("Error closing old socket:", err);
+    if (socket) {
+        socket.onopen = null;
+        socket.onmessage = null;
+        socket.onerror = null;
+        socket.onclose = null;
+        try {
+            socket.close();
+        } catch (err) {
+            console.warn("Error closing old socket:", err);
+        }
+        socket = null;
     }
-    socket = null;
-  }
     const id_store = idStore();
+    const user_store = userStore();
     var socketId = id_store.getDeviceId
-    var initsocket = new WebSocket(websocketURL + `?socketId=${socketId}`);
+    var loginId = user_store.getLoginId ?? 0
+    const initsocket = new WebSocket(
+        `${websocketURL}?socketId=${encodeURIComponent(socketId)}&loginId=${encodeURIComponent(loginId)}`
+    );
+
     initsocket.onopen = () => {
         is_reconnecting = false
-        console.log("websocket connected. we are ready to go",socketId)
+        console.log("websocket connected. we are ready to go", socketId)
         detectonline()
         let connectedmodel = new SocketConnectionModel()
         connectedmodel.is_connected = true
@@ -40,7 +45,7 @@ export function setupWebSocket() {
         console.log("websocket error.")
     };
     initsocket.onclose = (event) => {
-        console.log("websocket onclose.",is_reconnecting)
+        console.log("websocket onclose.", is_reconnecting)
         if (!is_reconnecting) {
             clearsocket()
             is_reconnecting = false
@@ -50,7 +55,7 @@ export function setupWebSocket() {
             connectedmodel.event_name = "connection"
             sendmsgtoworker(connectedmodel, true)
         }
-        
+
     };
     socket = initsocket
 }
@@ -102,12 +107,9 @@ async function handlesocketevent(eventdata: Blob) {
         let json = JSON.parse(jsontext) as ChatEventSocketModel
         sendmsgtoworker(json, true)
     }
-     else if (event_name === "user_updated_to_group") 
-    {
+    else if (event_name === "user_updated_to_group") {
         let json = JSON.parse(jsontext) as GroupEventSocketModel
-        console.log('jsons',json)
         sendmsgtoworker(json, true)
-       
     }
 
 
@@ -131,7 +133,7 @@ function reconnect() {
     if (!is_reconnecting) {
         is_reconnecting = true
         setupWebSocket()
-         console.log("websocket reconnecting.")
+        console.log("websocket reconnecting.")
     }
 }
 
