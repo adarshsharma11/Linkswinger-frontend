@@ -70,3 +70,9 @@ export class GroupEventSocketModel implements SocketEventModel {
   user_ids?: number[];
   socket_id? : string
 }
+export class TypingEventSocketModel implements SocketEventModel
+{
+  event_name!: string;
+  from_id? : number
+  to_id? : number
+}

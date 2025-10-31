@@ -285,6 +285,7 @@ export namespace UsersModel {
     media_path?:string;
     latitude?: number;
     longitude?: number;
+    is_typing?: boolean;
   }
 
   export class FetchMembershipRequestModel {
@@ -423,6 +424,7 @@ export namespace ChatsModel {
   is_read?:boolean
 
   user_id?:number
+  is_typing?:boolean
 
   page?: number;
   media_path?: string;
@@ -438,6 +440,7 @@ export namespace ChatsModel {
 
  
 }
+
 
 
   

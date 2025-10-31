@@ -111,6 +111,11 @@ async function handlesocketevent(eventdata: Blob) {
         let json = JSON.parse(jsontext) as GroupEventSocketModel
         sendmsgtoworker(json, true)
     }
+    else if (event_name === "typing_response") 
+    {
+        let json = JSON.parse(jsontext) as TypingEventSocketModel
+        sendmsgtoworker(json, true)
+    }
 
 
 }

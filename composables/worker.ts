@@ -1,7 +1,7 @@
 import { v4 as uuid } from 'uuid';
 import { idStore } from '~/store/appstores'
 import mitt from 'mitt'
-import { ChatEventSocketModel, GroupEventSocketModel, LeaderEventModel } from './websocketModels';
+import { ChatEventSocketModel, GroupEventSocketModel, LeaderEventModel, TypingEventSocketModel } from './websocketModels';
 import { detectonline } from './useDatabase';
 import { setupWebSocket } from './websockets';
 
@@ -31,6 +31,7 @@ type Events = {
   socketConnection: boolean,
   chatEvent: ChatEventSocketModel,
   onlineUserIds : number[],
+  typing:TypingEventSocketModel
 }
 let onlinemodel: OnlineEventResponse | null = null
 
@@ -256,6 +257,14 @@ async function handleworkerevent(event: MessageEvent<any>) {
   else if (json.event_name === "add_user_to_group") {
     let onlinemodel = event.data as GroupEventSocketModel
     sendtosocket(onlinemodel)
+  }
+   else if (json.event_name === "typing") {
+    let typingmodel = event.data as TypingEventSocketModel
+    sendtosocket(typingmodel)
+  }
+   else if (json.event_name === "typing_response") {
+    let typingmodel = event.data as TypingEventSocketModel
+    emitter.emit('typing', typingmodel)
   }
   else if (json.event_name === "user_updated_to_group") {
     let json = event.data as GroupEventSocketModel

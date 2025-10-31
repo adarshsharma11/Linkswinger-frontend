@@ -35,7 +35,9 @@
                     <span class="badge bg-warning bg-opacity-25 text-warning border border-warning">{{
                       historymodel.tier_name ?? 'Free' }}</span>
                   </div>
-                  <small class="text-secondary">{{ historymodel.message }}</small>
+                  <small class="text-secondary" v-if="(historymodel.is_typing ?? false) === true">Typing...</small>
+                  <small class="text-secondary" v-if="(historymodel.is_typing ?? false) === false">{{
+                    historymodel.message }}</small>
                 </div>
               </div>
               <!-- <span class="badge bg-danger glow-red text-white">2</span> -->
@@ -80,9 +82,14 @@
                   style="width:12px;height:12px;" v-if="onlineUsers.includes(userDetails?.user_id ?? 0)"></span>
               </div>
               <div>
-                <h6 class="mb-0"> {{ userDetails?.nick_name }} <span  class="badge bg-warning text-dark ms-1">{{
+                <h6 class="mb-0"> {{ userDetails?.nick_name }} <span class="badge bg-warning text-dark ms-1">{{
                   userDetails?.tier_name ?? 'Free' }}</span></h6>
-                  <small class="text-secondary" v-if="onlineUsers.includes(userDetails?.user_id ?? 0)">Online now •</small> <small class="text-secondary">{{ userDetails?.profile_type }}</small>
+                <div v-if="(userDetails?.is_typing ?? false) === false">
+                  <small class="text-secondary" v-if="onlineUsers.includes(userDetails?.user_id ?? 0)">Online now
+                    •</small>
+                  <small class="text-secondary">{{ userDetails?.profile_type }}</small>
+                </div>
+                <small class="text-secondary" v-if="(userDetails?.is_typing ?? false) === true">Typing...</small>
               </div>
             </div>
             <div class="d-flex gap-2 chat-hd-btn">
@@ -183,6 +190,8 @@ const router = useRouter()
 const pageIndex = ref(0);
 const isWSConnected = ref(false);
 const onlineUsers = ref([] as number[])
+let typingTimeout: ReturnType<typeof setInterval> | null = null
+const hideTimers: Record<number, ReturnType<typeof setTimeout>> = {};
 
 var is_loading = false
 const fetchHistory = async () => {
@@ -245,6 +254,59 @@ if (to_id !== 0) {
   fetchUserDetails();
 }
 
+function showTypingIndicator(from_id: number) {
+  // Show UI element
+
+  // 1. Find the chat model for that user
+  const chat = chatHistoryModels.value.find(c => c.user_id === from_id);
+
+  if (chat) {
+    // 2. Set typing flag to true
+    chat.is_typing = true;
+
+    if (from_id === userDetails.value?.user_id) {
+      userDetails.value.is_typing = true
+    }
+
+    // 3. Clear any previous hide timer for this user
+    clearTimeout(hideTimers[from_id]);
+
+    // 4. Schedule a new timeout to reset isTyping after 3 seconds
+    hideTimers[from_id] = setTimeout(() => {
+      chat.is_typing = false;
+      if (from_id === userDetails.value?.user_id) {
+        userDetails.value.is_typing = false
+      }
+      delete hideTimers[from_id];
+    }, 3000);
+  } else {
+    console.warn(`Typing event received for unknown user_id: ${from_id}`);
+  }
+}
+
+
+function onUserTyping(to_id: number) {
+  if (typingTimeout) return; // already sent recently
+
+  sendTypingStatus(to_id);
+
+  typingTimeout = setTimeout(() => {
+    typingTimeout = null;
+  }, 2000); // only send every 2 seconds max
+}
+
+function sendTypingStatus(to_id: number) {
+  let type = new TypingEventSocketModel()
+  type.event_name = "typing"
+  type.from_id = login_store.getUserDetails?.user_id
+  type.to_id = userDetails.value?.user_id
+  sendmsgtoworker(type, true)
+}
+
+watch(messageTxt, () => {
+  onUserTyping(userDetails.value?.user_id ?? 0)
+});
+
 onMounted(() => {
 
   isWSConnected.value = isSocketConnected()
@@ -258,7 +320,10 @@ onMounted(() => {
     checkuseronline()
   })
   eventBus.on('onlineUserIds', (onlineUserIds) => {
-  onlineUsers.value = onlineUserIds
+    onlineUsers.value = onlineUserIds
+  })
+  eventBus.on('typing', (typing) => {
+    showTypingIndicator(typing.from_id ?? 0)
   })
 
   eventBus.on('chatEvent', (responseevent) => {
@@ -297,7 +362,7 @@ onMounted(() => {
     }
   });
 
-checkuseronline()
+  checkuseronline()
 
 
 
@@ -307,6 +372,7 @@ onUnmounted(() => {
   eventBus.off('chatEvent')
   eventBus.off('socketConnection')
   eventBus.off('onlineUserIds')
+  eventBus.off('typing')
 
 })
 
@@ -361,8 +427,7 @@ const scrollToMessage = (messageId: number) => {
 };
 
 function checkuseronline() {
-  if (isWSConnected.value)
-   {
+  if (isWSConnected.value) {
     let user_ids = chatHistoryModels.value.map(it => it.user_id ?? 0)
     let groupmodel = new GroupEventSocketModel()
     groupmodel.admin_id = id_store.getDeviceId
