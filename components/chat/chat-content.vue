@@ -393,12 +393,16 @@ onMounted(() => {
 
 })
 
-onUnmounted(() => {
-  eventBus.off('chatEvent')
+onBeforeUnmount(() => {
+       eventBus.off('chatEvent')
   eventBus.off('socketConnection')
   eventBus.off('onlineUserIds')
   eventBus.off('typing')
   eventBus.off('chatUpdateStatus')
+    })
+
+onUnmounted(() => {
+  
 })
 
 const handleScroll = async () => {
@@ -484,6 +488,7 @@ function sendMessage() {
   if (trim.length === 0 || to_id === 0) {
     return
   }
+ 
   let eventmodel = new ChatEventSocketModel()
   eventmodel.event_name = 'chat'
   eventmodel.from_id = login_store.getUserDetails?.user_id ?? 0
@@ -511,7 +516,7 @@ function appendLastMessagetohistory(to_id: number, message: string) {
 
 async function fetchChats(from_id: number, to_id: number) {
   let user_id = from_id === login_store.getUserDetails?.user_id ? to_id : from_id
-  router.push({ path: `/chat/${user_id}` })
+  await navigateTo(`/chat/${user_id}`)
 }
 
 function getImagePathForUser(user: UsersModel.ProfileDetailsResponseModel | null | undefined): string {
