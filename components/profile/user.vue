@@ -129,7 +129,7 @@
                 <li v-if="(getUser()?.is_photo_verified ?? false) === true && isMine()">
                   <button class="dropdown-item text-white d-flex align-items-center" data-bs-toggle="modal"
                     data-bs-target="#mediaUploadModal">
-                    <img src="/images/badges/photo-verified.png" alt="Verify" class="rounded-circle me-2"
+                    <img src="/images/badges/animated/50X50px/upload-media.gif" alt="Verify" class="rounded-circle me-2"
                       style="width: 30px; height: 30px; object-fit: cover" />
                     <span class="text-white">Upload Media</span>
                   </button>
@@ -164,23 +164,23 @@
           <div class="col-12 col-md-6">
             <div class="d-flex gap-3 gap-md-4 flex-wrap justify-content-center">
               <div class="d-flex flex-column align-items-center">
-                <img src="/images/badges/chat.png" alt="Chat" class="badge-icon" />
+                <img src="/images/badges/animated/50X50px/chat.gif" alt="Chat" class="badge-icon" />
                 <small>Chat</small>
               </div>
               <div class="d-flex flex-column align-items-center">
-                <img src="/images/badges/call.png" alt="Call" class="badge-icon" />
+                <img src="/images/badges/animated/50X50px/call.gif" alt="Call" class="badge-icon" />
                 <small>Call</small>
               </div>
               <div class="d-flex flex-column align-items-center">
-                <img src="/images/badges/video-call.png" alt="Video Call" class="badge-icon" />
+                <img src="/images/badges/animated/50X50px/video-call.gif" alt="Video Call" class="badge-icon" />
                 <small>Video</small>
               </div>
               <div class="d-flex flex-column align-items-center">
-                <img src="/images/badges/like-button.png" alt="Like" class="badge-icon" />
+                <img src="/images/badges/animated/50X50px/ls-like.gif" alt="Like" class="badge-icon" />
                 <small>Like</small>
               </div>
               <div class="d-flex flex-column align-items-center">
-                <img src="/images/badges/public-photos.png" alt="VIP" class="badge-icon" />
+                <img src="/images/badges/animated/50X50px/public-photos.gif" alt="VIP" class="badge-icon" />
                 <small>VIP</small>
               </div>
             </div>

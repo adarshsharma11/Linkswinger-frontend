@@ -36,16 +36,16 @@
       </p>
 
       <div class="d-flex justify-content-center align-items-center gap-3 my-4 flex-wrap">
-        <div class="d-flex justify-content-center">
-          <img src="/images/badges/18-plus.png" alt="Chat" />
-          <img src="/images/badges/chat.png" alt="Call" />
-          <img src="/images/badges/call.png" alt="Video" />
-          <img src="/images/badges/video-call.png" alt="Like" />
+        <div class="d-flex justify-content-center landing-badges">
+          <img src="/images/badges/animated/150X150px/18-plus.gif" alt="Chat" />
+          <img src="/images/badges/animated/150X150px/chat.gif" alt="Call" />
+          <img src="/images/badges/animated/150X150px/call.gif" alt="Video" />
+          <img src="/images/badges/animated/150X150px/video-call.gif" alt="Like" />
         </div>
-        <div class="d-flex justify-content-center">
-          <img src="/images/badges/video-roulette-available.png" alt="Photo" />
-          <img src="/images/badges/location.png" alt="Elite" />
-          <img src="/images/badges/elite.png" alt="VIP" />
+        <div class="d-flex justify-content-center landing-badges">
+          <img src="/images/badges/animated/150X150px/video-roulette-available.gif" alt="Photo" />
+          <img src="/images/badges/animated/150X150px/location.gif" alt="Elite" />
+          <img src="/images/badges/animated/150X150px/elite.gif" alt="VIP" />
         </div>
       </div>
 

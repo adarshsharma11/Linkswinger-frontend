@@ -2,6 +2,9 @@
     <div class="login-page2 animat-rate">
         <div class="login-content-main">
             <div class="login-content">
+                <div class="login-content-header">
+                    <img src="/images/badges/animated/150X150px/edit-profile.gif" alt="Logo" class="logo" />
+                    </div>
                 <div class="form2 text-white">
                     <!-- Row: DOB + Sexual Orientation -->
                     <div class="row">
