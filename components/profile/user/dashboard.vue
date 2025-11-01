@@ -17,34 +17,34 @@
               class="sidebar-ic" :src="`/images/badges/user.png`" /></span>My Profile</a>
         <a href="#userlist" data-route="notifications" @click.prevent="setActiveNav('userlist')"
           :class="{ active: activeNav === 'userlist' }" class="text-white"><span class="icon"><!--🔔--> <img
-              class="sidebar-ic" :src="`/images/badges/user.png`" /></span>User List</a>
+              class="sidebar-ic" :src="`/images/badges/animated/50X50px/user-list.gif`" /></span>User List</a>
         <a href="#home" data-route="home" class="text-white" @click.prevent="setActiveNav('home')"
           :class="{ active: activeNav === 'home' }"><span class="icon"><!--🏠--> <img class="sidebar-ic"
               :src="`/images/badges/home.png`" /></span>Home</a>
         <a href="#messages" data-route="messages" @click.prevent="setActiveNav('messages')"
           :class="{ active: activeNav === 'messages' }" class="text-white"><span class="icon"><!--💬--> <img
-              class="sidebar-ic" :src="`/images/badges/chat.png`" /></span>Messages/Calls</a>
+              class="sidebar-ic" :src="`/images/badges/animated/50X50px/chat.gif`" /></span>Messages/Calls</a>
         <a href="#notifications" data-route="notifications" @click.prevent="setActiveNav('notifications')"
           :class="{ active: activeNav === 'notifications' }" class="text-white"><span class="icon"><!--🔔--> <img
-              class="sidebar-ic" :src="`/images/badges/notification.png`" /></span>Notifications</a>
+              class="sidebar-ic" :src="`/images/badges/animated/50X50px/notification.gif`" /></span>Notifications</a>
         <a href="#nearby" data-route="nearby" @click.prevent="setActiveNav('nearby')"
           :class="{ active: activeNav === 'nearby' }" class="text-white"><span class="icon"><!--📍--> <img
-              class="sidebar-ic" :src="`/images/badges/location.png`" /></span>Nearby People</a>
+              class="sidebar-ic" :src="`/images/badges/animated/50X50px/location.gif`" /></span>Nearby People</a>
         <a href="#friends" data-route="friends" @click.prevent="setActiveNav('friends')"
           :class="{ active: activeNav === 'friends' }" class="text-white"><span class="icon"><!--👥--> <img
-              class="sidebar-ic" :src="`/images/badges/friends.png`" /></span>My Friends</a>
+              class="sidebar-ic" :src="`/images/badges/animated/50X50px/my-friends.gif`" /></span>My Friends</a>
         <a href="#crush" data-route="crush" @click.prevent="setActiveNav('crush')"
           :class="{ active: activeNav === 'crush' }" class="text-white"><span class="icon"><!--⭐--> <img
-              class="sidebar-ic" :src="`/images/badges/star.png`" /></span>Crush List</a>
+              class="sidebar-ic" :src="`/images/badges/animated/50X50px/crush-list.gif`" /></span>Crush List</a>
         <a href="#search" data-route="search" @click.prevent="setActiveNav('search')"
           :class="{ active: activeNav === 'search' }" class="text-white"><span class="icon"><!--🔍--> <img
               class="sidebar-ic" :src="`/images/badges/search.png`" /></span>Search</a>
         <a href="#new-photos" data-route="new-photos" @click.prevent="setActiveNav('new-photos')"
           :class="{ active: activeNav === 'new-photos' }" class="text-white"><span class="icon"><!--🖼--> <img
-              class="sidebar-ic" :src="`/images/badges/public-photos.png`" /></span>New Photos</a>
+              class="sidebar-ic" :src="`/images/badges/animated/50X50px/public-photos.gif`" /></span>New Photos</a>
         <a href="#new-video" data-route="new-video" @click.prevent="setActiveNav('new-video')"
           :class="{ active: activeNav === 'new-video' }" class="text-white"><span class="icon"><!--🎞--> <img
-              class="sidebar-ic" :src="`/images/badges/video-call.png`" /></span>New Videos</a>
+              class="sidebar-ic" :src="`/images/badges/animated/50X50px/video-call.gif`" /></span>New Videos</a>
         <a href="#meet-events" data-route="meet-events" @click.prevent="setActiveNav('meet-events')"
           :class="{ active: activeNav === 'meet-events' }" class="text-white"><span class="icon"><!--📅--> <img
               class="sidebar-ic" :src="`/images/badges/calender.png`" /></span>Meet Events</a>
@@ -53,9 +53,10 @@
               class="sidebar-ic" :src="`/images/badges/club.png`" /> </span>Club Events</a>
         <a href="#video-roullet" data-route="video-roullet" @click.prevent="setActiveNav('video-roullet')"
           :class="{ active: activeNav === 'video-roullet' }" class="text-white"><span class="icon"> <img
-              class="sidebar-ic" :src="`/images/badges/video-roulette-available.png`" /></span>Video Roullet</a>
+              class="sidebar-ic" :src="`/images/badges/animated/50X50px/video-roulette-available.gif`" /></span>Video Roullet</a>
         <a href="#live" data-route="live" @click.prevent="setActiveNav('live')"
-          :class="{ active: activeNav === 'live' }" class="text-white"><span class="icon">🔴</span>Live / On Cam</a>
+          :class="{ active: activeNav === 'live' }" class="text-white"><span class="icon"> <img
+              class="sidebar-ic" :src="`/images/badges/animated/50X50px/live-oncam.gif`" /></span>Live / On Cam</a>
       </nav>
       <div class="spacer" />
       <button class="dash-button primary" id="dash-buttonUpload" @click="fakeUpload">＋ Upload/Post</button>
@@ -74,21 +75,6 @@
               d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5" />
           </svg></button>
       </div>
-      <header class="dashboard-header">
-        <div class="dash-row" style="gap:10px;flex:1">
-          <strong id="routeTitle" class="text-white">{{ routeTitle }}</strong>
-          <div class="search">
-            <input type="search" placeholder="Quick search people, photos, videos…" class="text-white" />
-            <button class="dash-button text-white" id="dash-buttonOpenAdvanced" @click="openAdvanced">Advanced</button>
-          </div>
-        </div>
-        <div class="quick">
-          <button @click="showAdvancedSearch = true" class="dash-button text-white">Verified ✅</button>
-          <button @click="showAdvancedSearch = true" class="dash-button text-white">Nearby 📍</button>
-          <button @click="showAdvancedSearch = true" class="dash-button text-white">Who’s live 🔴</button>
-        </div>
-      </header>
-
       <main class="dashboard-content">
         <!-- FEED / HOME -->
         <section id="view-home" :hidden="activeNav !== 'home'">
@@ -196,10 +182,14 @@
                 </div>
                 <div class="actions">
                   <button class="action" data-action="message" aria-label="Message" @click="openChat(user)"><span
-                      class="act-icon">💬</span> Message</button>
-                  <button class="action" data-action="call" aria-label="Voice call"><span class="act-icon">📞
+                      class="act-icon"><img src="/images/badges/animated/50X50px/chat.gif" alt="Message" class="rounded-circle"
+                        style="width: 15px; height: 15px; object-fit: cover" /></span> Message</button>
+                  <button class="action" data-action="call" aria-label="Voice call"><span class="act-icon">
+                    <img src="/images/badges/animated/50X50px/call.gif" alt="Message" class="rounded-circle"
+                        style="width: 15px; height: 15px; object-fit: cover" />
                     </span>Call</button>
-                  <button class="action primary" data-action="video" aria-label="Video call"><span class="act-icon">🎥
+                  <button class="action primary" data-action="video" aria-label="Video call"><span class="act-icon"><img src="/images/badges/animated/50X50px/video-call.gif" alt="Message" class="rounded-circle"
+                        style="width: 15px; height: 15px; object-fit: cover" />
                     </span>Video</button>
                 </div>
               </div>

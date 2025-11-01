@@ -19,7 +19,7 @@
                 aria-labelledby="settingsMenuMobile">
                 <li>
                   <button  class="dropdown-item text-white d-flex align-items-center" @click="navigateTo('/membership')">
-                    <img src="/images/badges/elite.png" alt="Verify" class="rounded-circle me-2"
+                    <img src="/images/badges/animated/50X50px/elite.gif" alt="Verify" class="rounded-circle me-2"
                       style="width: 30px; height: 30px; object-fit: cover" />
                     <span class="text-white">Membership</span>
                   </button>
@@ -27,7 +27,7 @@
                 <li>
                   <button class="dropdown-item text-white d-flex align-items-center"
                     @click="navigateTo(`/edit-profile`)">
-                    <img src="/images/badges/Profile_settings-min.png" alt="Verify" class="rounded-circle me-2"
+                    <img src="/images/badges/animated/50X50px/edit-profile.gif" alt="Verify" class="rounded-circle me-2"
                       style="width: 30px; height: 30px; object-fit: cover" />
                     <span class="text-white">Edit Profile</span>
                   </button>
@@ -35,7 +35,7 @@
                 <li v-if="(getUser()?.is_photo_verified ?? false) === false">
                   <button class="dropdown-item text-white d-flex align-items-center" data-bs-toggle="modal"
                     data-bs-target="#photoVerificationModal">
-                    <img src="/images/badges/photo-verified.png" alt="Verify" class="rounded-circle me-2"
+                    <img src="/images/badges/animated/50X50px/verified.gif" alt="Verify" class="rounded-circle me-2"
                       style="width: 30px; height: 30px; object-fit: cover" />
                     <span class="text-white">Verify Photo</span>
                   </button>
@@ -43,7 +43,7 @@
                 <li v-if="(getUser()?.is_photo_verified ?? false) === true">
                   <button class="dropdown-item text-white d-flex align-items-center" data-bs-toggle="modal"
                     data-bs-target="#mediaUploadModal">
-                    <img src="/images/badges/photo-verified.png" alt="Verify" class="rounded-circle me-2"
+                    <img src="/images/badges/animated/50X50px/upload-media.gif" alt="Verify" class="rounded-circle me-2"
                       style="width: 30px; height: 30px; object-fit: cover" />
                     <span class="text-white">Upload Media</span>
                   </button>
@@ -51,7 +51,7 @@
                 <li>
                   <button class="dropdown-item text-white d-flex align-items-center" @click="logout"
                     :disabled="is_logout_loading">
-                    <img src="/images/badges/logout.png" alt="Logout" class="rounded-circle me-2"
+                    <img src="/images/badges/animated/50X50px/logout.gif" alt="Logout" class="rounded-circle me-2"
                       style="width: 30px; height: 30px; object-fit: cover" />
                     <span class="text-white">Logout</span>
                     <span class="btn-loader ms-2" v-if="is_logout_loading"></span>
@@ -105,7 +105,7 @@
                 aria-labelledby="settingsMenu">
                 <li>
                   <button class="dropdown-item text-white d-flex align-items-center" @click="navigateTo('/membership')">
-                    <img src="/images/badges/elite.png" alt="Verify" class="rounded-circle me-2"
+                    <img src="/images/badges/animated/50X50px/elite.gif" alt="Verify" class="rounded-circle me-2"
                       style="width: 30px; height: 30px; object-fit: cover" />
                     <span class="text-white">Membership</span>
                   </button>
@@ -113,7 +113,7 @@
                 <li>
                   <button class="dropdown-item text-white d-flex align-items-center"
                     @click="navigateTo(`/edit-profile`)" v-if="isMine()">
-                    <img src="/images/badges/Profile_settings-min.png" alt="Verify" class="rounded-circle me-2"
+                    <img src="/images/badges/animated/50X50px/edit-profile.gif" alt="Verify" class="rounded-circle me-2"
                       style="width: 30px; height: 30px; object-fit: cover" />
                     <span class="text-white">Edit Profile</span>
                   </button>
@@ -121,7 +121,7 @@
                 <li v-if="(getUser()?.is_photo_verified ?? false) === false">
                   <button class="dropdown-item text-white d-flex align-items-center" data-bs-toggle="modal"
                     data-bs-target="#photoVerificationModal">
-                    <img src="/images/badges/photo-verified.png" alt="Verify" class="rounded-circle me-2"
+                    <img src="/images/badges/animated/50X50px/verified.gif" alt="Verify" class="rounded-circle me-2"
                       style="width: 30px; height: 30px; object-fit: cover" />
                     <span class="text-white">Verify Photo</span>
                   </button>
@@ -137,7 +137,7 @@
                 <li>
                   <button class="dropdown-item text-white d-flex align-items-center" @click="logout"
                     :disabled="is_logout_loading" v-if="isMine()">
-                    <img src="/images/badges/logout.png" alt="Logout" class="rounded-circle me-2"
+                    <img src="/images/badges/animated/50X50px/logout.gif" alt="Logout" class="rounded-circle me-2"
                       style="width: 30px; height: 30px; object-fit: cover" />
                     <span class="text-white">Logout</span>
                     <span class="tbtn-loader ms-2" v-if="is_logout_loading"></span>
