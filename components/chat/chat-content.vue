@@ -36,8 +36,11 @@
                       historymodel.tier_name ?? 'Free' }}</span>
                   </div>
                   <small class="text-secondary" v-if="(historymodel.is_typing ?? false) === true">Typing...</small>
-                  <small class="text-secondary" v-if="(historymodel.is_typing ?? false) === false">{{
-                    historymodel.message }}</small>
+                  <small class="text-secondary"
+                    v-if="(historymodel.is_typing ?? false) === false && historymodel.message_type === 'text'">{{
+                      historymodel.message }}</small>
+                  <small class="text-secondary"
+                    v-if="(historymodel.is_typing ?? false) === false && historymodel.message_type !== 'text'">Media</small>
                 </div>
               </div>
               <span class="badge bg-danger glow-red text-white" v-if="(historymodel.badge_count ?? 0) > 0">{{
@@ -115,9 +118,15 @@
               'ms-auto': chat.from_id === login_store.getUserDetails?.user_id,
               'glow-red': chat.from_id === login_store.getUserDetails?.user_id
             }" :id="`${chat.chat_id ?? 0}`">
-              {{ chat.message }}
-              <div class="message-time" v-if="chat.from_id !== login_store.getUserDetails?.user_id">{{ chat.created_at }}</div>
-              <div class="message-time" v-if="chat.from_id === login_store.getUserDetails?.user_id">{{ chat.created_at }} • {{ chat.status }}</div>
+              <div v-if="chat.message_type === 'text'">{{ chat.message }}</div>
+              <div v-if="chat.message_type === 'image'" ><img :src="(chat.media_path ?? '') + (chat.message ?? '')" style="max-width: 300px; max-height: 300px;" />
+              </div>
+              <div v-if="chat.message_type === 'video'" ><video
+                  :src="(chat.media_path ?? '') + (chat.message ?? '')" style="max-width: 300px; max-height: 300px;"></video></div>
+              <div class="message-time" v-if="chat.from_id !== login_store.getUserDetails?.user_id">{{ chat.created_at
+              }}</div>
+              <div class="message-time" v-if="chat.from_id === login_store.getUserDetails?.user_id">{{ chat.created_at
+              }} • {{ chat.status }}</div>
             </div>
             <!-- <div class="message-bubble message-incoming">We loved your profile pics. Fancy a chat tonight?<div
                 class="message-time">13:43</div>
@@ -141,8 +150,10 @@
                 class="form-control bg-transparent border-0 text-light"
                 placeholder="Type a message… (Ctrl/⌘ + Enter to send)"></textarea>
               <div class="d-flex flex items-center gap-2 chat-ftr-btns">
+                <input type="file" accept="image/png,image/jpeg,video/mp4" class="form-control d-none" ref="fileInput"
+                  @change="handleFileUpload" />
                 <button id="attach-btn" class="btn bbtn-dark border-secondary text-white ms-2"><svg viewBox="0 0 24 24"
-                    class="h-5 w-5" fill="currentColor">
+                    class="h-5 w-5" fill="currentColor" @click="triggerFileInput">
                     <path d="M16.5 6.5 9 14a3 3 0 1 0 4.24 4.24l7.07-7.07a5 5 0 1 0-7.07-7.07L6.1 7.17" fill="none"
                       stroke="currentColor" stroke-width="1.5"></path>
                   </svg></button>
@@ -152,8 +163,10 @@
                       d="M12 14a3 3 0 0 0 3-3V7a3 3 0 0 0-6 0v4a3 3 0 0 0 3 3zm-7-3h2a5 5 0 0 0 10 0h2a7 7 0 0 1-14 0zm6 7v-2h2v2h3v2H8v-2h3z">
                     </path>
                   </svg></button>
-                <button id="btnSend" class="btn btn-danger glow-red-strong text-white ms-2"
-                  @click="sendMessage()">Send</button>
+                <button v-if="is_uploading === false" id="btnSend"
+                  class="btn btn-danger glow-red-strong text-white ms-2" @click="sendMessage()">Send</button>
+                <button v-if="is_uploading === true" class="btn btn-danger glow-red-strong text-white ms-2">Send {{
+                  uploadProgress }}</button>
               </div>
             </div>
             <small class="text-secondary d-block mt-2">Attachments auto-expire after 60 days. Keep it respectful —
@@ -194,8 +207,13 @@ const isWSConnected = ref(false);
 const onlineUsers = ref([] as number[])
 let typingTimeout: ReturnType<typeof setInterval> | null = null
 const hideTimers: Record<number, ReturnType<typeof setTimeout>> = {};
-
+var is_uploading = ref(false)
+var uploadProgress = ref(0);
 var is_loading = false
+const previewUrl = ref<string | null>(null);
+const previewUrlFile = ref<Blob | null>(null);
+const contentType = ref('');
+const fileInput = ref<HTMLInputElement | null>(null);
 const fetchHistory = async () => {
   const api_url = getUrl(RequestURL.chatHistory);
   const { data: fetch_response, error: option_error } = await useFetch<SuccessError<ChatsModel.ChatResponseModel>>(api_url, {
@@ -348,10 +366,10 @@ onMounted(() => {
       chatresponse.message = responseevent.message
       chatresponse.created_at = responseevent.created_at
       chatresponse.status = responseevent.status
+      chatresponse.media_path = responseevent.media_path
       chatModels.value.push(chatresponse)
 
       if (event_name === 'chat_response') {
-
         let chatresponse = new ChatEventSocketModel()
         chatresponse.chat_id = responseevent.chat_id
         chatresponse.from_id = responseevent.from_id
@@ -362,7 +380,6 @@ onMounted(() => {
         chatresponse.status = responseevent.status
         chatresponse.event_name = "chat_read_status"
         sendmsgtoworker(chatresponse, true)
-
       }
     }
 
@@ -394,15 +411,15 @@ onMounted(() => {
 })
 
 onBeforeUnmount(() => {
-       eventBus.off('chatEvent')
+  eventBus.off('chatEvent')
   eventBus.off('socketConnection')
   eventBus.off('onlineUserIds')
   eventBus.off('typing')
   eventBus.off('chatUpdateStatus')
-    })
+})
 
 onUnmounted(() => {
-  
+
 })
 
 const handleScroll = async () => {
@@ -488,7 +505,7 @@ function sendMessage() {
   if (trim.length === 0 || to_id === 0) {
     return
   }
- 
+
   let eventmodel = new ChatEventSocketModel()
   eventmodel.event_name = 'chat'
   eventmodel.from_id = login_store.getUserDetails?.user_id ?? 0
@@ -547,6 +564,119 @@ function getImagePath(user: ChatsModel.ChatResponseModel): string {
   if (profile_type === 'Man') return "/images/profile-placeholders/man.png";
   return "/images/profile-placeholders/man.png"
 }
+function triggerFileInput() {
+  fileInput.value?.click();
+}
+
+async function handleFileUpload(event: Event) {
+  previewUrl.value = null
+  const target = event.target as HTMLInputElement;
+  let files = target?.files ?? []
+  const file = files[0]
+  if (file) {
+    contentType.value = file.type
+
+    if (file.type.startsWith("image/")) {
+      const profile_image = await file.arrayBuffer()
+      previewUrlFile.value = new Blob([profile_image])
+      previewUrl.value = URL.createObjectURL(file)
+       await uploadMedia()
+    }
+    else {
+
+      const video = document.createElement('video');
+      video.preload = 'metadata';
+      const video_file = await file.arrayBuffer()
+      video.onloadedmetadata = async function () {
+        if (video.duration > 180) {
+          showToastError("Please upload video less than 3 minutes long.");
+          target.value = '' // Clear the selected file
+        }
+        else {
+          previewUrlFile.value = new Blob([video_file])
+          previewUrl.value = URL.createObjectURL(file)
+           await uploadMedia()
+        }
+      };
+      video.src = URL.createObjectURL(file);
+    }
+
+   
+
+  }
+  target.value = ''
+}
+async function uploadMedia() {
+  if (previewUrl.value === null) {
+    showToastError('Please select media to upload.');
+    return;
+  }
+  if (is_uploading.value) {
+    return;
+  }
+  uploadProgress.value = 0
+  let api_url = getUrl(RequestURL.getChatMediaURL);
+  is_uploading.value = true;
+  let response = await $fetch<SuccessError<ChatsModel.ChatResponseModel>>(api_url, {
+    method: 'POST',
+    body: {
+      "contentType": contentType.value,
+    },
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+  let worker_model = response.response as ChatsModel.ChatResponseModel
+  uploadattachment(worker_model.url ?? '', worker_model.key ?? '', contentType.value)
+}
+
+function uploadattachment(url: string, key: string, contentType: string = 'image/jpeg') {
+  uploadProgress.value = 0;
+  const xhr = new XMLHttpRequest()
+  xhr.upload.addEventListener('progress', (e) => {
+    if (e.lengthComputable) {
+      let value = Math.round((e.loaded / e.total) * 100)
+      uploadProgress.value = value;
+    }
+  })
+
+  xhr.upload.addEventListener('error', () => {
+    // error.value = 'Upload failed'
+    // uploading.value = false
+    is_uploading.value = false;
+    showToastError('Photo upload failed. Please try again.')
+    uploadProgress.value = 0;
+  })
+
+  xhr.onreadystatechange = () => {
+    if (xhr.readyState === 4) {
+      var [type, subtype] = contentType.split("/");
+      if (type !== 'image' && type !== 'video') {
+        type = 'file'
+      }
+
+      is_uploading.value = false;
+      let to_id = Number(route.params.id ?? '0') ?? 0
+      let eventmodel = new ChatEventSocketModel()
+      eventmodel.event_name = 'chat'
+      eventmodel.from_id = login_store.getUserDetails?.user_id ?? 0
+      eventmodel.to_id = to_id
+      eventmodel.message_type = type
+      eventmodel.message = key
+      eventmodel.socket_id = id_store.getDeviceId
+      sendmsgtoworker(eventmodel, true)
+    }
+  }
+
+  xhr.open('PUT', url ?? '')
+  xhr.setRequestHeader('Content-Type', contentType)
+  // add headers if needed: xhr.setRequestHeader('Authorization', 'Bearer ...')
+  uploadProgress.value = 0;
+  xhr.send(previewUrlFile.value)
+
+
+}
+
 
 
 </script>

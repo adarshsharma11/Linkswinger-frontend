@@ -29,7 +29,8 @@ export enum RequestURL {
   fetchFeeds = "/fetchFeeds",
   fetchallusers = "/fetchallusers",
   chatHistory = "/chatHistory",
-  fetchChat = "/fetchChat"
+  fetchChat = "/fetchChat",
+  getChatMediaURL = "/getChatMediaURL"
 }
 
 export var online_user_ids : number[] = []
@@ -437,6 +438,9 @@ export namespace ChatsModel {
   tier_id? : number;
   tier_name? : string;
   price? : number;
+
+    url? : string;
+    key? : string;
   
   }
 
