@@ -421,9 +421,11 @@ export namespace ChatsModel {
   message_type?: string;
   message?: string;
   created_at?: string;
+  status?: string;
   is_read?:boolean
 
   user_id?:number
+  badge_count?:number
   is_typing?:boolean
 
   page?: number;

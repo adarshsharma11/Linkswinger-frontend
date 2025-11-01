@@ -116,6 +116,13 @@ async function handlesocketevent(eventdata: Blob) {
         let json = JSON.parse(jsontext) as TypingEventSocketModel
         sendmsgtoworker(json, true)
     }
+    else if (event_name === "chat_update_status") 
+    {
+        let json = JSON.parse(jsontext) as ChatEventSocketModel
+        sendmsgtoworker(json, true)
+    }
+
+    
 
 
 }

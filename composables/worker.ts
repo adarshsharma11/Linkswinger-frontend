@@ -30,6 +30,7 @@ type Events = {
   serverTime: Date,
   socketConnection: boolean,
   chatEvent: ChatEventSocketModel,
+  chatUpdateStatus:ChatEventSocketModel,
   onlineUserIds : number[],
   typing:TypingEventSocketModel
 }
@@ -273,6 +274,18 @@ async function handleworkerevent(event: MessageEvent<any>) {
     emitter.emit('onlineUserIds', online_user_ids)
     
   }
+  else if (json.event_name === "chat_update_status") {
+    let json = event.data as ChatEventSocketModel   
+    emitter.emit('chatUpdateStatus', json)
+    
+  }
+else if (json.event_name === "chat_read_status") {
+    let json = event.data as ChatEventSocketModel   
+    sendtosocket(json)
+  }
+  
+
+  
 
    
 }

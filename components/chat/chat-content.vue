@@ -40,7 +40,8 @@
                     historymodel.message }}</small>
                 </div>
               </div>
-              <!-- <span class="badge bg-danger glow-red text-white">2</span> -->
+              <span class="badge bg-danger glow-red text-white" v-if="(historymodel.badge_count ?? 0) > 0">{{
+                historymodel.badge_count }}</span>
             </div>
             <!-- <div class="p-2 rounded-3 d-flex align-items-center justify-content-between hover-overlay chat-item"
               style="background-color:rgba(23,23,23,0.4);margin-bottom:6px;">
@@ -115,7 +116,8 @@
               'glow-red': chat.from_id === login_store.getUserDetails?.user_id
             }" :id="`${chat.chat_id ?? 0}`">
               {{ chat.message }}
-              <div class="message-time">{{ chat.created_at }}</div>
+              <div class="message-time" v-if="chat.from_id !== login_store.getUserDetails?.user_id">{{ chat.created_at }}</div>
+              <div class="message-time" v-if="chat.from_id === login_store.getUserDetails?.user_id">{{ chat.created_at }} • {{ chat.status }}</div>
             </div>
             <!-- <div class="message-bubble message-incoming">We loved your profile pics. Fancy a chat tonight?<div
                 class="message-time">13:43</div>
@@ -232,6 +234,7 @@ if (to_id !== 0) {
       : []
   }
   chatModels.value = await fetchChat() as ChatsModel.ChatResponseModel[]
+  updateBadgeCount(to_id)
   pageIndex.value = 0
   const fetchUserDetails = async () => {
     const api_url = getUrl(RequestURL.getProfileDetails);
@@ -325,6 +328,10 @@ onMounted(() => {
   eventBus.on('typing', (typing) => {
     showTypingIndicator(typing.from_id ?? 0)
   })
+  eventBus.on('chatUpdateStatus', (eventModel) => {
+    updateMessageStatus(eventModel)
+  })
+
 
   eventBus.on('chatEvent', (responseevent) => {
     let event_name = responseevent.event_name ?? ''
@@ -340,8 +347,26 @@ onMounted(() => {
       chatresponse.message_type = responseevent.message_type
       chatresponse.message = responseevent.message
       chatresponse.created_at = responseevent.created_at
+      chatresponse.status = responseevent.status
       chatModels.value.push(chatresponse)
+
+      if (event_name === 'chat_response') {
+
+        let chatresponse = new ChatEventSocketModel()
+        chatresponse.chat_id = responseevent.chat_id
+        chatresponse.from_id = responseevent.from_id
+        chatresponse.to_id = responseevent.to_id
+        chatresponse.message_type = responseevent.message_type
+        chatresponse.message = responseevent.message
+        chatresponse.created_at = responseevent.created_at
+        chatresponse.status = responseevent.status
+        chatresponse.event_name = "chat_read_status"
+        sendmsgtoworker(chatresponse, true)
+
+      }
     }
+
+
 
 
 
@@ -373,7 +398,7 @@ onUnmounted(() => {
   eventBus.off('socketConnection')
   eventBus.off('onlineUserIds')
   eventBus.off('typing')
-
+  eventBus.off('chatUpdateStatus')
 })
 
 const handleScroll = async () => {
@@ -437,7 +462,16 @@ function checkuseronline() {
     sendmsgtoworker(groupmodel, true)
   }
 }
-
+function updateMessageStatus(eventmodel: ChatEventSocketModel) {
+  let to_id = Number(route.params.id) ?? 0
+  if (to_id === 0 || to_id !== (eventmodel.to_id ?? 0)) {
+    return;
+  }
+  let chat = chatModels.value.filter((history: ChatsModel.ChatResponseModel) => history.chat_id === eventmodel.chat_id)
+  if (chat.length > 0) {
+    chat[0].status = eventmodel.status
+  }
+}
 function sendMessage() {
 
   if (isWSConnected.value === false) {
@@ -460,11 +494,17 @@ function sendMessage() {
   sendmsgtoworker(eventmodel, true)
 }
 
-
+function updateBadgeCount(to_id: number) {
+  let histories = chatHistoryModels.value.filter((history: ChatsModel.ChatResponseModel) => history.to_id === to_id)
+  if (histories.length > 0) {
+    histories[0].badge_count = 0
+  }
+}
 
 function appendLastMessagetohistory(to_id: number, message: string) {
   let histories = chatHistoryModels.value.filter((history: ChatsModel.ChatResponseModel) => history.to_id === to_id)
   if (histories.length > 0) {
+    histories[0].badge_count = 0
     histories[0].message = message
   }
 }
