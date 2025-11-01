@@ -122,7 +122,7 @@
               <div v-if="chat.message_type === 'image'" ><img :src="(chat.media_path ?? '') + (chat.message ?? '')" style="max-width: 300px; max-height: 300px;" />
               </div>
               <div v-if="chat.message_type === 'video'" ><video
-                  :src="(chat.media_path ?? '') + (chat.message ?? '')" style="max-width: 300px; max-height: 300px;"></video></div>
+                  :src="(chat.media_path ?? '') + (chat.message ?? '')" style="max-width: 300px; max-height: 300px;" controls></video></div>
               <div class="message-time" v-if="chat.from_id !== login_store.getUserDetails?.user_id">{{ chat.created_at
               }}</div>
               <div class="message-time" v-if="chat.from_id === login_store.getUserDetails?.user_id">{{ chat.created_at
