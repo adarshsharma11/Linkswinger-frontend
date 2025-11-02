@@ -272,7 +272,7 @@ async function handleworkerevent(event: MessageEvent<any>) {
     clearOnlineIds()
     online_user_ids.push(...json.user_ids ?? [])
     emitter.emit('onlineUserIds', online_user_ids)
-    
+    console.log("user_updated_to_group...",emitter)
   }
   else if (json.event_name === "chat_update_status") {
     let json = event.data as ChatEventSocketModel   

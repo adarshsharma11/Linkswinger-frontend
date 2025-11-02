@@ -119,10 +119,11 @@
               'glow-red': chat.from_id === login_store.getUserDetails?.user_id
             }" :id="`${chat.chat_id ?? 0}`">
               <div v-if="chat.message_type === 'text'">{{ chat.message }}</div>
-              <div v-if="chat.message_type === 'image'" ><img :src="(chat.media_path ?? '') + (chat.message ?? '')" style="max-width: 300px; max-height: 300px;" />
+              <div v-if="chat.message_type === 'image'"><img :src="(chat.media_path ?? '') + (chat.message ?? '')"
+                  style="max-width: 300px; max-height: 300px;" />
               </div>
-              <div v-if="chat.message_type === 'video'" ><video
-                  :src="(chat.media_path ?? '') + (chat.message ?? '')" style="max-width: 300px; max-height: 300px;" controls></video></div>
+              <div v-if="chat.message_type === 'video'"><video :src="(chat.media_path ?? '') + (chat.message ?? '')"
+                  style="max-width: 300px; max-height: 300px;" controls></video></div>
               <div class="message-time" v-if="chat.from_id !== login_store.getUserDetails?.user_id">{{ chat.created_at
               }}</div>
               <div class="message-time" v-if="chat.from_id === login_store.getUserDetails?.user_id">{{ chat.created_at
@@ -252,7 +253,7 @@ if (to_id !== 0) {
       : []
   }
   chatModels.value = await fetchChat() as ChatsModel.ChatResponseModel[]
-  updateBadgeCount(to_id)
+
   pageIndex.value = 0
   const fetchUserDetails = async () => {
     const api_url = getUrl(RequestURL.getProfileDetails);
@@ -330,6 +331,7 @@ watch(messageTxt, () => {
 
 onMounted(() => {
 
+  console.log('onmounted...chat')
   isWSConnected.value = isSocketConnected()
   eventBus.on('socketConnection', (is_connected) => {
     if (isWSConnected.value === false) {
@@ -382,12 +384,6 @@ onMounted(() => {
         sendmsgtoworker(chatresponse, true)
       }
     }
-
-
-
-
-
-
     let user_id = responseevent.from_id === login_store.getUserDetails?.user_id ? responseevent.to_id : responseevent.from_id
 
     appendLastMessagetohistory(user_id ?? 0, responseevent.message ?? '')
@@ -406,6 +402,10 @@ onMounted(() => {
 
   checkuseronline()
 
+  let to_id = Number(route.params.id) ?? 0
+  if (to_id !== 0) {
+    updateBadgeCount(to_id)
+  }
 
 
 })
@@ -416,6 +416,7 @@ onBeforeUnmount(() => {
   eventBus.off('onlineUserIds')
   eventBus.off('typing')
   eventBus.off('chatUpdateStatus')
+  console.log('beforemount...chat')
 })
 
 onUnmounted(() => {
@@ -580,7 +581,7 @@ async function handleFileUpload(event: Event) {
       const profile_image = await file.arrayBuffer()
       previewUrlFile.value = new Blob([profile_image])
       previewUrl.value = URL.createObjectURL(file)
-       await uploadMedia()
+      await uploadMedia()
     }
     else {
 
@@ -595,13 +596,13 @@ async function handleFileUpload(event: Event) {
         else {
           previewUrlFile.value = new Blob([video_file])
           previewUrl.value = URL.createObjectURL(file)
-           await uploadMedia()
+          await uploadMedia()
         }
       };
       video.src = URL.createObjectURL(file);
     }
 
-   
+
 
   }
   target.value = ''

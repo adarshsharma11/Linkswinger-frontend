@@ -725,7 +725,7 @@ function checkuseronline() {
 
 onMounted(() => {
   // Handle hash-based navigation
-
+console.log('onMounted...dashboard')
   isWSConnected.value = isSocketConnected()
   eventBus.on('socketConnection', (is_connected) => {
     isWSConnected.value = is_connected
@@ -757,10 +757,11 @@ onMounted(() => {
   })
 })
 
-onUnmounted(() => {
+onBeforeUnmount(() => {
   window.removeEventListener('resize', checkMobile)
   eventBus.off('socketConnection')
   eventBus.off('onlineUserIds')
+   console.log('beforemount..dashboard')
 })
 
 

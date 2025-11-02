@@ -96,6 +96,7 @@ async function handlesocketevent(eventdata: Blob) {
         let json = JSON.parse(jsontext) as OnlineEventResponse
         if (json.success) {
             sendmsgtoworker(json, true)
+            console.log("onlineeee")
         }
         else {
             json.event_name = "logout"
