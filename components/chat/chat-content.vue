@@ -518,14 +518,14 @@ function sendMessage() {
 }
 
 function updateBadgeCount(to_id: number) {
-  let histories = chatHistoryModels.value.filter((history: ChatsModel.ChatResponseModel) => history.to_id === to_id)
+  let histories = chatHistoryModels.value.filter((history: ChatsModel.ChatResponseModel) => history.user_id === to_id)
   if (histories.length > 0) {
     histories[0].badge_count = 0
   }
 }
 
 function appendLastMessagetohistory(to_id: number, message: string) {
-  let histories = chatHistoryModels.value.filter((history: ChatsModel.ChatResponseModel) => history.to_id === to_id)
+  let histories = chatHistoryModels.value.filter((history: ChatsModel.ChatResponseModel) => history.user_id === to_id)
   if (histories.length > 0) {
     histories[0].badge_count = 0
     histories[0].message = message
