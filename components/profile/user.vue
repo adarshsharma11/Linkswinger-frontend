@@ -88,7 +88,7 @@
               {{ getGender() }} {{ getAge(getUser()?.dob ?? '') }} from
               {{ getUser()?.town ?? '' }}</h3>
             <span class="badge bg-success fs-6">Active</span>
-            <p class="mb-0 mt-2 text-white">😊 If you dream it, you can do it</p>
+            <p class="mb-0 mt-2 text-white">{{getUser()?.profile_status}}</p>
           </div>
 
           <!-- Right: Settings Dropdown (Desktop only) -->

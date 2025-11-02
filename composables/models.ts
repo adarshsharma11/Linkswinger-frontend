@@ -99,6 +99,16 @@ export function getDistanceFromLatLonInKm(lat1 : number , lon1 : number , lat2 :
   const distance = R * c
   return distance
 }
+export function getDistanceFromLatLonInMiles(
+  lat1: number,
+  lon1: number,
+  lat2: number,
+  lon2: number
+): number {
+  const km = getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2)
+  const milesPerKm = 0.621371
+  return km * milesPerKm
+}
 
 function deg2rad(deg : number) {
   return deg * (Math.PI / 180)
@@ -248,6 +258,7 @@ export namespace UsersModel {
     user_udid?: string;
     nick_name?: string;
     email?: string;
+    profile_status?:string;
     profile_image?: string;
     sd_profile_image?: string;
     hd_profile_image?: string;

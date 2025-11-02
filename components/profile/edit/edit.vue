@@ -41,7 +41,7 @@
                         </div>
                         <div class="form-group ">
                             <label>Status</label>
-                            <input class="form-control" id="inputstatus" type="text" />
+                            <input v-model="profile_status" class="form-control" id="inputstatus" type="text" />
                         </div>
                         <div class="form-group col-12 col-md-6">
                             <label for="inputdob">Date of Birth
@@ -251,6 +251,7 @@ const nickName = ref('');
 const email = ref('');
 const password = ref('');
 const about_me = ref(login_store.getUserDetails?.about_me ?? '');
+const profile_status = ref(login_store.getUserDetails?.profile_status ?? '');
 const cm_height = ref('');
 const feet_height = ref('');
 const inch_height = ref('0');
@@ -442,7 +443,8 @@ function usersignup() {
         device_id: "",
         gender: gender.value,
         partner_gender: partner_gender.value,
-        about_me: about_me.value
+        about_me: about_me.value,
+        profile_status:profile_status.value
     } as UsersModel.SignUpRequestModel
 
     let api_url = getUrl(RequestURL.updateUserProfile);

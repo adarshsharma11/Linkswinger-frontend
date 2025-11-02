@@ -172,7 +172,7 @@
                 <div class="row1">
                   <div>
                     <div class="name">{{ user.nick_name }}</div>
-                    <div class="meta">{{ user.town }} • {{ getDistance(user) }} km </div>
+                    <div class="meta">{{ user.town }} • {{ getDistance(user) }} miles </div>
                   </div>
                 </div>
                 <div class="chips">
@@ -674,7 +674,7 @@ async function fetchUsersList() {
 function getDistance(user: UsersModel.ProfileDetailsResponseModel): string {
   let lat = login_store.getUserDetails?.latitude ?? 0
   let lon = login_store.getUserDetails?.longitude ?? 0
-  let distance = getDistanceFromLatLonInKm(
+  let distance = getDistanceFromLatLonInMiles(
     user.latitude ?? 0,
     user.longitude ?? 0,
     lat,
