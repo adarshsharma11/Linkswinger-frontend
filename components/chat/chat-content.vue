@@ -112,9 +112,9 @@
                 </svg> Video</button>
                 <span class="btn-loader" v-if="is_code_loading"></span>
               <button class="btn btn-sm btn-danger glow-red-strong text-white" v-if="!is_code_loading && call_code.length === 0" @click="fetchCallCode()">Show my call code</button>
-              <span class="btn btn-sm btn-danger glow-red-strong text-white" v-if="!is_code_loading && call_code.length !== 0">{{ call_code.toUpperCase().slice(-4) }}</span>
-              <button class="btn btn-sm btn-danger glow-red-strong text-white" v-if="!is_code_loading && call_code.length !== 0" @click="updatecallcode()"><svg viewBox="0 0 24 24" class="h-4 w-4"
+              <button class="btn btn-sm btn-danger glow-red-strong text-white" v-if="!is_code_loading && call_code.length !== 0" @click="updatecallcode()">{{ call_code.toUpperCase().slice(-4) }} <svg viewBox="0 0 24 24" class="h-4 w-4"
                   fill="currentColor"><path d="M12 2a10 10 0 1 0 9.95 11H20a8 8 0 1 1-8-8c2.03 0 3.89.76 5.29 2.01L14 10h8V2l-2.35 2.35A9.97 9.97 0 0 0 12 2z" /></svg></button>
+           
             </div>
           </div>
 
