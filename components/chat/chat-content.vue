@@ -97,13 +97,13 @@
               </div>
             </div>
             <div class="d-flex gap-2 chat-hd-btn">
-              <button class="btn btn-sm btn-dark border-secondary grp-btn">Create Group</button>
+              <!-- <button class="btn btn-sm btn-dark border-secondary grp-btn">Create Group</button>
               <button class="btn btn-sm btn-dark border-secondary"><svg viewBox="0 0 24 24" class="h-4 w-4"
                   fill="currentColor">
                   <path
                     d="M6.6 10.8a15 15 0 0 0 6.6 6.6l2.2-2.2a1.5 1.5 0 0 1 1.6-.36l3.4 1.14a1.5 1.5 0 0 1 1 1.41V20a2 2 0 0 1-2 2c-9.39 0-17-7.61-17-17a2 2 0 0 1 2-2h2.61a1.5 1.5 0 0 1 1.41 1l1.14 3.4a1.5 1.5 0 0 1-.36 1.6L6.6 10.8z">
                   </path>
-                </svg> Voice</button>
+                </svg> Voice</button> -->
               <button class="btn btn-sm btn-danger glow-red-strong text-white">Show my call code</button>
             </div>
           </div>
