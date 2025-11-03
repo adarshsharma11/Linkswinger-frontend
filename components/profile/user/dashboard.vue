@@ -841,7 +841,7 @@ function checkuseronline() {
 
 onMounted(() => {
   // Handle hash-based navigation
-
+console.log('onMounted...dashboard')
   isWSConnected.value = isSocketConnected()
   eventBus.on('socketConnection', (is_connected) => {
     isWSConnected.value = is_connected
@@ -868,9 +868,9 @@ onMounted(() => {
   window.addEventListener('resize', checkMobile)
 
   // Cleanup listener on unmount
-  onUnmounted(() => {
-    //window.removeEventListener('hashchange', handleHashChange)
-  })
+  // onUnmounted(() => {
+  //   //window.removeEventListener('hashchange', handleHashChange)
+  // })
 })
 
 onBeforeUnmount(() => {
