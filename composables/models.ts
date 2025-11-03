@@ -30,7 +30,9 @@ export enum RequestURL {
   fetchallusers = "/fetchallusers",
   chatHistory = "/chatHistory",
   fetchChat = "/fetchChat",
-  getChatMediaURL = "/getChatMediaURL"
+  getChatMediaURL = "/getChatMediaURL",
+  fetchCallCode = "/fetchCallCode",
+  updateCallCode = "/updateCallCode"
 }
 
 export var online_user_ids : number[] = []
@@ -258,6 +260,7 @@ export namespace UsersModel {
     user_udid?: string;
     nick_name?: string;
     email?: string;
+    call_code?: string;
     profile_status?:string;
     profile_image?: string;
     sd_profile_image?: string;
@@ -340,6 +343,14 @@ export class ProfilePhotoResponseModel
   worker_model?: WorkerModel;
 }
 
+export class FetchCallCodeRequestModel
+{
+  user_id?: number;
+}
+export class FetchCallCodeResponseModel
+{
+  call_code?: string;
+}
 
 }
 export namespace MembershipsModel {

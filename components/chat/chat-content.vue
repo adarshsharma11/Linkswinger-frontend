@@ -109,7 +109,11 @@
                   <path d="M23 7l-6 4V7a2 2 0 0 0-2-2H3a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4l6 4V7z">
                   </path>
                 </svg> Video</button>
-              <button class="btn btn-sm btn-danger glow-red-strong text-white">Show my call code</button>
+                <span class="btn-loader" v-if="is_code_loading"></span>
+              <button class="btn btn-sm btn-danger glow-red-strong text-white" v-if="!is_code_loading && call_code.length === 0" @click="fetchCallCode()">Show my call code</button>
+              <span class="btn btn-sm btn-danger glow-red-strong text-white" v-if="!is_code_loading && call_code.length !== 0">{{ call_code.toUpperCase().slice(-4) }}</span>
+              <button class="btn btn-sm btn-danger glow-red-strong text-white" v-if="!is_code_loading && call_code.length !== 0" @click="updatecallcode()"><svg viewBox="0 0 24 24" class="h-4 w-4"
+                  fill="currentColor"><path d="M12 2a10 10 0 1 0 9.95 11H20a8 8 0 1 1-8-8c2.03 0 3.89.76 5.29 2.01L14 10h8V2l-2.35 2.35A9.97 9.97 0 0 0 12 2z" /></svg></button>
             </div>
           </div>
 
@@ -214,8 +218,10 @@ const onlineUsers = ref([] as number[])
 let typingTimeout: ReturnType<typeof setInterval> | null = null
 const hideTimers: Record<number, ReturnType<typeof setTimeout>> = {};
 var is_uploading = ref(false)
+var is_code_loading = ref(false)
 var uploadProgress = ref(0);
 var is_loading = false
+var call_code = ref('')
 const previewUrl = ref<string | null>(null);
 const previewUrlFile = ref<Blob | null>(null);
 const contentType = ref('');
@@ -310,6 +316,68 @@ function showTypingIndicator(from_id: number) {
     console.warn(`Typing event received for unknown user_id: ${from_id}`);
   }
 }
+
+async function fetchCallCode()
+{
+  if (is_code_loading.value)
+  {
+        return
+  }
+  is_code_loading.value = true
+      const api_url = getUrl(RequestURL.fetchCallCode);
+      await $fetch<SuccessError<UsersModel.FetchCallCodeResponseModel>>(api_url, {
+        cache: "no-cache",
+        method: "post",
+        body: {
+          "user_id": user_store.getLoginId
+        },
+        headers: {
+          "content-type": "application/json"
+        },
+        onResponse: async ({ response }) => {
+          is_code_loading.value = false
+          var response_model = response._data as SuccessError<UsersModel.FetchCallCodeResponseModel>
+          if (response_model.success) {
+            call_code.value = response_model.response?.call_code ?? ''
+          }
+          else {
+            showToastError(response_model.message)
+          }
+          
+        }
+      });
+}
+async function updatecallcode()
+{
+  if (is_code_loading.value)
+  {
+        return
+  }
+  is_code_loading.value = true
+      const api_url = getUrl(RequestURL.updateCallCode);
+      await $fetch<SuccessError<UsersModel.FetchCallCodeResponseModel>>(api_url, {
+        cache: "no-cache",
+        method: "post",
+        body: {
+          "user_id": user_store.getLoginId
+        },
+        headers: {
+          "content-type": "application/json"
+        },
+        onResponse: async ({ response }) => {
+          is_code_loading.value = false
+          var response_model = response._data as SuccessError<UsersModel.FetchCallCodeResponseModel>
+          if (response_model.success) {
+            call_code.value = response_model.response?.call_code ?? ''
+          }
+          else {
+            showToastError(response_model.message)
+          }
+          
+        }
+      });
+}
+
 
 
 function onUserTyping(to_id: number) {
