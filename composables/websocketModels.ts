@@ -77,3 +77,24 @@ export class TypingEventSocketModel implements SocketEventModel
   from_id? : number
   to_id? : number
 }
+export class CallSocketModel implements SocketEventModel {
+  from_id?: number;
+  to_id?: number;
+  from_socket_id?: string;
+  to_socket_id?: string;
+  event_name?: string;
+  webrtc_model?: number[];
+  type?: CallSocketModel.CallType;
+}
+export namespace CallSocketModel {
+  export enum CallType {
+    OFFER = "offer",
+    ANSWER = "answer",
+    DECLINE = "decline",
+    UNANSWERED = "unanswered",
+    USER_REJECTED = "userrejected",
+    ENDED = "ended",
+    CANDIDATE = "candidate",
+    CANDIDATE_RESPONSE = "candidate_response"
+  }
+}

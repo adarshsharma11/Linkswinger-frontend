@@ -10,10 +10,10 @@
               <span>Messages</span>
               <span class="badge bg-success bg-opacity-25 text-success border border-success">Verified only</span>
             </div>
-            <div class="d-flex gap-2">
+            <!-- <div class="d-flex gap-2">
               <button class="btn btn-sm btn-dark border-secondary">New</button>
               <button class="btn btn-sm btn-dark border-secondary">Group</button>
-            </div>
+            </div> -->
           </div>
           <div class="custom-scroll" style="max-height:70vh;overflow:auto;">
             <!-- Example Conversation Items -->
@@ -158,12 +158,12 @@
                     <path d="M16.5 6.5 9 14a3 3 0 1 0 4.24 4.24l7.07-7.07a5 5 0 1 0-7.07-7.07L6.1 7.17" fill="none"
                       stroke="currentColor" stroke-width="1.5"></path>
                   </svg></button>
-                <button id="btnvoicenote" class="btn btn-dark border-secondary text-white ms-2"><svg viewBox="0 0 24 24"
+                <!-- <button id="btnvoicenote" class="btn btn-dark border-secondary text-white ms-2"><svg viewBox="0 0 24 24"
                     class="h-5 w-5" fill="currentColor">
                     <path
                       d="M12 14a3 3 0 0 0 3-3V7a3 3 0 0 0-6 0v4a3 3 0 0 0 3 3zm-7-3h2a5 5 0 0 0 10 0h2a7 7 0 0 1-14 0zm6 7v-2h2v2h3v2H8v-2h3z">
                     </path>
-                  </svg></button>
+                  </svg></button> -->
                 <button v-if="is_uploading === false" id="btnSend"
                   class="btn btn-danger glow-red-strong text-white ms-2" @click="sendMessage()">Send</button>
                 <button v-if="is_uploading === true" class="btn btn-danger glow-red-strong text-white ms-2">Send {{
