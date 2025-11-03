@@ -154,7 +154,8 @@
                 </select>
                 <label class="check"><input id="nearby" type="checkbox" /> Nearby</label>
                 <label class="check"><input id="onlyVerified" type="checkbox" /> Verified members</label>
-                <a class="btn primary" href="advanced-search.html" aria-label="Go to Advanced Search">Advanced
+                <a class="btn primary" href="#" aria-label="Go to Advanced Search" data-bs-toggle="modal"
+	data-bs-target="#advancesearchmodal">Advanced
                   Search</a>
               </div>
             </div>
@@ -172,7 +173,7 @@
                 <div class="row1">
                   <div>
                     <div class="name">{{ user.nick_name }}</div>
-                    <div class="meta">{{ user.town }} • {{ getDistance(user) }} miles </div>
+                    <div class="meta">{{ user.town }} • {{ getDistance(user) }} km </div>
                   </div>
                 </div>
                 <div class="chips">
@@ -558,6 +559,121 @@
       </div>
     </div>
   </div>
+
+
+
+
+
+
+
+
+  <div class="modal fade ad-search-modal" id="advancesearchmodal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable" role="document">
+            <div class="modal-content bg-dark text-white">
+                <!-- Header -->
+
+                <div class="modal-header ad-sc-header border-0">
+                    <h2 class="modal-title text-white">Advance Search</h2>
+                    <p>Dial in exactly what you’re after. Choose one or many options below and tap Search.</p>
+                    <button class="close text-danger fs-3 fw-bold" type="button" data-bs-dismiss="modal"
+                        aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <!-- Body -->
+                <div class="modal-body ad-sc-body">
+                    <form id="advForm">
+                      <div class="group-fd">
+                        <div class="label">I am looking for</div>
+                        <div class="chips">
+                          <label class="chip"><input type="checkbox" name="looking_for" value="Man"> Man</label>
+                          <label class="chip"><input type="checkbox" name="looking_for" value="Woman"> Woman</label>
+                          <label class="chip"><input type="checkbox" name="looking_for" value="Couple MF"> Couple MF</label>
+                          <label class="chip"><input type="checkbox" name="looking_for" value="Couple MM"> Couple MM</label>
+                          <label class="chip"><input type="checkbox" name="looking_for" value="Couple FF"> Couple FF</label>
+                          <label class="chip"><input type="checkbox" name="looking_for" value="TS/TV"> TS/TV</label>
+                        </div>
+                      </div>
+
+                      <div class="group-fd">
+                        <div class="label">Who wants to meet</div>
+                        <div class="chips">
+                          <label class="chip"><input type="checkbox" name="who_meets" value="Man"> Man</label>
+                          <label class="chip"><input type="checkbox" name="who_meets" value="Woman"> Woman</label>
+                          <label class="chip"><input type="checkbox" name="who_meets" value="Couple MF"> Couple MF</label>
+                          <label class="chip"><input type="checkbox" name="who_meets" value="Couple MM"> Couple MM</label>
+                          <label class="chip"><input type="checkbox" name="who_meets" value="Couple FF"> Couple FF</label>
+                          <label class="chip"><input type="checkbox" name="who_meets" value="TS/TV"> TS/TV</label>
+                        </div>
+                      </div>
+
+                      <div class="group-fd">
+                        <div class="label">Age range</div>
+                        <div class="row">
+                          <div class="col-md-6">
+                            <input class="input" type="number" name="age_min" min="18" max="99" value="18" placeholder="Min (18)"/>
+                          </div>
+                          <div class="col-md-6">
+                            <input class="input" type="number" name="age_max" min="18" max="99" value="99" placeholder="Max (99)"/>
+                          </div>
+                        </div>
+                        <div class="hint">Allowed: 18 to 99.</div>
+                      </div>
+
+                      <div class="group-fd">
+                        <div class="label">Near town / postcode</div>
+                        <div class="inline-check"><label class="toggle"><input type="checkbox" id="use_my_location" name="use_my_location"> 📍 Use my location</label></div>
+                        <div class="row">
+                          <div class="col-md-6 pb-2">
+                          <input class="input" type="text" name="near" placeholder="Enter town or postcode"/>
+                          </div>
+                          <div class="col-md-6 pb-2">
+                          <select class="select" name="distance">
+                            <option value="0.25">Within ¼ mile</option>
+                            <option value="0.5">Within ½ mile</option>
+                            <option value="1">Within 1 mile</option>
+                            <option value="2">Within 2 miles</option>
+                            <option value="5">Within 5 miles</option>
+                            <option value="10">Within 10 miles</option>
+                            <option value="25">Within 25 miles</option>
+                            <option value="50">Within 50 miles</option>
+                            <option value="100">Within 100 miles</option>
+                            <option value="250">Within 250 miles</option>
+                            <option value="500">Within 500 miles</option>
+                            <option value="1000">Within 1000 miles</option>
+                            <option value="1500+">Within 1500+ miles</option>
+                          </select>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="group-fd">
+                        <div class="label">More options</div>
+                        <div class="toggles">
+                          <label class="toggle"><input type="checkbox" name="meet_today"> Looking to meet today</label>
+                          <label class="toggle"><input type="checkbox" name="photo_verified"> Photo verified</label>
+                          <label class="toggle"><input type="checkbox" name="meet_verified"> Meet verified</label>
+                          <label class="toggle"><input type="checkbox" name="public_photo"> With public photo/video</label>
+                          <label class="toggle"><input type="checkbox" name="online_now"> Online now</label>
+                          <label class="toggle"><input type="checkbox" name="recently_active"> Recently active</label>
+                          <label class="toggle"><input type="checkbox" name="premium_only"> Premium members only</label>
+                          <label class="toggle"><input type="checkbox" name="has_description"> Has profile description</label>
+                          <label class="toggle"><input type="checkbox" name="has_gallery"> With media gallery</label>
+                        </div>
+                      </div>
+
+                      <div class="actions">
+                        <button type="submit" class="btn primary">Search</button>
+                        <button type="reset" class="btn ghost">Reset</button>
+                        <button type="button" class="btn" onclick="alert('Search saved!')">💾 Save this search</button>
+                      </div>
+                      <div class="footnote">Tip: You can tick multiple options in the lists above.</div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </template>
 
 <script setup lang="ts">
@@ -674,7 +790,7 @@ async function fetchUsersList() {
 function getDistance(user: UsersModel.ProfileDetailsResponseModel): string {
   let lat = login_store.getUserDetails?.latitude ?? 0
   let lon = login_store.getUserDetails?.longitude ?? 0
-  let distance = getDistanceFromLatLonInMiles(
+  let distance = getDistanceFromLatLonInKm(
     user.latitude ?? 0,
     user.longitude ?? 0,
     lat,
@@ -725,7 +841,7 @@ function checkuseronline() {
 
 onMounted(() => {
   // Handle hash-based navigation
-console.log('onMounted...dashboard')
+
   isWSConnected.value = isSocketConnected()
   eventBus.on('socketConnection', (is_connected) => {
     isWSConnected.value = is_connected
@@ -757,11 +873,10 @@ console.log('onMounted...dashboard')
   })
 })
 
-onBeforeUnmount(() => {
+onUnmounted(() => {
   window.removeEventListener('resize', checkMobile)
   eventBus.off('socketConnection')
   eventBus.off('onlineUserIds')
-   console.log('beforemount..dashboard')
 })
 
 
