@@ -18,6 +18,7 @@
           <div class="custom-scroll" style="max-height:70vh;overflow:auto;">
             <!-- Example Conversation Items -->
             <div class="p-2 rounded-3 d-flex align-items-center justify-content-between hover-overlay chat-item"
+              :class="{ 'chat-active': activeChatId === (historymodel.user_id ?? 0) }"
               style="background-color:rgba(23,23,23,0.4);margin-bottom:6px;" v-for="historymodel in chatHistoryModels"
               @click="fetchChats(historymodel.from_id ?? 0, historymodel.to_id ?? 0)">
               <div class="d-flex align-items-center gap-3">
@@ -226,6 +227,7 @@ const previewUrl = ref<string | null>(null);
 const previewUrlFile = ref<Blob | null>(null);
 const contentType = ref('');
 const fileInput = ref<HTMLInputElement | null>(null);
+const activeChatId = ref<number | null>(null); // Add this line to track active chat
 const fetchHistory = async () => {
   const api_url = getUrl(RequestURL.chatHistory);
   const { data: fetch_response, error: option_error } = await useFetch<SuccessError<ChatsModel.ChatResponseModel>>(api_url, {
@@ -405,6 +407,13 @@ watch(messageTxt, () => {
 onMounted(() => {
 
   console.log('onmounted...chat')
+  
+  // Initialize activeChatId from route params
+  const currentChatId = Number(route.params.id ?? '0')
+  if (currentChatId !== 0) {
+    activeChatId.value = currentChatId
+  }
+  
   isWSConnected.value = isSocketConnected()
   eventBus.on('socketConnection', (is_connected) => {
     if (isWSConnected.value === false) {
@@ -606,6 +615,7 @@ function appendLastMessagetohistory(to_id: number, message: string) {
 
 async function fetchChats(from_id: number, to_id: number) {
   let user_id = from_id === login_store.getUserDetails?.user_id ? to_id : from_id
+  activeChatId.value = user_id; // Set the active chat ID
   await navigateTo(`/chat/${user_id}`)
 }
 
@@ -753,3 +763,10 @@ function uploadattachment(url: string, key: string, contentType: string = 'image
 
 
 </script>
+
+<style scoped>
+.chat-active {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  border-left: 3px solid #ff6b6b;
+}
+</style>

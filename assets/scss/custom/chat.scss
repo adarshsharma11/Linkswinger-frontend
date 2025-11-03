@@ -103,6 +103,9 @@ span.badge.bg-danger.glow-red.text-white {
 .chat-hd-btn svg {
     width: 16px;
 }
+.chat-item {
+    cursor: pointer;
+}
 
 .chat-hd-btn  button.btn {
     padding: 6px 12px;
@@ -161,7 +164,9 @@ button#btnSend {
 .chat-ftr-left textarea :-moz-placeholder { /* Firefox 18- */
   color: #737373;
 }
-
+.chat-item.chat-active {
+    background-color: rgb(232 60 89) !important;
+}
 @media only screen and (max-width:767px){
 .chat-header {
     flex-wrap: wrap;
