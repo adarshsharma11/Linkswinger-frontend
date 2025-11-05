@@ -32,7 +32,8 @@ export enum RequestURL {
   fetchChat = "/fetchChat",
   getChatMediaURL = "/getChatMediaURL",
   fetchCallCode = "/fetchCallCode",
-  updateCallCode = "/updateCallCode"
+  updateCallCode = "/updateCallCode",
+  validateCall = "/validateCall"
 }
 
 export var online_user_ids : number[] = []

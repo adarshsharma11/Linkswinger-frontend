@@ -99,14 +99,14 @@
             </div>
             <div class="d-flex gap-2 chat-hd-btn">
               <!-- <button class="btn btn-sm btn-dark border-secondary grp-btn">Create Group</button> -->
-              <button class="btn btn-sm btn-dark border-secondary"><svg viewBox="0 0 24 24" class="h-4 w-4"
-                  fill="currentColor">
+              <button class="btn btn-sm btn-dark border-secondary" @click="showCodeAlert(false)"><svg viewBox="0 0 24 24" class="h-4 w-4"
+                  fill="currentColor" >
                   <path
                     d="M6.6 10.8a15 15 0 0 0 6.6 6.6l2.2-2.2a1.5 1.5 0 0 1 1.6-.36l3.4 1.14a1.5 1.5 0 0 1 1 1.41V20a2 2 0 0 1-2 2c-9.39 0-17-7.61-17-17a2 2 0 0 1 2-2h2.61a1.5 1.5 0 0 1 1.41 1l1.14 3.4a1.5 1.5 0 0 1-.36 1.6L6.6 10.8z">
                   </path>
                 </svg> Voice</button>
-              <button class="btn btn-sm btn-dark border-secondary"><svg viewBox="0 0 24 24" class="h-4 w-4"
-                  fill="currentColor">
+              <button class="btn btn-sm btn-dark border-secondary" @click="showCodeAlert(true)"><svg viewBox="0 0 24 24" class="h-4 w-4"
+                  fill="currentColor" >
                   <path d="M23 7l-6 4V7a2 2 0 0 0-2-2H3a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4l6 4V7z">
                   </path>
                 </svg> Video</button>
@@ -200,7 +200,8 @@
 
 <script setup lang="ts">
 import { ChatsModel, UsersModel } from '~/composables/models'
-
+import Swal from 'sweetalert2'
+import type { CallsModel } from '~/composables/websocketModels'
 const id_store = idStore()
 const route = useRoute()
 const user_store = userStore()
@@ -379,6 +380,54 @@ async function updatecallcode()
       });
 }
 
+function showCodeAlert(is_video:boolean)
+{
+  Swal.fire({
+  title: 'Please enter code',
+  input: 'text', // Specifies a text input field
+  inputPlaceholder: 'Type code here', // Placeholder text for the input
+  showCancelButton: true, // Displays a cancel button
+  inputValidator: (value : string) => { // Optional: input validation
+    if (!value) {
+      return 'Please enter code';
+    }
+  }
+}).then((result) => {
+  if (result.isConfirmed) {
+     validateCall(result.value ?? '',is_video)
+  }
+});
+}
+
+async function validateCall(code:string,is_video:boolean)
+{
+  let to_id = Number(route.params.id ?? '0') ?? 0
+    const api_url = getUrl(RequestURL.validateCall);
+      await $fetch<SuccessError<CallsModel.ValidateCallResponseModel>>(api_url, {
+        cache: "no-cache",
+        method: "post",
+        body: {
+          "from_id": user_store.getLoginId,
+          "from_socket_id" : id_store.getDeviceId,
+           "to_id": to_id,
+           "call_code":code,
+           "is_video" : is_video
+        },
+        headers: {
+          "content-type": "application/json"
+        },
+        onResponse: async ({ response }) => {
+          
+          var response_model = response._data as SuccessError<CallsModel.ValidateCallResponseModel>
+          if (response_model.success) {
+            showToastSuccess(response_model.message)
+          }
+          else {
+            showToastError(response_model.message)
+          }
+        }
+      });
+}
 
 
 function onUserTyping(to_id: number) {
@@ -417,7 +466,7 @@ onMounted(() => {
   eventBus.on('socketConnection', (is_connected) => {
     if (isWSConnected.value === false) {
       if (is_connected) {
-        showToastSuccess('Socket Connected')
+       // showToastSuccess('Socket Connected')
       }
     }
     isWSConnected.value = is_connected

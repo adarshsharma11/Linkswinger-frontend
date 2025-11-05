@@ -86,6 +86,15 @@ export class CallSocketModel implements SocketEventModel {
   webrtc_model?: number[];
   type?: CallSocketModel.CallType;
 }
+
+export class CallAlertModel implements SocketEventModel {
+  from_id?: number;
+  from_socket_id?: string;
+  event_name?: string;
+  nick_name?:string;
+}
+
+
 export namespace CallSocketModel {
   export enum CallType {
     OFFER = "offer",
@@ -98,3 +107,17 @@ export namespace CallSocketModel {
     CANDIDATE_RESPONSE = "candidate_response"
   }
 }
+
+export namespace CallsModel
+{
+    export class ValidateCallRequestModel {
+         to_id?: number
+         from_id?: number
+         call_code? : string
+    }
+    export class ValidateCallResponseModel {
+        
+    }
+    
+}
+

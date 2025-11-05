@@ -1,7 +1,7 @@
 import { v4 as uuid } from 'uuid';
 import { idStore } from '~/store/appstores'
 import mitt from 'mitt'
-import { ChatEventSocketModel, GroupEventSocketModel, LeaderEventModel, TypingEventSocketModel } from './websocketModels';
+import { CallAlertModel, ChatEventSocketModel, GroupEventSocketModel, LeaderEventModel, TypingEventSocketModel } from './websocketModels';
 import { detectonline } from './useDatabase';
 import { setupWebSocket } from './websockets';
 
@@ -32,7 +32,8 @@ type Events = {
   chatEvent: ChatEventSocketModel,
   chatUpdateStatus:ChatEventSocketModel,
   onlineUserIds : number[],
-  typing:TypingEventSocketModel
+  typing:TypingEventSocketModel,
+  callAlert:CallAlertModel,
 }
 let onlinemodel: OnlineEventResponse | null = null
 
@@ -283,8 +284,12 @@ else if (json.event_name === "chat_read_status") {
     let json = event.data as ChatEventSocketModel   
     sendtosocket(json)
   }
-  
+  else if (json.event_name === "call_alert") {
+   let json = event.data as CallAlertModel   
+    emitter.emit('callAlert', json)
+  }
 
+  
   
 
    
