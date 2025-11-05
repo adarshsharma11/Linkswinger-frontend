@@ -122,7 +122,12 @@ async function handlesocketevent(eventdata: Blob) {
         let json = JSON.parse(jsontext) as ChatEventSocketModel
         sendmsgtoworker(json, true)
     }
-
+else if (event_name === "call_alert") 
+    {
+        let json = JSON.parse(jsontext) as  CallAlertModel
+        sendmsgtoworker(json, true)
+    }
+    
     
 
 

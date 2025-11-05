@@ -289,10 +289,6 @@ else if (json.event_name === "chat_read_status") {
     emitter.emit('callAlert', json)
   }
 
-  
-  
-
-   
 }
 
 
