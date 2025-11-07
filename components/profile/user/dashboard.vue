@@ -14,13 +14,13 @@
       <nav class="nav" id="sideNav">
         <a href="#profile" data-route="profile" @click.prevent="setActiveNav('profile')"
           :class="{ active: activeNav === 'profile' }" class="text-white"><span class="icon"><!--👤--> <img
-              class="sidebar-ic" :src="`/images/badges/user.png`" /></span>My Profile</a>
+              class="sidebar-ic" :src="`/images/badges/animated/50X50px/edit-profile.gif`" /></span>My Profile</a>
         <a href="#userlist" data-route="notifications" @click.prevent="setActiveNav('userlist')"
           :class="{ active: activeNav === 'userlist' }" class="text-white"><span class="icon"><!--🔔--> <img
               class="sidebar-ic" :src="`/images/badges/animated/50X50px/user-list.gif`" /></span>User List</a>
         <a href="#home" data-route="home" class="text-white" @click.prevent="setActiveNav('home')"
           :class="{ active: activeNav === 'home' }"><span class="icon"><!--🏠--> <img class="sidebar-ic"
-              :src="`/images/badges/home.png`" /></span>Home</a>
+              :src="`/images/badges/animated/150X150px/17.gif`" /></span>Home</a>
         <a href="#messages" data-route="messages" @click.prevent="setActiveNav('messages')"
           :class="{ active: activeNav === 'messages' }" class="text-white"><span class="icon"><!--💬--> <img
               class="sidebar-ic" :src="`/images/badges/animated/50X50px/chat.gif`" /></span>Messages/Calls</a>
@@ -38,7 +38,7 @@
               class="sidebar-ic" :src="`/images/badges/animated/50X50px/crush-list.gif`" /></span>Crush List</a>
         <a href="#search" data-route="search" @click.prevent="setActiveNav('search')"
           :class="{ active: activeNav === 'search' }" class="text-white"><span class="icon"><!--🔍--> <img
-              class="sidebar-ic" :src="`/images/badges/search.png`" /></span>Search</a>
+              class="sidebar-ic" :src="`/images/badges/animated/50X50px/SEARCH.gif`" /></span>Search</a>
         <a href="#new-photos" data-route="new-photos" @click.prevent="setActiveNav('new-photos')"
           :class="{ active: activeNav === 'new-photos' }" class="text-white"><span class="icon"><!--🖼--> <img
               class="sidebar-ic" :src="`/images/badges/animated/50X50px/public-photos.gif`" /></span>New Photos</a>
@@ -47,10 +47,10 @@
               class="sidebar-ic" :src="`/images/badges/animated/50X50px/video-call.gif`" /></span>New Videos</a>
         <a href="#meet-events" data-route="meet-events" @click.prevent="setActiveNav('meet-events')"
           :class="{ active: activeNav === 'meet-events' }" class="text-white"><span class="icon"><!--📅--> <img
-              class="sidebar-ic" :src="`/images/badges/calender.png`" /></span>Meet Events</a>
+              class="sidebar-ic" :src="`/images/badges/animated/150X150px/Meet-Event-Calendar-150x150px.png`" /></span>Meet Events</a>
         <a href="#club-events" data-route="club-events" @click.prevent="setActiveNav('club-events')"
           :class="{ active: activeNav === 'club-events' }" class="text-white"><span class="icon"><!--🏷--> <img
-              class="sidebar-ic" :src="`/images/badges/club.png`" /> </span>Club Events</a>
+              class="sidebar-ic" :src="`/images/badges/animated/150X150px/CLUB-events-150x150px.png`" /> </span>Club Events</a>
         <a href="#video-roullet" data-route="video-roullet" @click.prevent="setActiveNav('video-roullet')"
           :class="{ active: activeNav === 'video-roullet' }" class="text-white"><span class="icon"> <img
               class="sidebar-ic" :src="`/images/badges/animated/50X50px/video-roulette-available.gif`" /></span>Video
@@ -58,6 +58,8 @@
         <a href="#live" data-route="live" @click.prevent="setActiveNav('live')"
           :class="{ active: activeNav === 'live' }" class="text-white"><span class="icon"> <img class="sidebar-ic"
               :src="`/images/badges/animated/50X50px/live-oncam.gif`" /></span>Live / On Cam</a>
+        <a href="#"  class="text-white"><span class="icon"> <img class="sidebar-ic"
+              :src="`/images/badges/animated/150X150px/19.gif`" /></span>Logout</a>
       </nav>
       <div class="spacer" />
       <button class="dash-button primary" id="dash-buttonUpload" @click="fakeUpload">＋ Upload/Post</button>
@@ -136,31 +138,17 @@
             <div class="controls">
               <div class="quc-search">
                 <div class="qtitle">Quick Search</div>
-                <input id="q" class="input" type="search" placeholder="Search by nickname…" />
-              </div>
-              <div class="quc-frm">
-                <select id="gender" class="select" aria-label="Gender">
-                  <option value="">All genders</option>
-                  <option>Woman</option>
-                  <option>Man</option>
-                  <option>Couple</option>
-                  <option>Trans</option>
-                </select>
-                <select id="distance" class="select" aria-label="Distance">
-                  <option value="">Any distance</option>
-                  <option value="10">≤ 10 km</option>
-                  <option value="25">≤ 25 km</option>
-                  <option value="50">≤ 50 km</option>
-                  <option value="100">≤ 100 km</option>
-                </select>
-                <label class="check"><input id="nearby" type="checkbox" /> Nearby</label>
-                <label class="check"><input id="onlyVerified" type="checkbox" /> Verified members</label>
-                <a class="btn primary" href="#" aria-label="Go to Advanced Search" data-bs-toggle="modal"
-                  data-bs-target="#advancesearchmodal">Advanced
-                  Search</a>
+                <div style="display: flex; gap: 10px; align-items: flex-end;">
+                  <input id="q" class="input" type="search" placeholder="Search by nickname…" style="width: 100%; min-width: 300px;" />
+                  <a class="btn primary" href="#" aria-label="Go to Advanced Search" data-bs-toggle="modal"
+                    data-bs-target="#advancesearchmodal" style="white-space: nowrap; height: fit-content;">Advanced
+                    Search</a>
+                </div>
               </div>
             </div>
           </div>
+
+
 
           <div id="grid" class="grid user-grid" aria-live="polite">
             <article class="card" v-for="user in users" :key="user.user_id">
@@ -173,27 +161,36 @@
               <div class="content">
                 <div class="row1">
                   <div>
-                    <div class="name">{{ user.nick_name }}</div>
+                    <div class="name d-flex flex-wrap align-items-center">{{ user.nick_name }}
+                      <ul class="nm-icons">
+                          <li><img src="/images/badges/animated/150X150px/PLUS.gif" alt="Message"
+                        class="rounded-circle" /></li>
+                        <li><img src="/images/badges/animated/150X150px/MEET-VERIFYED.gif" alt="Message"
+                        class="rounded-circle" /></li>
+                        <li><img src="/images/badges/animated/150X150px/FLAG-ANIMATION.gif" alt="Message"
+                        class="rounded-circle" /></li>
+                      </ul>
+                    </div>
                     <div class="meta">{{ user.town }} • {{ getDistance(user) }} miles </div>
                   </div>
                 </div>
-                <div class="chips">
+                <!--<div class="chips">
                   <span class="chip" v-for="interest in user.interests?.slice(0, 3)">{{ interest.interest_name }}</span>
                   <button class="chip" v-if="(user.interests?.length ?? 0) > 3" @click="openProfile(user)"> +{{
                     (user.interests?.length ?? 0) - 3 }} more</button>
-                </div>
+                </div>-->
                 <div class="actions">
                   <button class="action" data-action="message" aria-label="Message" @click="openChat(user)"><span
                       class="act-icon"><img src="/images/badges/animated/50X50px/chat.gif" alt="Message"
-                        class="rounded-circle" style="width: 15px; height: 15px; object-fit: cover" /></span>
+                        class="rounded-circle" style="width: 25px; height: 25px; object-fit: cover" /></span>
                     Message</button>
                   <button class="action" data-action="call" aria-label="Voice call"><span class="act-icon">
                       <img src="/images/badges/animated/50X50px/call.gif" alt="Message" class="rounded-circle"
-                        style="width: 15px; height: 15px; object-fit: cover" />
+                        style="width: 25px; height: 25px; object-fit: cover" />
                     </span>Call</button>
                   <button class="action primary" data-action="video" aria-label="Video call"><span class="act-icon"><img
                         src="/images/badges/animated/50X50px/video-call.gif" alt="Message" class="rounded-circle"
-                        style="width: 15px; height: 15px; object-fit: cover" />
+                        style="width: 25px; height: 25px; object-fit: cover" />
                     </span>Video</button>
                 </div>
               </div>

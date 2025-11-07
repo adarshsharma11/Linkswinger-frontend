@@ -7,14 +7,14 @@
     box-shadow: 0 8px 24px rgba(0, 0, 0, .45);
 }
 .quickbar .controls {
-    display: grid;
-    grid-template-columns: auto 1fr;
+    display: flex;
     gap: 10px;
-    align-items: center;
+    align-items: flex-start;
 }
 .quc-search {
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    width: 100%;
 }
 .quc-frm {
     grid-template-columns: auto 1.2fr 1fr 1fr auto auto;
@@ -331,9 +331,38 @@ select.select {
     padding: 30px;
 }
 /* End Popup */
-@media only screen and (min-width: 980px) and (max-width: 1531px) {
+ul.nm-icons {
+    display: flex;
+    flex-wrap:wrap;
+}
+
+ul.nm-icons li img {
+    width: 25px;
+}
+
+ul.nm-icons li {
+    margin: 0 3px;
+}
+ul.nm-icons {
+    display: flex;
+    flex-wrap: wrap;
+    margin-left: 10px;
+}
+
+@media only screen and (min-width: 1650px) {
 .user-grid .content {
     padding: 12px 12px 80px;
+}
+.user-grid .actions {
+    position: absolute;
+    left: 12px;
+    right: 12px;
+    bottom: 10px;
+}
+}
+@media only screen and (min-width: 980px) and (max-width:1650px) {
+.user-grid .content {
+    padding: 12px 12px 130px;
 }
 .user-grid .actions {
     position: absolute;

@@ -70,3 +70,9 @@ input.custom-theme-checkbox {
     width: auto;
   }
 }
+
+@media only screen and (max-width:767px){
+.landing-badges img {
+    height: 65px;
+}  
+}
