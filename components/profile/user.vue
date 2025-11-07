@@ -281,10 +281,9 @@
           <div class="card bg-black text-white">
             <div class="card-body">
               <h5 class="text-white mb-3">Meet Verification</h5>
-              <p><strong>Username:</strong> something_username</p>
-              <p><strong>Username:</strong> something_username</p>
-              <p><strong>Username:</strong> something_username</p>
-              <button class="btn btn-sm btn-outline-light mt-2">See more</button>
+              <p v-for="verification in verifications"><strong>{{ verification.nick_name }}:</strong>{{ verification.review  }}</p>
+              <button v-if="isMine() === false && is_verified === false && is_verify_loading === false" class="btn btn-sm btn-outline-light mt-2" @click="showVerificationAlert()">Verify</button>
+              <span class="btn-loader" v-if="is_verify_loading"></span>
             </div>
           </div>
         </div>
@@ -294,8 +293,8 @@
 </template>
 <script setup lang="ts">
 import { number } from 'yup';
-import type { UsersModel } from '~/composables/models';
-
+import { MeetVerificationsModel, type UsersModel } from '~/composables/models';
+import Swal from 'sweetalert2'
 interface Props {
   user_id: number
 }
@@ -304,7 +303,11 @@ const props = defineProps<Props>()
 const user_store = userStore()
 const login_store = useLoginStore();
 const is_logout_loading = ref(false);
+const is_verify_loading = ref(false);
+const verifications  = ref([] as MeetVerificationsModel.FetchVerifyResponseModel[])
 const userDetails = ref<UsersModel.ProfileDetailsResponseModel | null | undefined>(null);
+const is_verified = ref(false);
+
 
 if (isMine() === false) {
     const fetchUserDetails = async () => {
@@ -327,6 +330,37 @@ if (isMine() === false) {
   };
   fetchUserDetails();
 }
+const fetchMeetVerifications = async () => {
+    const api_url = getUrl(RequestURL.fetchMeetVerifications);
+    const { data: response, error: option_error } = await useFetch<SuccessError<MeetVerificationsModel.FetchVerifyResponseModel>>(
+      api_url,
+      {
+        method: "POST",
+        body: {
+          from_id: user_store.getLoginId,
+          to_id : Number(props.user_id ?? 0)
+        },
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    console.log(response.value)
+    if (response.value?.success) 
+    {
+      if(response.value.result)
+      {
+         is_verified.value = response.value.result[0].is_verified ?? false
+      }
+      return response.value.result
+    }
+    else
+    {
+      return []
+    }
+  };
+
+verifications.value = await fetchMeetVerifications() as MeetVerificationsModel.FetchVerifyResponseModel[]
 
 function getAge(dobStr: string): number {
   const dob = new Date(dobStr);
@@ -364,6 +398,63 @@ function getPartnerHeight(): string {
     let parseHeight = parseFloat(height)
     let feet_inch = convertToInches(parseHeight)
     return feet_inch.feet + 'ft ' + feet_inch.inches + 'in'
+  }
+}
+
+function showVerificationAlert()
+{
+  Swal.fire({
+  title: 'Please enter review',
+  input: 'text', // Specifies a text input field
+  inputPlaceholder: 'Type review here', // Placeholder text for the input
+  showCancelButton: true, // Displays a cancel button
+  inputValidator: (value : string) => { // Optional: input validation
+    let trim = value.trim()
+    if (trim.length === 0) {
+      return 'Please enter review';
+    }
+  }
+}).then((result) => {
+  if (result.isConfirmed) {
+     addVerification(result.value ?? '')
+  }
+});
+}
+
+
+async function addVerification(review:string) {
+ if (is_verify_loading.value) {
+    return;
+  }
+  const api_url = getUrl(RequestURL.addMeetVerification);
+  is_verify_loading.value = true;
+  const response = await $fetch<SuccessError<UsersModel.LoginResponseModel>>(
+    api_url,
+    {
+      method: "POST",
+      body: {
+        from_id: user_store.getLoginId,
+        to_id: Number(props.user_id ?? 0),
+        review : review
+      },
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+  is_verify_loading.value = false;
+  if (response.success) 
+  {
+   is_verified.value = true
+   let fetchmodel = new MeetVerificationsModel.FetchVerifyResponseModel()
+   fetchmodel.from_id =  user_store.getLoginId
+   fetchmodel.to_id =  Number(props.user_id ?? 0)
+   fetchmodel.review = review
+   verifications.value.push(fetchmodel)
+   showToastSuccess(response.message)
+  }
+  else {
+    showToastError("Logout failed. Please try again.");
   }
 }
 

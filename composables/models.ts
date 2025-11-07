@@ -33,7 +33,9 @@ export enum RequestURL {
   getChatMediaURL = "/getChatMediaURL",
   fetchCallCode = "/fetchCallCode",
   updateCallCode = "/updateCallCode",
-  validateCall = "/validateCall"
+  validateCall = "/validateCall",
+  addMeetVerification = "/addMeetVerification",
+  fetchMeetVerifications = "/fetchMeetVerifications"
 }
 
 export var online_user_ids : number[] = []
@@ -470,6 +472,31 @@ export namespace ChatsModel {
  
 }
 
+export namespace MeetVerificationsModel
+{
+    export class AddVerifyRequestModel {
+         from_id? : number
+         to_id? : number
+         review? : string
+    }
+    export class AddVerifyResponseModel {
+       
+    }
+    export class FetchVerifyRequestModel {
+         from_id? : number
+         to_id? : number
+    }
+    
+    export class FetchVerifyResponseModel
+    {
+         from_id? : number
+         to_id? : number
+         nick_name? : string
+         review? : string
+         is_public? : boolean
+         is_verified? : boolean
+    }
+}
 
 
   
