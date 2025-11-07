@@ -450,8 +450,20 @@ function sendTypingStatus(to_id: number) {
 }
 
 watch(messageTxt, () => {
+  const emojiRegex = /(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])/g;
+   messageTxt.value = messageTxt.value.replace(emojiRegex, '')
   onUserTyping(userDetails.value?.user_id ?? 0)
 });
+
+// const filterEmojis = (event:any) => {
+//   // Regex to match most common emoji Unicode ranges
+//   // This is a simplified example, a more comprehensive regex might be needed for full coverage
+  
+
+//   // Replace emojis with an empty string
+//   event.target.value = event.target.value.replace(emojiRegex, '');
+//   messageTxt.value = event.target.value;
+// };
 
 onMounted(() => {
 
