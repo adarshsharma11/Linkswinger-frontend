@@ -4,7 +4,7 @@
       <span class="text-black" :style="{ '--scroll-speed': scrollSpeed + 's' }" v-html="text"></span>
     </div>
   </div>
-  <CommonCallAlert>
+  <CommonCallAlert @accept="handleAccept" @reject="handleReject" :is_loading="is_loading" :alert-model="alertModel">
   </CommonCallAlert>
 </template>
 
@@ -47,6 +47,16 @@ const closeModal = async () => {
 onBeforeUnmount(() => {
   console.log('beforemount...strip')
 })
+
+function handleAccept() {
+  console.log('Accepted call!')
+     callAlertSub.hide()
+}
+
+function handleReject() {
+  console.log('Rejected call!')
+     callAlertSub.hide()
+}
 
 </script>
 

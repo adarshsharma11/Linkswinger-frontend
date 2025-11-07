@@ -92,6 +92,7 @@ export class CallAlertModel implements SocketEventModel {
   from_socket_id?: string;
   event_name?: string;
   nick_name?:string;
+  is_video? : boolean
 }
 
 
