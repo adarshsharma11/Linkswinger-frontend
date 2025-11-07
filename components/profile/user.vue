@@ -345,7 +345,6 @@ const fetchMeetVerifications = async () => {
         },
       }
     );
-    console.log(response.value)
     if (response.value?.success) 
     {
       if(response.value.result)
@@ -448,6 +447,7 @@ async function addVerification(review:string) {
    is_verified.value = true
    let fetchmodel = new MeetVerificationsModel.FetchVerifyResponseModel()
    fetchmodel.from_id =  user_store.getLoginId
+   fetchmodel.nick_name = login_store.getUserDetails?.nick_name
    fetchmodel.to_id =  Number(props.user_id ?? 0)
    fetchmodel.review = review
    verifications.value.push(fetchmodel)
