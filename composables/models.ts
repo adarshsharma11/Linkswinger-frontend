@@ -298,6 +298,7 @@ export namespace UsersModel {
     price?:number
      about_me?: string;
     is_photo_verified?: boolean;
+    is_meet_verified?: boolean;
     verified_photo?:string;
     assets_path?:string;
     media_path?:string;

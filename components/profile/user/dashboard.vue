@@ -163,11 +163,11 @@
                   <div>
                     <div class="name d-flex flex-wrap align-items-center">{{ user.nick_name }}
                       <ul class="nm-icons">
-                          <li><img src="/images/badges/animated/150X150px/PLUS.gif" alt="Message"
+                          <li><img :src="getmembershipIcon(user)" alt="Message"
                         class="rounded-circle" /></li>
-                        <li><img src="/images/badges/animated/150X150px/MEET-VERIFYED.gif" alt="Message"
+                        <li><img v-if="user.is_meet_verified" src="/images/badges/animated/150X150px/MEET-VERIFYED.gif" alt="Message"
                         class="rounded-circle" /></li>
-                        <li><img src="/images/badges/animated/150X150px/FLAG-ANIMATION.gif" alt="Message"
+                        <li><img v-if="user.is_photo_verified" src="/images/badges/animated/150X150px/FLAG-ANIMATION.gif" alt="Message"
                         class="rounded-circle" /></li>
                       </ul>
                     </div>
@@ -179,6 +179,9 @@
                   <button class="chip" v-if="(user.interests?.length ?? 0) > 3" @click="openProfile(user)"> +{{
                     (user.interests?.length ?? 0) - 3 }} more</button>
                 </div>-->
+                <div class="chips">
+                  <span style="color: white;">{{ user.profile_status }}</span>
+                </div>
                 <div class="actions">
                   <button class="action" data-action="message" aria-label="Message" @click="openChat(user)"><span
                       class="act-icon"><img src="/images/badges/animated/50X50px/chat.gif" alt="Message"
