@@ -94,7 +94,7 @@
                     •</small>
                   <small class="text-secondary">{{ userDetails?.profile_type }}</small>
                 </div>
-                <small class="text-secondary" v-if="(userDetails?.is_typing ?? false) === true">Typing...</small>
+               
               </div>
             </div>
             <div class="d-flex gap-2 chat-hd-btn">
@@ -150,7 +150,7 @@
             <div class="message-bubble message-outgoing ms-auto glow-red">Cool — speak later ✨<div class="message-time">
                 13:50 • Delivered</div>
             </div> -->
-            <div class="typing-animate">Typing<span></span><span></span><span></span></div>
+            <div class="typing-animate" v-if="(userDetails?.is_typing ?? false) === true">Typing<span></span><span></span><span></span></div>
           </div>
 
           <!-- Composer -->
