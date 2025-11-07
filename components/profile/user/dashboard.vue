@@ -140,9 +140,9 @@
                 <div class="qtitle">Quick Search</div>
                 <div style="display: flex; gap: 10px; align-items: flex-end;">
                   <input id="q" class="input" type="search" placeholder="Search by nickname…" style="width: 100%; min-width: 300px;" />
+                  <button class="btn primary" style="white-space: nowrap; height: fit-content;">Search</button>
                   <a class="btn primary" href="#" aria-label="Go to Advanced Search" data-bs-toggle="modal"
-                    data-bs-target="#advancesearchmodal" style="white-space: nowrap; height: fit-content;">Advanced
-                    Search</a>
+                    data-bs-target="#advancesearchmodal" style="white-space: nowrap; height: fit-content;">Advanced Search</a>
                 </div>
               </div>
             </div>
