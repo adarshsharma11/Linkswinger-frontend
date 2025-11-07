@@ -139,8 +139,8 @@
               <div class="quc-search">
                 <div class="qtitle">Quick Search</div>
                 <div style="display: flex; gap: 10px; align-items: flex-end;">
-                  <input id="q" class="input" type="search" placeholder="Search by nickname…" style="width: 100%; min-width: 300px;" />
-                  <button class="btn primary" style="white-space: nowrap; height: fit-content;">Search</button>
+                  <input id="q" v-model="searchTxt" class="input" type="search" placeholder="Search by nickname…" style="width: 100%; min-width: 300px;" />
+                  <button class="btn primary" style="white-space: nowrap; height: fit-content;" @click="searchTapped()">Search</button>
                   <a class="btn primary" href="#" aria-label="Go to Advanced Search" data-bs-toggle="modal"
                     data-bs-target="#advancesearchmodal" style="white-space: nowrap; height: fit-content;">Advanced Search</a>
                 </div>
@@ -791,6 +791,12 @@ async function fetchUsersList() {
     showToastError(response.message ?? "Something went wrong");
   }
 }
+
+async function searchTapped()
+{
+   await fetchUsersList()
+}
+
 
 function getDistance(user: UsersModel.ProfileDetailsResponseModel): string {
   let lat = login_store.getUserDetails?.latitude ?? 0
