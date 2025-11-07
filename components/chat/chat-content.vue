@@ -25,7 +25,7 @@
                 <div class="position-relative chat-item-left">
                   <img
                     class="rounded-circle bg-success text-white d-flex align-items-center justify-content-center fw-bold"
-                    style="width:40px;height:40px;" :src="getImagePath(historymodel)"></img>
+                    style="width:40px;height:40px;object-fit: cover; object-position: center;" :src="getImagePath(historymodel)"></img>
                   <span
                     class="position-absolute bottom-0 end-0 translate-middle rounded-circle bg-success border border-dark"
                     style="width:12px;height:12px;" v-if="onlineUsers.includes(historymodel.user_id ?? 0)"></span>
@@ -150,6 +150,7 @@
             <div class="message-bubble message-outgoing ms-auto glow-red">Cool — speak later ✨<div class="message-time">
                 13:50 • Delivered</div>
             </div> -->
+            <div class="typing-animate">Typing<span></span><span></span><span></span></div>
           </div>
 
           <!-- Composer -->

@@ -48,6 +48,11 @@
   cursor: pointer;
   gap: 0.5rem;
 }
+.photo-list li:hover {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border-color: #1e1e1e;
+    border-bottom-color: #e83c59;
+}
 .photo-list li:last-child {
   border-bottom: none;
 }
