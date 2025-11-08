@@ -61,13 +61,18 @@
   height: 40px;
   object-fit: contain;
 }
+.profile-header .dropdown .dropdown-menu  {
+    right: 0 !important;
+    left: auto !important;
+    transform: translate3d(0px, 47px, 0px) !important;
+} 
 @media (max-width: 991px) {
   .profile-grid {
     grid-template-columns: 1fr;
   }
   .info-grid {
     grid-template-columns: 1fr;
-  }
+  } 
 }
 
 .upload-area {
