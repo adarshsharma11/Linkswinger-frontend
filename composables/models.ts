@@ -13,6 +13,7 @@ export enum RequestURL {
   activateUser = "/activateUser",
   resendVerificationEmail = "/resendVerificationEmail",
   fetchTowns = "/fetchTowns",
+  fetchPostCodes = "/fetchPostCodes",
   getProfileDetails = "/getProfileDetails",
   logout = "/logout",
   forgotPassword = "/forgotPassword",
@@ -254,6 +255,20 @@ export namespace UsersModel {
   {
      town_id?: number;
      town?: string;
+      latitude?: number;
+      longitude?: number;
+
+  }
+   export class FetchPostCodeRequestModel
+  {
+     search?: string;
+  }
+  export class FetchPostCodeResponseModel
+  {
+     post_code_id?: number;
+     post_code?: string;
+     latitude?: number;
+      longitude?: number;
   }
    export class ProfileDetailsRequestModel {
     user_id?: number;
@@ -305,6 +320,11 @@ export namespace UsersModel {
     latitude?: number;
     longitude?: number;
     is_typing?: boolean;
+
+    post_code_id?: number;
+    post_code?: string
+    post_latitude?: number;
+    post_longitude?: number;
   }
 
   export class FetchMembershipRequestModel {

@@ -80,6 +80,12 @@
                             :close-on-select="true" placeholder="Select Town" :loading="is_town_loading"
                             @search-change="fetchTowns" label="town" track_by="town_id" />
                     </div>
+                    <div class="form-group ">
+                        <label>Post Code</label>
+                        <Multiselect v-model="selectedPostCode" :options="allPostCodes" :multiple="false"
+                            :close-on-select="true" placeholder="Select Post Code" :loading="is_post_code_loading"
+                            @search-change="fetchPostCodes" label="post_code" track_by="post_code_id" />
+                    </div>
 
                     <div class="form-group ">
                         <label>Height Unit</label>
@@ -265,14 +271,17 @@ const height_unit = ref(login_store.getUserDetails?.height_unit ?? 'cm');
 const sexualInterest = ref<UsersModel.InterestsModel[]>(login_store.getUserDetails?.interests ?? []);
 const meetPreference = ref<UsersModel.MeetPreferencesModel[]>(login_store.getUserDetails?.meet_perferences ?? []);
 const allTowns = ref<UsersModel.FetchTownResponseModel[]>([]);
+const allPostCodes = ref<UsersModel.FetchPostCodeResponseModel[]>([]);
 
 const selectedTown = ref<UsersModel.FetchTownResponseModel>({});
+const selectedPostCode = ref<UsersModel.FetchPostCodeResponseModel>({});
 const lookingFor = ref<string[]>(login_store.getUserDetails?.looking_for ?? []);
 
 const today = new Date();
 const maxDob = `${today.getFullYear() - 18}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
 
 const is_town_loading = ref(false);
+const is_post_code_loading = ref(false);
 const is_nick_loading = ref(false);
 const is_signup_loading = ref(false);
 const is_photo_uploading = ref(false);
@@ -319,6 +328,7 @@ const fetchOptions = async () => {
 }
 allOptions.value = await fetchOptions() as UsersModel.FetchOptionsResponseModel
 selectedTown.value = { town_id: login_store.getUserDetails?.town_id, town: login_store.getUserDetails?.town } as UsersModel.FetchTownResponseModel
+selectedPostCode.value = { post_code_id: login_store.getUserDetails?.post_code_id, post_code: login_store.getUserDetails?.post_code } as UsersModel.FetchPostCodeResponseModel
 getHeight();
 getPartnerHeight();
 
@@ -394,6 +404,31 @@ function fetchTowns(query: string) {
     });
 }
 
+function fetchPostCodes(query: string) {
+    if (query.length === 0) {
+        allPostCodes.value = []
+        return;
+    }
+    let api_url = getUrl(RequestURL.fetchPostCodes);
+    is_post_code_loading.value = true;
+    allPostCodes.value = []
+    $fetch<SuccessError<UsersModel.FetchPostCodeResponseModel>>(api_url, {
+        method: 'POST',
+        body: { "search": query },
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    }).then((response) => {
+
+        if (response.success) {
+            allPostCodes.value = (response.result ?? []) as UsersModel.FetchPostCodeResponseModel[]
+        }
+        is_post_code_loading.value = false;
+    }).catch((error) => {
+        is_post_code_loading.value = false;
+    });
+}
+
 function usersignup() {
     if (!checkValidation() || is_signup_loading.value) {
         return;
@@ -418,6 +453,7 @@ function usersignup() {
         partner_height = convertToCm(p_f_i).toString()
     }
     const town_id = selectedTown.value?.town_id ?? 0
+    const post_code_id = selectedPostCode.value?.post_code_id ?? 0
     let request_mdoel = {
         user_id: login_store.getUserDetails?.user_id,
         profile_type: profileType.value,
@@ -440,6 +476,7 @@ function usersignup() {
         height: height,
         partner_height: partner_height,
         town_id: town_id,
+        post_code_id : post_code_id,
         device_id: "",
         gender: gender.value,
         partner_gender: partner_gender.value,
@@ -591,6 +628,7 @@ function checkValidation(): boolean {
     const partnerfeetheight = partner_feet_height.value ?? ""
     const partnerinchheight = partner_inch_height.value ?? ""
     const town_id = selectedTown.value?.town_id ?? 0
+    const post_code_id = selectedPostCode.value?.post_code_id ?? 0
     if (dobVal.length === 0) {
         showalert('Please enter date of birth');
         // toDate((item.created_at ?? ''),'yyyy-MM-dd')?.toISOString().split('T')[0] }}
@@ -604,6 +642,10 @@ function checkValidation(): boolean {
 
     else if (town_id === 0) {
         showalert('Please select town');
+        return false;
+    }
+     else if (post_code_id === 0) {
+        showalert('Please select post code');
         return false;
     }
     else if (unit.length === 0) {
