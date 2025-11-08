@@ -11,7 +11,7 @@ body,
 /* ✅ Outer wrapper: full height and centered horizontally */
 .shorts-wrapper {
     height: 100vh;
-    width: 360px;
+    width: 100%;
     margin: 0 auto;
     overflow: hidden;
     display: flex;
@@ -45,16 +45,11 @@ body,
 }
 
 /* ✅ Frame simulates 9:16 Shorts card */
-.short-frame {
-    position: relative;
-    width: 360px;
-    height: 640px;
-    /* 9:16 ratio */
-    background: #000;
 
-    overflow: hidden;
+.shorts-wrapper {
+    width: 100%;
+    max-width: 1600px;
 }
-
 .short-video {
     width: 100%;
     height: 100%;
@@ -142,6 +137,17 @@ body,
         border-radius: 0;
         box-shadow: none;
     }
+ .short-frame {
+    position: relative;
+    width: 360px;
+    height: 640px;
+    /* 9:16 ratio */
+    background: #000;
+    overflow: hidden;
+}   
+.shorts-wrapper {
+    width: 360px;
+}
 }
 
 .vd-name {
@@ -153,12 +159,16 @@ body,
 
 .vd-img img {
     width: 100%;
+    object-fit: cover;
+    object-position: center;
+    height: 50px;
 }
 
 .vd-img {
     width: 50px;
     border-radius: 50px;
     overflow: hidden;
+    height: 50px;
 }
 
 .vdo-name {
@@ -173,8 +183,13 @@ body,
 .short-container .short-frame {
     height: 100%;
     width: 100%;
-    max-width: 400px;
+    max-width: 100%;
 }
+/*.short-container .short-frame {
+    height: 100%;
+    width: 100%;
+    max-width: 400px;
+}*/
 .short-frame .video-js {
     padding-top: 0 !important;
     height: 100% !important;

@@ -494,17 +494,17 @@
       <!-- MOBILE NAV -->
       <nav class="mobile-dashboard-nav" id="mobileNav" :hidden="!isMobile">
         <a href="#home" data-route="home" class="nav-item" :class="{ active: activeNav === 'home' }"
-          @click.prevent="setActiveNav('home')">🏠<!--<small>Home</small>--></a>
+          @click.prevent="setActiveNav('home')"><img src="/images/badges/animated/50X50px/home.gif" alt="Home" class="badge-icon" /></a>
         <a href="#search" data-route="search" class="nav-item" :class="{ active: activeNav === 'search' }"
-          @click.prevent="setActiveNav('search')">🔍<!--<small>Search</small>--></a>
-        <a href="#upload" id="mUpload" @click.prevent="fakeUpload" class="nav-item">＋<!--<small>Post</small>--></a>
+          @click.prevent="setActiveNav('search')"><img src="/images/badges/animated/50X50px/search.gif" alt="Search" class="badge-icon" /></a>
+        <a href="#upload" id="mUpload" @click.prevent="fakeUpload" class="nav-item"><img src="/images/badges/animated/50X50px/upload-media.gif" alt="Post" class="badge-icon" /></a>
         <a href="#friends" data-route="friends" class="nav-item" :class="{ active: activeNav === 'friends' }"
-          @click.prevent="setActiveNav('messages')">👥<!--<small>My Friends</small>--></a>
+          @click.prevent="setActiveNav('friends')"><img src="/images/badges/animated/50X50px/my-friends.gif" alt="My Friends" class="badge-icon" /></a>
         <a href="#notifications" data-route="notifications" class="nav-item"
           :class="{ active: activeNav === 'notifications' }"
-          @click.prevent="setActiveNav('notifications')">🔔<!--<small>My Friends</small>--></a>
+          @click.prevent="setActiveNav('notifications')"><img src="/images/badges/animated/50X50px/notification.gif" alt="Notifications" class="badge-icon" /></a>
         <a href="#messages" data-route="messages" class="nav-item" :class="{ active: activeNav === 'messages' }"
-          @click.prevent="setActiveNav('messages')">💬<!--<small>Chats</small>--></a>
+          @click.prevent="setActiveNav('messages')"><img src="/images/badges/animated/50X50px/chat.gif" alt="Chats" class="badge-icon" /></a>
       </nav>
     </div>
     <div class="overlay-sidebar" :class="{ active: isSidebarOpen }"></div>
