@@ -1,5 +1,15 @@
 <template>
   <div class="container py-4">
+    <!-- Mobile Back Button -->
+    <div class="d-lg-none mb-3">
+      <button class="btn btn-sm btn-dark border-secondary" @click="goBack">
+        <svg viewBox="0 0 24 24" class="h-4 w-4" fill="currentColor">
+          <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+        </svg>
+        Back
+      </button>
+    </div>
+
     <div class="row g-3">
       <!-- Sidebar -->
       <aside class="col-12 col-lg-4 col-xl-3">
@@ -78,6 +88,12 @@
           <!-- Header -->
           <div class="d-flex justify-content-between align-items-center border-bottom border-secondary p-3 chat-header">
             <div class="d-flex align-items-center gap-3 chat-hd">
+              <!-- Desktop Back Button -->
+              <button class="btn btn-sm btn-dark border-secondary d-none d-lg-inline-flex" @click="goBack">
+                <svg viewBox="0 0 24 24" class="h-4 w-4" fill="currentColor">
+                  <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+                </svg>
+              </button>
               <div class="position-relative">
                 <img
                   class="rounded-circle bg-danger text-white d-flex align-items-center justify-content-center fw-bold"
@@ -141,10 +157,10 @@
             <!-- <div class="message-bubble message-incoming">We loved your profile pics. Fancy a chat tonight?<div
                 class="message-time">13:43</div>
             </div>
-            <div class="message-bubble message-outgoing ms-auto glow-red">Thanks! We’re around after 9pm. Video call ok?
+            <div class="message-bubble message-outgoing ms-auto glow-red">Thanks! We're around after 9pm. Video call ok?
               <div class="message-time">13:47 • Sent</div>
             </div>
-            <div class="message-bubble message-incoming">Perfect. We’ll ping you here.<div class="message-time">13:49
+            <div class="message-bubble message-incoming">Perfect. We'll ping you here.<div class="message-time">13:49
               </div>
             </div>
             <div class="message-bubble message-outgoing ms-auto glow-red">Cool — speak later ✨<div class="message-time">
@@ -288,6 +304,10 @@ if (to_id !== 0) {
     }
   };
   fetchUserDetails();
+}
+
+function goBack() {
+  router.back()
 }
 
 function showTypingIndicator(from_id: number) {

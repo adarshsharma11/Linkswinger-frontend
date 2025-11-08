@@ -11,7 +11,7 @@
               <button v-if="isMine()"  id="settingsMenuMobile"
                 class="btn p-0 border-0 bg-transparent d-flex flex-column align-items-center text-white mr-2"
                 data-bs-toggle="dropdown" aria-expanded="false" >
-                <img src="/images/badges/settings.png" alt="Settings" class="rounded-circle"
+                <img src="/images/badges/animated/50X50px/settings.gif" alt="Settings" class="rounded-circle"
                   style="width: 40px; height: 40px; object-fit: cover" />
                 <small>Settings</small>
               </button>
@@ -48,6 +48,14 @@
                     <span class="text-white">Upload Media</span>
                   </button>
                 </li>
+                  <li>
+                  <button class="dropdown-item text-white d-flex align-items-center"
+                    @click="navigateTo(`/profile-settings`)">
+                    <img src="/images/badges/animated/50X50px/profile-settings.gif" alt="Verify" class="rounded-circle me-2"
+                      style="width: 30px; height: 30px; object-fit: cover" />
+                    <span class="text-white">Profile Settings</span>
+                  </button>
+                </li>
                 <li>
                   <button class="dropdown-item text-white d-flex align-items-center" @click="logout"
                     :disabled="is_logout_loading">
@@ -60,7 +68,7 @@
               </ul>
               <div class="ml-2">
                 <nuxt-link to="/dashboard" class="d-flex flex-column align-items-center">
-                  <img src="/images/badges/home.png" alt="Home" class="badge-icon" />
+                  <img src="/images/badges/animated/50X50px/home.gif" alt="Home" class="badge-icon" />
                   <small>Home</small>
                 </nuxt-link>
               </div>
@@ -97,7 +105,7 @@
               <button v-if="isMine()" id="settingsMenu"
                 class="btn p-0 border-0 bg-transparent d-flex flex-column align-items-center text-white"
                 data-bs-toggle="dropdown" aria-expanded="false">
-                <img src="/images/badges/settings.png" alt="Settings" class="rounded-circle"
+                <img src="/images/badges/animated/50X50px/settings.gif" alt="Settings" class="rounded-circle"
                   style="width: 50px; height: 50px; object-fit: cover" />
                 <small>Settings</small>
               </button>
@@ -132,6 +140,14 @@
                     <img src="/images/badges/animated/50X50px/upload-media.gif" alt="Verify" class="rounded-circle me-2"
                       style="width: 30px; height: 30px; object-fit: cover" />
                     <span class="text-white">Upload Media</span>
+                  </button>
+                </li>
+                <li>
+                  <button class="dropdown-item text-white d-flex align-items-center"
+                    @click="navigateTo(`/profile-settings`)" v-if="isMine()">
+                    <img src="/images/badges/animated/50X50px/profile-settings.gif" alt="Verify" class="rounded-circle me-2"
+                      style="width: 30px; height: 30px; object-fit: cover" />
+                    <span class="text-white">Profile Settings</span>
                   </button>
                 </li>
                 <li>
@@ -189,7 +205,7 @@
           <!-- Right: Empty spacer (desktop only) -->
           <div class="col-md-3 d-md-block d-none">
             <nuxt-link to="/dashboard" class="d-flex flex-column align-items-center">
-              <img src="/images/badges/home.png" alt="Home" class="badge-icon" />
+              <img src="/images/badges/animated/50X50px/home.gif" alt="Home" class="badge-icon" />
               <small>Home</small>
             </nuxt-link>
           </div>
