@@ -47,10 +47,12 @@
               class="sidebar-ic" :src="`/images/badges/animated/50X50px/video-call.gif`" /></span>New Videos</a>
         <a href="#meet-events" data-route="meet-events" @click.prevent="setActiveNav('meet-events')"
           :class="{ active: activeNav === 'meet-events' }" class="text-white"><span class="icon"><!--📅--> <img
-              class="sidebar-ic" :src="`/images/badges/animated/150X150px/Meet-Event-Calendar-150x150px.png`" /></span>Meet Events</a>
+              class="sidebar-ic"
+              :src="`/images/badges/animated/150X150px/Meet-Event-Calendar-150x150px.png`" /></span>Meet Events</a>
         <a href="#club-events" data-route="club-events" @click.prevent="setActiveNav('club-events')"
           :class="{ active: activeNav === 'club-events' }" class="text-white"><span class="icon"><!--🏷--> <img
-              class="sidebar-ic" :src="`/images/badges/animated/150X150px/CLUB-events-150x150px.png`" /> </span>Club Events</a>
+              class="sidebar-ic" :src="`/images/badges/animated/150X150px/CLUB-events-150x150px.png`" /> </span>Club
+          Events</a>
         <a href="#video-roullet" data-route="video-roullet" @click.prevent="setActiveNav('video-roullet')"
           :class="{ active: activeNav === 'video-roullet' }" class="text-white"><span class="icon"> <img
               class="sidebar-ic" :src="`/images/badges/animated/50X50px/video-roulette-available.gif`" /></span>Video
@@ -58,7 +60,7 @@
         <a href="#live" data-route="live" @click.prevent="setActiveNav('live')"
           :class="{ active: activeNav === 'live' }" class="text-white"><span class="icon"> <img class="sidebar-ic"
               :src="`/images/badges/animated/50X50px/live-oncam.gif`" /></span>Live / On Cam</a>
-        <a href="#"  class="text-white"><span class="icon"> <img class="sidebar-ic"
+        <a href="#" class="text-white"><span class="icon"> <img class="sidebar-ic"
               :src="`/images/badges/animated/150X150px/19.gif`" /></span>Logout</a>
       </nav>
       <div class="spacer" />
@@ -139,10 +141,13 @@
               <div class="quc-search">
                 <div class="qtitle">Quick Search</div>
                 <div style="display: flex; gap: 10px; align-items: flex-end;">
-                  <input id="q" v-model="searchTxt" class="input" type="search" placeholder="Search by nickname…" style="width: 100%; min-width: 300px;" />
-                  <button class="btn primary" style="white-space: nowrap; height: fit-content;" @click="searchTapped()">Search</button>
+                  <input id="q" v-model="searchTxt" class="input" type="search" placeholder="Search by nickname…"
+                    style="width: 100%; min-width: 300px;" />
+                  <button class="btn primary" style="white-space: nowrap; height: fit-content;"
+                    @click="searchTapped()">Search</button>
                   <a class="btn primary" href="#" aria-label="Go to Advanced Search" data-bs-toggle="modal"
-                    data-bs-target="#advancesearchmodal" style="white-space: nowrap; height: fit-content;">Advanced Search</a>
+                    data-bs-target="#advancesearchmodal" style="white-space: nowrap; height: fit-content;">Advanced
+                    Search</a>
                 </div>
               </div>
             </div>
@@ -163,12 +168,12 @@
                   <div>
                     <div class="name d-flex flex-wrap align-items-center">{{ user.nick_name }}
                       <ul class="nm-icons">
-                          <li><img :src="getmembershipIcon(user)" alt="Message"
-                        class="rounded-circle" /></li>
-                        <li><img v-if="user.is_meet_verified" src="/images/badges/animated/150X150px/MEET-VERIFYED.gif" alt="Message"
-                        class="rounded-circle" /></li>
-                        <li><img v-if="user.is_photo_verified" src="/images/badges/animated/150X150px/FLAG-ANIMATION.gif" alt="Message"
-                        class="rounded-circle" /></li>
+                        <li><img :src="getmembershipIcon(user)" alt="Message" class="rounded-circle" /></li>
+                        <li><img v-if="user.is_meet_verified" src="/images/badges/animated/150X150px/MEET-VERIFYED.gif"
+                            alt="Message" class="rounded-circle" /></li>
+                        <li><img v-if="user.is_photo_verified"
+                            src="/images/badges/animated/150X150px/FLAG-ANIMATION.gif" alt="Message"
+                            class="rounded-circle" /></li>
                       </ul>
                     </div>
                     <div class="meta">{{ user.town }} • {{ getDistance(user) }} miles </div>
@@ -494,17 +499,22 @@
       <!-- MOBILE NAV -->
       <nav class="mobile-dashboard-nav" id="mobileNav" :hidden="!isMobile">
         <a href="#home" data-route="home" class="nav-item" :class="{ active: activeNav === 'home' }"
-          @click.prevent="setActiveNav('home')"><img src="/images/badges/animated/50X50px/home.gif" alt="Home" class="badge-icon" /></a>
+          @click.prevent="setActiveNav('home')"><img src="/images/badges/animated/50X50px/home.gif" alt="Home"
+            class="badge-icon" /></a>
         <a href="#search" data-route="search" class="nav-item" :class="{ active: activeNav === 'search' }"
-          @click.prevent="setActiveNav('search')"><img src="/images/badges/animated/50X50px/search.gif" alt="Search" class="badge-icon" /></a>
-        <a href="#upload" id="mUpload" @click.prevent="fakeUpload" class="nav-item"><img src="/images/badges/animated/50X50px/upload-media.gif" alt="Post" class="badge-icon" /></a>
+          @click.prevent="setActiveNav('search')"><img src="/images/badges/animated/50X50px/search.gif" alt="Search"
+            class="badge-icon" /></a>
+        <a href="#upload" id="mUpload" @click.prevent="fakeUpload" class="nav-item"><img
+            src="/images/badges/animated/50X50px/upload-media.gif" alt="Post" class="badge-icon" /></a>
         <a href="#friends" data-route="friends" class="nav-item" :class="{ active: activeNav === 'friends' }"
-          @click.prevent="setActiveNav('friends')"><img src="/images/badges/animated/50X50px/my-friends.gif" alt="My Friends" class="badge-icon" /></a>
+          @click.prevent="setActiveNav('friends')"><img src="/images/badges/animated/50X50px/my-friends.gif"
+            alt="My Friends" class="badge-icon" /></a>
         <a href="#notifications" data-route="notifications" class="nav-item"
-          :class="{ active: activeNav === 'notifications' }"
-          @click.prevent="setActiveNav('notifications')"><img src="/images/badges/animated/50X50px/notification.gif" alt="Notifications" class="badge-icon" /></a>
+          :class="{ active: activeNav === 'notifications' }" @click.prevent="setActiveNav('notifications')"><img
+            src="/images/badges/animated/50X50px/notification.gif" alt="Notifications" class="badge-icon" /></a>
         <a href="#messages" data-route="messages" class="nav-item" :class="{ active: activeNav === 'messages' }"
-          @click.prevent="setActiveNav('messages')"><img src="/images/badges/animated/50X50px/chat.gif" alt="Chats" class="badge-icon" /></a>
+          @click.prevent="setActiveNav('messages')"><img src="/images/badges/animated/50X50px/chat.gif" alt="Chats"
+            class="badge-icon" /></a>
       </nav>
     </div>
     <div class="overlay-sidebar" :class="{ active: isSidebarOpen }"></div>
@@ -585,28 +595,40 @@
 
         <!-- Body -->
         <div class="modal-body ad-sc-body">
-          <form id="advForm">
+          <div id="advForm">
             <div class="group-fd">
               <div class="label">I am looking for</div>
               <div class="chips">
-                <label class="chip"><input type="checkbox" name="looking_for" value="Man"> Man</label>
-                <label class="chip"><input type="checkbox" name="looking_for" value="Woman"> Woman</label>
-                <label class="chip"><input type="checkbox" name="looking_for" value="Couple MF"> Couple MF</label>
-                <label class="chip"><input type="checkbox" name="looking_for" value="Couple MM"> Couple MM</label>
-                <label class="chip"><input type="checkbox" name="looking_for" value="Couple FF"> Couple FF</label>
-                <label class="chip"><input type="checkbox" name="looking_for" value="TS/TV"> TS/TV</label>
+                <label class="chip"><input type="checkbox" v-model="lookingFor" name="looking_for" value="Man">
+                  Man</label>
+                <label class="chip"><input type="checkbox" v-model="lookingFor" name="looking_for" value="Woman">
+                  Woman</label>
+                <label class="chip"><input type="checkbox" v-model="lookingFor" name="looking_for" value="Couple MF">
+                  Couple MF</label>
+                <label class="chip"><input type="checkbox" v-model="lookingFor" name="looking_for" value="Couple MM">
+                  Couple MM</label>
+                <label class="chip"><input type="checkbox" v-model="lookingFor" name="looking_for" value="Couple FF">
+                  Couple FF</label>
+                <label class="chip"><input type="checkbox" v-model="lookingFor" name="looking_for" value="TS/TV">
+                  TS/TV</label>
               </div>
             </div>
 
             <div class="group-fd">
               <div class="label">Who wants to meet</div>
               <div class="chips">
-                <label class="chip"><input type="checkbox" name="who_meets" value="Man"> Man</label>
-                <label class="chip"><input type="checkbox" name="who_meets" value="Woman"> Woman</label>
-                <label class="chip"><input type="checkbox" name="who_meets" value="Couple MF"> Couple MF</label>
-                <label class="chip"><input type="checkbox" name="who_meets" value="Couple MM"> Couple MM</label>
-                <label class="chip"><input type="checkbox" name="who_meets" value="Couple FF"> Couple FF</label>
-                <label class="chip"><input type="checkbox" name="who_meets" value="TS/TV"> TS/TV</label>
+                <label class="chip"><input type="checkbox" v-model="whoMeets" name="who_meets" value="Man"
+                    :disabled="lookingFor.length === 0"> Man</label>
+                <label class="chip"><input type="checkbox" v-model="whoMeets" name="who_meets" value="Woman"
+                    :disabled="lookingFor.length === 0"> Woman</label>
+                <label class="chip"><input type="checkbox" v-model="whoMeets" name="who_meets" value="Couple MF"
+                    :disabled="lookingFor.length === 0"> Couple MF</label>
+                <label class="chip"><input type="checkbox" v-model="whoMeets" name="who_meets" value="Couple MM"
+                    :disabled="lookingFor.length === 0"> Couple MM</label>
+                <label class="chip"><input type="checkbox" v-model="whoMeets" name="who_meets" value="Couple FF"
+                    :disabled="lookingFor.length === 0"> Couple FF</label>
+                <label class="chip"><input type="checkbox" v-model="whoMeets" name="who_meets" value="TS/TV"
+                    :disabled="lookingFor.length === 0"> TS/TV</label>
               </div>
             </div>
 
@@ -614,12 +636,12 @@
               <div class="label">Age range</div>
               <div class="row">
                 <div class="col-md-6">
-                  <input class="input" type="number" name="age_min" min="18" max="99" value="18"
-                    placeholder="Min (18)" />
+                  <input class="input" type="number" name="age_min" v-model.number="ageMin" @blur="onAgeBlur()"
+                    :min="MIN_AGE" :max="MAX_AGE" placeholder="Min (18)" />
                 </div>
                 <div class="col-md-6">
-                  <input class="input" type="number" name="age_max" min="18" max="99" value="99"
-                    placeholder="Max (99)" />
+                  <input class="input" type="number" name="age_max" v-model.number="ageMax" @blur="onAgeBlur()"
+                    :min="MIN_AGE" :max="MAX_AGE" placeholder="Max (99)" />
                 </div>
               </div>
               <div class="hint">Allowed: 18 to 99.</div>
@@ -628,13 +650,16 @@
             <div class="group-fd">
               <div class="label">Near town / postcode</div>
               <div class="inline-check"><label class="toggle"><input type="checkbox" id="use_my_location"
-                    name="use_my_location"> 📍 Use my location</label></div>
+                    name="use_my_location" v-model="current_loc"> 📍 Use my location</label></div>
               <div class="row">
                 <div class="col-md-6 pb-2">
-                  <input class="input" type="text" name="near" placeholder="Enter town or postcode" />
+                  <!-- <input class="input" type="text" name="near" placeholder="Enter town or postcode" /> -->
+                  <Multiselect class="input" v-model="selectedTown" :options="allTowns" :multiple="false"
+                    :close-on-select="true" placeholder="Enter town or postcode" :loading="is_town_loading"
+                    @search-change="fetchTownsPostCodes" label="name" track_by="id" />
                 </div>
                 <div class="col-md-6 pb-2">
-                  <select class="select" name="distance">
+                  <select class="select" v-model="radius" name="distance">
                     <option value="0.25">Within ¼ mile</option>
                     <option value="0.5">Within ½ mile</option>
                     <option value="1">Within 1 mile</option>
@@ -656,25 +681,53 @@
             <div class="group-fd">
               <div class="label">More options</div>
               <div class="toggles">
-                <label class="toggle"><input type="checkbox" name="meet_today"> Looking to meet today</label>
-                <label class="toggle"><input type="checkbox" name="photo_verified"> Photo verified</label>
-                <label class="toggle"><input type="checkbox" name="meet_verified"> Meet verified</label>
-                <label class="toggle"><input type="checkbox" name="public_photo"> With public photo/video</label>
-                <label class="toggle"><input type="checkbox" name="online_now"> Online now</label>
-                <label class="toggle"><input type="checkbox" name="recently_active"> Recently active</label>
-                <label class="toggle"><input type="checkbox" name="premium_only"> Premium members only</label>
-                <label class="toggle"><input type="checkbox" name="has_description"> Has profile description</label>
-                <label class="toggle"><input type="checkbox" name="has_gallery"> With media gallery</label>
+                <label class="toggle">
+                  <input type="checkbox" v-model="lookingToMeetToday" name="meet_today" />
+                  Looking to meet today
+                </label>
+                <label class="toggle">
+                  <input type="checkbox" v-model="is_photo_verified" name="photo_verified" />
+                  Photo verified
+                </label>
+                <label class="toggle">
+                  <input type="checkbox" v-model="is_meet_verified" name="meet_verified" />
+                  Meet verified
+                </label>
+                <label class="toggle">
+                  <input type="checkbox" v-model="with_public_media" name="public_photo" />
+                  With public photo/video
+                </label>
+                <label class="toggle">
+                  <input type="checkbox" v-model="premium_only" name="premium_only" />
+                  Premium members only
+                </label>
+                <label class="toggle">
+                  <input type="checkbox" v-model="has_profile_description" name="has_description" />
+                  Has profile description
+                </label>
+                <label class="toggle">
+                  <input type="checkbox" v-model="with_media_gallery" name="has_gallery" />
+                  With media gallery
+                </label>
+                <label class="toggle">
+                  <input type="checkbox" v-model="recently_active" name="recently_active" />
+                  Recently active
+                </label>
+                <label class="toggle">
+                  <input type="checkbox" v-model="is_online" name="online_now" />
+                  Online now
+                </label>
               </div>
+
             </div>
 
             <div class="actions">
-              <button type="submit" class="btn primary">Search</button>
-              <button type="reset" class="btn ghost">Reset</button>
-              <button type="button" class="btn" onclick="alert('Search saved!')">💾 Save this search</button>
+              <button type="submit" class="btn primary" @click="fetchUsersList(true)">Search</button>
+              <button type="reset" class="btn ghost" @click="resetSearch">Reset</button>
+              <button type="button" class="btn" @click="saveSearch">💾 Save this search</button>
             </div>
             <div class="footnote">Tip: You can tick multiple options in the lists above.</div>
-          </form>
+          </div>
         </div>
       </div>
     </div>
@@ -684,6 +737,8 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { UsersModel } from '~/composables/models'
+import Multiselect from 'vue-multiselect';
+import 'vue-multiselect/dist/vue-multiselect.css';
 const id_store = idStore()
 const route = useRoute()
 const router = useRouter()
@@ -697,6 +752,54 @@ const users = ref([] as UsersModel.ProfileDetailsResponseModel[])
 const eventBus = useMittEmitter()
 const onlineUsers = ref([] as number[])
 const isWSConnected = ref(false);
+
+const lookingFor = ref<Array<string>>([])   // binds to "I am looking for"
+const whoMeets = ref<Array<string>>([])   // binds to "Who wants to meet"
+
+// constants
+const MIN_AGE = 18
+const MAX_AGE = 99
+
+// reactive age values: use numbers (default to 18/99 as per your UI)
+const ageMin = ref<number | null>(18)
+const ageMax = ref<number | null>(99)
+
+const selectedTown = ref<UsersModel.FetchTownPostCodesResponseModel | null>(null);
+const allTowns = ref<UsersModel.FetchTownPostCodesResponseModel[]>([]);
+const is_town_loading = ref(false);
+
+// radius selected from dropdown (as string)
+const radius = ref<string | null>('0.25')
+
+const current_loc = ref(false)
+const lookingToMeetToday = ref(false) // still sent separately
+const is_photo_verified = ref(false)
+const is_meet_verified = ref(false)
+const with_public_media = ref(false)
+const with_media_gallery = ref(false)
+const has_profile_description = ref(false)
+const recently_active = ref(false)
+const premium_only = ref(false)
+const is_online = ref(false)
+const STORAGE_KEY = 'filters_search_state'
+const { $bootstrap } = useNuxtApp();
+var advanceModelSub: any = null
+const latitude = ref<number | null>(null)
+const longitude = ref<number | null>(null)
+// Computed numeric version for backend payload
+var radiusMiles = computed<number | null>(() => {
+  if (!radius.value) return null
+
+  // handle "1500+"
+  if (radius.value.endsWith('+')) {
+    return parseFloat(radius.value) || 1500
+  }
+
+  // convert normal values
+  const num = parseFloat(radius.value)
+  return Number.isNaN(num) ? null : num
+})
+
 const routeTitle = computed(() => {
   const path = route.path.split('/').pop() || 'home'
   return path.charAt(0).toUpperCase() + path.slice(1)
@@ -745,6 +848,8 @@ function checkMobile() {
   isMobile.value = window.innerWidth <= 980
 }
 
+
+
 const fetchallusers = async () => {
   const api_url = getUrl(RequestURL.fetchallusers);
   const { data: users, error: cat_error } = await useFetch<SuccessError<UsersModel.ProfileDetailsResponseModel>>(api_url, {
@@ -753,7 +858,8 @@ const fetchallusers = async () => {
     body: {
       page: 0,
       search: searchTxt.value,
-      user_id: login_store.getUserDetails?.user_id ?? 0
+      user_id: login_store.getUserDetails?.user_id ?? 0,
+     
     },
     headers: {
       "content-type": "application/json"
@@ -769,15 +875,48 @@ if (hash === '#userlist') {
   users.value = await fetchallusers() as UsersModel.ProfileDetailsResponseModel[]
 }
 
-async function fetchUsersList() {
+async function fetchUsersList(fromAdvance = false) {
   const api_url = getUrl(RequestURL.fetchallusers);
-  let response = await $fetch<SuccessError<UsersModel.LoginRequestModel>>(api_url, {
-    method: 'POST',
-    body: {
+  let latitude_r =  selectedTown.value?.latitude ?? latitude.value ?? 0
+  let longitude_r = selectedTown.value?.longitude ?? longitude.value ?? 0
+  let radius_value = radiusMiles.value ?? 0
+
+  if (latitude_r === 0 && longitude_r === 0) {
+    radius_value = 0
+  }
+  var body = {
+     page: 0,
+      search: searchTxt.value,
+      user_id: login_store.getUserDetails?.user_id ?? 0,
+  }
+  if (fromAdvance)
+  {
+     body =  {
       page: 0,
       search: searchTxt.value,
-      user_id: login_store.getUserDetails?.user_id ?? 0
-    },
+      user_id: login_store.getUserDetails?.user_id ?? 0,
+      looking_for: lookingFor.value,
+      who_wants_to_meet: whoMeets.value,
+      age_min: ageMin.value ?? MIN_AGE,
+      age_max: ageMax.value ?? MAX_AGE, 
+      latitude: latitude_r,
+      longitude: longitude_r,
+      radius: radius_value,
+      looking_to_meet_today: lookingToMeetToday.value,
+      is_photo_verified: is_photo_verified.value,
+      is_meet_verified: is_meet_verified.value,
+      with_public_media: with_public_media.value,
+      with_media_gallery: with_media_gallery.value,
+      has_profile_description: has_profile_description.value,
+      recently_active: recently_active.value,
+      premium_only: premium_only.value,
+      is_online: is_online.value,
+    }
+  }
+  advanceModelSub.hide()
+  let response = await $fetch<SuccessError<UsersModel.LoginRequestModel>>(api_url, {
+    method: 'POST',
+    body: body,
     headers: {
       'Content-Type': 'application/json'
     }
@@ -786,17 +925,164 @@ async function fetchUsersList() {
   if (response.success) {
     users.value = response.result as UsersModel.ProfileDetailsResponseModel[];
     checkuseronline()
+    
   }
   else {
+    users.value = []
     showToastError(response.message ?? "Something went wrong");
   }
 }
 
-async function searchTapped()
-{
-   await fetchUsersList()
+function fetchTownsPostCodes(query: string) {
+  if (query.length === 0) {
+    allTowns.value = []
+    return;
+  }
+  let api_url = getUrl(RequestURL.fetchTownsPostCodes);
+  is_town_loading.value = true;
+  allTowns.value = []
+  $fetch<SuccessError<UsersModel.SignUpResponseModel>>(api_url, {
+    method: 'POST',
+    body: { "search": query },
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  }).then((response) => {
+
+    if (response.success) {
+      allTowns.value = (response.result ?? []) as UsersModel.FetchTownPostCodesResponseModel[]
+    }
+    is_town_loading.value = false;
+  }).catch((error) => {
+    is_town_loading.value = false;
+  });
 }
 
+async function searchTapped() {
+  await fetchUsersList()
+}
+
+watch(lookingFor, () => {
+
+  if (lookingFor.value.length === 0) {
+    whoMeets.value = []
+  }
+
+});
+watch(current_loc, () => {
+
+  if (current_loc.value) {
+    selectedTown.value = null
+    navigator.geolocation.getCurrentPosition(
+    (position) => {
+      latitude.value = position.coords.latitude
+      longitude.value = position.coords.longitude
+    },
+    (err) => {
+      current_loc.value = false
+      latitude.value = null
+      longitude.value = null
+    }
+  )
+  }
+
+});
+watch(selectedTown, () => {
+
+  if (selectedTown.value !== null) {
+    current_loc.value = false
+    latitude.value = null
+     longitude.value = null
+    
+  }
+
+});
+
+
+function resetSearch() {
+  localStorage.removeItem(STORAGE_KEY)
+
+  lookingFor.value = []
+  whoMeets.value = []
+
+  ageMin.value = MIN_AGE
+  ageMax.value = MAX_AGE
+
+  latitude.value = null
+  longitude.value = null
+  selectedTown.value = null
+  radius.value = '0.25'
+  lookingToMeetToday.value = false
+  is_photo_verified.value = false
+  is_meet_verified.value = false
+  with_public_media.value = false
+  with_media_gallery.value = false
+  has_profile_description.value = false
+  recently_active.value = false
+  premium_only.value = false
+  is_online.value = false
+  current_loc.value = false
+
+}
+
+function saveSearch() {
+  const payload = {
+    looking_for: lookingFor.value,
+    who_wants_to_meet: whoMeets.value,
+    age_min: ageMin.value,
+    age_max: ageMax.value,
+    townPostCode: selectedTown.value,
+    latitude: latitude.value ?? null,
+    longitude: longitude.value ?? null,
+    radius: radius.value,
+    looking_to_meet_today: lookingToMeetToday.value,
+    is_photo_verified: is_photo_verified.value,
+    is_meet_verified: is_meet_verified.value,
+    with_public_media: with_public_media.value,
+    with_media_gallery: with_media_gallery.value,
+    has_profile_description: has_profile_description.value,
+    recently_active: recently_active.value,
+    premium_only: premium_only.value,
+    is_online: is_online.value,
+  }
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+}
+
+// optional: if user clears the field, we'll set null so buildPayload can omit it
+// helper: clamp a value and ensure integer
+function clampInt(val: number, min = MIN_AGE, max = MAX_AGE) {
+  const n = Math.trunc(Number(val) || 0)
+  if (Number.isNaN(n)) return min
+  return Math.min(Math.max(n, min), max)
+}
+
+// called on blur to enforce allowed range and integerness
+function onAgeBlur() {
+  if (ageMin.value != null) ageMin.value = clampInt(ageMin.value)
+  if (ageMax.value != null) ageMax.value = clampInt(ageMax.value)
+  // ensure min <= max; if not, adjust min to <= max
+  if (ageMin.value != null && ageMax.value != null && ageMin.value > ageMax.value) {
+    // choose a sensible correction: set min = max
+    ageMin.value = ageMax.value
+  }
+
+  console.log('Search filters reset. onAgeBlur')
+}
+
+// computed validation error (empty string / null when ok)
+const ageError = computed(() => {
+  if (ageMin.value == null && ageMax.value == null) return ''
+  if (ageMin.value != null && (ageMin.value < MIN_AGE || ageMin.value > MAX_AGE)) {
+    return `Min age must be between ${MIN_AGE} and ${MAX_AGE}.`
+  }
+  if (ageMax.value != null && (ageMax.value < MIN_AGE || ageMax.value > MAX_AGE)) {
+    return `Max age must be between ${MIN_AGE} and ${MAX_AGE}.`
+  }
+  if (ageMin.value != null && ageMax.value != null && ageMin.value > ageMax.value) {
+    return 'Min age cannot be greater than Max age.'
+  }
+  return ''
+})
 
 function getDistance(user: UsersModel.ProfileDetailsResponseModel): string {
   let lat = login_store.getUserDetails?.latitude ?? 0
@@ -855,6 +1141,8 @@ function checkuseronline() {
 
 onMounted(() => {
   // Handle hash-based navigation
+
+  advanceModelSub = new ($bootstrap as any).Modal(document.getElementById('advancesearchmodal'));
   console.log('onMounted...dashboard')
   isWSConnected.value = isSocketConnected()
   eventBus.on('socketConnection', (is_connected) => {
@@ -888,6 +1176,46 @@ onMounted(() => {
   if (isWSConnected.value) {
     checkuseronline()
   }
+
+  const saved = localStorage.getItem(STORAGE_KEY)
+  if (saved) {
+    try {
+      const data = JSON.parse(saved)
+      // Restore only if keys exist
+
+      lookingFor.value = data.looking_for ?? []
+      whoMeets.value = data.who_wants_to_meet ?? []
+      ageMin.value = data.age_min ?? MIN_AGE
+      ageMax.value = data.age_max ?? MAX_AGE
+
+       current_loc.value = false
+      if (data.townPostCode) {
+        selectedTown.value = data.townPostCode
+      }
+      if (data.latitude && data.longitude) {
+        latitude.value = data.latitude
+        longitude.value = data.longitude
+        current_loc.value = true
+      }
+      radius.value = data.radius ?? '0.25'
+
+      lookingToMeetToday.value = data.looking_to_meet_today ?? false
+      is_photo_verified.value = data.is_photo_verified ?? false
+      is_meet_verified.value = data.is_meet_verified ?? false
+      with_public_media.value = data.with_public_media ?? false
+      with_media_gallery.value = data.with_media_gallery ?? false
+      has_profile_description.value = data.has_profile_description ?? false
+      recently_active.value = data.recently_active ?? false
+      premium_only.value = data.premium_only ?? false
+      is_online.value = data.is_online ?? false
+
+      console.log('✅ Filters restored from localStorage', data.looking_for)
+    } catch (err) {
+      console.warn('Failed to load saved filters:', err)
+    }
+  }
+
+
 })
 
 onBeforeUnmount(() => {

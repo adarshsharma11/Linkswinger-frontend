@@ -14,6 +14,7 @@ export enum RequestURL {
   resendVerificationEmail = "/resendVerificationEmail",
   fetchTowns = "/fetchTowns",
   fetchPostCodes = "/fetchPostCodes",
+  fetchTownsPostCodes = "/fetchTownsPostCodes",
   getProfileDetails = "/getProfileDetails",
   logout = "/logout",
   forgotPassword = "/forgotPassword",
@@ -269,6 +270,15 @@ export namespace UsersModel {
      post_code?: string;
      latitude?: number;
       longitude?: number;
+  }
+   export class FetchTownPostCodesResponseModel
+  {
+     id?: number;
+     name?: string;
+     type?: string;
+      latitude?: number;
+      longitude?: number;
+
   }
    export class ProfileDetailsRequestModel {
     user_id?: number;
