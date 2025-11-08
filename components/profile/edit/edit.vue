@@ -2,9 +2,6 @@
     <div class="login-page2 animat-rate">
         <div class="login-content-main">
             <div class="login-content">
-                <div class="login-content-header">
-                    <img src="/images/badges/animated/150X150px/edit-profile.gif" alt="Logo" class="logo" />
-                    </div>
                 <div class="form2 text-white">
                     <!-- Row: DOB + Sexual Orientation -->
                     <div class="row">
@@ -740,7 +737,7 @@ function getProfileImage() : string
     console.log("Profile Image Path: " + media_path + profile_image)
     return media_path + profile_image
   }
-  return "/images/avtar/1.jpg"
+  return "/images/badges/animated/150X150px/edit-profile.gif"
 }
 </script>
 
