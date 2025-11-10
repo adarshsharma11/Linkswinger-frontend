@@ -67,7 +67,7 @@
                 </li>
               </ul>
               <div class="ml-2">
-                <nuxt-link to="/dashboard" class="d-flex flex-column align-items-center">
+                <nuxt-link to="/dashboard" class="d-flex flex-column align-items-center text-white">
                   <img src="/images/badges/animated/50X50px/home.gif" alt="Home" class="badge-icon" />
                   <small>Home</small>
                 </nuxt-link>
@@ -204,7 +204,7 @@
 
           <!-- Right: Empty spacer (desktop only) -->
           <div class="col-md-3 d-md-block d-none">
-            <nuxt-link to="/dashboard" class="d-flex flex-column align-items-center">
+            <nuxt-link to="/dashboard" class="d-flex flex-column align-items-center text-white">
               <img src="/images/badges/animated/50X50px/home.gif" alt="Home" class="badge-icon" />
               <small>Home</small>
             </nuxt-link>
