@@ -514,8 +514,9 @@ onMounted(() => {
   eventBus.on('chatUpdateStatus', (eventModel) => {
     updateMessageStatus(eventModel)
   })
-
-
+   eventBus.on('callDeclineAlert', (eventModel) => {
+    showToastError('Call declined')
+  })
   eventBus.on('chatEvent', (responseevent) => {
     let event_name = responseevent.event_name ?? ''
     if (event_name === 'chat_sent') {
@@ -579,6 +580,7 @@ onBeforeUnmount(() => {
   eventBus.off('onlineUserIds')
   eventBus.off('typing')
   eventBus.off('chatUpdateStatus')
+  eventBus.off('callDeclineAlert')
   console.log('beforemount...chat')
 })
 

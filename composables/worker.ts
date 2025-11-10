@@ -34,6 +34,7 @@ type Events = {
   onlineUserIds : number[],
   typing:TypingEventSocketModel,
   callAlert:CallAlertModel,
+  callDeclineAlert:CallAlertModel
 }
 let onlinemodel: OnlineEventResponse | null = null
 
@@ -278,7 +279,6 @@ async function handleworkerevent(event: MessageEvent<any>) {
   else if (json.event_name === "chat_update_status") {
     let json = event.data as ChatEventSocketModel   
     emitter.emit('chatUpdateStatus', json)
-    
   }
 else if (json.event_name === "chat_read_status") {
     let json = event.data as ChatEventSocketModel   
@@ -288,6 +288,12 @@ else if (json.event_name === "chat_read_status") {
    let json = event.data as CallAlertModel   
     emitter.emit('callAlert', json)
   }
+   else if (json.event_name === "call_decline_alert") {
+   let json = event.data as CallAlertModel   
+    emitter.emit('callDeclineAlert', json)
+  }
+
+  
 
 }
 

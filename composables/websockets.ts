@@ -127,10 +127,11 @@ else if (event_name === "call_alert")
         let json = JSON.parse(jsontext) as  CallAlertModel
         sendmsgtoworker(json, true)
     }
-    
-    
-
-
+    else if (event_name === "call_decline_alert") 
+    {
+        let json = JSON.parse(jsontext) as  CallAlertModel
+        sendmsgtoworker(json, true)
+    }
 }
 
 export async function onlinerole(model: OnlineSocketModel) {

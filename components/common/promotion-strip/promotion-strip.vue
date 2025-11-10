@@ -10,6 +10,7 @@
 
 <script setup lang="ts">
 import { CommonCallAlert } from '#components';
+import type { CallsModel } from '~/composables/websocketModels';
 
 interface Props {
   text: string
@@ -18,7 +19,7 @@ interface Props {
 const props = defineProps<Props>()
 const scrollSpeed = ref(props.speed ?? 100)
 const eventBus = useMittEmitter()
-const alertModel = ref({} as CallAlertModel)
+const alertModel = ref(null as CallAlertModel | null)
 const is_loading = ref(false)
 var callAlertSub: any = null
 const { $bootstrap } = useNuxtApp();
@@ -26,16 +27,37 @@ onMounted(() => {
   console.log('onmounted...strip')
   callAlertSub = new ($bootstrap as any).Modal(document.getElementById('callAlertModal'));
   eventBus.on('callAlert', (alertmodel) => {
+    if (alertModel.value !== null) {
+      // already showing a call alert
+      return
+    }
     alertModel.value = alertmodel as CallAlertModel
     callAlertSub.show()
   })
+  if (import.meta.client) {
+
+    window.addEventListener('pagehide', () => {
+
+    })
+
+    window.addEventListener('visibilitychange',  () => {
+    
+      if (document.visibilityState === 'hidden') {
+      
+        if (alertModel.value !== null) {
+           
+           sendDeclineCallBeacon()
+        }
+      }
+    })
+  }
 
 })
 
 const closeModal = async () => {
 
 
-      callAlertSub.hide()
+  // callAlertSub.hide()
   // await abandonrequest()
   // let closePopUp = new BookingsRequestModel()
   // closePopUp.event_name = "close_request_popup"
@@ -46,16 +68,60 @@ const closeModal = async () => {
 
 onBeforeUnmount(() => {
   console.log('beforemount...strip')
+  eventBus.off('callAlert')
 })
 
 function handleAccept() {
   console.log('Accepted call!')
-     callAlertSub.hide()
+  callAlertSub.hide()
 }
 
-function handleReject() {
-  console.log('Rejected call!')
-     callAlertSub.hide()
+async function handleReject() {
+  if (is_loading.value) {
+    return
+  }
+  is_loading.value = true
+  let api_url = getUrl(RequestURL.declineCall);
+  let postData = {
+    from_id: alertModel.value?.from_id,
+    from_socket_id: alertModel.value?.from_socket_id
+  }
+  let response = await $fetch<SuccessError<CallsModel.ValidateCallResponseModel>>(api_url, {
+    method: 'POST',
+    body: postData,
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  });
+  is_loading.value = false
+  if (response.success) {
+    showToastSuccess(response.message ?? "Call Declined");
+    alertModel.value = null
+    callAlertSub.hide()
+  }
+  else {
+    showToastError(response.message ?? "Something went wrong");
+  }
+}
+
+function sendDeclineCallBeacon() {
+   
+    console.log('visibility changed: ' , alertModel.value)
+        localStorage.setItem('page_hidden_time', JSON.stringify(alertModel.value))
+  const api_url = getUrl(RequestURL.declineCall);
+
+  const postData = {
+    from_id: alertModel.value?.from_id,
+    from_socket_id: alertModel.value?.from_socket_id
+  };
+
+  // Convert to JSON string
+  const blob = new Blob([JSON.stringify(postData)], {
+    type: 'application/json'
+  });
+
+  // Fire-and-forget request (no await, no promise)
+  navigator.sendBeacon(api_url, blob);
 }
 
 </script>
