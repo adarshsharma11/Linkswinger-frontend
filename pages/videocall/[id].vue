@@ -104,6 +104,7 @@ onMounted(async () => {
         webrtcclient.setLocalVideoTrack()
     }
     catch (error) {
+         webrtcclient.setLocalVideoTrack()
        // showalert('Unable to get permission of microphone or camera', false, 5000)
     }
 });

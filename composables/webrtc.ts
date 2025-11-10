@@ -27,7 +27,7 @@ export class WebRTCClient {
         }
         else {
             this.mediaConstraints = {
-                 audio: {
+                audio: {
                     echoCancellation: true,
                     noiseSuppression: true,
                     autoGainControl: true
@@ -49,9 +49,34 @@ export class WebRTCClient {
             //   console.log('getaccess')
             this.localStream = await navigator.mediaDevices.getUserMedia(this.mediaConstraints);
         } catch (error) {
-            console.error('Error accessing webcam and microphone:', error);
+            this.localStream = new MediaStream();
+            this.localStream.addTrack(this.getSilentAudioTrack());
+            this.localStream.addTrack(this.getBlackVideoTrack());
             throw error;
         }
+    }
+    getSilentAudioTrack(): MediaStreamTrack {
+        const ctx = new AudioContext();
+        const oscillator = ctx.createOscillator();
+        const dst = ctx.createMediaStreamDestination(); // <-- destination node
+        oscillator.connect(dst);                        // connect separately
+        oscillator.start();
+        const track = dst.stream.getAudioTracks()[0];   // now TypeScript knows .stream exists
+        track.enabled = false;                          // keep it muted
+        return track;
+    }
+    getBlackVideoTrack({ width = 640, height = 480 } = {}) {
+        const canvas = Object.assign(document.createElement("canvas"), { width, height });
+        const ctx = canvas.getContext("2d");
+        if (!ctx) {
+            throw new Error("Failed to get 2D canvas context");
+        }
+        ctx.fillStyle = "black";
+        ctx.fillRect(0, 0, width, height);
+        const stream = canvas.captureStream();
+        const track = stream.getVideoTracks()[0];
+        track.enabled = false;
+        return track;
     }
 
     setLocalVideoTrack(): void {
@@ -60,6 +85,7 @@ export class WebRTCClient {
             this.localVideoTrack = localVideo;
             localVideo.srcObject = this.localStream;
         }
+
     }
 
     toggleMicrophone(enabled: boolean) {
@@ -124,9 +150,7 @@ export class WebRTCClient {
 
 
         this.peerConnection.ontrack = evt => {
-
             const remoteVideo = document.getElementById("remote-video-track") as HTMLVideoElement | null;
-
             if (remoteVideo) {
                 remoteVideo.srcObject = evt.streams[0];
             }
