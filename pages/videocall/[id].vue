@@ -20,7 +20,7 @@
                             
                         </div>
                         <div class="user-video">
-                            <video id="local-video-track" autoplay playsinline class="video-element">
+                            <video id="local-video-track" autoplay playsinline muted class="video-element">
                             </video>
                         </div>
                     </div>
