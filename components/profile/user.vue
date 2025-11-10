@@ -67,7 +67,7 @@
                 </li>
               </ul>
               <div class="ml-2">
-                <nuxt-link to="/dashboard" class="d-flex flex-column align-items-center">
+                <nuxt-link to="/dashboard" class="d-flex flex-column align-items-center text-white">
                   <img src="/images/badges/animated/50X50px/home.gif" alt="Home" class="badge-icon" />
                   <small>Home</small>
                 </nuxt-link>
@@ -196,7 +196,7 @@
                 <small>Like</small>
               </div>
               <div class="d-flex flex-column align-items-center">
-                <img src="/images/badges/animated/50X50px/public-photos.gif" alt="VIP" class="badge-icon" />
+                <img src="/images/badges/animated/50X50px/video-roulette-available.gif" alt="VIP" class="badge-icon" />
                 <small>VIP</small>
               </div>
             </div>
@@ -204,7 +204,7 @@
 
           <!-- Right: Empty spacer (desktop only) -->
           <div class="col-md-3 d-md-block d-none">
-            <nuxt-link to="/dashboard" class="d-flex flex-column align-items-center">
+            <nuxt-link to="/dashboard" class="d-flex flex-column align-items-center text-white">
               <img src="/images/badges/animated/50X50px/home.gif" alt="Home" class="badge-icon" />
               <small>Home</small>
             </nuxt-link>

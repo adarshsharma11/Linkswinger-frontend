@@ -56,7 +56,7 @@
         <a href="#video-roullet" data-route="video-roullet" @click.prevent="setActiveNav('video-roullet')"
           :class="{ active: activeNav === 'video-roullet' }" class="text-white"><span class="icon"> <img
               class="sidebar-ic" :src="`/images/badges/animated/50X50px/video-roulette-available.gif`" /></span>Video
-          Roullet</a>
+          Roulette</a>
         <a href="#live" data-route="live" @click.prevent="setActiveNav('live')"
           :class="{ active: activeNav === 'live' }" class="text-white"><span class="icon"> <img class="sidebar-ic"
               :src="`/images/badges/animated/50X50px/live-oncam.gif`" /></span>Live / On Cam</a>
