@@ -24,7 +24,7 @@
                             </div>
                         </div>
                         <div class="user-video">
-                            <video id="local-video-track" autoplay playsinline muted class="video-element">
+                            <video id="local-video-track" autoplay playsinline  class="video-element">
                             </video>
                         </div>
                     </div>
@@ -102,8 +102,8 @@ onMounted(async () => {
     //     sendoffer()
     // }
     try {
-        await webrtcclient.getAccess()
         webrtcclient.setLocalVideoTrack()
+        await webrtcclient.getAccess()
     }
     catch (error) {
       //  showalert('Unable to get permission of microphone or camera', false, 5000)
