@@ -1,7 +1,7 @@
 export class WebRTCClient {
     private mediaConstraints: MediaStreamConstraints;
     private socket: any; // Adjust type according to your socket implementation
-    private peerConnection: RTCPeerConnection | null;
+     peerConnection: RTCPeerConnection | null;
     private localVideoTrack: HTMLVideoElement | null;
     private localStream: MediaStream | null;
     private remoteStream: MediaStream | null;

@@ -71,6 +71,7 @@ const eventBus = useMittEmitter()
 const isAnswerSent = ref(false)
 const hasAnswer = ref(false)
 const hasOfferSent = ref(false)
+var queueCandidates: RTCIceCandidate[] = []
 const formattedTime = computed(() => {
     const hours = Math.floor(timeStart.value / 3600).toString().padStart(2, '0');
     const mins = Math.floor((timeStart.value % 3600) / 60).toString().padStart(2, '0');
@@ -95,7 +96,7 @@ onMounted(async () => {
     eventBus.on('callEvent', (callModel: CallSocketModel) => {
         handlecallevent(callModel)
         console.log('call event received', callModel.type)
-        console.log('call event received',login_store.getUserDetails?.user_id)
+        console.log('call event received', login_store.getUserDetails?.user_id)
     })
     if (isSocketConnected()) {
         hasOfferSent.value = true
@@ -202,17 +203,27 @@ function sendremotecandidate(remotecandidate: RTCIceCandidate) {
 
 }
 function setremotedesc(remote: RTCSessionDescription) {
-    if (call_store.getCallDetails?.from_id === login_store.getUserDetails?.user_id) {
+    if (call_store.getCallDetails?.from_id === login_store.getUserDetails?.user_id) 
+    {
         webrtcclient?.setRemoteDes(remote, () => {
-
+            for (let i = 0; i < queueCandidates.length; i++) {
+                setremotecandidate(queueCandidates[i])
+            }
+            queueCandidates = []
         })
     }
 }
 function setremotecandidate(remote: RTCIceCandidate) {
     if (call_store.getCallDetails?.from_id === login_store.getUserDetails?.user_id) {
-        webrtcclient?.setRemoteCandidate(remote, () => {
+        if (webrtcclient.peerConnection?.remoteDescription == null) {
+            queueCandidates.push(remote)
+        }
+        else {
+            webrtcclient?.setRemoteCandidate(remote, () => {
 
-        })
+            })
+        }
+
     }
 }
 
@@ -250,6 +261,7 @@ function handlecallevent(callModel: CallSocketModel) {
                 createanswer(toRTCSessionDescription(message.sdp))
             }
             else if (message.type === 'IceCandidate') {
+                console.log('Received remote candidate', login_store.getUserDetails?.user_id)
                 setremotecandidate(toRTCIceCandidate(message.candidate))
             }
         }
