@@ -12,7 +12,11 @@ export class WebRTCClient {
     constructor(isVideo: boolean = true) {
         if (isVideo) {
             this.mediaConstraints = {
-                audio: true,
+                audio: {
+                    echoCancellation: true,
+                    noiseSuppression: true,
+                    autoGainControl: true
+                },
                 video: {
                     width: { max: 640 },
                     height: { max: 480 },
@@ -23,7 +27,11 @@ export class WebRTCClient {
         }
         else {
             this.mediaConstraints = {
-                audio: true,
+                 audio: {
+                    echoCancellation: true,
+                    noiseSuppression: true,
+                    autoGainControl: true
+                }
             };
         }
         this.socket = null;

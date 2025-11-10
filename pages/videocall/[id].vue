@@ -5,11 +5,9 @@
                 <div class="videocall-main">
                     <div class="videocall-header">
                         <div class="timer">
-                            <Clock /> <span>{{ formattedTime }}</span>
+                             <span>{{ formattedTime }}</span>
                         </div>
-                        <button class="btn btn-default-outline btn-sm btn-end-session">
-                            <LogOut /> End Call
-                        </button>
+                        
                     </div>
 
                     <div class="video-wrapper">
@@ -19,9 +17,7 @@
                             </div> -->
                             <video id="remote-video-track" autoplay playsinline class="video-element">
                             </video>
-                            <div class="video-overlay">
-
-                            </div>
+                            
                         </div>
                         <div class="user-video">
                             <video id="local-video-track" autoplay playsinline class="video-element">
@@ -90,11 +86,12 @@ onMounted(async () => {
     eventBus.on('socketConnection', (isConnected: boolean) => {
         if (isConnected === true && hasOfferSent.value === false) {
             hasOfferSent.value = true
-            console.log('Socket connected, sending offer')
+          
             sendoffer()
         }
     })
     eventBus.on('callEvent', (callModel: CallSocketModel) => {
+          
         handlecallevent(callModel)
     })
     // if (isSocketConnected()) {
@@ -122,6 +119,7 @@ function enabledisableaudio() {
 function sendoffer() {
     if (hasAnswer.value === false) {
         if (call_store.getCallDetails?.from_id === login_store.getUserDetails?.user_id) {
+              
             let socketmodel = new CallSocketModel()
             socketmodel.event_name = 'call'
             socketmodel.from_id = call_store.getCallDetails?.from_id
@@ -149,6 +147,7 @@ function sendanswer() {
     }
 }
 function sendlocaldes(localdes: RTCSessionDescription) {
+    
     let socketmodel = new CallSocketModel()
     socketmodel.event_name = 'call'
     socketmodel.from_id = call_store.getCallDetails?.from_id
@@ -161,7 +160,6 @@ function sendlocaldes(localdes: RTCSessionDescription) {
     sendmsgtoworker(socketmodel, true)
 }
 function sendlocalcandidate(localcandidate: RTCIceCandidate) {
-
     let socketmodel = new CallSocketModel()
     socketmodel.event_name = 'call'
     socketmodel.from_id = call_store.getCallDetails?.from_id
@@ -244,6 +242,7 @@ function handlecallevent(callModel: CallSocketModel) {
         sendanswer()
     }
     else if (callModel.type === CallSocketModel.CallType.ANSWER) {
+        
         if (hasAnswer.value === false) {
             hasAnswer.value = true
             webrtcclient.createOffer((localdes) => {
@@ -258,6 +257,7 @@ function handlecallevent(callModel: CallSocketModel) {
         if (callModel.webrtc_model) {
             let message = decodeFromUint8Array(new Uint8Array(callModel.webrtc_model));
             if (message.type === 'SessionDescription') {
+               
                 setremotedesc(toRTCSessionDescription(message.sdp))
                 createanswer(toRTCSessionDescription(message.sdp))
             }
