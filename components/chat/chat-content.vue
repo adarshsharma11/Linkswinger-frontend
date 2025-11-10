@@ -581,6 +581,9 @@ onMounted(() => {
     updateBadgeCount(to_id)
   }
 
+   navigator.mediaDevices.getUserMedia({
+    audio: true
+   });
 
 })
 

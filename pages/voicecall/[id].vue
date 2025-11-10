@@ -94,6 +94,8 @@ onMounted(async () => {
     })
     eventBus.on('callEvent', (callModel: CallSocketModel) => {
         handlecallevent(callModel)
+        console.log('call event received', callModel.type)
+        console.log('call event received',login_store.getUserDetails?.user_id)
     })
     if (isSocketConnected()) {
         hasOfferSent.value = true
@@ -137,10 +139,10 @@ function sendanswer() {
         isAnswerSent.value = true
         let socketmodel = new CallSocketModel()
         socketmodel.event_name = 'call'
-        socketmodel.from_id = call_store.getCallDetails?.from_id
-        socketmodel.from_socket_id = call_store.getCallDetails?.from_socket_id
-        socketmodel.to_id = call_store.getCallDetails?.to_id
-        socketmodel.to_socket_id = call_store.getCallDetails?.to_socket_id
+        socketmodel.from_id = call_store.getCallDetails?.to_id
+        socketmodel.from_socket_id = call_store.getCallDetails?.to_socket_id
+        socketmodel.to_id = call_store.getCallDetails?.from_id
+        socketmodel.to_socket_id = call_store.getCallDetails?.from_socket_id
         socketmodel.is_video = call_store.getCallDetails?.is_video
         socketmodel.type = CallSocketModel.CallType.ANSWER
         sendmsgtoworker(socketmodel, true)
@@ -176,10 +178,10 @@ function sendremotedes(remotedes: RTCSessionDescription) {
 
     let socketmodel = new CallSocketModel()
     socketmodel.event_name = 'call'
-    socketmodel.from_id = call_store.getCallDetails?.from_id
-    socketmodel.from_socket_id = call_store.getCallDetails?.from_socket_id
-    socketmodel.to_id = call_store.getCallDetails?.to_id
-    socketmodel.to_socket_id = call_store.getCallDetails?.to_socket_id
+    socketmodel.from_id = call_store.getCallDetails?.to_id
+    socketmodel.from_socket_id = call_store.getCallDetails?.to_socket_id
+    socketmodel.to_id = call_store.getCallDetails?.from_id
+    socketmodel.to_socket_id = call_store.getCallDetails?.from_socket_id
     socketmodel.is_video = call_store.getCallDetails?.is_video
     socketmodel.type = CallSocketModel.CallType.CANDIDATE
     socketmodel.webrtc_model = Array.from(encodeToUint8Array(createSdpMessage(remotedes)))
@@ -187,13 +189,12 @@ function sendremotedes(remotedes: RTCSessionDescription) {
 
 }
 function sendremotecandidate(remotecandidate: RTCIceCandidate) {
-
     let socketmodel = new CallSocketModel()
     socketmodel.event_name = 'call'
-    socketmodel.from_id = call_store.getCallDetails?.from_id
-    socketmodel.from_socket_id = call_store.getCallDetails?.from_socket_id
-    socketmodel.to_id = call_store.getCallDetails?.to_id
-    socketmodel.to_socket_id = call_store.getCallDetails?.to_socket_id
+    socketmodel.from_id = call_store.getCallDetails?.to_id
+    socketmodel.from_socket_id = call_store.getCallDetails?.to_socket_id
+    socketmodel.to_id = call_store.getCallDetails?.from_id
+    socketmodel.to_socket_id = call_store.getCallDetails?.from_socket_id
     socketmodel.is_video = call_store.getCallDetails?.is_video
     socketmodel.type = CallSocketModel.CallType.CANDIDATE
     socketmodel.webrtc_model = Array.from(encodeToUint8Array(createCandidateMessage(remotecandidate)))
