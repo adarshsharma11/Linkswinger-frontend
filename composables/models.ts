@@ -38,7 +38,9 @@ export enum RequestURL {
   validateCall = "/validateCall",
   addMeetVerification = "/addMeetVerification",
   fetchMeetVerifications = "/fetchMeetVerifications",
-  declineCall = "/declineCall"
+  declineCall = "/declineCall",
+  acceptCall = "/acceptCall",
+  fetchCallDetails = "/fetchCallDetails"
 }
 
 export var online_user_ids : number[] = []

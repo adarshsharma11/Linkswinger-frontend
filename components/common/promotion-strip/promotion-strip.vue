@@ -71,9 +71,43 @@ onBeforeUnmount(() => {
   eventBus.off('callAlert')
 })
 
-function handleAccept() {
-  console.log('Accepted call!')
-  callAlertSub.hide()
+async function handleAccept() {
+  if (is_loading.value) {
+    return
+  }
+  is_loading.value = true
+  let api_url = getUrl(RequestURL.acceptCall);
+  let postData = {
+    from_id: alertModel.value?.from_id,
+    from_socket_id: alertModel.value?.from_socket_id,
+    to_id : useLoginStore().getUserDetails?.user_id,
+    to_socket_id : idStore().getDeviceId,
+    is_video : alertModel.value?.is_video
+  }
+  let response = await $fetch<SuccessError<CallsModel.AcceptCallResponseModel>>(api_url, {
+    method: 'POST',
+    body: postData,
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  });
+  is_loading.value = false
+  if (response.success) {
+    showToastSuccess(response.message ?? "Call Accepted");
+    alertModel.value = null
+    callAlertSub.hide()
+    if (response.response?.is_video)
+     {
+        await navigateTo(`/videocall/${response.response?.token}`)
+     }
+     else
+     {
+       await navigateTo(`/voicecall/${response.response?.token}`)
+     }
+  }
+  else {
+    showToastError(response.message ?? "Something went wrong");
+  }
 }
 
 async function handleReject() {

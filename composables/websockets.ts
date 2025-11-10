@@ -85,53 +85,64 @@ async function handlesocketevent(eventdata: Blob) {
     if (event_name === "server_date") {
         let json = JSON.parse(jsontext) as ServerDateSocketModel
         useServerTimeFromSocket(json.server_date ?? "")
-        sendmsgtoworker(json, true)
+        sendmsgtoworker(json, true,true)
     }
     else if (event_name === "logout") {
         let json = JSON.parse(jsontext) as OnlineEventResponse
-        sendmsgtoworker(json, true)
+        sendmsgtoworker(json, true,true)
         logoutself()
     }
     else if (event_name === "online") {
         let json = JSON.parse(jsontext) as OnlineEventResponse
         if (json.success) {
-            sendmsgtoworker(json, true)
+          sendmsgtoworker(json, true,true)
             console.log("onlineeee")
         }
         else {
             json.event_name = "logout"
-            sendmsgtoworker(json, true)
+           sendmsgtoworker(json, true,true)
             logoutself()
         }
     }
     else if (event_name === "chat_sent" || event_name === "chat_response") {
         let json = JSON.parse(jsontext) as ChatEventSocketModel
-        sendmsgtoworker(json, true)
+     sendmsgtoworker(json, true,true)
     }
     else if (event_name === "user_updated_to_group") {
         let json = JSON.parse(jsontext) as GroupEventSocketModel
-        sendmsgtoworker(json, true)
+         sendmsgtoworker(json, true,true)
     }
     else if (event_name === "typing_response") 
     {
         let json = JSON.parse(jsontext) as TypingEventSocketModel
-        sendmsgtoworker(json, true)
+  sendmsgtoworker(json, true,true)
     }
     else if (event_name === "chat_update_status") 
     {
         let json = JSON.parse(jsontext) as ChatEventSocketModel
-        sendmsgtoworker(json, true)
+        sendmsgtoworker(json, true,true)
     }
 else if (event_name === "call_alert") 
     {
         let json = JSON.parse(jsontext) as  CallAlertModel
-        sendmsgtoworker(json, true)
+        sendmsgtoworker(json, true,true)
     }
     else if (event_name === "call_decline_alert") 
     {
         let json = JSON.parse(jsontext) as  CallAlertModel
-        sendmsgtoworker(json, true)
+         sendmsgtoworker(json, true,true)
     }
+    else if (event_name === "call_accept_alert") 
+    {
+        let json = JSON.parse(jsontext) as  CallAlertModel
+         sendmsgtoworker(json, true,true)
+    }
+    else if (event_name === "call") 
+    {
+        let json = JSON.parse(jsontext) as  CallSocketModel
+         sendmsgtoworker(json, true,true)
+    }
+    
 }
 
 export async function onlinerole(model: OnlineSocketModel) {

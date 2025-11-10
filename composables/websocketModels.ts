@@ -1,5 +1,6 @@
 export class SocketEventModel {
   event_name?: string
+  from_socket?: boolean
 }
 
 export class LeaderEventModel implements SocketEventModel {
@@ -82,6 +83,7 @@ export class CallSocketModel implements SocketEventModel {
   to_id?: number;
   from_socket_id?: string;
   to_socket_id?: string;
+  is_video? : boolean
   event_name?: string;
   webrtc_model?: number[];
   type?: CallSocketModel.CallType;
@@ -93,6 +95,7 @@ export class CallAlertModel implements SocketEventModel {
   event_name?: string;
   nick_name?:string;
   is_video? : boolean
+  token?: string;
 }
 
 
@@ -118,6 +121,10 @@ export namespace CallsModel
     }
     export class ValidateCallResponseModel {
         
+    }
+      export class AcceptCallResponseModel {
+         token? : string
+         is_video? : boolean
     }
     
 }

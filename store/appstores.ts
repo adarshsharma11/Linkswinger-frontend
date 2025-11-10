@@ -72,3 +72,28 @@ export const useLoginStore = defineStore('login_details', {
       },
     }
   })
+
+  export const useCallStore = defineStore('call_details', {
+    state: () => {
+      return {
+        callDetails: null as CallSocketModel | null | undefined,
+      }
+    },
+    getters: {
+      getCallDetails: state => {
+        return state.callDetails 
+     }
+    },
+    actions: {
+       setCallDetails(call : CallSocketModel | null | undefined)
+       {
+           this.callDetails = call
+       },
+       clear()
+      {
+        this.setCallDetails(null)
+      },
+    }
+  })
+
+  

@@ -517,6 +517,16 @@ onMounted(() => {
    eventBus.on('callDeclineAlert', (eventModel) => {
     showToastError('Call declined')
   })
+   eventBus.on('callAcceptAlert', async (eventModel) => {
+     if (eventModel.is_video)
+     {
+        await navigateTo(`/videocall/${eventModel.token}`)
+     }
+     else
+     {
+       await navigateTo(`/voicecall/${eventModel.token}`)
+     }
+  })
   eventBus.on('chatEvent', (responseevent) => {
     let event_name = responseevent.event_name ?? ''
     if (event_name === 'chat_sent') {
@@ -581,6 +591,7 @@ onBeforeUnmount(() => {
   eventBus.off('typing')
   eventBus.off('chatUpdateStatus')
   eventBus.off('callDeclineAlert')
+  eventBus.off('callAcceptAlert')
   console.log('beforemount...chat')
 })
 

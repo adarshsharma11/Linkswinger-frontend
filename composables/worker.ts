@@ -1,7 +1,7 @@
 import { v4 as uuid } from 'uuid';
 import { idStore } from '~/store/appstores'
 import mitt from 'mitt'
-import { CallAlertModel, ChatEventSocketModel, GroupEventSocketModel, LeaderEventModel, TypingEventSocketModel } from './websocketModels';
+import { CallAlertModel, CallsModel, CallSocketModel, ChatEventSocketModel, GroupEventSocketModel, LeaderEventModel, TypingEventSocketModel } from './websocketModels';
 import { detectonline } from './useDatabase';
 import { setupWebSocket } from './websockets';
 
@@ -34,7 +34,9 @@ type Events = {
   onlineUserIds : number[],
   typing:TypingEventSocketModel,
   callAlert:CallAlertModel,
-  callDeclineAlert:CallAlertModel
+  callDeclineAlert:CallAlertModel,
+  callAcceptAlert : CallAlertModel,
+  callEvent : CallSocketModel
 }
 let onlinemodel: OnlineEventResponse | null = null
 
@@ -140,7 +142,7 @@ function askForLeader() {
   }, 1000); // wait 1s for a reply
 }
 
-export async function sendmsgtoworker(message: any, is_self: boolean = false) {
+export async function sendmsgtoworker(message: any, is_self: boolean = false , from_socket: boolean = false) {
   // if (typeof SharedWorker === 'undefined') {
   //   sharedWorker.port.postMessage(message)
   // }
@@ -148,6 +150,7 @@ export async function sendmsgtoworker(message: any, is_self: boolean = false) {
   // {
   //   channel.postMessage(message)
   // }
+  message.from_socket = from_socket
   if (is_self) {
     await handleworkerevent({ data: message } as MessageEvent<any>)
   }
@@ -162,6 +165,7 @@ export function isSocketConnected() {
 }
 async function handleworkerevent(event: MessageEvent<any>) {
   let json = event.data as SocketEventModel
+  let from_socket = json.from_socket ?? false
   if (json.event_name === "who_is_leader") {
     if (is_leader) {
       let leadermodel = new LeaderEventModel()
@@ -274,7 +278,7 @@ async function handleworkerevent(event: MessageEvent<any>) {
     clearOnlineIds()
     online_user_ids.push(...json.user_ids ?? [])
     emitter.emit('onlineUserIds', online_user_ids)
-    console.log("user_updated_to_group...",emitter)
+    console.log("user_updated_to_group", from_socket)
   }
   else if (json.event_name === "chat_update_status") {
     let json = event.data as ChatEventSocketModel   
@@ -291,6 +295,22 @@ else if (json.event_name === "chat_read_status") {
    else if (json.event_name === "call_decline_alert") {
    let json = event.data as CallAlertModel   
     emitter.emit('callDeclineAlert', json)
+  }
+  else if (json.event_name === "call_accept_alert") {
+   let json = event.data as CallAlertModel   
+    emitter.emit('callAcceptAlert', json)
+  }
+  else if (json.event_name === "call") {
+    let json = event.data as CallSocketModel  
+    if (from_socket)
+    {
+       emitter.emit('callEvent', json)
+    }
+    else
+    {
+    sendtosocket(json)
+    }
+
   }
 
   
