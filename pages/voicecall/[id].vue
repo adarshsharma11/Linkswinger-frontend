@@ -90,18 +90,17 @@ onMounted(async () => {
     eventBus.on('socketConnection', (isConnected: boolean) => {
         if (isConnected === true && hasOfferSent.value === false) {
             hasOfferSent.value = true
+            console.log('Socket connected, sending offer')
             sendoffer()
         }
     })
     eventBus.on('callEvent', (callModel: CallSocketModel) => {
         handlecallevent(callModel)
-        console.log('call event received', callModel.type)
-        console.log('call event received', login_store.getUserDetails?.user_id)
     })
-    if (isSocketConnected()) {
-        hasOfferSent.value = true
-        sendoffer()
-    }
+    // if (isSocketConnected()) {
+    //     hasOfferSent.value = true
+    //     sendoffer()
+    // }
     try {
         await webrtcclient.getAccess()
         webrtcclient.setLocalVideoTrack()
@@ -203,8 +202,7 @@ function sendremotecandidate(remotecandidate: RTCIceCandidate) {
 
 }
 function setremotedesc(remote: RTCSessionDescription) {
-    if (call_store.getCallDetails?.from_id === login_store.getUserDetails?.user_id) 
-    {
+    if (call_store.getCallDetails?.from_id === login_store.getUserDetails?.user_id) {
         webrtcclient?.setRemoteDes(remote, () => {
             for (let i = 0; i < queueCandidates.length; i++) {
                 setremotecandidate(queueCandidates[i])
@@ -214,16 +212,13 @@ function setremotedesc(remote: RTCSessionDescription) {
     }
 }
 function setremotecandidate(remote: RTCIceCandidate) {
-    if (call_store.getCallDetails?.from_id === login_store.getUserDetails?.user_id) {
-        if (webrtcclient.peerConnection?.remoteDescription == null) {
-            queueCandidates.push(remote)
-        }
-        else {
-            webrtcclient?.setRemoteCandidate(remote, () => {
+    if (webrtcclient.peerConnection?.remoteDescription == null) {
+        queueCandidates.push(remote)
+    }
+    else {
+        webrtcclient?.setRemoteCandidate(remote, () => {
 
-            })
-        }
-
+        })
     }
 }
 
@@ -231,6 +226,12 @@ function createanswer(remote: RTCSessionDescription) {
     if (call_store.getCallDetails?.to_id === login_store.getUserDetails?.user_id) {
         webrtcclient.createAnswer(remote, (session) => {
             sendremotedes(session)
+
+            for (let i = 0; i < queueCandidates.length; i++) {
+                setremotecandidate(queueCandidates[i])
+            }
+            queueCandidates = []
+
         }, (candidate) => {
             sendremotecandidate(candidate)
         })

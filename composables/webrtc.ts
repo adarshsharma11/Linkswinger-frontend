@@ -1,7 +1,7 @@
 export class WebRTCClient {
     private mediaConstraints: MediaStreamConstraints;
     private socket: any; // Adjust type according to your socket implementation
-     peerConnection: RTCPeerConnection | null;
+    peerConnection: RTCPeerConnection | null;
     private localVideoTrack: HTMLVideoElement | null;
     private localStream: MediaStream | null;
     private remoteStream: MediaStream | null;
@@ -38,7 +38,7 @@ export class WebRTCClient {
 
     async getAccess(): Promise<void> {
         try {
-         //   console.log('getaccess')
+            //   console.log('getaccess')
             this.localStream = await navigator.mediaDevices.getUserMedia(this.mediaConstraints);
         } catch (error) {
             console.error('Error accessing webcam and microphone:', error);
@@ -54,25 +54,25 @@ export class WebRTCClient {
         }
     }
 
-     toggleMicrophone(enabled: boolean) {
+    toggleMicrophone(enabled: boolean) {
         if (this.localStream) {
             this.localStream.getAudioTracks().forEach(track => {
                 track.enabled = enabled;
             });
         }
     }
-     toggleVideo( enabled: boolean) {
+    toggleVideo(enabled: boolean) {
         if (this.localStream) {
             this.localStream.getVideoTracks().forEach(track => {
                 track.enabled = enabled;
             });
         }
     }
-    
-    
+
+
 
     getLocalStream(): void {
-      //  console.log('User has granted access; you can now use the stream for various purposes', this.localStream);
+        //  console.log('User has granted access; you can now use the stream for various purposes', this.localStream);
     }
 
     stopLocalStream(): void {
@@ -116,7 +116,7 @@ export class WebRTCClient {
 
 
         this.peerConnection.ontrack = evt => {
-      
+
             const remoteVideo = document.getElementById("remote-video-track") as HTMLVideoElement | null;
 
             if (remoteVideo) {
@@ -151,8 +151,11 @@ export class WebRTCClient {
                         //  this.socket.sendCandidate(evt.candidate, this.sessionId, this.handleId);
                     }
                 };
-                this.peerConnection!.onconnectionstatechange = evt => {
-                   // console.log("Connection state changed:", evt);
+                // this.peerConnection!.onconnectionstatechange = evt => {
+                //     console.log("Connection state changed:", evt);
+                // };
+                this.peerConnection!.oniceconnectionstatechange = () => {
+                    console.log('ICE state:', this.peerConnection!.iceConnectionState);
                 };
             })
             .catch(reason => {
@@ -182,7 +185,7 @@ export class WebRTCClient {
         const sessionDesc = new RTCSessionDescription(jsep);
 
         this.peerConnection.ontrack = evt => {
-         
+
             const remoteVideo = document.getElementById("remote-video-track") as HTMLVideoElement | null;
             if (remoteVideo) {
                 remoteVideo.srcObject = evt.streams[0];
