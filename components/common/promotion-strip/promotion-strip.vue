@@ -105,22 +105,15 @@ async function handleReject() {
 }
 
 function sendDeclineCallBeacon() {
-   
-    console.log('visibility changed: ' , alertModel.value)
-        localStorage.setItem('page_hidden_time', JSON.stringify(alertModel.value))
   const api_url = getUrl(RequestURL.declineCall);
-
   const postData = {
     from_id: alertModel.value?.from_id,
     from_socket_id: alertModel.value?.from_socket_id
   };
-
   // Convert to JSON string
   const blob = new Blob([JSON.stringify(postData)], {
     type: 'application/json'
   });
-
-  // Fire-and-forget request (no await, no promise)
   navigator.sendBeacon(api_url, blob);
 }
 
