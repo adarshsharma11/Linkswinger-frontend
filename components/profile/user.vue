@@ -196,7 +196,7 @@
                 <small>Like</small>
               </div>
               <div class="d-flex flex-column align-items-center">
-                <img src="/images/badges/animated/50X50px/public-photos.gif" alt="VIP" class="badge-icon" />
+                <img src="/images/badges/animated/50X50px/video-roulette-available.gif" alt="VIP" class="badge-icon" />
                 <small>VIP</small>
               </div>
             </div>
