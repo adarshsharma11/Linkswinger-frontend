@@ -40,6 +40,7 @@ export enum RequestURL {
   fetchMeetVerifications = "/fetchMeetVerifications",
   declineCall = "/declineCall",
   acceptCall = "/acceptCall",
+  endCall = "/endCall",
   fetchCallDetails = "/fetchCallDetails"
 }
 

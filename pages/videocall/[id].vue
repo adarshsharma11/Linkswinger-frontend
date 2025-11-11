@@ -46,6 +46,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import type { CallsModel } from '~/composables/websocketModels';
 import userdetails from '~/middleware/userdetails';
 import validatecall from '~/middleware/validatecall';
 import { useCallStore } from '~/store/appstores';
@@ -66,6 +67,8 @@ let webrtcclient = new WebRTCClient(true)
 const eventBus = useMittEmitter()
 const isAnswerSent = ref(false)
 const hasAnswer = ref(false)
+const is_loading = ref(false)
+const id_store = idStore();
 var queueCandidates: RTCIceCandidate[] = []
 const formattedTime = computed(() => {
     const hours = Math.floor(timeStart.value / 3600).toString().padStart(2, '0');
@@ -77,6 +80,7 @@ onBeforeUnmount(() => {
     eventBus.off('callEvent')
     eventBus.off('socketConnection')
     eventBus.off('serverTime')
+    eventBus.off('callEndAlert')
     webrtcclient.stopLocalStream()
     webrtcclient.teardown()
 });
@@ -84,8 +88,18 @@ onBeforeUnmount(() => {
 onMounted(async () => {
 
     eventBus.on('socketConnection', (isConnected: boolean) => {
-       
+
     })
+
+    eventBus.on('callEndAlert', (callEndAlert: CallAlertModel) => {
+        webrtcclient.stopLocalStream()
+        webrtcclient.teardown()
+        reloadNuxtApp({
+            path: "/",
+            ttl: 1000
+        })
+    })
+
     eventBus.on('serverTime', (serverTime: Date) => {
         if (isSocketConnected()) {
             sendoffer()
@@ -270,11 +284,42 @@ function handlecallevent(callModel: CallSocketModel) {
 
 }
 
-const extendSession = () => {
+async function endCall() {
+    if (is_loading.value) {
+        return
+    }
+    is_loading.value = true
+    let api_url = getUrl(RequestURL.endCall);
 
-};
+    let to_id = call_store.getCallDetails?.to_id === login_store.getUserDetails?.user_id ? call_store.getCallDetails?.from_id : call_store.getCallDetails?.to_id
+    let to_socket_id = call_store.getCallDetails?.to_socket_id === id_store.getDeviceId ? call_store.getCallDetails?.from_socket_id : call_store.getCallDetails?.to_socket_id
 
-
+    let postData = {
+        from_id: login_store.getUserDetails?.user_id,
+        from_socket_id: id_store.getDeviceId,
+        to_id: to_id,
+        to_socket_id: to_socket_id,
+    }
+    let response = await $fetch<SuccessError<CallsModel.AcceptCallResponseModel>>(api_url, {
+        method: 'POST',
+        body: postData,
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+    is_loading.value = false
+    if (response.success) {
+        webrtcclient.stopLocalStream()
+        webrtcclient.teardown()
+        reloadNuxtApp({
+            path: "/",
+            ttl: 1000
+        })
+    }
+    else {
+        showToastError(response.message ?? "Something went wrong");
+    }
+}
 
 </script>
 <style scoped>

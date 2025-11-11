@@ -35,6 +35,7 @@ type Events = {
   callAlert:CallAlertModel,
   callDeclineAlert:CallAlertModel,
   callAcceptAlert : CallAlertModel,
+  callEndAlert : CallAlertModel,
   callEvent : CallSocketModel
 }
 let onlinemodel: OnlineEventResponse | null = null
@@ -301,6 +302,11 @@ else if (json.event_name === "chat_read_status") {
    let json = event.data as CallAlertModel   
     emitter.emit('callAcceptAlert', json)
   }
+  else if (json.event_name === "call_end_alert") {
+   let json = event.data as CallAlertModel   
+    emitter.emit('callEndAlert', json)
+  }
+  
   else if (json.event_name === "call") {
     let json = event.data as CallSocketModel  
     if (from_socket)

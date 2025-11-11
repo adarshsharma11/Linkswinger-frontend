@@ -137,6 +137,12 @@ else if (event_name === "call_alert")
         let json = JSON.parse(jsontext) as  CallAlertModel
          sendmsgtoworker(json, true,true)
     }
+    else if (event_name === "call_end_alert") 
+    {
+        let json = JSON.parse(jsontext) as  CallAlertModel
+         sendmsgtoworker(json, true,true)
+    }
+    
     else if (event_name === "call") 
     {
         let json = JSON.parse(jsontext) as  CallSocketModel

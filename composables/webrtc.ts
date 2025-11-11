@@ -186,9 +186,7 @@ export class WebRTCClient {
                 // this.peerConnection!.onconnectionstatechange = evt => {
                 //     console.log("Connection state changed:", evt);
                 // };
-                this.peerConnection!.oniceconnectionstatechange = () => {
-                    console.log('ICE state:', this.peerConnection!.iceConnectionState);
-                };
+               
             })
             .catch(reason => {
                 console.error("Offer creation failed:", reason);
@@ -244,6 +242,7 @@ export class WebRTCClient {
                         candidatecallback(evt.candidate)
                     }
                 };
+                  
             })
             .catch(error => {
                 console.error("Answer creation failed:", error);

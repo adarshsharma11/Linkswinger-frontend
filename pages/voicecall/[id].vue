@@ -5,7 +5,7 @@
                 <div class="videocall-main">
                     <div class="videocall-header">
                         <div class="timer">
-                            <Clock /> <span>{{ formattedTime }}</span>
+                             <span style="color: white;">{{ connectStatus }}</span>
                         </div>
                         <button class="btn btn-default-outline btn-sm btn-end-session">
                             <LogOut /> End Call
@@ -24,7 +24,7 @@
                             </div>
                         </div>
                         <div class="user-video">
-                            <video id="local-video-track" autoplay playsinline class="video-element">
+                            <video id="local-video-track" autoplay playsinline muted class="video-element">
                             </video>
                         </div>
                     </div>
@@ -70,6 +70,7 @@ let webrtcclient = new WebRTCClient(false)
 const eventBus = useMittEmitter()
 const isAnswerSent = ref(false)
 const hasAnswer = ref(false)
+const connectStatus = ref('Connecting...')
 var queueCandidates: RTCIceCandidate[] = []
 const formattedTime = computed(() => {
     const hours = Math.floor(timeStart.value / 3600).toString().padStart(2, '0');
@@ -81,6 +82,7 @@ onBeforeUnmount(() => {
     eventBus.off('callEvent')
     eventBus.off('socketConnection')
     eventBus.off('serverTime')
+    eventBus.off('callEndAlert')
     webrtcclient.stopLocalStream()
     webrtcclient.teardown()
 });
@@ -90,10 +92,30 @@ onMounted(async () => {
     eventBus.on('socketConnection', (isConnected: boolean) => {
     
     })
+     eventBus.on('callEndAlert', (callEndAlert: CallAlertModel) => {
+        webrtcclient.stopLocalStream()
+        webrtcclient.teardown()
+        reloadNuxtApp({
+            path: "/",
+            ttl: 1000
+        })
+    })
     eventBus.on('serverTime', (serverTime: Date) => {
         if (isSocketConnected()) {
             sendoffer()
         } 
+         connectStatus.value = webrtcclient.peerConnection?.connectionState || 'Connecting...'
+        if(webrtcclient.peerConnection)
+        {
+            if (webrtcclient.peerConnection.connectionState === "connected")
+            {
+
+            }
+            else if (webrtcclient.peerConnection.connectionState === "disconnected" || webrtcclient.peerConnection.connectionState === "failed")
+            {
+                // showalert('Connection lost. Trying to reconnect...', false, 5000)    
+            }
+        }
     })
     eventBus.on('callEvent', (callModel: CallSocketModel) => {
         handlecallevent(callModel)
