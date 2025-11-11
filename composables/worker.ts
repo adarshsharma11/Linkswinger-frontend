@@ -17,7 +17,6 @@ let channel: BroadcastChannel;
 let leaderCheckTimeout: ReturnType<typeof setInterval> | null = null
 let heartBeatTimeout: ReturnType<typeof setInterval> | null = null
 let leaderDiedTimeout: ReturnType<typeof setInterval> | null = null
-
 let lastLeaderHeartbeat = Date.now();
 
 
@@ -156,10 +155,12 @@ export async function sendmsgtoworker(message: any, is_self: boolean = false , f
   }
   channel.postMessage(message)
 }
-export function useServerTime(initialServerTime: string) {
+
+export function useServerTime(initialServerTime: string) {  
   let serverTime = new Date(initialServerTime)
   emitter.emit('serverTime', serverTime)
 }
+
 export function isSocketConnected() {
   return is_connected
 }

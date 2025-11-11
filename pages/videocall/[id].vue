@@ -5,9 +5,9 @@
                 <div class="videocall-main">
                     <div class="videocall-header">
                         <div class="timer">
-                             <span>{{ formattedTime }}</span>
+                            <span>{{ formattedTime }}</span>
                         </div>
-                        
+
                     </div>
 
                     <div class="video-wrapper">
@@ -17,10 +17,10 @@
                             </div> -->
                             <video id="remote-video-track" autoplay playsinline class="video-element">
                             </video>
-                            
+
                         </div>
                         <div class="user-video">
-                            <video id="local-video-track" autoplay playsinline  class="video-element">
+                            <video id="local-video-track" autoplay playsinline class="video-element">
                             </video>
                         </div>
                     </div>
@@ -66,7 +66,6 @@ let webrtcclient = new WebRTCClient(true)
 const eventBus = useMittEmitter()
 const isAnswerSent = ref(false)
 const hasAnswer = ref(false)
-const hasOfferSent = ref(false)
 var queueCandidates: RTCIceCandidate[] = []
 const formattedTime = computed(() => {
     const hours = Math.floor(timeStart.value / 3600).toString().padStart(2, '0');
@@ -77,6 +76,7 @@ const formattedTime = computed(() => {
 onBeforeUnmount(() => {
     eventBus.off('callEvent')
     eventBus.off('socketConnection')
+    eventBus.off('serverTime')
     webrtcclient.stopLocalStream()
     webrtcclient.teardown()
 });
@@ -84,28 +84,26 @@ onBeforeUnmount(() => {
 onMounted(async () => {
 
     eventBus.on('socketConnection', (isConnected: boolean) => {
-        if (isConnected === true && hasOfferSent.value === false) {
-            hasOfferSent.value = true
-          
+       
+    })
+    eventBus.on('serverTime', (serverTime: Date) => {
+        if (isSocketConnected()) {
             sendoffer()
         }
     })
     eventBus.on('callEvent', (callModel: CallSocketModel) => {
-          
+
         handlecallevent(callModel)
     })
-    // if (isSocketConnected()) {
-    //     hasOfferSent.value = true
-    //     sendoffer()
-    // }
+
     try {
-         
+
         await webrtcclient.getAccess()
         webrtcclient.setLocalVideoTrack()
     }
     catch (error) {
-         webrtcclient.setLocalVideoTrack()
-       // showalert('Unable to get permission of microphone or camera', false, 5000)
+        webrtcclient.setLocalVideoTrack()
+        // showalert('Unable to get permission of microphone or camera', false, 5000)
     }
 });
 
@@ -121,7 +119,7 @@ function enabledisableaudio() {
 function sendoffer() {
     if (hasAnswer.value === false) {
         if (call_store.getCallDetails?.from_id === login_store.getUserDetails?.user_id) {
-              
+
             let socketmodel = new CallSocketModel()
             socketmodel.event_name = 'call'
             socketmodel.from_id = call_store.getCallDetails?.from_id
@@ -149,7 +147,7 @@ function sendanswer() {
     }
 }
 function sendlocaldes(localdes: RTCSessionDescription) {
-    
+
     let socketmodel = new CallSocketModel()
     socketmodel.event_name = 'call'
     socketmodel.from_id = call_store.getCallDetails?.from_id
@@ -244,7 +242,7 @@ function handlecallevent(callModel: CallSocketModel) {
         sendanswer()
     }
     else if (callModel.type === CallSocketModel.CallType.ANSWER) {
-        
+
         if (hasAnswer.value === false) {
             hasAnswer.value = true
             webrtcclient.createOffer((localdes) => {
@@ -259,7 +257,7 @@ function handlecallevent(callModel: CallSocketModel) {
         if (callModel.webrtc_model) {
             let message = decodeFromUint8Array(new Uint8Array(callModel.webrtc_model));
             if (message.type === 'SessionDescription') {
-               
+
                 setremotedesc(toRTCSessionDescription(message.sdp))
                 createanswer(toRTCSessionDescription(message.sdp))
             }

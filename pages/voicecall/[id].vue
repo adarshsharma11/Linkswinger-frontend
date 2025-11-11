@@ -24,7 +24,7 @@
                             </div>
                         </div>
                         <div class="user-video">
-                            <video id="local-video-track" autoplay playsinline  class="video-element">
+                            <video id="local-video-track" autoplay playsinline class="video-element">
                             </video>
                         </div>
                     </div>
@@ -70,7 +70,6 @@ let webrtcclient = new WebRTCClient(false)
 const eventBus = useMittEmitter()
 const isAnswerSent = ref(false)
 const hasAnswer = ref(false)
-const hasOfferSent = ref(false)
 var queueCandidates: RTCIceCandidate[] = []
 const formattedTime = computed(() => {
     const hours = Math.floor(timeStart.value / 3600).toString().padStart(2, '0');
@@ -81,6 +80,7 @@ const formattedTime = computed(() => {
 onBeforeUnmount(() => {
     eventBus.off('callEvent')
     eventBus.off('socketConnection')
+    eventBus.off('serverTime')
     webrtcclient.stopLocalStream()
     webrtcclient.teardown()
 });
@@ -88,26 +88,23 @@ onBeforeUnmount(() => {
 onMounted(async () => {
 
     eventBus.on('socketConnection', (isConnected: boolean) => {
-        if (isConnected === true && hasOfferSent.value === false) {
-            hasOfferSent.value = true
-            console.log('Socket connected, sending offer')
+    
+    })
+    eventBus.on('serverTime', (serverTime: Date) => {
+        if (isSocketConnected()) {
             sendoffer()
-        }
+        } 
     })
     eventBus.on('callEvent', (callModel: CallSocketModel) => {
         handlecallevent(callModel)
     })
-    // if (isSocketConnected()) {
-    //     hasOfferSent.value = true
-    //     sendoffer()
-    // }
+
     try {
-      
         await webrtcclient.getAccess()
-          webrtcclient.setLocalVideoTrack()
+        webrtcclient.setLocalVideoTrack()
     }
     catch (error) {
-      //  showalert('Unable to get permission of microphone or camera', false, 5000)
+        //  showalert('Unable to get permission of microphone or camera', false, 5000)
     }
 });
 
