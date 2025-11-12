@@ -4,9 +4,12 @@
             <div class="videocall-container">
                 <div class="videocall-main">
                     <div class="videocall-header">
-                        <div class="timer">
-                            <span>{{ formattedTime }}</span>
+                      <div class="timer">
+                            <span style="color: white;">{{ connectStatus }}</span>
                         </div>
+                        <button @click="endCall()" class="btn btn-default-outline btn-sm btn-end-session">
+                           End Call
+                        </button>
 
                     </div>
 
@@ -69,6 +72,7 @@ const isAnswerSent = ref(false)
 const hasAnswer = ref(false)
 const is_loading = ref(false)
 const id_store = idStore();
+const connectStatus = ref('Connecting...')
 var queueCandidates: RTCIceCandidate[] = []
 const formattedTime = computed(() => {
     const hours = Math.floor(timeStart.value / 3600).toString().padStart(2, '0');
@@ -103,6 +107,22 @@ onMounted(async () => {
     eventBus.on('serverTime', (serverTime: Date) => {
         if (isSocketConnected()) {
             sendoffer()
+        }
+         connectStatus.value = webrtcclient.peerConnection?.connectionState || 'Connecting...'
+        if (webrtcclient.peerConnection) {
+            if (webrtcclient.peerConnection.connectionState === "connected") {
+
+            }
+            else if (webrtcclient.peerConnection.connectionState === "disconnected" || webrtcclient.peerConnection.connectionState === "failed") {
+                // showalert('Connection lost. Trying to reconnect...', false, 5000)    
+                webrtcclient.stopLocalStream()
+                webrtcclient.teardown()
+                  endCall()
+                reloadNuxtApp({
+                    path: "/",
+                    ttl: 1000
+                })
+            }
         }
     })
     eventBus.on('callEvent', (callModel: CallSocketModel) => {
