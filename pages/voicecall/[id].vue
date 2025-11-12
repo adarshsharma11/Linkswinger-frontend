@@ -7,9 +7,10 @@
                         <div class="timer">
                             <span style="color: white;">{{ connectStatus }}</span>
                         </div>
-                        <button @click="endCall()" class="btn btn-default-outline btn-sm btn-end-session">
+                        <button v-if="!is_loading" @click="endCall()" class="btn btn-default-outline btn-sm btn-end-session">
                             <LogOut /> End Call
                         </button>
+                        <span class="btn-loader" v-if="is_loading"></span>
                     </div>
 
                     <div class="video-wrapper">

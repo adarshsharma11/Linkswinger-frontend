@@ -4,13 +4,14 @@
             <div class="videocall-container">
                 <div class="videocall-main">
                     <div class="videocall-header">
-                      <div class="timer">
+                        <div class="timer">
                             <span style="color: white;">{{ connectStatus }}</span>
                         </div>
-                        <button @click="endCall()" class="btn btn-default-outline btn-sm btn-end-session">
-                           End Call
+                        <button v-if="!is_loading" @click="endCall()"
+                            class="btn btn-default-outline btn-sm btn-end-session">
+                            End Call
                         </button>
-
+                        <span class="btn-loader" v-if="is_loading"></span>
                     </div>
 
                     <div class="video-wrapper">
@@ -108,7 +109,7 @@ onMounted(async () => {
         if (isSocketConnected()) {
             sendoffer()
         }
-         connectStatus.value = webrtcclient.peerConnection?.connectionState || 'Connecting...'
+        connectStatus.value = webrtcclient.peerConnection?.connectionState || 'Connecting...'
         if (webrtcclient.peerConnection) {
             if (webrtcclient.peerConnection.connectionState === "connected") {
 
@@ -117,7 +118,7 @@ onMounted(async () => {
                 // showalert('Connection lost. Trying to reconnect...', false, 5000)    
                 webrtcclient.stopLocalStream()
                 webrtcclient.teardown()
-                  endCall()
+                endCall()
                 reloadNuxtApp({
                     path: "/",
                     ttl: 1000
