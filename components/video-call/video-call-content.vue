@@ -74,7 +74,7 @@
     <section class="col-12 col-lg-8 col-xl-9">
       <!-- Remote video with red metallic contour -->
       <div id="videoStage" class="relative red-contour  overflow-hidden">
-        <video id="remote-video-track" class="w-100 vh-64 object-cover bg-black" autoplay playsinline muted></video>
+        <video id="remote-video-track" class="w-100 vh-64 object-cover bg-black" autoplay playsinline ></video>
         <!-- Labels -->
         <div class="position-absolute top-12 left-12 px-2 py-1 rounded-md bg-black/60 text-[11px]">Maya &amp; Tom — HD</div>
         <div id="netBadge" class="position-absolute top-12 right-12 px-2 py-1 label-red">Ended</div>
