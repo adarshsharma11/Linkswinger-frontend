@@ -5,7 +5,7 @@
       <div class="vdhd-inner d-flex flex-wrap align-items-center justify-content-between">
         <div class="vd-hd-left">
           <span id="callStatusDot" class="inline-block h-2 w-2 rounded-full bg-emerald-400"></span>
-          <span id="callStatusText">Call ended</span>
+          <span id="callStatusText">Call {{ connectStatus }}</span>
         </div>
         <div class="vd-hd-center">
            <img src="/images/logo/landing-logo.gif" alt="LinkSwingers logo" class="">
@@ -77,7 +77,7 @@
         <video id="remote-video-track" class="w-100 vh-64 object-cover bg-black" autoplay playsinline ></video>
         <!-- Labels -->
         <div class="position-absolute top-12 left-12 px-2 py-1 rounded-md bg-black/60 text-[11px]">Maya &amp; Tom — HD</div>
-        <div id="netBadge" class="position-absolute top-12 right-12 px-2 py-1 label-red">Ended</div>
+        <div id="netBadge" class="position-absolute top-12 right-12 px-2 py-1 label-red">{{ connectStatus }}</div>
         <!-- Local PiP -->
         <div class="position-absolute bottom-12 right-12 selfVideo aspect-video overflow-hidden">
           <video id="local-video-track" class="w-100 h-100 object-cover bg-black" autoplay playsinline muted></video>
@@ -174,6 +174,7 @@ onMounted(async () => {
                 })
             }
         }
+        sendcallupdates()
     })
     eventBus.on('callEvent', (callModel: CallSocketModel) => {
 
