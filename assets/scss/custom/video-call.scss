@@ -1,0 +1,246 @@
+.vd-hd-center img {
+    height: 84px;
+}
+
+.vd-hd-left {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    width: 33.3%;
+}
+.vd-hd-center {
+    width: 33.3%;
+    text-align: center;
+}
+.vd-hd-right {
+    width: 33.3%;
+}
+span#callStatusDot {
+    background-color: #34d399;
+    width: 8px;
+    height: 8px;
+    border-radius: 50px;
+}
+
+.vd-hd-left span#callStatusText {
+    color: #a3a3a3;
+    font-size: 13px;
+    font-weight: 400;
+}
+
+.sh-btn {
+    background-color: rgba(23, 23, 23, 0.7);
+    border-radius: 8px;
+    padding: 8px 12px !important;
+    border: 1px solid #262626;
+    color: #f5f5f5;
+    line-height: normal;
+    font-size: 13px;
+    font-weight: 400;
+}
+
+.vd-header {
+    background-color: rgb(11 11 11 / 0.95);
+    border-bottom: 1px solid #171717;
+    padding: 5px 0;
+}
+.vdo-lft-cht {
+    border: 1px solid #262626 !important;
+    border-radius: 1rem;
+}
+
+.vdo-lft-cht p.text-sm {
+    color: #d4d4d4;
+    margin: 0;
+}
+.vdo-lft-tp {
+    padding: 12px 15px;
+}
+.vd-al-pad {
+    padding: 12px 15px;
+}
+.green-label {
+    color: #6ee7b7;
+    font-weight: 300;
+    border-radius: 50px;
+    border: 1px solid rgb(16 185 129 / 0.3);
+    background-color: rgb(5 150 105 / 0.2);
+    padding: 2px 7px !important;
+    font-size: 10px;
+}
+.vd-chat-right p {
+    margin: 0;
+    font-size: 14px;
+    color: #f5f5f5;
+    line-height: normal;
+}
+
+.vd-chat-right small.text-secondary {
+    font-size: 11px;
+    color: #a3a3a3;
+}
+
+.vd-cht-item {
+    margin: 10px 0 0;
+}
+
+.vd-cht-item:first-child {
+    margin-top: 0;
+}
+.red-contour{position:relative}
+.red-contour::before{content:"";position:absolute;inset:0;border-radius:1rem;padding:2px;background:conic-gradient(from 180deg,#f43f5e,#fb7185,#fecaca,#be123c,#f43f5e);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none;}
+.custom-scroll::-webkit-scrollbar{width:10px;height:10px}
+.custom-scroll::-webkit-scrollbar-track{background:rgba(23,23,23,0.6)}
+.custom-scroll::-webkit-scrollbar-thumb{background:linear-gradient(180deg,rgba(16,185,129,0.5),rgba(244,63,94,0.7));border-radius:9999px}
+button#btnClearChat {
+    background-color: rgb(23 23 23 / 0.7);
+    border: 1px solid #262626;
+    border-radius: 6px;
+    color: #fff;
+    font-size: 11px;
+    padding: 5px 8px;
+}
+
+.cht-btm-opt {
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.h-64 {
+    height: 16rem;
+}
+
+input#chatInput {
+    background-color: rgb(23 23 23 / 0.7);
+    padding: 0.5rem 0.75rem;
+    line-height: normal;
+    font-size: 14px;
+    border: 1px solid #262626;
+    border-radius: 12px;
+    height: 40px;
+}
+.cht-lft-type .flex-1 {
+    flex: 1 1 0%;
+}
+button#chatSend {
+    background-color: rgb(225 29 72 / 0.95);
+    padding: 0.5rem 0.75rem;
+    border-radius: 12px;
+    border: none;
+    color: #fff;
+    font-weight: 500;
+}
+div#videoStage {
+    background-color: rgb(10 10 10 / 0.6);
+    border: 1px solid #262626;
+    border-radius: 1rem;
+}
+.object-cover {
+    object-fit: cover;
+}
+.top-12 {
+    top: 12px;
+}
+.left-12 {
+    left: 12px;
+}
+.right-12 {
+    right: 12px;
+}
+.bottom-12 {
+    bottom: 12px;
+}
+.left-4 {
+    left: 4px;
+}
+.bottom-4 {
+    bottom: 4px;
+}
+.label-red {
+    color: #fda4af;
+    border: 1px solid rgb(244 63 94 / 0.3);
+    background-color: rgb(225 29 72 / 0.2);
+    border-radius: 6px;
+    padding: 4px 8px !important;
+    font-size: 11px;
+}
+.selfVideo {width: 14rem;border-radius: 12px;border: 2px solid rgb(225 29 72 / 0.7);}
+
+.aspect-video {
+    aspect-ratio: 16 / 9;
+}
+
+video#localVideo {
+    background-color: #000;
+}
+.vd-controls button {
+    background-color: rgb(23 23 23 / 0.7);
+    border-radius: 12px;
+    padding: 10px 16px !important;
+    border: 1px solid #262626;
+    color: #f5f5f5;
+    line-height: normal;
+    font-size: 16px;
+}
+
+.vd-controls button span {
+    color: #fff;
+    font-weight: 400;
+    font-size: 16px;
+}
+
+.vd-controls {
+    padding: 15px 0;
+}
+
+.vd-controls button#btnEnd {
+    box-shadow: 0 8px 26px rgba(244,63,94,0.35);
+    background-color: rgb(225 29 72 / 0.95);
+    border-color: rgb(225 29 72 / 0.95);
+}
+.vh-64 {
+    height: 64vh;
+}
+@media (max-width: 767px) {
+.vh-64 {
+    height: 58vh;
+}
+.h-64 {
+    height: 10rem;
+}
+.vd-controls button {
+    font-size: 14px;
+}
+
+.vd-controls button span {
+    font-size: 14px;
+}
+
+.vd-hd-center img {
+    height: 50px;
+}
+
+.vd-hd-center {
+    order: 1;
+    width: 100%;
+    margin-bottom: 5px;
+}
+.vd-hd-left {
+    order: 2;
+    width: 45%;
+}
+
+.vd-hd-right {
+    order: 3;
+    width: 55%;
+}
+
+.sh-btn {
+    font-size: 12px;
+    padding: 5px 5px !important;
+}
+
+.vd-hd-left span#callStatusText {
+    font-size: 12px;
+}
+}
+
