@@ -117,7 +117,7 @@ onMounted(async () => {
                 // showalert('Connection lost. Trying to reconnect...', false, 5000)    
                 webrtcclient.stopLocalStream()
                 webrtcclient.teardown()
-                  endCall()
+                  sendEndCallBeacon()
                 reloadNuxtApp({
                     path: "/",
                     ttl: 1000
@@ -129,6 +129,21 @@ onMounted(async () => {
     eventBus.on('callEvent', (callModel: CallSocketModel) => {
         handlecallevent(callModel)
     })
+
+    window.addEventListener("pagehide", (event) => {
+        if (event.persisted) return;
+        const nav = performance.getEntriesByType("navigation")[0];
+        const isReload = nav && (nav.type === "reload" || nav.type === "navigate");
+        if (isReload) {
+            sendEndCallBeacon()
+            webrtcclient.stopLocalStream()
+            webrtcclient.teardown()   
+                reloadNuxtApp({
+                    path: "/",
+                    ttl: 1000
+                })
+        }
+    });
 
     try {
         await webrtcclient.getAccess()
@@ -334,6 +349,24 @@ async function endCall() {
     else {
         showToastError(response.message ?? "Something went wrong");
     }
+}
+
+function sendEndCallBeacon() {
+    const api_url = getUrl(RequestURL.endCall);
+    let to_id = call_store.getCallDetails?.to_id === login_store.getUserDetails?.user_id ? call_store.getCallDetails?.from_id : call_store.getCallDetails?.to_id
+    let to_socket_id = call_store.getCallDetails?.to_socket_id === id_store.getDeviceId ? call_store.getCallDetails?.from_socket_id : call_store.getCallDetails?.to_socket_id
+
+    let postData = {
+        from_id: login_store.getUserDetails?.user_id,
+        from_socket_id: id_store.getDeviceId,
+        to_id: to_id,
+        to_socket_id: to_socket_id,
+    }
+    // Convert to JSON string
+    const blob = new Blob([JSON.stringify(postData)], {
+        type: 'application/json'
+    });
+    navigator.sendBeacon(api_url, blob);
 }
 
 

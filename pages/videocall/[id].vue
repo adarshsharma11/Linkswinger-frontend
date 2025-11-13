@@ -134,7 +134,7 @@ onMounted(async () => {
     window.addEventListener("pagehide", (event) => {
         if (event.persisted) return;
         const nav = performance.getEntriesByType("navigation")[0];
-        const isReload = nav && nav.type === "reload";
+        const isReload = nav && (nav.type === "reload" || nav.type === "navigate");
         if (isReload) {
              sendEndCallBeacon()
             webrtcclient.stopLocalStream()
