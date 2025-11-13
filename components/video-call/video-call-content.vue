@@ -104,7 +104,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
-import type { CallsModel } from '~/composables/websocketModels';
+import { CallAlertModel, type CallsModel } from '~/composables/websocketModels';
 import { useCallStore } from '~/store/appstores';
 const login_store = useLoginStore()
 const call_store = useCallStore()
@@ -206,6 +206,15 @@ onMounted(async () => {
         // showalert('Unable to get permission of microphone or camera', false, 5000)
     }
 });
+
+function sendcallupdates()
+{
+     let callupdates = new CallAlertModel()
+     callupdates.event_name = "call_updates"
+     callupdates.from_id = call_store.getCallDetails?.from_id
+     callupdates.to_id = call_store.getCallDetails?.to_id
+     sendmsgtoworker(callupdates, true)
+}
 
 function enabledisableaudio() {
     if (isMicActive.value === true) {

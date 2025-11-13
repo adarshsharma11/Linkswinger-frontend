@@ -91,6 +91,7 @@ export class CallSocketModel implements SocketEventModel {
 
 export class CallAlertModel implements SocketEventModel {
   from_id?: number;
+  to_id?: number;
   from_socket_id?: string;
   event_name?: string;
   nick_name?:string;

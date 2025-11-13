@@ -319,6 +319,11 @@ else if (json.event_name === "chat_read_status") {
     }
 
   }
+else if (json.event_name === "call_updates") {
+   let json = event.data as CallAlertModel  
+sendtosocket(json)
+}
+  
 
   
 
