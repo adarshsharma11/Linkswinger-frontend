@@ -1,5 +1,5 @@
-import type { UsersModel } from "~/composables/models";
-import { useCallStore, useLoginStore, userStore } from "~/store/appstores";
+
+import { useCallStore, userStore } from "~/store/appstores";
 
 export default defineNuxtRouteMiddleware(async (to, from) => {
     const nuxtApp = useNuxtApp()

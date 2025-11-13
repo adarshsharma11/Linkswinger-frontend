@@ -50,7 +50,7 @@
 </template>
 <script setup lang="ts">
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+
 import type { CallsModel } from '~/composables/websocketModels';
 import userdetails from '~/middleware/userdetails';
 import validatecall from '~/middleware/validatecall';
