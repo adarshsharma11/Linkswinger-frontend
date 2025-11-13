@@ -10,4 +10,6 @@ useHead({
         middleware:'auth'
     })
 const login_store = useLoginStore();
+
+ 
 </script>
