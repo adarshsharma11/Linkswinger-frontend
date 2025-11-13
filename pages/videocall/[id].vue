@@ -75,6 +75,7 @@ const is_loading = ref(false)
 const id_store = idStore();
 const connectStatus = ref('Connecting...')
 var queueCandidates: RTCIceCandidate[] = []
+const isPremissionAccepted = ref(false);
 const formattedTime = computed(() => {
     const hours = Math.floor(timeStart.value / 3600).toString().padStart(2, '0');
     const mins = Math.floor((timeStart.value % 3600) / 60).toString().padStart(2, '0');
@@ -149,9 +150,11 @@ onMounted(async () => {
     try {
         await webrtcclient.getAccess()
         webrtcclient.setLocalVideoTrack()
+        isPremissionAccepted.value = true;
     }
     catch (error) {
         webrtcclient.setLocalVideoTrack()
+           isPremissionAccepted.value = true;
         // showalert('Unable to get permission of microphone or camera', false, 5000)
     }
 });
@@ -166,7 +169,8 @@ function enabledisableaudio() {
     webrtcclient.toggleMicrophone(isMicActive.value)
 }
 function sendoffer() {
-    if (hasAnswer.value === false) {
+    if (hasAnswer.value === false && isPremissionAccepted.value)
+     {
         if (call_store.getCallDetails?.from_id === login_store.getUserDetails?.user_id) {
 
             let socketmodel = new CallSocketModel()
@@ -182,7 +186,7 @@ function sendoffer() {
     }
 }
 function sendanswer() {
-    if (isAnswerSent.value === false) {
+    if (isAnswerSent.value === false && isPremissionAccepted.value) {
         isAnswerSent.value = true
         let socketmodel = new CallSocketModel()
         socketmodel.event_name = 'call'
