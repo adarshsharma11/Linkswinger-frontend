@@ -520,7 +520,7 @@ onMounted(() => {
    eventBus.on('callAcceptAlert', async (eventModel) => {
      if (eventModel.is_video)
      {
-        await navigateTo(`/videocall/${eventModel.token}`)
+        await navigateTo(`/video-call/${eventModel.token}`)
      }
      else
      {

@@ -99,7 +99,7 @@ async function handleAccept() {
     alertModel.value = null
     callAlertSub.hide()
     if (response.response?.is_video) {
-      await navigateTo(`/videocall/${response.response?.token}`)
+      await navigateTo(`/video-call/${response.response?.token}`)
     }
     else {
       await navigateTo(`/voicecall/${response.response?.token}`)
