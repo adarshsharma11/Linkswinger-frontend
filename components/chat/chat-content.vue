@@ -1,18 +1,8 @@
 <template>
   <div class="container py-4">
-    <!-- Mobile Back Button -->
-    <div class="d-lg-none mb-3">
-      <button class="btn btn-sm btn-dark border-secondary" @click="goBack">
-        <svg viewBox="0 0 24 24" class="h-4 w-4" fill="currentColor">
-          <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" />
-        </svg>
-        Back
-      </button>
-    </div>
-
     <div class="row g-3">
       <!-- Sidebar -->
-      <aside class="col-12 col-lg-4 col-xl-3">
+      <aside class="col-12 col-lg-4 col-xl-3" :class="{ 'd-none': showMobileChat && isMobile }">
         <div class="chat-card p-2">
           <div
             class="d-flex justify-content-between align-items-center border-bottom border-secondary pb-2 mb-2 cht-top">
@@ -30,7 +20,7 @@
             <div class="p-2 rounded-3 d-flex align-items-center justify-content-between hover-overlay chat-item"
               :class="{ 'chat-active': activeChatId === (historymodel.user_id ?? 0) }"
               style="background-color:rgba(23,23,23,0.4);margin-bottom:6px;" v-for="historymodel in chatHistoryModels"
-              @click="fetchChats(historymodel.from_id ?? 0, historymodel.to_id ?? 0)">
+              @click="selectUserForMobile(historymodel.user_id ?? 0)">
               <div class="d-flex align-items-center gap-3">
                 <div class="position-relative chat-item-left">
                   <img
@@ -90,13 +80,32 @@
       </aside>
 
       <!-- Chat Section -->
-      <section class="col-12 col-lg-8 col-xl-9">
-        <div class="chat-card d-flex flex-column h-100">
+      <section class="col-12 col-lg-8 col-xl-9" :class="{ 'd-none': !showMobileChat && isMobile }">
+        
+        <!-- No Chat Selected Placeholder -->
+        <div v-if="!route.params.id || route.params.id === '0'" class="chat-card d-flex flex-column h-100 justify-content-center align-items-center">
+          <div class="text-center text-secondary">
+            <svg viewBox="0 0 24 24" class="h-16 w-16 mb-4 opacity-50" fill="currentColor">
+              <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/>
+            </svg>
+            <h5>Select a conversation</h5>
+            <p class="mb-0">Choose a conversation from the list to start chatting</p>
+          </div>
+        </div>
+
+        <!-- Chat Content (only show when there's an ID) -->
+        <div v-else class="chat-card d-flex flex-column h-100">
           <!-- Header -->
           <div class="d-flex justify-content-between align-items-center border-bottom border-secondary p-3 chat-header">
             <div class="d-flex align-items-center gap-3 chat-hd">
               <!-- Desktop Back Button -->
               <button class="btn btn-sm btn-dark border-secondary d-none d-lg-inline-flex" @click="goBack">
+                <svg viewBox="0 0 24 24" class="h-4 w-4" fill="currentColor">
+                  <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" />
+                </svg>
+              </button>
+              <!-- Mobile Back Button -->
+              <button class="btn btn-sm btn-dark border-secondary d-lg-none" @click="goBack">
                 <svg viewBox="0 0 24 24" class="h-4 w-4" fill="currentColor">
                   <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" />
                 </svg>
@@ -267,6 +276,55 @@ const previewUrlFile = ref<Blob | null>(null);
 const contentType = ref('');
 const fileInput = ref<HTMLInputElement | null>(null);
 const activeChatId = ref<number | null>(null); // Add this line to track active chat
+const showMobileChat = ref(false); // For mobile: show chat instead of user list
+// Initialize mobile detection immediately
+const isMobile = ref(process.client ? window.innerWidth < 768 : false); // Mobile detection
+
+// Computed property to determine if chat should be shown
+const shouldShowChat = computed(() => {
+  const hasIdInRoute = route.params.id && route.params.id !== '0'
+  
+  // If no ID in route, don't show chat
+  if (!hasIdInRoute) return false
+  
+  // On server or initial load, show chat if ID exists
+  if (!process.client) return true
+  
+  // Desktop: show chat if ID is in route
+  if (!isMobile.value) {
+    return true
+  }
+  
+  // Mobile: show chat if ID is in route and showMobileChat is true
+  return showMobileChat.value
+})
+
+// Mobile detection on mount
+onMounted(() => {
+  if (process.client) {
+    isMobile.value = window.innerWidth < 768
+    window.addEventListener('resize', () => {
+      isMobile.value = window.innerWidth < 768
+    })
+  }
+})
+
+// Watch for route changes to reset mobile state
+watch(() => route.params.id, (newId, oldId) => {
+  if (isMobile.value) {
+    // Only update showMobileChat if we're actually changing routes
+    // and not just initializing
+    if (oldId !== undefined) {
+      if (newId && newId !== '0') {
+        // If there's an ID in route on mobile, show chat
+        showMobileChat.value = true
+      } else {
+        // If no ID in route on mobile, show user list
+        showMobileChat.value = false
+      }
+    }
+  }
+})
 const fetchHistory = async () => {
   const api_url = getUrl(RequestURL.chatHistory);
   const { data: fetch_response, error: option_error } = await useFetch<SuccessError<ChatsModel.ChatResponseModel>>(api_url, {
@@ -329,7 +387,23 @@ if (to_id !== 0) {
 }
 
 function goBack() {
-  router.back()
+  if (isMobile.value && showMobileChat.value && route.params.id) {
+    // On mobile, when in chat view, go back to user list
+    showMobileChat.value = false
+    // Navigate to chat page without ID to show user list
+    router.push('/chat')
+  } else {
+    router.back()
+  }
+}
+
+function selectUserForMobile(userId: number) {
+  // Navigate to chat with user and show chat view on mobile
+  if (isMobile.value) {
+    showMobileChat.value = true
+  }
+  // Navigate to the chat page
+  navigateTo(`/chat/${userId}`)
 }
 
 function showTypingIndicator(from_id: number) {
@@ -509,6 +583,17 @@ onMounted(() => {
   const currentChatId = Number(route.params.id ?? '0')
   if (currentChatId !== 0) {
     activeChatId.value = currentChatId
+  }
+
+  // Initialize mobile chat state based on current route
+  if (isMobile.value) {
+    if (currentChatId !== 0) {
+      // If there's an ID in route on mobile, show chat
+      showMobileChat.value = true
+    } else {
+      // If no ID in route on mobile, show user list
+      showMobileChat.value = false
+    }
   }
 
   isWSConnected.value = isSocketConnected()
