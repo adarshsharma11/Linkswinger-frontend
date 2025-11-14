@@ -61,7 +61,7 @@ select,input[type=number]{background:#0f0f0f;border:1px solid #222;border-radius
 button#dash-buttonUpload {
     color: #fff;
 }
-.toggle-side-btn { background-color: transparent; border: none; padding: 0; width: 40px; height: 40px; position: absolute; right: 10px; top: 59%; transform: translateY(-50%); box-shadow: 0 0 8px rgb(173 4 27 / 44%); border-radius: 5px;display: none; } 
+.toggle-side-btn { background-color: transparent; border: none; padding: 0; width: 40px; height: 40px; position: absolute; left: 10px; top: 59%; transform: translateY(-50%); box-shadow: 0 0 8px rgb(173 4 27 / 44%); border-radius: 5px;display: none; } 
 .toggle-side-btn svg { fill: #fff; width: 30px; height: 30px; margin-top: 1px; }
 .cross-side-btn { background-color: transparent; border: none; width: 30px; height: 30px; position: absolute; right: 10px; text-align: center; box-shadow: 0 0 7px rgba(24,255,109,.35); border-radius: 8px;display: none; } 
 .cross-side-btn svg { fill: #fff; transform: rotate(45deg); width: 30px; height: 30px; margin-left: -6px; }
