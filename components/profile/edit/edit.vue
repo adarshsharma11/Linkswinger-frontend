@@ -36,10 +36,7 @@
                             <textarea v-model="about_me" class="form-control" id="exampleFormControlTextarea1"
                                 placeholder="Write about yourself" rows="4" style="resize:none;"></textarea>
                         </div>
-                        <div class="form-group ">
-                            <label>Status</label>
-                            <input v-model="profile_status" class="form-control" id="inputstatus" type="text" />
-                        </div>
+                       
                         <div class="form-group col-12 col-md-6">
                             <label for="inputdob">Date of Birth
                                 <i class="fa fa-info-circle text-info ms-1"
@@ -254,7 +251,6 @@ const nickName = ref('');
 const email = ref('');
 const password = ref('');
 const about_me = ref(login_store.getUserDetails?.about_me ?? '');
-const profile_status = ref(login_store.getUserDetails?.profile_status ?? '');
 const cm_height = ref('');
 const feet_height = ref('');
 const inch_height = ref('0');
@@ -478,7 +474,6 @@ function usersignup() {
         gender: gender.value,
         partner_gender: partner_gender.value,
         about_me: about_me.value,
-        profile_status:profile_status.value
     } as UsersModel.SignUpRequestModel
 
     let api_url = getUrl(RequestURL.updateUserProfile);
@@ -734,7 +729,6 @@ function getProfileImage() : string
   let profile_image = login_store.getUserDetails?.profile_image ?? ''
   if (media_path.length > 0 && profile_image.length > 0)
   {
-    console.log("Profile Image Path: " + media_path + profile_image)
     return media_path + profile_image
   }
   return "/images/badges/animated/150X150px/edit-profile.gif"
