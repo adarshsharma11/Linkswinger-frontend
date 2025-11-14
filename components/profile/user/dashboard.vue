@@ -954,7 +954,6 @@ function fetchTownsPostCodes(query: string) {
     }
   }).catch((error) => {
     is_town_loading.value = false;
-     console.log(error.message);
   });
 }
 
