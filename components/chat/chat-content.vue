@@ -578,7 +578,7 @@ onMounted(() => {
     }
     let user_id = responseevent.from_id === login_store.getUserDetails?.user_id ? responseevent.to_id : responseevent.from_id
 
-    appendLastMessagetohistory(user_id ?? 0, responseevent.message ?? '')
+    appendLastMessagetohistory(responseevent.chat_id ?? 0,user_id ?? 0, responseevent.message ?? '')
     nextTick(() => {
       if (scrollContainer.value) {
         scrollContainer.value.scrollTop = scrollContainer.value.scrollHeight;
@@ -768,10 +768,11 @@ function updateBadgeCount(to_id: number) {
   }
 }
 
-function appendLastMessagetohistory(to_id: number, message: string) {
+function appendLastMessagetohistory(chat_id: number,to_id: number, message: string) {
   let histories = chatHistoryModels.value.filter((history: ChatsModel.ChatResponseModel) => history.user_id === to_id)
  
   if (histories.length > 0) {
+    histories[0].chat_id = chat_id
     histories[0].badge_count = 0
     histories[0].message = message
     histories[0].is_deleted = false
