@@ -163,14 +163,17 @@
                 </div>
                 <div v-if="chat.message_type === 'video'"><video :src="(chat.media_path ?? '') + (chat.message ?? '')"
                     style="max-width: 300px; max-height: 300px;" controls></video></div>
-  
+
               </div>
-              <div class="message-time" v-if="chat.from_id !== login_store.getUserDetails?.user_id">{{ chat.created_at }}
+              <div class="message-time" v-if="chat.from_id !== login_store.getUserDetails?.user_id">{{ chat.created_at
+                }}
               </div>
-              <div class="message-time" v-if="chat.from_id === login_store.getUserDetails?.user_id">{{ chat.created_at }}
+              <div class="message-time" v-if="chat.from_id === login_store.getUserDetails?.user_id">{{ chat.created_at
+                }}
                 • {{ chat.status }}</div>
-            <button class="trash-btn" @click="deleteChat(chat)" v-if="chat.from_id === login_store.getUserDetails?.user_id && (chat.is_deleted ?? false) === false && (chat.is_deleting ?? false) === false">🗑️</button>
-            <span class="btn-loader" v-if="chat.is_deleting"></span>
+              <button class="trash-btn" @click="deleteChat(chat)"
+                v-if="chat.from_id === login_store.getUserDetails?.user_id && (chat.is_deleted ?? false) === false && (chat.is_deleting ?? false) === false">🗑️</button>
+              <span class="btn-loader" v-if="chat.is_deleting"></span>
             </div>
             <!-- <div class="message-bubble message-incoming">We loved your profile pics. Fancy a chat tonight?<div
                 class="message-time">13:43</div>
@@ -689,13 +692,20 @@ function updateMessageStatus(eventmodel: ChatEventSocketModel) {
   }
 }
 function deleteMessageStatus(eventmodel: ChatEventSocketModel) {
+   
   let chat = chatModels.value.filter((history: ChatsModel.ChatResponseModel) => history.chat_id === eventmodel.chat_id)
   if (chat.length > 0) {
     chat[0].is_deleted = true
   }
+  let histories = chatHistoryModels.value.filter((history: ChatsModel.ChatResponseModel) => history.user_id === eventmodel.to_id)
+  if (histories.length > 0) {
+    if (histories[0].chat_id === eventmodel.chat_id) {
+      histories[0].is_deleted = true
+    }
+  }
 }
 
-async function deleteChat(chat:ChatResponseModel) {
+async function deleteChat(chat: ChatResponseModel) {
   if (chat.is_deleting === true) {
     return
   }
@@ -714,6 +724,12 @@ async function deleteChat(chat:ChatResponseModel) {
       var response_model = response._data as SuccessError<ChatsModel.ChatResponseModel>
       if (response_model.success) {
         chat.is_deleted = true
+        let histories = chatHistoryModels.value.filter((history: ChatsModel.ChatResponseModel) => history.user_id === chat.to_id)
+        if (histories.length > 0) {
+          if (histories[0].chat_id === chat.chat_id) {
+            histories[0].is_deleted = true
+          }
+        }
         showToastSuccess(response_model.message)
       }
       else {
@@ -754,9 +770,11 @@ function updateBadgeCount(to_id: number) {
 
 function appendLastMessagetohistory(to_id: number, message: string) {
   let histories = chatHistoryModels.value.filter((history: ChatsModel.ChatResponseModel) => history.user_id === to_id)
+ 
   if (histories.length > 0) {
     histories[0].badge_count = 0
     histories[0].message = message
+    histories[0].is_deleted = false
   }
 }
 
@@ -916,5 +934,4 @@ function uploadattachment(url: string, key: string, contentType: string = 'image
   background-color: rgba(255, 255, 255, 0.1) !important;
   border-left: 3px solid #ff6b6b;
 }
-
 </style>
