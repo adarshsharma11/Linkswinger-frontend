@@ -656,7 +656,7 @@
                   <!-- <input class="input" type="text" name="near" placeholder="Enter town or postcode" /> -->
                   <Multiselect class="input" v-model="selectedTown" :options="allTowns" :multiple="false"
                     :close-on-select="true" placeholder="Enter town or postcode" :loading="is_town_loading"
-                    @search-change="fetchTownsPostCodes" label="name" track_by="id" />
+                    @search-change="fetchTownsPostCodes" label="name" track_by="id" :internal-search="false" />
                 </div>
                 <div class="col-md-6 pb-2">
                   <select class="select" v-model="radius" name="distance">
@@ -934,7 +934,7 @@ async function fetchUsersList(fromAdvance = false) {
 }
 
 function fetchTownsPostCodes(query: string) {
-  if (query.length === 0) {
+  if (query.length === 0 || is_town_loading.value) {
     allTowns.value = []
     return;
   }
@@ -948,13 +948,13 @@ function fetchTownsPostCodes(query: string) {
       'Content-Type': 'application/json',
     },
   }).then((response) => {
-
+ is_town_loading.value = false;
     if (response.success) {
       allTowns.value = (response.result ?? []) as UsersModel.FetchTownPostCodesResponseModel[]
     }
-    is_town_loading.value = false;
   }).catch((error) => {
     is_town_loading.value = false;
+     console.log(error.message);
   });
 }
 
