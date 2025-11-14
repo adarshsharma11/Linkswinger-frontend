@@ -37,7 +37,7 @@ export default defineNuxtConfig({
     '@/assets/scss/app.scss',
     'video.js/dist/video-js.css',
   ],
-  modules: ['nuxt-icon','@pinia/nuxt','floating-vue/nuxt'],
+  modules: ['nuxt-icon','@pinia/nuxt','floating-vue/nuxt','nuxt-emoji-picker'],
   pinia: {
     storesDirs: ['./store/**', './custom-folder/store/**'],
   },

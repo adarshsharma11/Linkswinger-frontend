@@ -8,9 +8,9 @@
           <!-- Mobile Settings Menu -->
           <div class="col-12 mb-2 d-md-none">
             <div class="dropdown d-flex justify-content-end">
-              <button v-if="isMine()"  id="settingsMenuMobile"
+              <button v-if="isMine()" id="settingsMenuMobile"
                 class="btn p-0 border-0 bg-transparent d-flex flex-column align-items-center text-white mr-2"
-                data-bs-toggle="dropdown" aria-expanded="false" >
+                data-bs-toggle="dropdown" aria-expanded="false">
                 <img src="/images/badges/animated/50X50px/settings.gif" alt="Settings" class="rounded-circle"
                   style="width: 40px; height: 40px; object-fit: cover" />
                 <small>Settings</small>
@@ -18,7 +18,7 @@
               <ul class="dropdown-menu dropdown-menu-end bg-dark text-white setting-dropdown-menu"
                 aria-labelledby="settingsMenuMobile">
                 <li>
-                  <button  class="dropdown-item text-white d-flex align-items-center" @click="navigateTo('/membership')">
+                  <button class="dropdown-item text-white d-flex align-items-center" @click="navigateTo('/membership')">
                     <img src="/images/badges/animated/50X50px/elite.gif" alt="Verify" class="rounded-circle me-2"
                       style="width: 30px; height: 30px; object-fit: cover" />
                     <span class="text-white">Membership</span>
@@ -48,11 +48,11 @@
                     <span class="text-white">Upload Media</span>
                   </button>
                 </li>
-                  <li>
+                <li>
                   <button class="dropdown-item text-white d-flex align-items-center"
                     @click="navigateTo(`/profile-settings`)">
-                    <img src="/images/badges/animated/50X50px/profile-settings.gif" alt="Verify" class="rounded-circle me-2"
-                      style="width: 30px; height: 30px; object-fit: cover" />
+                    <img src="/images/badges/animated/50X50px/profile-settings.gif" alt="Verify"
+                      class="rounded-circle me-2" style="width: 30px; height: 30px; object-fit: cover" />
                     <span class="text-white">Profile Settings</span>
                   </button>
                 </li>
@@ -96,7 +96,7 @@
               {{ getGender() }} {{ getAge(getUser()?.dob ?? '') }} from
               {{ getUser()?.town ?? '' }}</h3>
             <span class="badge bg-success fs-6">Active</span>
-            <p class="mb-0 mt-2 text-white">{{getUser()?.profile_status}}</p>
+            <p class="mb-0 mt-2 text-white">{{ getUser()?.profile_status }}</p>
           </div>
 
           <!-- Right: Settings Dropdown (Desktop only) -->
@@ -145,8 +145,8 @@
                 <li>
                   <button class="dropdown-item text-white d-flex align-items-center"
                     @click="navigateTo(`/profile-settings`)" v-if="isMine()">
-                    <img src="/images/badges/animated/50X50px/profile-settings.gif" alt="Verify" class="rounded-circle me-2"
-                      style="width: 30px; height: 30px; object-fit: cover" />
+                    <img src="/images/badges/animated/50X50px/profile-settings.gif" alt="Verify"
+                      class="rounded-circle me-2" style="width: 30px; height: 30px; object-fit: cover" />
                     <span class="text-white">Profile Settings</span>
                   </button>
                 </li>
@@ -170,9 +170,8 @@
           <div class="col-12 col-md-3 d-flex justify-content-center justify-content-md-start">
             <div class="d-flex gap-2 flex-wrap justify-content-center">
               <img :src="getmembershipIcon()" alt="Elite" class="badge-icon" />
-              <img src="/images/badges/photo-verified.gif"
-                v-if="(getUser()?.is_photo_verified ?? false) === true" alt="Silver"
-                class="badge-icon" />
+              <img src="/images/badges/photo-verified.gif" v-if="(getUser()?.is_photo_verified ?? false) === true"
+                alt="Silver" class="badge-icon" />
             </div>
           </div>
 
@@ -222,22 +221,28 @@
             <ul class="list-unstyled photo-list mb-0">
               <li
                 @click="navigateTo('/feeds/' + getUser()?.user_id + '?' + 'media_type=image' + '&' + 'feed_type=public')">
-                <img src="/images/badges/public-photos.png" class="icon" /> Public Photos</li>
+                <img src="/images/badges/public-photos.png" class="icon" /> Public Photos
+              </li>
               <li
                 @click="navigateTo('/feeds/' + getUser()?.user_id + '?' + 'media_type=video' + '&' + 'feed_type=public')">
-                <img src="/images/badges/public-photos.png" class="icon" /> Public Videos</li>
+                <img src="/images/badges/public-photos.png" class="icon" /> Public Videos
+              </li>
               <li
                 @click="navigateTo('/feeds/' + getUser()?.user_id + '?' + 'media_type=image' + '&' + 'feed_type=friends')">
-                <img src="/images/badges/friends-only-photos.png" class="icon" /> Friends-Only Photos</li>
+                <img src="/images/badges/friends-only-photos.png" class="icon" /> Friends-Only Photos
+              </li>
               <li
                 @click="navigateTo('/feeds/' + getUser()?.user_id + '?' + 'media_type=video' + '&' + 'feed_type=friends')">
-                <img src="/images/badges/friends-only-photos.png" class="icon" /> Friends-Only Videos</li>
+                <img src="/images/badges/friends-only-photos.png" class="icon" /> Friends-Only Videos
+              </li>
               <li
                 @click="navigateTo('/feeds/' + getUser()?.user_id + '?' + 'media_type=image' + '&' + 'feed_type=private')">
-                <img src="/images/badges/private-photos.png" class="icon" /> Private Photos</li>
+                <img src="/images/badges/private-photos.png" class="icon" /> Private Photos
+              </li>
               <li
                 @click="navigateTo('/feeds/' + getUser()?.user_id + '?' + 'media_type=video' + '&' + 'feed_type=private')">
-                <img src="/images/badges/private-photos.png" class="icon" /> Private Videos</li>
+                <img src="/images/badges/private-photos.png" class="icon" /> Private Videos
+              </li>
             </ul>
           </div>
         </div>
@@ -297,18 +302,44 @@
           <div class="card bg-black text-white">
             <div class="card-body">
               <h5 class="text-white mb-3">Meet Verification</h5>
-              <p v-for="verification in verifications"><strong>{{ verification.nick_name }}:</strong>{{ verification.review  }}</p>
-              <button v-if="isMine() === false && is_verified === false && is_verify_loading === false" class="btn btn-sm btn-outline-light mt-2" @click="showVerificationAlert()">Verify</button>
+              <p v-for="verification in verifications"><strong>{{ verification.nick_name }}:</strong>{{
+                verification.review }}</p>
+              <button v-if="isMine() === false && is_verified === false && is_verify_loading === false"
+                class="btn btn-sm btn-outline-light mt-2" @click="showVerificationAlert()">Verify</button>
               <span class="btn-loader" v-if="is_verify_loading"></span>
             </div>
           </div>
         </div>
       </div>
     </div>
+
   </section>
+  <div class="absolute" ref="emojiButtonRef">
+    <!-- Floating Emoji Picker -->
+    <transition name="fade">
+      <div v-if="showEmojiPicker" ref="emojiPickerRef" class="fixed z-50 bg-white border rounded-lg shadow-lg" :style="{
+        position: 'absolute',
+        top: pickerPosition.y + 'px',
+        left: pickerPosition.x + 'px',
+        width: '300px'
+      }">
+        <!-- Header for dragging -->
+        <div
+          class="cursor-move bg-gray-100 px-2 py-1 rounded-t-lg border-b flex justify-between items-center select-none"
+          @mousedown="startDrag">
+          <span class="text-sm text-gray-600">Drag me 😄</span>
+          <button @click="showEmojiPicker = false" class="text-gray-400 hover:text-gray-700">&times;</button>
+        </div>
+
+        <!-- Picker content -->
+        <div class="p-2">
+          <NuxtEmojiPicker @select="onSelectEmoji" />
+        </div>
+      </div>
+    </transition>
+  </div>
 </template>
 <script setup lang="ts">
-import { number } from 'yup';
 import { MeetVerificationsModel, type UsersModel } from '~/composables/models';
 import Swal from 'sweetalert2'
 interface Props {
@@ -320,13 +351,13 @@ const user_store = userStore()
 const login_store = useLoginStore();
 const is_logout_loading = ref(false);
 const is_verify_loading = ref(false);
-const verifications  = ref([] as MeetVerificationsModel.FetchVerifyResponseModel[])
+const verifications = ref([] as MeetVerificationsModel.FetchVerifyResponseModel[])
 const userDetails = ref<UsersModel.ProfileDetailsResponseModel | null | undefined>(null);
 const is_verified = ref(false);
 
 
 if (isMine() === false) {
-    const fetchUserDetails = async () => {
+  const fetchUserDetails = async () => {
     const api_url = getUrl(RequestURL.getProfileDetails);
     const { data: response, error: option_error } = await useFetch<SuccessError<UsersModel.ProfileDetailsResponseModel>>(
       api_url,
@@ -347,33 +378,30 @@ if (isMine() === false) {
   fetchUserDetails();
 }
 const fetchMeetVerifications = async () => {
-    const api_url = getUrl(RequestURL.fetchMeetVerifications);
-    const { data: response, error: option_error } = await useFetch<SuccessError<MeetVerificationsModel.FetchVerifyResponseModel>>(
-      api_url,
-      {
-        method: "POST",
-        body: {
-          from_id: user_store.getLoginId,
-          to_id : Number(props.user_id ?? 0)
-        },
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
-    if (response.value?.success) 
+  const api_url = getUrl(RequestURL.fetchMeetVerifications);
+  const { data: response, error: option_error } = await useFetch<SuccessError<MeetVerificationsModel.FetchVerifyResponseModel>>(
+    api_url,
     {
-      if(response.value.result)
-      {
-         is_verified.value = response.value.result[0].is_verified ?? false
-      }
-      return response.value.result
+      method: "POST",
+      body: {
+        from_id: user_store.getLoginId,
+        to_id: Number(props.user_id ?? 0)
+      },
+      headers: {
+        "Content-Type": "application/json",
+      },
     }
-    else
-    {
-      return []
+  );
+  if (response.value?.success) {
+    if (response.value.result) {
+      is_verified.value = response.value.result[0].is_verified ?? false
     }
-  };
+    return response.value.result
+  }
+  else {
+    return []
+  }
+};
 
 verifications.value = await fetchMeetVerifications() as MeetVerificationsModel.FetchVerifyResponseModel[]
 
@@ -416,29 +444,28 @@ function getPartnerHeight(): string {
   }
 }
 
-function showVerificationAlert()
-{
+function showVerificationAlert() {
   Swal.fire({
-  title: 'Please enter review',
-  input: 'text', // Specifies a text input field
-  inputPlaceholder: 'Type review here', // Placeholder text for the input
-  showCancelButton: true, // Displays a cancel button
-  inputValidator: (value : string) => { // Optional: input validation
-    let trim = value.trim()
-    if (trim.length === 0) {
-      return 'Please enter review';
+    title: 'Please enter review',
+    input: 'text', // Specifies a text input field
+    inputPlaceholder: 'Type review here', // Placeholder text for the input
+    showCancelButton: true, // Displays a cancel button
+    inputValidator: (value: string) => { // Optional: input validation
+      let trim = value.trim()
+      if (trim.length === 0) {
+        return 'Please enter review';
+      }
     }
-  }
-}).then((result) => {
-  if (result.isConfirmed) {
-     addVerification(result.value ?? '')
-  }
-});
+  }).then((result) => {
+    if (result.isConfirmed) {
+      addVerification(result.value ?? '')
+    }
+  });
 }
 
 
-async function addVerification(review:string) {
- if (is_verify_loading.value) {
+async function addVerification(review: string) {
+  if (is_verify_loading.value) {
     return;
   }
   const api_url = getUrl(RequestURL.addMeetVerification);
@@ -450,7 +477,7 @@ async function addVerification(review:string) {
       body: {
         from_id: user_store.getLoginId,
         to_id: Number(props.user_id ?? 0),
-        review : review
+        review: review
       },
       headers: {
         "Content-Type": "application/json",
@@ -458,16 +485,15 @@ async function addVerification(review:string) {
     }
   );
   is_verify_loading.value = false;
-  if (response.success) 
-  {
-   is_verified.value = true
-   let fetchmodel = new MeetVerificationsModel.FetchVerifyResponseModel()
-   fetchmodel.from_id =  user_store.getLoginId
-   fetchmodel.nick_name = login_store.getUserDetails?.nick_name
-   fetchmodel.to_id =  Number(props.user_id ?? 0)
-   fetchmodel.review = review
-   verifications.value.push(fetchmodel)
-   showToastSuccess(response.message)
+  if (response.success) {
+    is_verified.value = true
+    let fetchmodel = new MeetVerificationsModel.FetchVerifyResponseModel()
+    fetchmodel.from_id = user_store.getLoginId
+    fetchmodel.nick_name = login_store.getUserDetails?.nick_name
+    fetchmodel.to_id = Number(props.user_id ?? 0)
+    fetchmodel.review = review
+    verifications.value.push(fetchmodel)
+    showToastSuccess(response.message)
   }
   else {
     showToastError("Logout failed. Please try again.");
@@ -565,4 +591,49 @@ function isMine(): boolean {
   let login_id = Number(login_store.getUserDetails?.user_id ?? 0)
   return user_id === login_id
 }
+
+const showEmojiPicker = ref(true)
+const emojiButtonRef = ref(null)
+const emojiPickerRef = ref(null)
+const isDragging = ref(false)
+const dragOffset = ref({ x: 0, y: 0 })
+const pickerPosition = ref({ x: 500, y: 200 }) // initial position
+
+const toggleEmojiPicker = () => {
+  showEmojiPicker.value = !showEmojiPicker.value
+}
+
+const onSelectEmoji = (emoji: any) => {
+  console.log(emoji.i)
+}
+
+const startDrag = (e: any) => {
+  console.log('startDrag')
+  if (!emojiPickerRef.value) return
+  isDragging.value = true
+  const rect = emojiPickerRef.value.getBoundingClientRect()
+  dragOffset.value = {
+    x: e.clientX - rect.left,
+    y: e.clientY - (rect.top - 50),
+  }
+  document.addEventListener('mousemove', onDrag)
+  document.addEventListener('mouseup', stopDrag)
+}
+
+const onDrag = (e: any) => {
+
+  if (!isDragging.value) return
+  pickerPosition.value = {
+    x: e.clientX - dragOffset.value.x,
+    y: e.clientY - dragOffset.value.y,
+  }
+}
+
+const stopDrag = () => {
+  isDragging.value = false
+  document.removeEventListener('mousemove', onDrag)
+  document.removeEventListener('mouseup', stopDrag)
+}
+
+
 </script>
