@@ -538,7 +538,7 @@ onMounted(() => {
       await navigateTo(`/video-call/${eventModel.token}`)
     }
     else {
-      await navigateTo(`/voicecall/${eventModel.token}`)
+      await navigateTo(`/voice-call/${eventModel.token}`)
     }
   })
   eventBus.on('chatEvent', (responseevent) => {

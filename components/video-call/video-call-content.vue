@@ -123,6 +123,12 @@
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
 import { CallAlertModel, type CallsModel } from '~/composables/websocketModels';
 import { useCallStore } from '~/store/appstores';
+
+interface Props {
+  is_video: boolean,
+}
+const props = defineProps<Props>()
+
 const login_store = useLoginStore()
 const call_store = useCallStore()
 const advisor = ref(null);
@@ -132,7 +138,7 @@ const timeLeft = ref(0);
 const timeStart = ref(0);
 var is_session_ending = ref(false);
 var isalertshown = false
-let webrtcclient = new WebRTCClient(true)
+let webrtcclient = new WebRTCClient(props.is_video)
 const eventBus = useMittEmitter()
 const isAnswerSent = ref(false)
 const hasAnswer = ref(false)

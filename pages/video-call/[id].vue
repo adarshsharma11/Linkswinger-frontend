@@ -1,5 +1,5 @@
 <template>
-   <video-call/>
+   <video-call :is_video="true"/>
 </template>
 <script setup>
 import userdetails from '~/middleware/userdetails';

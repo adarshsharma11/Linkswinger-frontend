@@ -9,10 +9,10 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
         if (call_store.getCallDetails === null) {
 
             var token = ""
-            if (to.path.startsWith('/voicecall/') || to.path.startsWith('/video-call/')) {
+            if (to.path.startsWith('/voice-call/') || to.path.startsWith('/video-call/')) {
                token = to.params.id as string
             }
-            if (from.path.startsWith('/voicecall/') || from.path.startsWith('/video-call/')) {
+            if (from.path.startsWith('/voice-call/') || from.path.startsWith('/video-call/')) {
                token = to.params.id as string
             }
             const api_url = getUrl(RequestURL.fetchCallDetails)

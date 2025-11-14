@@ -102,7 +102,7 @@ async function handleAccept() {
       await navigateTo(`/video-call/${response.response?.token}`)
     }
     else {
-      await navigateTo(`/voicecall/${response.response?.token}`)
+      await navigateTo(`/voice-call/${response.response?.token}`)
     }
   }
   else {
