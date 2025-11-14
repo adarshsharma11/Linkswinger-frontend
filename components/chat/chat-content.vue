@@ -163,13 +163,14 @@
                 </div>
                 <div v-if="chat.message_type === 'video'"><video :src="(chat.media_path ?? '') + (chat.message ?? '')"
                     style="max-width: 300px; max-height: 300px;" controls></video></div>
-
+  
               </div>
               <div class="message-time" v-if="chat.from_id !== login_store.getUserDetails?.user_id">{{ chat.created_at }}
               </div>
               <div class="message-time" v-if="chat.from_id === login_store.getUserDetails?.user_id">{{ chat.created_at }}
                 • {{ chat.status }}</div>
-              <button class="trash-btn" v-if="chat.from_id === login_store.getUserDetails?.user_id">🗑️</button>
+            <button class="trash-btn" @click="deleteChat(chat)" v-if="chat.from_id === login_store.getUserDetails?.user_id && (chat.is_deleted ?? false) === false && (chat.is_deleting ?? false) === false">🗑️</button>
+            <span class="btn-loader" v-if="chat.is_deleting"></span>
             </div>
             <!-- <div class="message-bubble message-incoming">We loved your profile pics. Fancy a chat tonight?<div
                 class="message-time">13:43</div>
@@ -693,6 +694,36 @@ function deleteMessageStatus(eventmodel: ChatEventSocketModel) {
     chat[0].is_deleted = true
   }
 }
+
+async function deleteChat(chat:ChatResponseModel) {
+  if (chat.is_deleting === true) {
+    return
+  }
+  chat.is_deleting = true
+  const api_url = getUrl(RequestURL.deleteChat);
+  await $fetch<SuccessError<ChatsModel.ChatResponseModel>>(api_url, {
+    cache: "no-cache",
+    method: "post",
+    body: {
+      "chat_id": chat.chat_id,
+    },
+    headers: {
+      "content-type": "application/json"
+    },
+    onResponse: async ({ response }) => {
+      var response_model = response._data as SuccessError<ChatsModel.ChatResponseModel>
+      if (response_model.success) {
+        chat.is_deleted = true
+        showToastSuccess(response_model.message)
+      }
+      else {
+        showToastError(response_model.message)
+      }
+      chat.is_deleting = false
+    }
+  });
+}
+
 function sendMessage() {
   if (isWSConnected.value === false) {
     showToastError('Please wait while we are connecting to server');
@@ -886,21 +917,4 @@ function uploadattachment(url: string, key: string, contentType: string = 'image
   border-left: 3px solid #ff6b6b;
 }
 
-.chat-item {
-  position: relative;
-  display: inline-block;
-}
-
-.trash-btn {
-  position: absolute;
-  top: 5px;
-  right: -40px;
-  opacity: 0;
-  transition: opacity 0.2s;
-  cursor: pointer;
-}
-
-.chat-item:hover .trash-btn {
-  opacity: 1;
-}
 </style>

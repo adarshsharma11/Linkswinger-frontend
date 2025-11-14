@@ -486,6 +486,7 @@ export namespace ChatsModel {
   status?: string;
   is_read?:boolean
   is_deleted?:boolean
+  is_deleting?:boolean
 
   user_id?:number
   badge_count?:number
