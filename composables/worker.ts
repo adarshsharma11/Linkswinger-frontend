@@ -30,6 +30,7 @@ type Events = {
   socketConnection: boolean,
   chatEvent: ChatEventSocketModel,
   chatUpdateStatus:ChatEventSocketModel,
+  chatDeleteStatus:ChatEventSocketModel,
   onlineUserIds : number[],
   typing:TypingEventSocketModel,
   callAlert:CallAlertModel,
@@ -290,6 +291,11 @@ else if (json.event_name === "chat_read_status") {
     let json = event.data as ChatEventSocketModel   
     sendtosocket(json)
   }
+  else if (json.event_name === "chat_delete") {
+    let json = event.data as ChatEventSocketModel   
+     emitter.emit('chatDeleteStatus', json)
+  }
+  
   else if (json.event_name === "call_alert") {
    let json = event.data as CallAlertModel   
     emitter.emit('callAlert', json)
@@ -323,6 +329,7 @@ else if (json.event_name === "call_updates") {
    let json = event.data as CallAlertModel  
 sendtosocket(json)
 }
+
   
 
   

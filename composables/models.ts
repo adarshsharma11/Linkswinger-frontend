@@ -41,7 +41,8 @@ export enum RequestURL {
   declineCall = "/declineCall",
   acceptCall = "/acceptCall",
   endCall = "/endCall",
-  fetchCallDetails = "/fetchCallDetails"
+  fetchCallDetails = "/fetchCallDetails",
+  deleteChat = "/deleteChat"
 }
 
 export var online_user_ids : number[] = []
@@ -484,6 +485,7 @@ export namespace ChatsModel {
   created_at?: string;
   status?: string;
   is_read?:boolean
+  is_deleted?:boolean
 
   user_id?:number
   badge_count?:number

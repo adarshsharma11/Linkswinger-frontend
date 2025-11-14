@@ -4,7 +4,7 @@
     <div class="d-lg-none mb-3">
       <button class="btn btn-sm btn-dark border-secondary" @click="goBack">
         <svg viewBox="0 0 24 24" class="h-4 w-4" fill="currentColor">
-          <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+          <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" />
         </svg>
         Back
       </button>
@@ -35,7 +35,8 @@
                 <div class="position-relative chat-item-left">
                   <img
                     class="rounded-circle bg-success text-white d-flex align-items-center justify-content-center fw-bold"
-                    style="width:40px;height:40px;object-fit: cover; object-position: center;" :src="getImagePath(historymodel)"></img>
+                    style="width:40px;height:40px;object-fit: cover; object-position: center;"
+                    :src="getImagePath(historymodel)"></img>
                   <span
                     class="position-absolute bottom-0 end-0 translate-middle rounded-circle bg-success border border-dark"
                     style="width:12px;height:12px;" v-if="onlineUsers.includes(historymodel.user_id ?? 0)"></span>
@@ -47,11 +48,17 @@
                       historymodel.tier_name ?? 'Free' }}</span>
                   </div>
                   <small class="text-secondary" v-if="(historymodel.is_typing ?? false) === true">Typing...</small>
-                  <small class="text-secondary"
-                    v-if="(historymodel.is_typing ?? false) === false && historymodel.message_type === 'text'">{{
-                      historymodel.message }}</small>
-                  <small class="text-secondary"
-                    v-if="(historymodel.is_typing ?? false) === false && historymodel.message_type !== 'text'">Media</small>
+                  <div v-if="(historymodel.is_deleted ?? false) === false">
+                    <small class="text-secondary"
+                      v-if="(historymodel.is_typing ?? false) === false && historymodel.message_type === 'text'">{{
+                        historymodel.message }}</small>
+                    <small class="text-secondary"
+                      v-if="(historymodel.is_typing ?? false) === false && historymodel.message_type !== 'text'">Media</small>
+                  </div>
+                  <div
+                    v-if="(historymodel.is_deleted ?? false) === true && (historymodel.is_typing ?? false) === false">
+                    <small class="text-secondary">This message was deleted</small>
+                  </div>
                 </div>
               </div>
               <span class="badge bg-danger glow-red text-white" v-if="(historymodel.badge_count ?? 0) > 0">{{
@@ -91,7 +98,7 @@
               <!-- Desktop Back Button -->
               <button class="btn btn-sm btn-dark border-secondary d-none d-lg-inline-flex" @click="goBack">
                 <svg viewBox="0 0 24 24" class="h-4 w-4" fill="currentColor">
-                  <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+                  <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" />
                 </svg>
               </button>
               <div class="position-relative">
@@ -110,26 +117,31 @@
                     •</small>
                   <small class="text-secondary">{{ userDetails?.profile_type }}</small>
                 </div>
-               
+
               </div>
             </div>
             <div class="d-flex gap-2 chat-hd-btn">
               <!-- <button class="btn btn-sm btn-dark border-secondary grp-btn">Create Group</button> -->
-              <button class="btn btn-sm btn-dark border-secondary" @click="showCodeAlert(false)"><svg viewBox="0 0 24 24" class="h-4 w-4"
-                  fill="currentColor" >
+              <button class="btn btn-sm btn-dark border-secondary" @click="showCodeAlert(false)"><svg
+                  viewBox="0 0 24 24" class="h-4 w-4" fill="currentColor">
                   <path
                     d="M6.6 10.8a15 15 0 0 0 6.6 6.6l2.2-2.2a1.5 1.5 0 0 1 1.6-.36l3.4 1.14a1.5 1.5 0 0 1 1 1.41V20a2 2 0 0 1-2 2c-9.39 0-17-7.61-17-17a2 2 0 0 1 2-2h2.61a1.5 1.5 0 0 1 1.41 1l1.14 3.4a1.5 1.5 0 0 1-.36 1.6L6.6 10.8z">
                   </path>
                 </svg> Voice</button>
-              <button class="btn btn-sm btn-dark border-secondary" @click="showCodeAlert(true)"><svg viewBox="0 0 24 24" class="h-4 w-4"
-                  fill="currentColor" >
+              <button class="btn btn-sm btn-dark border-secondary" @click="showCodeAlert(true)"><svg viewBox="0 0 24 24"
+                  class="h-4 w-4" fill="currentColor">
                   <path d="M23 7l-6 4V7a2 2 0 0 0-2-2H3a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4l6 4V7z">
                   </path>
                 </svg> Video</button>
-                <span class="btn-loader" v-if="is_code_loading"></span>
-              <button class="btn btn-sm btn-danger glow-red-strong text-white" v-if="!is_code_loading && call_code.length === 0" @click="fetchCallCode()">Show my call code</button>
-              <button class="btn btn-sm btn-danger glow-red-strong text-white" v-if="!is_code_loading && call_code.length !== 0" @click="updatecallcode()">{{ call_code.toUpperCase().slice(-4) }} <svg viewBox="0 0 24 24" class="h-4 w-4"
-                  fill="currentColor"><path d="M12 2a10 10 0 1 0 9.95 11H20a8 8 0 1 1-8-8c2.03 0 3.89.76 5.29 2.01L14 10h8V2l-2.35 2.35A9.97 9.97 0 0 0 12 2z" /></svg></button>
+              <span class="btn-loader" v-if="is_code_loading"></span>
+              <button class="btn btn-sm btn-danger glow-red-strong text-white"
+                v-if="!is_code_loading && call_code.length === 0" @click="fetchCallCode()">Show my call code</button>
+              <button class="btn btn-sm btn-danger glow-red-strong text-white"
+                v-if="!is_code_loading && call_code.length !== 0" @click="updatecallcode()">{{
+                  call_code.toUpperCase().slice(-4) }} <svg viewBox="0 0 24 24" class="h-4 w-4" fill="currentColor">
+                  <path
+                    d="M12 2a10 10 0 1 0 9.95 11H20a8 8 0 1 1-8-8c2.03 0 3.89.76 5.29 2.01L14 10h8V2l-2.35 2.35A9.97 9.97 0 0 0 12 2z" />
+                </svg></button>
             </div>
           </div>
 
@@ -143,16 +155,21 @@
               'ms-auto': chat.from_id === login_store.getUserDetails?.user_id,
               'glow-red': chat.from_id === login_store.getUserDetails?.user_id
             }" :id="`${chat.chat_id ?? 0}`">
-              <div v-if="chat.message_type === 'text'">{{ chat.message }}</div>
-              <div v-if="chat.message_type === 'image'"><img :src="(chat.media_path ?? '') + (chat.message ?? '')"
-                  style="max-width: 300px; max-height: 300px;" />
+              <div v-if="(chat.is_deleted ?? false) === true">This message was deleted</div>
+              <div v-if="(chat.is_deleted ?? false) === false" class="chat-item">
+                <div v-if="chat.message_type === 'text'">{{ chat.message }}</div>
+                <div v-if="chat.message_type === 'image'"><img :src="(chat.media_path ?? '') + (chat.message ?? '')"
+                    style="max-width: 300px; max-height: 300px;" />
+                </div>
+                <div v-if="chat.message_type === 'video'"><video :src="(chat.media_path ?? '') + (chat.message ?? '')"
+                    style="max-width: 300px; max-height: 300px;" controls></video></div>
+
               </div>
-              <div v-if="chat.message_type === 'video'"><video :src="(chat.media_path ?? '') + (chat.message ?? '')"
-                  style="max-width: 300px; max-height: 300px;" controls></video></div>
-              <div class="message-time" v-if="chat.from_id !== login_store.getUserDetails?.user_id">{{ chat.created_at
-              }}</div>
-              <div class="message-time" v-if="chat.from_id === login_store.getUserDetails?.user_id">{{ chat.created_at
-              }} • {{ chat.status }}</div>
+              <div class="message-time" v-if="chat.from_id !== login_store.getUserDetails?.user_id">{{ chat.created_at }}
+              </div>
+              <div class="message-time" v-if="chat.from_id === login_store.getUserDetails?.user_id">{{ chat.created_at }}
+                • {{ chat.status }}</div>
+              <button class="trash-btn" v-if="chat.from_id === login_store.getUserDetails?.user_id">🗑️</button>
             </div>
             <!-- <div class="message-bubble message-incoming">We loved your profile pics. Fancy a chat tonight?<div
                 class="message-time">13:43</div>
@@ -166,7 +183,8 @@
             <div class="message-bubble message-outgoing ms-auto glow-red">Cool — speak later ✨<div class="message-time">
                 13:50 • Delivered</div>
             </div> -->
-            <div class="typing-animate" v-if="(userDetails?.is_typing ?? false) === true">Typing<span></span><span></span><span></span></div>
+            <div class="typing-animate" v-if="(userDetails?.is_typing ?? false) === true">
+              Typing<span></span><span></span><span></span></div>
           </div>
 
           <!-- Composer -->
@@ -340,114 +358,108 @@ function showTypingIndicator(from_id: number) {
   }
 }
 
-async function fetchCallCode()
-{
-  if (is_code_loading.value)
-  {
-        return
+async function fetchCallCode() {
+  if (is_code_loading.value) {
+    return
   }
   is_code_loading.value = true
-      const api_url = getUrl(RequestURL.fetchCallCode);
-      await $fetch<SuccessError<UsersModel.FetchCallCodeResponseModel>>(api_url, {
-        cache: "no-cache",
-        method: "post",
-        body: {
-          "user_id": user_store.getLoginId
-        },
-        headers: {
-          "content-type": "application/json"
-        },
-        onResponse: async ({ response }) => {
-          is_code_loading.value = false
-          var response_model = response._data as SuccessError<UsersModel.FetchCallCodeResponseModel>
-          if (response_model.success) {
-            call_code.value = response_model.response?.call_code ?? ''
-          }
-          else {
-            showToastError(response_model.message)
-          }
-          
-        }
-      });
-}
-async function updatecallcode()
-{
-  if (is_code_loading.value)
-  {
-        return
-  }
-  is_code_loading.value = true
-      const api_url = getUrl(RequestURL.updateCallCode);
-      await $fetch<SuccessError<UsersModel.FetchCallCodeResponseModel>>(api_url, {
-        cache: "no-cache",
-        method: "post",
-        body: {
-          "user_id": user_store.getLoginId
-        },
-        headers: {
-          "content-type": "application/json"
-        },
-        onResponse: async ({ response }) => {
-          is_code_loading.value = false
-          var response_model = response._data as SuccessError<UsersModel.FetchCallCodeResponseModel>
-          if (response_model.success) {
-            call_code.value = response_model.response?.call_code ?? ''
-          }
-          else {
-            showToastError(response_model.message)
-          }
-          
-        }
-      });
-}
+  const api_url = getUrl(RequestURL.fetchCallCode);
+  await $fetch<SuccessError<UsersModel.FetchCallCodeResponseModel>>(api_url, {
+    cache: "no-cache",
+    method: "post",
+    body: {
+      "user_id": user_store.getLoginId
+    },
+    headers: {
+      "content-type": "application/json"
+    },
+    onResponse: async ({ response }) => {
+      is_code_loading.value = false
+      var response_model = response._data as SuccessError<UsersModel.FetchCallCodeResponseModel>
+      if (response_model.success) {
+        call_code.value = response_model.response?.call_code ?? ''
+      }
+      else {
+        showToastError(response_model.message)
+      }
 
-function showCodeAlert(is_video:boolean)
-{
-  Swal.fire({
-  title: 'Please enter code',
-  input: 'text', // Specifies a text input field
-  inputPlaceholder: 'Type code here', // Placeholder text for the input
-  showCancelButton: true, // Displays a cancel button
-  inputValidator: (value : string) => { // Optional: input validation
-    if (!value) {
-      return 'Please enter code';
     }
+  });
+}
+async function updatecallcode() {
+  if (is_code_loading.value) {
+    return
   }
-}).then((result) => {
-  if (result.isConfirmed) {
-     validateCall(result.value ?? '',is_video)
-  }
-});
+  is_code_loading.value = true
+  const api_url = getUrl(RequestURL.updateCallCode);
+  await $fetch<SuccessError<UsersModel.FetchCallCodeResponseModel>>(api_url, {
+    cache: "no-cache",
+    method: "post",
+    body: {
+      "user_id": user_store.getLoginId
+    },
+    headers: {
+      "content-type": "application/json"
+    },
+    onResponse: async ({ response }) => {
+      is_code_loading.value = false
+      var response_model = response._data as SuccessError<UsersModel.FetchCallCodeResponseModel>
+      if (response_model.success) {
+        call_code.value = response_model.response?.call_code ?? ''
+      }
+      else {
+        showToastError(response_model.message)
+      }
+
+    }
+  });
 }
 
-async function validateCall(code:string,is_video:boolean)
-{
+function showCodeAlert(is_video: boolean) {
+  Swal.fire({
+    title: 'Please enter code',
+    input: 'text', // Specifies a text input field
+    inputPlaceholder: 'Type code here', // Placeholder text for the input
+    showCancelButton: true, // Displays a cancel button
+    inputValidator: (value: string) => { // Optional: input validation
+      if (!value) {
+        return 'Please enter code';
+      }
+    }
+  }).then((result) => {
+    if (result.isConfirmed) {
+      validateCall(result.value ?? '', is_video)
+    }
+  });
+}
+
+async function validateCall(code: string, is_video: boolean) {
   let to_id = Number(route.params.id ?? '0') ?? 0
-    const api_url = getUrl(RequestURL.validateCall);
-      await $fetch<SuccessError<CallsModel.ValidateCallResponseModel>>(api_url, {
-        cache: "no-cache",
-        method: "post",
-        body: {
-          "from_id": user_store.getLoginId,
-          "from_socket_id" : id_store.getDeviceId,
-           "to_id": to_id,
-           "call_code":code,
-           "is_video" : is_video
-        },
-        headers: {
-          "content-type": "application/json"
-        },
-        onResponse: async ({ response }) => {
-          
-          var response_model = response._data as SuccessError<CallsModel.ValidateCallResponseModel>
-          if (response_model.success) {
-            showToastSuccess(response_model.message)
-          }
-          else {
-            showToastError(response_model.message)
-          }
-        }
-      });
+  const api_url = getUrl(RequestURL.validateCall);
+  await $fetch<SuccessError<CallsModel.ValidateCallResponseModel>>(api_url, {
+    cache: "no-cache",
+    method: "post",
+    body: {
+      "from_id": user_store.getLoginId,
+      "from_socket_id": id_store.getDeviceId,
+      "to_id": to_id,
+      "call_code": code,
+      "is_video": is_video
+    },
+    headers: {
+      "content-type": "application/json"
+    },
+    onResponse: async ({ response }) => {
+
+      var response_model = response._data as SuccessError<CallsModel.ValidateCallResponseModel>
+      if (response_model.success) {
+        showToastSuccess(response_model.message)
+      }
+      else {
+        showToastError(response_model.message)
+      }
+    }
+  });
 }
 
 
@@ -471,14 +483,14 @@ function sendTypingStatus(to_id: number) {
 
 watch(messageTxt, () => {
   const emojiRegex = /(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])/g;
-   messageTxt.value = messageTxt.value.replace(emojiRegex, '')
+  messageTxt.value = messageTxt.value.replace(emojiRegex, '')
   onUserTyping(userDetails.value?.user_id ?? 0)
 });
 
 // const filterEmojis = (event:any) => {
 //   // Regex to match most common emoji Unicode ranges
 //   // This is a simplified example, a more comprehensive regex might be needed for full coverage
-  
+
 
 //   // Replace emojis with an empty string
 //   event.target.value = event.target.value.replace(emojiRegex, '');
@@ -488,18 +500,18 @@ watch(messageTxt, () => {
 onMounted(() => {
 
   console.log('onmounted...chat')
-  
+
   // Initialize activeChatId from route params
   const currentChatId = Number(route.params.id ?? '0')
   if (currentChatId !== 0) {
     activeChatId.value = currentChatId
   }
-  
+
   isWSConnected.value = isSocketConnected()
   eventBus.on('socketConnection', (is_connected) => {
     if (isWSConnected.value === false) {
       if (is_connected) {
-       // showToastSuccess('Socket Connected')
+        // showToastSuccess('Socket Connected')
       }
     }
     isWSConnected.value = is_connected
@@ -514,18 +526,20 @@ onMounted(() => {
   eventBus.on('chatUpdateStatus', (eventModel) => {
     updateMessageStatus(eventModel)
   })
-   eventBus.on('callDeclineAlert', (eventModel) => {
+  eventBus.on('chatDeleteStatus', (eventModel) => {
+    deleteMessageStatus(eventModel)
+  })
+
+  eventBus.on('callDeclineAlert', (eventModel) => {
     showToastError('Call declined')
   })
-   eventBus.on('callAcceptAlert', async (eventModel) => {
-     if (eventModel.is_video)
-     {
-        await navigateTo(`/video-call/${eventModel.token}`)
-     }
-     else
-     {
-       await navigateTo(`/voicecall/${eventModel.token}`)
-     }
+  eventBus.on('callAcceptAlert', async (eventModel) => {
+    if (eventModel.is_video) {
+      await navigateTo(`/video-call/${eventModel.token}`)
+    }
+    else {
+      await navigateTo(`/voicecall/${eventModel.token}`)
+    }
   })
   eventBus.on('chatEvent', (responseevent) => {
     let event_name = responseevent.event_name ?? ''
@@ -581,7 +595,7 @@ onMounted(() => {
     updateBadgeCount(to_id)
   }
 
- 
+
 
 })
 
@@ -591,8 +605,10 @@ onBeforeUnmount(() => {
   eventBus.off('onlineUserIds')
   eventBus.off('typing')
   eventBus.off('chatUpdateStatus')
+  eventBus.off('chatDeleteStatus')
   eventBus.off('callDeclineAlert')
   eventBus.off('callAcceptAlert')
+
   console.log('beforemount...chat')
 })
 
@@ -671,8 +687,13 @@ function updateMessageStatus(eventmodel: ChatEventSocketModel) {
     chat[0].status = eventmodel.status
   }
 }
-function sendMessage() 
-{
+function deleteMessageStatus(eventmodel: ChatEventSocketModel) {
+  let chat = chatModels.value.filter((history: ChatsModel.ChatResponseModel) => history.chat_id === eventmodel.chat_id)
+  if (chat.length > 0) {
+    chat[0].is_deleted = true
+  }
+}
+function sendMessage() {
   if (isWSConnected.value === false) {
     showToastError('Please wait while we are connecting to server');
     return
@@ -863,5 +884,23 @@ function uploadattachment(url: string, key: string, contentType: string = 'image
 .chat-active {
   background-color: rgba(255, 255, 255, 0.1) !important;
   border-left: 3px solid #ff6b6b;
+}
+
+.chat-item {
+  position: relative;
+  display: inline-block;
+}
+
+.trash-btn {
+  position: absolute;
+  top: 5px;
+  right: -40px;
+  opacity: 0;
+  transition: opacity 0.2s;
+  cursor: pointer;
+}
+
+.chat-item:hover .trash-btn {
+  opacity: 1;
 }
 </style>
