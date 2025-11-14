@@ -312,36 +312,13 @@
         </div>
       </div>
     </div>
-
   </section>
-  <div class="absolute" ref="emojiButtonRef">
-    <!-- Floating Emoji Picker -->
-    <transition name="fade">
-      <div v-if="showEmojiPicker" ref="emojiPickerRef" class="fixed z-50 bg-white border rounded-lg shadow-lg" :style="{
-        position: 'absolute',
-        top: pickerPosition.y + 'px',
-        left: pickerPosition.x + 'px',
-        width: '300px'
-      }">
-        <!-- Header for dragging -->
-        <div
-          class="cursor-move bg-gray-100 px-2 py-1 rounded-t-lg border-b flex justify-between items-center select-none"
-          @mousedown="startDrag">
-          <span class="text-sm text-gray-600">Drag me 😄</span>
-          <button @click="showEmojiPicker = false" class="text-gray-400 hover:text-gray-700">&times;</button>
-        </div>
-
-        <!-- Picker content -->
-        <div class="p-2">
-          <NuxtEmojiPicker @select="onSelectEmoji" />
-        </div>
-      </div>
-    </transition>
-  </div>
+ <EmojiPicker/>
 </template>
 <script setup lang="ts">
 import { MeetVerificationsModel, type UsersModel } from '~/composables/models';
 import Swal from 'sweetalert2'
+import { EmojiPicker } from '#components';
 interface Props {
   user_id: number
 }
@@ -591,49 +568,4 @@ function isMine(): boolean {
   let login_id = Number(login_store.getUserDetails?.user_id ?? 0)
   return user_id === login_id
 }
-
-const showEmojiPicker = ref(true)
-const emojiButtonRef = ref(null)
-const emojiPickerRef = ref(null)
-const isDragging = ref(false)
-const dragOffset = ref({ x: 0, y: 0 })
-const pickerPosition = ref({ x: 500, y: 200 }) // initial position
-
-const toggleEmojiPicker = () => {
-  showEmojiPicker.value = !showEmojiPicker.value
-}
-
-const onSelectEmoji = (emoji: any) => {
-  console.log(emoji.i)
-}
-
-const startDrag = (e: any) => {
-  console.log('startDrag')
-  if (!emojiPickerRef.value) return
-  isDragging.value = true
-  const rect = emojiPickerRef.value.getBoundingClientRect()
-  dragOffset.value = {
-    x: e.clientX - rect.left,
-    y: e.clientY - (rect.top - 50),
-  }
-  document.addEventListener('mousemove', onDrag)
-  document.addEventListener('mouseup', stopDrag)
-}
-
-const onDrag = (e: any) => {
-
-  if (!isDragging.value) return
-  pickerPosition.value = {
-    x: e.clientX - dragOffset.value.x,
-    y: e.clientY - dragOffset.value.y,
-  }
-}
-
-const stopDrag = () => {
-  isDragging.value = false
-  document.removeEventListener('mousemove', onDrag)
-  document.removeEventListener('mouseup', stopDrag)
-}
-
-
 </script>
