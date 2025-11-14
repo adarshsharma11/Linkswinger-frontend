@@ -192,7 +192,10 @@ onMounted(async () => {
                 })
             }
         }
-        sendcallupdates()
+        if (isSocketConnected()) {
+            sendcallupdates()
+        }
+
     })
     eventBus.on('callEvent', (callModel: CallSocketModel) => {
 
