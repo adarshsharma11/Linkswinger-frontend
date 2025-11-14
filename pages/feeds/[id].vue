@@ -77,7 +77,7 @@ onMounted(async () => {
     allFeeds.value.forEach((feed, i) => {
         const videoEl = videoRefs.value[i]
         const player = videojs(videoEl, {
-            controls: false, // ✅ hide default UI
+            controls: true, // ✅ hide default UI
             autoplay: false,
             preload: 'auto',
             muted: false,

@@ -5,8 +5,8 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     if (user_store.getLoginId !== 0) {
        return await navigateTo('/profile');
     }
-    // if (to.fullPath === '/authentication/signup')
-    // {
-    //     return await navigateTo('/early-access');
-    // }
+    if (to.fullPath === '/authentication/signup')
+    {
+        return await navigateTo('/early-access');
+    }
 })
