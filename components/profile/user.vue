@@ -494,7 +494,7 @@ function editStatus() {
   nextTick(() => {
     const clearBtn = document.getElementById('clear-btn');
     const statusInput = document.getElementById('status-input') as HTMLInputElement;
-    statusInput.textContent = getUser()?.profile_status ?? ''
+    statusInput.value = getUser()?.profile_status ?? ''
     clearBtn?.addEventListener('click', () => {
       statusInput.focus();
       handleToggle()
@@ -518,8 +518,18 @@ function handleToggle() {
 function selectedEmoji(emoji: string) {
   const statusInput = document.getElementById('status-input') as HTMLInputElement;
   if (statusInput) {
-    statusInput.value += emoji;
-    statusInput.focus();
+      const start = statusInput.selectionStart;
+  const end = statusInput.selectionEnd;
+  const value = statusInput.value;
+
+  statusInput.value = value.substring(0, start) + emoji + value.substring(end);
+
+  // Move cursor after the emoji
+  const newPos = start + emoji.length;
+  statusInput.setSelectionRange(newPos, newPos);
+
+  // Ensure input stays focused
+  statusInput.focus();
   }
 }
 
@@ -544,6 +554,7 @@ if (is_status_loading.value) {
   );
   is_status_loading.value = false;
   if (response.success) {
+    getUser()!.profile_status = profile_status
     showToastSuccess(response.message)
   }
   else {
