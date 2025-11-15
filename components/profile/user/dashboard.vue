@@ -63,8 +63,8 @@
         <a href="#live" data-route="live" @click.prevent="setActiveNav('live')"
           :class="{ active: activeNav === 'live' }" class="text-white"><span class="icon"> <img class="sidebar-ic"
               :src="`/images/badges/animated/50X50px/live-oncam.gif`" /></span>Live / On Cam</a>
-        <a href="#" class="text-white"><span class="icon"> <img class="sidebar-ic"
-              :src="`/images/badges/animated/150X150px/19.gif`" /></span>Logout</a>
+        <a  class="text-white" @click="logout()"><span class="icon" > <img class="sidebar-ic"
+              :src="`/images/badges/animated/150X150px/19.gif`" /></span>Logout <span class="btn-loader" v-if="is_logout_loading"></span></a>
       </nav>
       <div class="spacer" />
       <button class="dash-button primary" id="dash-buttonUpload" @click="fakeUpload">＋ Upload/Post</button>
@@ -789,6 +789,7 @@ const { $bootstrap } = useNuxtApp();
 var advanceModelSub: any = null
 const latitude = ref<number | null>(null)
 const longitude = ref<number | null>(null)
+const is_logout_loading = ref(false);
 // Computed numeric version for backend payload
 var radiusMiles = computed<number | null>(() => {
   if (!radius.value) return null
@@ -814,6 +815,11 @@ function setActive(r: string) {
 }
 
 async function setActiveNav(nav: string) {
+
+  if(isSidebarOpen.value)
+  {
+     isSidebarOpen.value = false
+  }
 
   if (nav === 'userlist') {
     activeNav.value = nav
@@ -1141,6 +1147,36 @@ function checkuseronline() {
       sendmsgtoworker(groupmodel, true)
     }
 
+  }
+}
+
+async function logout() {
+  if (is_logout_loading.value) {
+    return;
+  }
+  const api_url = getUrl(RequestURL.logout);
+  is_logout_loading.value = true;
+  const response = await $fetch<SuccessError<UsersModel.LoginResponseModel>>(
+    api_url,
+    {
+      method: "POST",
+      body: {
+        user_id: login_store.getUserDetails?.user_id ?? 0,
+      },
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  is_logout_loading.value = false;
+  if (response.success) {
+    let socketmodel = new OnlineSocketModel()
+    socketmodel.event_name = "logoutself"
+    sendmsgtoworker(socketmodel, true)
+  }
+  else {
+    showToastError("Logout failed. Please try again.");
   }
 }
 

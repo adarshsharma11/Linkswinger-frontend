@@ -607,8 +607,6 @@ watch(messageTxt, () => {
 // const filterEmojis = (event:any) => {
 //   // Regex to match most common emoji Unicode ranges
 //   // This is a simplified example, a more comprehensive regex might be needed for full coverage
-
-
 //   // Replace emojis with an empty string
 //   event.target.value = event.target.value.replace(emojiRegex, '');
 //   messageTxt.value = event.target.value;
