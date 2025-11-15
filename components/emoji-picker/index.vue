@@ -34,12 +34,19 @@ const dragOffset = ref({ x: 0, y: 0 })
 const pickerPosition = ref({ x: 500, y: 200 }) // initial position
 const pickerWidth = ref(300)
 const pickerHeight = ref(370)
+const emit = defineEmits(['selectedEmoji'])
+
+
 const toggleEmojiPicker = () => {
     showEmojiPicker.value = !showEmojiPicker.value
 }
+const closeEmojiPicker = () => {
+    showEmojiPicker.value = false
+}
+
 
 const onSelectEmoji = (emoji: any) => {
-    console.log(emoji.i)
+    emit('selectedEmoji', emoji.i)
 }
 
 const startDrag = (e: any) => {
@@ -78,5 +85,10 @@ onMounted(() => {
   //showEmojiPicker.value = true
 
 });
+
+defineExpose({
+  closeEmojiPicker,
+  toggleEmojiPicker
+})
 
 </script>

@@ -96,7 +96,9 @@
               {{ getGender() }} {{ getAge(getUser()?.dob ?? '') }} from
               {{ getUser()?.town ?? '' }}</h3>
             <span class="badge bg-success fs-6">Active</span>
-            <p class="mb-0 mt-2 text-white">{{ getUser()?.profile_status }}</p>
+            <p class="mb-0 mt-2 text-white">{{ getUser()?.profile_status }} <i v-if="isMine()"
+                class="fa fa-pencil text-white fa-lg" @click="editStatus()"></i></p>
+
           </div>
 
           <!-- Right: Settings Dropdown (Desktop only) -->
@@ -313,17 +315,23 @@
       </div>
     </div>
   </section>
- <EmojiPicker/>
+  <Teleport to="body">
+    <div style="position: fixed; z-index: 999999; left: 0; top: 0;">
+      <EmojiPicker ref="emojiPickerRef" v-on:selected-emoji="selectedEmoji" />
+    </div>
+  </Teleport>
+
 </template>
 <script setup lang="ts">
 import { MeetVerificationsModel, type UsersModel } from '~/composables/models';
 import Swal from 'sweetalert2'
 import { EmojiPicker } from '#components';
+import { Teleport } from 'vue';
 interface Props {
   user_id: number
 }
 const props = defineProps<Props>()
-
+const emojiPickerRef = ref(null)
 const user_store = userStore()
 const login_store = useLoginStore();
 const is_logout_loading = ref(false);
@@ -440,6 +448,81 @@ function showVerificationAlert() {
   });
 }
 
+function editStatus() {
+  Swal.fire({
+    title: 'Edit Profile Status',
+    html: `
+  <div style="
+  display: flex;
+  align-items: center; 
+  gap: 6px;
+">
+  <input id="status-input" class="swal2-input" placeholder="Type status here"
+    style="margin: 0; width: auto; flex: 1;" />
+
+  <button  id="clear-btn" class="swal2-confirm" 
+     style="
+    height: 2.5em;
+    padding: 0 12px;
+    border: none !important;
+    box-shadow: none !important;
+    border-radius: 10px !important;
+  ">
+    😊
+  </button>
+</div>
+
+  `,
+    focusConfirm: false,
+    showCancelButton: true,
+    willClose: () => {
+      // Close your emoji picker here
+      emojiPickerRef.value?.closeEmojiPicker()
+      // or: showEmoji.value = false
+    },
+    preConfirm: () => {
+      const value = (document.getElementById('status-input') as HTMLInputElement).value.trim();
+      if (!value) {
+        Swal.showValidationMessage("Please enter status");
+        return false;
+      }
+      return value;
+    }
+  });
+
+
+  nextTick(() => {
+    const clearBtn = document.getElementById('clear-btn');
+    const statusInput = document.getElementById('status-input') as HTMLInputElement;
+
+    clearBtn?.addEventListener('click', () => {
+      statusInput.focus();
+      handleToggle()
+    });
+
+    const emojiRegex =
+      /(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])/g
+
+    // Watch input changes
+    statusInput.addEventListener("input", () => {
+      statusInput.value = statusInput.value.replace(emojiRegex, "")
+       statusInput.focus();
+    })
+  });
+}
+function handleToggle() {
+  if (emojiPickerRef.value) {
+    emojiPickerRef.value.toggleEmojiPicker()
+  }
+}
+
+function selectedEmoji(emoji: string) {
+  const statusInput = document.getElementById('status-input') as HTMLInputElement;
+  if (statusInput) {
+    statusInput.value += emoji;
+    statusInput.focus();
+  }
+}
 
 async function addVerification(review: string) {
   if (is_verify_loading.value) {
