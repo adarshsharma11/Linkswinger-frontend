@@ -53,6 +53,9 @@
           :class="{ active: activeNav === 'club-events' }" class="text-white"><span class="icon"><!--🏷--> <img
               class="sidebar-ic" :src="`/images/badges/animated/150X150px/CLUB-events-150x150px.png`" /> </span>Club
           Events</a>
+          <a href="#membership" data-route="membership" @click.prevent="setActiveNav('membership')"
+          :class="{ active: activeNav === 'membership' }" class="text-white"><span class="icon"><!--🏷--> <img
+              class="sidebar-ic" :src="`/images/badges/animated/150X150px/elite.gif`" /> </span>Membership</a>
         <a href="#video-roullet" data-route="video-roullet" @click.prevent="setActiveNav('video-roullet')"
           :class="{ active: activeNav === 'video-roullet' }" class="text-white"><span class="icon"> <img
               class="sidebar-ic" :src="`/images/badges/animated/50X50px/video-roulette-available.gif`" /></span>Video
@@ -822,6 +825,9 @@ async function setActiveNav(nav: string) {
   }
   else if (nav === 'messages') {
     openChatOnly()
+  }
+  else if (nav === 'membership') {
+    await navigateTo(`/membership`)
   }
   else {
     activeNav.value = nav
