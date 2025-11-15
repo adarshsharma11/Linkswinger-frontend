@@ -42,7 +42,8 @@ export enum RequestURL {
   acceptCall = "/acceptCall",
   endCall = "/endCall",
   fetchCallDetails = "/fetchCallDetails",
-  deleteChat = "/deleteChat"
+  deleteChat = "/deleteChat",
+  updateUserStatus = "/updateUserStatus"
 }
 
 export var online_user_ids : number[] = []

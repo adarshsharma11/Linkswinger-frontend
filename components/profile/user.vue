@@ -96,8 +96,8 @@
               {{ getGender() }} {{ getAge(getUser()?.dob ?? '') }} from
               {{ getUser()?.town ?? '' }}</h3>
             <span class="badge bg-success fs-6">Active</span>
-            <p class="mb-0 mt-2 text-white">{{ getUser()?.profile_status }} <i v-if="isMine()"
-                class="fa fa-pencil text-white fa-lg" @click="editStatus()"></i></p>
+            <p class="mb-0 mt-2 text-white">{{ getUser()?.profile_status }} <i v-if="isMine() && !is_status_loading"
+                class="fa fa-pencil text-white fa-lg" @click="editStatus()"></i><span class="btn-loader" v-if="is_status_loading"></span></p>
 
           </div>
 
@@ -336,6 +336,7 @@ const user_store = userStore()
 const login_store = useLoginStore();
 const is_logout_loading = ref(false);
 const is_verify_loading = ref(false);
+const is_status_loading = ref(false);
 const verifications = ref([] as MeetVerificationsModel.FetchVerifyResponseModel[])
 const userDetails = ref<UsersModel.ProfileDetailsResponseModel | null | undefined>(null);
 const is_verified = ref(false);
@@ -459,7 +460,6 @@ function editStatus() {
 ">
   <input id="status-input" class="swal2-input" placeholder="Type status here"
     style="margin: 0; width: auto; flex: 1;" />
-
   <button  id="clear-btn" class="swal2-confirm" 
      style="
     height: 2.5em;
@@ -471,7 +471,6 @@ function editStatus() {
     😊
   </button>
 </div>
-
   `,
     focusConfirm: false,
     showCancelButton: true,
@@ -486,6 +485,7 @@ function editStatus() {
         Swal.showValidationMessage("Please enter status");
         return false;
       }
+      updateStatus(value);
       return value;
     }
   });
@@ -494,7 +494,7 @@ function editStatus() {
   nextTick(() => {
     const clearBtn = document.getElementById('clear-btn');
     const statusInput = document.getElementById('status-input') as HTMLInputElement;
-
+    statusInput.textContent = getUser()?.profile_status ?? ''
     clearBtn?.addEventListener('click', () => {
       statusInput.focus();
       handleToggle()
@@ -502,7 +502,6 @@ function editStatus() {
 
     const emojiRegex =
       /(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])/g
-
     // Watch input changes
     statusInput.addEventListener("input", () => {
       statusInput.value = statusInput.value.replace(emojiRegex, "")
@@ -524,6 +523,33 @@ function selectedEmoji(emoji: string) {
   }
 }
 
+async function updateStatus(profile_status:string) {
+if (is_status_loading.value) {
+    return;
+  }
+  const api_url = getUrl(RequestURL.updateUserStatus);
+  is_status_loading.value = true;
+  const response = await $fetch<SuccessError<UsersModel.LoginResponseModel>>(
+    api_url,
+    {
+      method: "POST",
+      body: {
+        user_id: user_store.getLoginId,
+        profile_status: profile_status
+      },
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+  is_status_loading.value = false;
+  if (response.success) {
+    showToastSuccess(response.message)
+  }
+  else {
+    showToastError("Logout failed. Please try again.");
+  }
+}
 async function addVerification(review: string) {
   if (is_verify_loading.value) {
     return;
