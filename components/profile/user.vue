@@ -180,7 +180,7 @@
           <!-- Center: Action icons -->
           <div class="col-12 col-md-6">
             <div class="d-flex gap-3 gap-md-4 flex-wrap justify-content-center">
-              <div class="d-flex flex-column align-items-center">
+              <div class="d-flex flex-column align-items-center" @click="openChat()">
                 <img src="/images/badges/animated/50X50px/chat.gif" alt="Chat" class="badge-icon" />
                 <small>Chat</small>
               </div>
@@ -681,6 +681,16 @@ function getUser(): UsersModel.ProfileDetailsResponseModel | null | undefined {
     return login_store.getUserDetails
   }
   return userDetails.value
+}
+
+async function openChat() {
+  if (isMine()) {
+await navigateTo('/chat')
+  }
+  else
+  {
+    await navigateTo('/chat/' + String(props.user_id ?? 0))
+  }
 }
 
 function isMine(): boolean {
