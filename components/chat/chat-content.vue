@@ -81,12 +81,14 @@
 
       <!-- Chat Section -->
       <section class="col-12 col-lg-8 col-xl-9" :class="{ 'd-none': !showMobileChat && isMobile }">
-        
+
         <!-- No Chat Selected Placeholder -->
-        <div v-if="!route.params.id || route.params.id === '0'" class="chat-card d-flex flex-column h-100 justify-content-center align-items-center">
+        <div v-if="!route.params.id || route.params.id === '0'"
+          class="chat-card d-flex flex-column h-100 justify-content-center align-items-center">
           <div class="text-center text-secondary">
             <svg viewBox="0 0 24 24" class="h-16 w-16 mb-4 opacity-50" fill="currentColor">
-              <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/>
+              <path
+                d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z" />
             </svg>
             <h5>Select a conversation</h5>
             <p class="mb-0">Choose a conversation from the list to start chatting</p>
@@ -175,15 +177,17 @@
 
               </div>
               <div class="message-time" v-if="chat.from_id !== login_store.getUserDetails?.user_id">{{ chat.created_at
-                }}
+              }}
               </div>
               <div class="message-time" v-if="chat.from_id === login_store.getUserDetails?.user_id">{{ chat.created_at
-                }}
+              }}
                 • {{ chat.status }}</div>
               <button class="btn btn-sm btn-danger glow-red-strong text-white trash-btn" @click="deleteChat(chat)"
                 v-if="chat.from_id === login_store.getUserDetails?.user_id && (chat.is_deleted ?? false) === false && (chat.is_deleting ?? false) === false">
                 <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor">
-                  <path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2m3 0v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6h14zM10 11v6M14 11v6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path
+                    d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2m3 0v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6h14zM10 11v6M14 11v6"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                 </svg>
               </button>
               <span class="btn-loader" v-if="chat.is_deleting"></span>
@@ -207,8 +211,8 @@
           <!-- Composer -->
           <div class="border-top border-secondary p-3 chat-ftr">
             <div class="d-flex align-items-center message-input chat-ftr-left">
-              <button class="btn btn-link text-light fs-5">😊</button>
-              <textarea v-model="messageTxt" id="composer" rows="1"
+              <button class="btn btn-link text-light fs-5" @click="handleToggle">😊</button>
+              <textarea v-model="messageTxt" id="composer" ref="messageRef" rows="1"
                 class="form-control bg-transparent border-0 text-light"
                 placeholder="Type a message… (Ctrl/⌘ + Enter to send)"></textarea>
               <div class="d-flex flex items-center gap-2 chat-ftr-btns">
@@ -248,6 +252,12 @@
     </div>
   </div>
 
+  <Teleport to="body">
+    <div style="position: fixed; z-index: 999999; left: 0; top: 0;">
+      <EmojiPicker ref="emojiPickerRef" v-on:selected-emoji="selectedEmoji" />
+    </div>
+  </Teleport>
+
 </template>
 
 <script setup lang="ts">
@@ -260,6 +270,8 @@ const user_store = userStore()
 const login_store = useLoginStore()
 const eventBus = useMittEmitter()
 const messageTxt = ref('')
+const emojiPickerRef = ref(null)
+const messageRef = ref<HTMLTextAreaElement | null>(null);
 const chatHistoryModels = ref([] as ChatsModel.ChatResponseModel[])
 const chatModels = ref([] as ChatsModel.ChatResponseModel[])
 const scrollContainer = ref<HTMLElement | null>(null);
@@ -287,18 +299,18 @@ const isMobile = ref(process.client ? window.innerWidth < 768 : false); // Mobil
 // Computed property to determine if chat should be shown
 const shouldShowChat = computed(() => {
   const hasIdInRoute = route.params.id && route.params.id !== '0'
-  
+
   // If no ID in route, don't show chat
   if (!hasIdInRoute) return false
-  
+
   // On server or initial load, show chat if ID exists
   if (!process.client) return true
-  
+
   // Desktop: show chat if ID is in route
   if (!isMobile.value) {
     return true
   }
-  
+
   // Mobile: show chat if ID is in route and showMobileChat is true
   return showMobileChat.value
 })
@@ -497,6 +509,30 @@ async function updatecallcode() {
   });
 }
 
+function selectedEmoji(emoji: string) {
+  const statusInput = messageRef.value;
+  if (statusInput) {
+    const start = statusInput.selectionStart;
+    const end = statusInput.selectionEnd;
+    const value = statusInput.value;
+
+    statusInput.value = value.substring(0, start) + emoji + value.substring(end);
+
+    // Move cursor after the emoji
+    const newPos = start + emoji.length;
+    statusInput.setSelectionRange(newPos, newPos);
+
+    // Ensure input stays focused
+    statusInput.focus();
+  }
+}
+
+function handleToggle() {
+  if (emojiPickerRef.value) {
+    emojiPickerRef.value.toggleEmojiPicker()
+  }
+}
+
 function showCodeAlert(is_video: boolean) {
   Swal.fire({
     title: 'Please enter code',
@@ -566,7 +602,6 @@ function sendTypingStatus(to_id: number) {
 watch(messageTxt, () => {
   const emojiRegex = /(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])/g;
   messageTxt.value = messageTxt.value.replace(emojiRegex, '')
-  onUserTyping(userDetails.value?.user_id ?? 0)
 });
 
 // const filterEmojis = (event:any) => {
@@ -667,7 +702,7 @@ onMounted(() => {
     }
     let user_id = responseevent.from_id === login_store.getUserDetails?.user_id ? responseevent.to_id : responseevent.from_id
 
-    appendLastMessagetohistory(responseevent.chat_id ?? 0,user_id ?? 0, responseevent.message ?? '')
+    appendLastMessagetohistory(responseevent.chat_id ?? 0, user_id ?? 0, responseevent.message ?? '')
     nextTick(() => {
       if (scrollContainer.value) {
         scrollContainer.value.scrollTop = scrollContainer.value.scrollHeight;
@@ -781,7 +816,7 @@ function updateMessageStatus(eventmodel: ChatEventSocketModel) {
   }
 }
 function deleteMessageStatus(eventmodel: ChatEventSocketModel) {
-   
+
   let chat = chatModels.value.filter((history: ChatsModel.ChatResponseModel) => history.chat_id === eventmodel.chat_id)
   if (chat.length > 0) {
     chat[0].is_deleted = true
@@ -834,7 +869,9 @@ function sendMessage() {
     showToastError('Please wait while we are connecting to server');
     return
   }
-  let trim = messageTxt.value.trim()
+    const statusInput = messageRef.value as HTMLTextAreaElement;
+
+  let trim = statusInput.value.trim()
   let to_id = Number(route.params.id) ?? 0
   if (trim.length === 0 || to_id === 0) {
     return
@@ -857,9 +894,9 @@ function updateBadgeCount(to_id: number) {
   }
 }
 
-function appendLastMessagetohistory(chat_id: number,to_id: number, message: string) {
+function appendLastMessagetohistory(chat_id: number, to_id: number, message: string) {
   let histories = chatHistoryModels.value.filter((history: ChatsModel.ChatResponseModel) => history.user_id === to_id)
- 
+
   if (histories.length > 0) {
     histories[0].chat_id = chat_id
     histories[0].badge_count = 0

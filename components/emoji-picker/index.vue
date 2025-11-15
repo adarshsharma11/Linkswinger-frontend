@@ -50,7 +50,6 @@ const onSelectEmoji = (emoji: any) => {
 }
 
 const startDrag = (e: any) => {
-    console.log('startDrag')
     if (!emojiPickerRef.value) return
     isDragging.value = true
     const rect = emojiPickerRef.value.getBoundingClientRect()
