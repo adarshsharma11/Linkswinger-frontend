@@ -11,7 +11,7 @@
                         <img src="/images/logo/landing-logo.gif" alt="LinkSwingers logo" class="">
                     </div>
                     <div class="vd-hd-right d-flex flex-wrap align-items-center justify-content-end gap-2">
-                        <span id="callTimer" class="sh-btn">87:15</span>
+                        <span id="callTimer" class="sh-btn">{{ formattedTime }}</span>
                     </div>
                 </div>
             </div>
@@ -119,7 +119,7 @@ onMounted(async () => {
         connectStatus.value = webrtcclient.peerConnection?.connectionState || 'Connecting...'
         if (webrtcclient.peerConnection) {
             if (webrtcclient.peerConnection.connectionState === "connected") {
-
+                  timeStart.value += 1
             }
             else if (webrtcclient.peerConnection.connectionState === "disconnected" || webrtcclient.peerConnection.connectionState === "failed") {
                 // showalert('Connection lost. Trying to reconnect...', false, 5000)    

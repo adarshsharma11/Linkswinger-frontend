@@ -184,11 +184,11 @@
                 <img src="/images/badges/animated/50X50px/chat.gif" alt="Chat" class="badge-icon" />
                 <small>Chat</small>
               </div>
-              <div class="d-flex flex-column align-items-center">
+              <div class="d-flex flex-column align-items-center" @click="showCodeAlert(false)">
                 <img src="/images/badges/animated/50X50px/call.gif" alt="Call" class="badge-icon" />
                 <small>Call</small>
               </div>
-              <div class="d-flex flex-column align-items-center">
+              <div class="d-flex flex-column align-items-center" @click="showCodeAlert(true)">
                 <img src="/images/badges/animated/50X50px/video-call.gif" alt="Video Call" class="badge-icon" />
                 <small>Video</small>
               </div>
@@ -327,6 +327,7 @@ import { MeetVerificationsModel, type UsersModel } from '~/composables/models';
 import Swal from 'sweetalert2'
 import { EmojiPicker } from '#components';
 import { Teleport } from 'vue';
+import type { CallsModel } from '~/composables/websocketModels';
 interface Props {
   user_id: number
 }
@@ -340,8 +341,8 @@ const is_status_loading = ref(false);
 const verifications = ref([] as MeetVerificationsModel.FetchVerifyResponseModel[])
 const userDetails = ref<UsersModel.ProfileDetailsResponseModel | null | undefined>(null);
 const is_verified = ref(false);
-
-
+const eventBus = useMittEmitter()
+const id_store = idStore()
 if (isMine() === false) {
   const fetchUserDetails = async () => {
     const api_url = getUrl(RequestURL.getProfileDetails);
@@ -390,6 +391,28 @@ const fetchMeetVerifications = async () => {
 };
 
 verifications.value = await fetchMeetVerifications() as MeetVerificationsModel.FetchVerifyResponseModel[]
+
+onMounted(() => {
+
+   eventBus.on('callDeclineAlert', (eventModel) => {
+    showToastError('Call declined')
+  })
+  eventBus.on('callAcceptAlert', async (eventModel) => {
+    if (eventModel.is_video) {
+      await navigateTo(`/video-call/${eventModel.token}`)
+    }
+    else {
+      await navigateTo(`/voice-call/${eventModel.token}`)
+    }
+  })
+
+});
+
+onBeforeUnmount(() => {
+  eventBus.off('callDeclineAlert')
+  eventBus.off('callAcceptAlert')
+})
+
 
 function getAge(dobStr: string): number {
   const dob = new Date(dobStr);
@@ -445,6 +468,57 @@ function showVerificationAlert() {
   }).then((result) => {
     if (result.isConfirmed) {
       addVerification(result.value ?? '')
+    }
+  });
+}
+
+function showCodeAlert(is_video: boolean) {
+  if (isMine())
+  {
+    return;
+  }
+  Swal.fire({
+    title: 'Please enter code',
+    input: 'text', // Specifies a text input field
+    inputPlaceholder: 'Type code here', // Placeholder text for the input
+    showCancelButton: true, // Displays a cancel button
+    inputValidator: (value: string) => { // Optional: input validation
+      if (!value) {
+        return 'Please enter code';
+      }
+    }
+  }).then((result) => {
+    if (result.isConfirmed) {
+      validateCall(result.value ?? '', is_video)
+    }
+  });
+}
+
+async function validateCall(code: string, is_video: boolean) {
+  let to_id = Number(props.user_id ?? 0)
+  const api_url = getUrl(RequestURL.validateCall);
+  await $fetch<SuccessError<CallsModel.ValidateCallResponseModel>>(api_url, {
+    cache: "no-cache",
+    method: "post",
+    body: {
+      "from_id": user_store.getLoginId,
+      "from_socket_id": id_store.getDeviceId,
+      "to_id": to_id,
+      "call_code": code,
+      "is_video": is_video
+    },
+    headers: {
+      "content-type": "application/json"
+    },
+    onResponse: async ({ response }) => {
+
+      var response_model = response._data as SuccessError<CallsModel.ValidateCallResponseModel>
+      if (response_model.success) {
+        showToastSuccess(response_model.message)
+      }
+      else {
+        showToastError(response_model.message)
+      }
     }
   });
 }
@@ -685,7 +759,7 @@ function getUser(): UsersModel.ProfileDetailsResponseModel | null | undefined {
 
 async function openChat() {
   if (isMine()) {
-await navigateTo('/chat')
+    await navigateTo('/chat')
   }
   else
   {

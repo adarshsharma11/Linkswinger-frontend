@@ -315,15 +315,7 @@ const shouldShowChat = computed(() => {
   return showMobileChat.value
 })
 
-// Mobile detection on mount
-onMounted(() => {
-  if (process.client) {
-    isMobile.value = window.innerWidth < 768
-    window.addEventListener('resize', () => {
-      isMobile.value = window.innerWidth < 768
-    })
-  }
-})
+
 
 // Watch for route changes to reset mobile state
 watch(() => route.params.id, (newId, oldId) => {
@@ -615,6 +607,13 @@ watch(messageTxt, () => {
 onMounted(() => {
 
   console.log('onmounted...chat')
+
+   if (process.client) {
+    isMobile.value = window.innerWidth < 768
+    window.addEventListener('resize', () => {
+      isMobile.value = window.innerWidth < 768
+    })
+  }
 
   // Initialize activeChatId from route params
   const currentChatId = Number(route.params.id ?? '0')
