@@ -195,11 +195,11 @@
                       class="act-icon"><img src="/images/badges/animated/50X50px/chat.gif" alt="Message"
                         class="rounded-circle" style="width: 25px; height: 25px; object-fit: cover" /></span>
                     Message</button>
-                  <button class="action" data-action="call" aria-label="Voice call"><span class="act-icon">
+                  <button @click="showCodeAlert(user.user_id ?? 0,false)" class="action" data-action="call" aria-label="Voice call"><span class="act-icon">
                       <img src="/images/badges/animated/50X50px/call.gif" alt="Message" class="rounded-circle"
                         style="width: 25px; height: 25px; object-fit: cover" />
                     </span>Call</button>
-                  <button class="action primary" data-action="video" aria-label="Video call"><span class="act-icon"><img
+                  <button @click="showCodeAlert(user.user_id ?? 0,true)" class="action primary" data-action="video" aria-label="Video call"><span class="act-icon"><img
                         src="/images/badges/animated/50X50px/video-call.gif" alt="Message" class="rounded-circle"
                         style="width: 25px; height: 25px; object-fit: cover" />
                     </span>Video</button>
@@ -742,6 +742,8 @@ import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { UsersModel } from '~/composables/models'
 import Multiselect from 'vue-multiselect';
 import 'vue-multiselect/dist/vue-multiselect.css';
+import type { CallsModel } from '~/composables/websocketModels';
+import Swal from 'sweetalert2'
 const id_store = idStore()
 const route = useRoute()
 const router = useRouter()
@@ -790,6 +792,7 @@ var advanceModelSub: any = null
 const latitude = ref<number | null>(null)
 const longitude = ref<number | null>(null)
 const is_logout_loading = ref(false);
+
 // Computed numeric version for backend payload
 var radiusMiles = computed<number | null>(() => {
   if (!radius.value) return null
@@ -1194,6 +1197,18 @@ onMounted(() => {
     onlineUsers.value = onlineUserIds
   })
 
+  eventBus.on('callDeclineAlert', (eventModel) => {
+    showToastError('Call declined')
+  })
+  eventBus.on('callAcceptAlert', async (eventModel) => {
+    if (eventModel.is_video) {
+      await navigateTo(`/video-call/${eventModel.token}`)
+    }
+    else {
+      await navigateTo(`/voice-call/${eventModel.token}`)
+    }
+  })
+
   let hash = route.hash
   activeNav.value = hash.slice(1) || 'home'
 
@@ -1263,6 +1278,8 @@ onBeforeUnmount(() => {
   window.removeEventListener('resize', checkMobile)
   eventBus.off('socketConnection')
   eventBus.off('onlineUserIds')
+   eventBus.off('callDeclineAlert')
+  eventBus.off('callAcceptAlert')
   console.log('beforemount...dashboard')
 })
 
@@ -1292,4 +1309,53 @@ function switchView(view) {
 function handleBodyClick() {
   if (isSidebarOpen.value) closeSidebar();
 }
+
+function showCodeAlert(to_id:number,is_video: boolean) {
+  Swal.fire({
+    title: 'Please enter code',
+    input: 'text', // Specifies a text input field
+    inputPlaceholder: 'Type code here', // Placeholder text for the input
+    showCancelButton: true, // Displays a cancel button
+    inputValidator: (value: string) => { // Optional: input validation
+      if (!value) {
+        return 'Please enter code';
+      }
+    }
+  }).then((result) => {
+    if (result.isConfirmed) {
+      validateCall(to_id,result.value ?? '', is_video)
+    }
+  });
+}
+
+async function validateCall(to_id:number,code: string, is_video: boolean) {
+  const api_url = getUrl(RequestURL.validateCall);
+  await $fetch<SuccessError<CallsModel.ValidateCallResponseModel>>(api_url, {
+    cache: "no-cache",
+    method: "post",
+    body: {
+      "from_id": login_store.getUserDetails?.user_id ?? 0,
+      "from_socket_id": id_store.getDeviceId,
+      "to_id": to_id,
+      "call_code": code,
+      "is_video": is_video
+    },
+    headers: {
+      "content-type": "application/json"
+    },
+    onResponse: async ({ response }) => {
+
+      var response_model = response._data as SuccessError<CallsModel.ValidateCallResponseModel>
+      if (response_model.success) {
+        showToastSuccess(response_model.message)
+      }
+      else {
+        showToastError(response_model.message)
+      }
+    }
+  });
+}
+
+
+
 </script>
