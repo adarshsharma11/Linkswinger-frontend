@@ -164,7 +164,7 @@
               'ms-auto': chat.from_id === login_store.getUserDetails?.user_id,
               'glow-red': chat.from_id === login_store.getUserDetails?.user_id
             }" :id="`${chat.chat_id ?? 0}`">
-              <div v-if="(chat.is_deleted ?? false) === true">This message was deleted</div>
+              <div v-if="(chat.is_deleted ?? false) === true" class="text-secondary">This message was deleted</div>
               <div v-if="(chat.is_deleted ?? false) === false" class="chat-item">
                 <div v-if="chat.message_type === 'text'">{{ chat.message }}</div>
                 <div v-if="chat.message_type === 'image'"><img :src="(chat.media_path ?? '') + (chat.message ?? '')"
@@ -180,8 +180,12 @@
               <div class="message-time" v-if="chat.from_id === login_store.getUserDetails?.user_id">{{ chat.created_at
                 }}
                 • {{ chat.status }}</div>
-              <button class="trash-btn" @click="deleteChat(chat)"
-                v-if="chat.from_id === login_store.getUserDetails?.user_id && (chat.is_deleted ?? false) === false && (chat.is_deleting ?? false) === false">🗑️</button>
+              <button class="btn btn-sm btn-danger glow-red-strong text-white trash-btn" @click="deleteChat(chat)"
+                v-if="chat.from_id === login_store.getUserDetails?.user_id && (chat.is_deleted ?? false) === false && (chat.is_deleting ?? false) === false">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor">
+                  <path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2m3 0v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6h14zM10 11v6M14 11v6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
               <span class="btn-loader" v-if="chat.is_deleting"></span>
             </div>
             <!-- <div class="message-bubble message-incoming">We loved your profile pics. Fancy a chat tonight?<div

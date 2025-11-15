@@ -200,9 +200,15 @@ video#localVideo {
 .vh-64 {
     height: 64vh;
 }
+.vh-80 {
+    height: 80vh;
+}
 @media (max-width: 767px) {
 .vh-64 {
     height: 58vh;
+}
+.vh-80 {
+    height: 70vh;
 }
 .h-64 {
     height: 10rem;
@@ -241,6 +247,38 @@ video#localVideo {
 
 .vd-hd-left span#callStatusText {
     font-size: 12px;
+}
+
+/* Additional mobile optimizations for full-width video */
+.video-call-page .container {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.selfVideo {
+    width: 10rem;
+}
+
+#videoStage {
+    margin: 0 auto;
+    max-width: 100%;
+}
+}
+
+/* Tablet optimizations */
+@media (max-width: 1024px) and (min-width: 768px) {
+.vh-80 {
+    height: 75vh;
+}
+.selfVideo {
+    width: 12rem;
+}
+}
+
+/* Large screen optimizations */
+@media (min-width: 1200px) {
+#videoStage {
+    max-width: 90%;
 }
 }
 
