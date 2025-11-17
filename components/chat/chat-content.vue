@@ -36,6 +36,15 @@
                     <strong>{{ historymodel.nick_name }}</strong>
                     <span class="badge bg-warning bg-opacity-25 text-warning border border-warning">{{
                       historymodel.tier_name ?? 'Free' }}</span>
+                    <button class=" btn-danger glow-red-strong text-white " style="border-radius: 5px; "
+                      @click="deleteWholeChat(historymodel)" v-if="(historymodel.is_deleting ?? false) === false">
+                      <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor">
+                        <path
+                          d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2m3 0v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6h14zM10 11v6M14 11v6"
+                          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                      </svg>
+                    </button>
+                     <span class="btn-loader" v-if="historymodel.is_deleting"></span>
                   </div>
                   <small class="text-secondary" v-if="(historymodel.is_typing ?? false) === true">Typing...</small>
                   <div v-if="(historymodel.is_deleted ?? false) === false">
@@ -904,9 +913,9 @@ async function deleteChat(chat: ChatResponseModel) {
 
           if (chatModels.value.length > 0) {
             const lastMessage = chatModels.value[chatModels.value.length - 1];
-          
+
             let histories = chatHistoryModels.value.filter((history: ChatsModel.ChatResponseModel) => history.chat_id === chat.chat_id)
-              console.log('lastMessage', histories)
+
             if (histories.length > 0) {
               if (histories[0].chat_id === chat.chat_id) {
                 histories[0].from_id = lastMessage.from_id ?? 0
@@ -924,6 +933,37 @@ async function deleteChat(chat: ChatResponseModel) {
 
 
         }
+        showToastSuccess(response_model.message)
+      }
+      else {
+        showToastError(response_model.message)
+      }
+      chat.is_deleting = false
+    }
+  });
+}
+
+async function deleteWholeChat(chat: ChatResponseModel) {
+  if (chat.is_deleting === true) {
+    return
+  }
+  chat.is_deleting = true
+  const api_url = getUrl(RequestURL.deleteWholeChat);
+  await $fetch<SuccessError<ChatsModel.ChatResponseModel>>(api_url, {
+    cache: "no-cache",
+    method: "post",
+    body: {
+      "chat_id": chat.chat_id,
+      "from_id": login_store.getUserDetails?.user_id,
+      "to_id" : chat.user_id
+    },
+    headers: {
+      "content-type": "application/json"
+    },
+    onResponse: async ({ response }) => {
+      var response_model = response._data as SuccessError<ChatsModel.ChatResponseModel>
+      if (response_model.success) {
+        navigateTo('/chat')
         showToastSuccess(response_model.message)
       }
       else {
