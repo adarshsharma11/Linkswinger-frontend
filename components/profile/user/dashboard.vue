@@ -838,6 +838,9 @@ async function setActiveNav(nav: string) {
   else if (nav === 'membership') {
     await navigateTo(`/membership`)
   }
+   else if (nav === 'video-roullet') {
+    await navigateTo(`/video-roulette`)
+  }
   else {
     activeNav.value = nav
     window.location.hash = nav
