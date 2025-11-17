@@ -43,7 +43,8 @@ export enum RequestURL {
   endCall = "/endCall",
   fetchCallDetails = "/fetchCallDetails",
   deleteChat = "/deleteChat",
-  updateUserStatus = "/updateUserStatus"
+  updateUserStatus = "/updateUserStatus",
+  getFeedCount ="/getFeedCount"
 }
 
 export var online_user_ids : number[] = []
@@ -390,6 +391,13 @@ export class FetchCallCodeRequestModel
 export class FetchCallCodeResponseModel
 {
   call_code?: string;
+}
+
+export class FeedCountResponseModel
+{
+  feed_type?: string;
+  media_type?: string;
+  count?: number;
 }
 
 }

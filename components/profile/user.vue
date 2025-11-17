@@ -224,26 +224,32 @@
               <li
                 @click="navigateTo('/feeds/' + getUser()?.user_id + '?' + 'media_type=image' + '&' + 'feed_type=public')">
                 <img src="/images/badges/public-photos.png" class="icon" /> Public Photos
+                <span class="badge bg-theme-color ms-2">{{ getFeedCount('public','image') }}</span>
               </li>
               <li
                 @click="navigateTo('/feeds/' + getUser()?.user_id + '?' + 'media_type=video' + '&' + 'feed_type=public')">
                 <img src="/images/badges/public-photos.png" class="icon" /> Public Videos
+                <span class="badge bg-theme-color ms-2">{{ getFeedCount('public','video') }}</span>
               </li>
               <li
                 @click="navigateTo('/feeds/' + getUser()?.user_id + '?' + 'media_type=image' + '&' + 'feed_type=friends')">
                 <img src="/images/badges/friends-only-photos.png" class="icon" /> Friends-Only Photos
+                <span class="badge bg-theme-color ms-2">{{ getFeedCount('friends','image') }}</span>
               </li>
               <li
                 @click="navigateTo('/feeds/' + getUser()?.user_id + '?' + 'media_type=video' + '&' + 'feed_type=friends')">
                 <img src="/images/badges/friends-only-photos.png" class="icon" /> Friends-Only Videos
+                   <span class="badge bg-theme-color ms-2">{{ getFeedCount('friends','video') }}</span>
               </li>
               <li
                 @click="navigateTo('/feeds/' + getUser()?.user_id + '?' + 'media_type=image' + '&' + 'feed_type=private')">
                 <img src="/images/badges/private-photos.png" class="icon" /> Private Photos
+                  <span class="badge bg-theme-color ms-2">{{ getFeedCount('private','image') }}</span>
               </li>
               <li
                 @click="navigateTo('/feeds/' + getUser()?.user_id + '?' + 'media_type=video' + '&' + 'feed_type=private')">
                 <img src="/images/badges/private-photos.png" class="icon" /> Private Videos
+                  <span class="badge bg-theme-color ms-2">{{ getFeedCount('private','video') }}</span>
               </li>
             </ul>
           </div>
@@ -340,6 +346,7 @@ const is_verify_loading = ref(false);
 const is_status_loading = ref(false);
 const verifications = ref([] as MeetVerificationsModel.FetchVerifyResponseModel[])
 const userDetails = ref<UsersModel.ProfileDetailsResponseModel | null | undefined>(null);
+const feedCounts = ref([] as UsersModel.FeedCountResponseModel[])
 const is_verified = ref(false);
 const eventBus = useMittEmitter()
 const id_store = idStore()
@@ -390,7 +397,31 @@ const fetchMeetVerifications = async () => {
   }
 };
 
+const fetchfeedCounts = async () => {
+  const api_url = getUrl(RequestURL.getFeedCount);
+  const { data: response, error: option_error } = await useFetch<SuccessError<UsersModel.FeedCountResponseModel>>(
+    api_url,
+    {
+      method: "POST",
+      body: {
+        user_id: Number(props.user_id ?? 0)
+      },
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+  if (response.value?.success) {
+    return response.value.result
+  }
+  else {
+    return []
+  }
+};
+
 verifications.value = await fetchMeetVerifications() as MeetVerificationsModel.FetchVerifyResponseModel[]
+feedCounts.value = await fetchfeedCounts() as UsersModel.FeedCountResponseModel[]
+
 
 onMounted(() => {
 
@@ -587,6 +618,11 @@ function handleToggle() {
   if (emojiPickerRef.value) {
     emojiPickerRef.value.toggleEmojiPicker()
   }
+}
+
+function getFeedCount(feed_type : string , media_type :string) : number {
+  let count = feedCounts.value.find(fc => fc.feed_type === feed_type && fc.media_type === media_type)?.count ?? 0
+  return count
 }
 
 function selectedEmoji(emoji: string) {
