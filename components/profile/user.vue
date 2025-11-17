@@ -1,5 +1,6 @@
 <template>
   <section class="profile-page bg-dark text-white min-vh-100 py-4">
+  
     <div class="container">
       <!-- Header -->
       <div class="profile-header container-fluid px-3 px-md-4">
