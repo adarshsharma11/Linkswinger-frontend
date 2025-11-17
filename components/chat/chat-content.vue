@@ -148,8 +148,8 @@
               <button class="btn btn-sm btn-danger glow-red-strong text-white"
                 v-if="!is_code_loading && call_code.length === 0" @click="fetchCallCode()">Show my call code</button>
               <button class="btn btn-sm btn-danger glow-red-strong text-white"
-                v-if="!is_code_loading && call_code.length !== 0" @click="updatecallcode()">{{
-                  call_code.toUpperCase().slice(-4) }} <svg viewBox="0 0 24 24" class="h-4 w-4" fill="currentColor">
+                v-if="!is_code_loading && call_code.length !== 0" @click="updateCallCodealert()">{{
+                  call_code.length > 4 ? call_code.toUpperCase().slice(-4) : call_code }} <svg viewBox="0 0 24 24" class="h-4 w-4" fill="currentColor">
                   <path
                     d="M12 2a10 10 0 1 0 9.95 11H20a8 8 0 1 1-8-8c2.03 0 3.89.76 5.29 2.01L14 10h8V2l-2.35 2.35A9.97 9.97 0 0 0 12 2z" />
                 </svg></button>
@@ -472,17 +472,49 @@ async function fetchCallCode() {
     }
   });
 }
-async function updatecallcode() {
-  if (is_code_loading.value) {
+
+function updateCallCodealert()
+{
+    if (is_code_loading.value) {
     return
   }
+ Swal.fire({
+  title: 'Update Code',
+  input: 'text',
+  inputPlaceholder: 'Type code here',
+  showCancelButton: true,
+  inputAttributes: {
+    maxlength: '4',      // Limit max input length
+    inputmode: 'numeric' // Mobile numeric keypad
+  },
+  inputValidator: (value: string) => {
+    if (!value) {
+      return 'Please enter code';
+    }
+    if (!/^\d+$/.test(value)) {
+      return 'Only numbers are allowed';
+    }
+    if (value.length > 4) {
+      return 'Maximum length is 4 digits';
+    }
+  }
+}).then((result) => {
+  if (result.isConfirmed) {
+    updatecallcode(result.value ?? '');
+  }
+});
+
+}
+async function updatecallcode(callcode:string) {
+
   is_code_loading.value = true
   const api_url = getUrl(RequestURL.updateCallCode);
   await $fetch<SuccessError<UsersModel.FetchCallCodeResponseModel>>(api_url, {
     cache: "no-cache",
     method: "post",
     body: {
-      "user_id": user_store.getLoginId
+      "user_id": user_store.getLoginId,
+      "call_code": callcode
     },
     headers: {
       "content-type": "application/json"
