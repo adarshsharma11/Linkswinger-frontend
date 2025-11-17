@@ -149,7 +149,8 @@
                 v-if="!is_code_loading && call_code.length === 0" @click="fetchCallCode()">Show my call code</button>
               <button class="btn btn-sm btn-danger glow-red-strong text-white"
                 v-if="!is_code_loading && call_code.length !== 0" @click="updateCallCodealert()">{{
-                  call_code.length > 4 ? call_code.toUpperCase().slice(-4) : call_code }} <svg viewBox="0 0 24 24" class="h-4 w-4" fill="currentColor">
+                  call_code.length > 4 ? call_code.toUpperCase().slice(-4) : call_code }} <svg viewBox="0 0 24 24"
+                  class="h-4 w-4" fill="currentColor">
                   <path
                     d="M12 2a10 10 0 1 0 9.95 11H20a8 8 0 1 1-8-8c2.03 0 3.89.76 5.29 2.01L14 10h8V2l-2.35 2.35A9.97 9.97 0 0 0 12 2z" />
                 </svg></button>
@@ -190,6 +191,16 @@
                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                 </svg>
               </button>
+
+              <button class="btn btn-sm btn-danger glow-red-strong text-white trash-btn" @click="deleteChat(chat)"
+                v-if="chat.from_id !== login_store.getUserDetails?.user_id && (chat.is_deleting ?? false) === false">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor">
+                  <path
+                    d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2m3 0v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6h14zM10 11v6M14 11v6"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </button>
+
               <span class="btn-loader" v-if="chat.is_deleting"></span>
             </div>
             <!-- <div class="message-bubble message-incoming">We loved your profile pics. Fancy a chat tonight?<div
@@ -473,39 +484,38 @@ async function fetchCallCode() {
   });
 }
 
-function updateCallCodealert()
-{
-    if (is_code_loading.value) {
+function updateCallCodealert() {
+  if (is_code_loading.value) {
     return
   }
- Swal.fire({
-  title: 'Update Code',
-  input: 'text',
-  inputPlaceholder: 'Type code here',
-  showCancelButton: true,
-  inputAttributes: {
-    maxlength: '4',      // Limit max input length
-    inputmode: 'numeric' // Mobile numeric keypad
-  },
-  inputValidator: (value: string) => {
-    if (!value) {
-      return 'Please enter code';
+  Swal.fire({
+    title: 'Update Code',
+    input: 'text',
+    inputPlaceholder: 'Type code here',
+    showCancelButton: true,
+    inputAttributes: {
+      maxlength: '4',      // Limit max input length
+      inputmode: 'numeric' // Mobile numeric keypad
+    },
+    inputValidator: (value: string) => {
+      if (!value) {
+        return 'Please enter code';
+      }
+      if (!/^\d+$/.test(value)) {
+        return 'Only numbers are allowed';
+      }
+      if (value.length > 4) {
+        return 'Maximum length is 4 digits';
+      }
     }
-    if (!/^\d+$/.test(value)) {
-      return 'Only numbers are allowed';
+  }).then((result) => {
+    if (result.isConfirmed) {
+      updatecallcode(result.value ?? '');
     }
-    if (value.length > 4) {
-      return 'Maximum length is 4 digits';
-    }
-  }
-}).then((result) => {
-  if (result.isConfirmed) {
-    updatecallcode(result.value ?? '');
-  }
-});
+  });
 
 }
-async function updatecallcode(callcode:string) {
+async function updatecallcode(callcode: string) {
 
   is_code_loading.value = true
   const api_url = getUrl(RequestURL.updateCallCode);
@@ -640,7 +650,7 @@ onMounted(() => {
 
   console.log('onmounted...chat')
 
-   if (process.client) {
+  if (process.client) {
     isMobile.value = window.innerWidth < 768
     window.addEventListener('resize', () => {
       isMobile.value = window.innerWidth < 768
@@ -869,6 +879,7 @@ async function deleteChat(chat: ChatResponseModel) {
     method: "post",
     body: {
       "chat_id": chat.chat_id,
+      "from_id": login_store.getUserDetails?.user_id
     },
     headers: {
       "content-type": "application/json"
@@ -876,12 +887,42 @@ async function deleteChat(chat: ChatResponseModel) {
     onResponse: async ({ response }) => {
       var response_model = response._data as SuccessError<ChatsModel.ChatResponseModel>
       if (response_model.success) {
-        chat.is_deleted = true
-        let histories = chatHistoryModels.value.filter((history: ChatsModel.ChatResponseModel) => history.user_id === chat.to_id)
-        if (histories.length > 0) {
-          if (histories[0].chat_id === chat.chat_id) {
-            histories[0].is_deleted = true
+        if (chat.from_id === login_store.getUserDetails?.user_id) {
+          chat.is_deleted = true
+          let histories = chatHistoryModels.value.filter((history: ChatsModel.ChatResponseModel) => history.user_id === chat.to_id)
+          if (histories.length > 0) {
+            if (histories[0].chat_id === chat.chat_id) {
+              histories[0].is_deleted = true
+            }
           }
+        }
+        else {
+          const index = chatModels.value.findIndex(c => c.chat_id === chat.chat_id);
+          if (index !== -1) {
+            chatModels.value.splice(index, 1);
+          }
+
+          if (chatModels.value.length > 0) {
+            const lastMessage = chatModels.value[chatModels.value.length - 1];
+          
+            let histories = chatHistoryModels.value.filter((history: ChatsModel.ChatResponseModel) => history.chat_id === chat.chat_id)
+              console.log('lastMessage', histories)
+            if (histories.length > 0) {
+              if (histories[0].chat_id === chat.chat_id) {
+                histories[0].from_id = lastMessage.from_id ?? 0
+                histories[0].to_id = lastMessage.to_id ?? 0
+                histories[0].chat_id = lastMessage.chat_id ?? 0
+                histories[0].message = lastMessage.message ?? ''
+                histories[0].is_deleted = lastMessage.is_deleted ?? false
+              }
+
+            }
+
+          }
+
+
+
+
         }
         showToastSuccess(response_model.message)
       }
@@ -898,7 +939,7 @@ function sendMessage() {
     showToastError('Please wait while we are connecting to server');
     return
   }
-    const statusInput = messageRef.value as HTMLTextAreaElement;
+  const statusInput = messageRef.value as HTMLTextAreaElement;
 
   let trim = statusInput.value.trim()
   let to_id = Number(route.params.id) ?? 0
