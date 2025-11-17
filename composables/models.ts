@@ -44,7 +44,8 @@ export enum RequestURL {
   fetchCallDetails = "/fetchCallDetails",
   deleteChat = "/deleteChat",
   updateUserStatus = "/updateUserStatus",
-  getFeedCount ="/getFeedCount"
+  getFeedCount ="/getFeedCount",
+  removeProfilePhoto = "/removeProfilePhoto"
 }
 
 export var online_user_ids : number[] = []

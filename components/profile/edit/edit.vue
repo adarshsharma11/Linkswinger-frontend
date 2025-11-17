@@ -7,25 +7,25 @@
                     <div class="row">
                         <div class="form-group">
                             <div class="d-flex flex-column align-items-center justify-content-center position-relative">
-                                <!-- Avatar Wrapper -->
+                              
                                 <div class="position-relative d-inline-block" style="width: 120px; height: 120px;">
-                                    <!-- Avatar -->
+                                
                                     <img :src="getProfileImage()" alt="Profile" class="rounded-circle"
                                         style="width: 120px; height: 120px; object-fit: cover; display: block; margin: 0 auto;" />
                                     <span class="btn-loader" v-if="is_photo_uploading"></span>
 
-                                    <!-- Edit Icon -->
-                                    <button v-if="!is_photo_uploading" type="button"
+                                  
+                                    <!-- <button v-if="!is_photo_uploading" type="button"
                                         class="btn btn-theme-color rounded-circle position-absolute"
                                         style="top: -12px; right: -8px; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;"
                                         @click="triggerFileInput">
                                         <i class="fa fa-pencil text-white fa-lg"></i>
-                                    </button>
+                                    </button> -->
                                 </div>
 
-                                <!-- Hidden File Input -->
-                                <input type="file" accept="image/png,image/jpeg" class="d-none" ref="fileInput"
-                                    @change="handleFileUpload" />
+                              
+                                <!-- <input type="file" accept="image/png,image/jpeg" class="d-none" ref="fileInput"
+                                    @change="handleFileUpload" /> -->
                             </div>
 
 
@@ -286,21 +286,21 @@ const is_gender_disabled = ref(true);
 const previewUrlFile = ref<Blob | null>(null);
 const fileInput = ref<HTMLInputElement | null>(null);
 const previewUrl = ref<string | null>(null);
-function triggerFileInput() {
-    fileInput.value?.click();
-}
+// function triggerFileInput() {
+//     fileInput.value?.click();
+// }
 
-async function handleFileUpload(event: Event) {
-    const target = event.target as HTMLInputElement;
-    const file = target.files?.[0];
-    if (file) {
-        const profile_image = await file.arrayBuffer()
-        previewUrl.value = URL.createObjectURL(file)
-        previewUrlFile.value = new Blob([profile_image])
-        await uploadPhoto(file.type)
-    }
-    target.value = ''
-}
+// async function handleFileUpload(event: Event) {
+//     const target = event.target as HTMLInputElement;
+//     const file = target.files?.[0];
+//     if (file) {
+//         const profile_image = await file.arrayBuffer()
+//         previewUrl.value = URL.createObjectURL(file)
+//         previewUrlFile.value = new Blob([profile_image])
+//         await uploadPhoto(file.type)
+//     }
+//     target.value = ''
+// }
 // Arrays to hold values
 let cmArray: number[] = [];
 let feetArray: number[] = [];
@@ -505,58 +505,58 @@ function usersignup() {
     // Proceed with signup logic
 }
 
-async function uploadPhoto(contentType:string = 'image/jpeg') {
-    let api_url = getUrl(RequestURL.getProfilePhotoURL);
-    is_photo_uploading.value = true;
-    let response = await $fetch<SuccessError<UsersModel.ProfilePhotoResponseModel>>(api_url, {
-        method: 'POST',
-        body: {
-            "user_id": login_store.getUserDetails?.user_id,
-            "contentType": contentType
-        },
-        headers: {
-            'Content-Type': 'application/json',
-        },
-    })
-     let worker_model = response.response?.worker_model as WorkerModel
-     worker_model.timeStamp = Date.now()
-     upload(worker_model,contentType)
-}
+// async function uploadPhoto(contentType:string = 'image/jpeg') {
+//     let api_url = getUrl(RequestURL.getProfilePhotoURL);
+//     is_photo_uploading.value = true;
+//     let response = await $fetch<SuccessError<UsersModel.ProfilePhotoResponseModel>>(api_url, {
+//         method: 'POST',
+//         body: {
+//             "user_id": login_store.getUserDetails?.user_id,
+//             "contentType": contentType
+//         },
+//         headers: {
+//             'Content-Type': 'application/json',
+//         },
+//     })
+//      let worker_model = response.response?.worker_model as WorkerModel
+//      worker_model.timeStamp = Date.now()
+//      upload(worker_model,contentType)
+// }
 
-function upload(worker_model: WorkerModel,contentType:string = 'image/jpeg') 
-{
-    const xhr = new XMLHttpRequest()
-    xhr.upload.addEventListener('progress', (e) => {
-        if (e.lengthComputable) {
-            let value = Math.round((e.loaded / e.total) * 100)
-            worker_model.progress   = value
-            sendmsgtoworker(worker_model,true)
-        }
-    })
+// function upload(worker_model: WorkerModel,contentType:string = 'image/jpeg') 
+// {
+//     const xhr = new XMLHttpRequest()
+//     xhr.upload.addEventListener('progress', (e) => {
+//         if (e.lengthComputable) {
+//             let value = Math.round((e.loaded / e.total) * 100)
+//             worker_model.progress   = value
+//             sendmsgtoworker(worker_model,true)
+//         }
+//     })
 
-    xhr.upload.addEventListener('error', () => {
-        // error.value = 'Upload failed'
-        // uploading.value = false
-        is_photo_uploading.value = false;
-        showToastError('Photo upload failed. Please try again.')
-            worker_model.progress = -1
-            sendmsgtoworker(worker_model,true)
-    })
+//     xhr.upload.addEventListener('error', () => {
+//         // error.value = 'Upload failed'
+//         // uploading.value = false
+//         is_photo_uploading.value = false;
+//         showToastError('Photo upload failed. Please try again.')
+//             worker_model.progress = -1
+//             sendmsgtoworker(worker_model,true)
+//     })
 
-    xhr.onreadystatechange = () => {
-        if (xhr.readyState === 4) {
-            is_photo_uploading.value = false;
-            worker_model.progress = 100
-            sendmsgtoworker(worker_model,true)
-        }
-    }
+//     xhr.onreadystatechange = () => {
+//         if (xhr.readyState === 4) {
+//             is_photo_uploading.value = false;
+//             worker_model.progress = 100
+//             sendmsgtoworker(worker_model,true)
+//         }
+//     }
 
-    xhr.open('PUT', worker_model.url ?? '')
-    xhr.setRequestHeader('Content-Type', contentType)
-    // add headers if needed: xhr.setRequestHeader('Authorization', 'Bearer ...')
+//     xhr.open('PUT', worker_model.url ?? '')
+//     xhr.setRequestHeader('Content-Type', contentType)
+//     // add headers if needed: xhr.setRequestHeader('Authorization', 'Bearer ...')
    
-    xhr.send(previewUrlFile.value)
-}
+//     xhr.send(previewUrlFile.value)
+// }
 
 
 

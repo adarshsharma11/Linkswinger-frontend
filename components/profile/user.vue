@@ -82,6 +82,19 @@
           <!-- Left: Avatar + Badge -->
           <div class="col-12 col-md-3 d-flex justify-content-center justify-content-md-start">
             <div class="d-flex flex-column align-items-center">
+              <button @click="removeProfilePhoto()" v-if="!is_photo_uploading && isMine() && (getUser()?.profile_image ?? '').length !== 0"
+                type="button" class="btn btn-theme-color rounded-circle "
+                style="top: 2px; right: 8px; width: 40px; height: 40px; display: flex; align-items: left; justify-content: left; ">
+               <i class="fa fa-close text-white fa-lg"></i>
+              </button>
+              <button v-if="!is_photo_uploading && isMine()" type="button" class="btn btn-theme-color rounded-circle "
+                style="top: 2px; right: 8px; width: 40px; height: 40px; display: flex; align-items: left; justify-content: left; "
+                @click="triggerFileInput">
+                <i class="fa fa-pencil text-white fa-lg"></i>
+              </button>
+              <input type="file" v-if="!is_photo_uploading && isMine()" accept="image/png,image/jpeg" class="d-none"
+                ref="fileInput" @change="handleFileUpload" />
+              <span class="btn-loader" v-if="is_photo_uploading"></span>
               <img :src="getProfilePlaceholder()" alt="Profile" class="rounded-circle mb-2"
                 style="width: 90px; height: 90px; object-fit: cover" />
               <span class="badge bg-theme-color fs-6 mt-2">{{ (getUser()?.tier_name ?? '').length === 0
@@ -97,7 +110,8 @@
               {{ getUser()?.town ?? '' }}</h3>
             <span class="badge bg-success fs-6">Active</span>
             <p class="mb-0 mt-2 text-white">{{ getUser()?.profile_status }} <i v-if="isMine() && !is_status_loading"
-                class="fa fa-pencil text-white fa-lg" @click="editStatus()"></i><span class="btn-loader" v-if="is_status_loading"></span></p>
+                class="fa fa-pencil text-white fa-lg" @click="editStatus()"></i><span class="btn-loader"
+                v-if="is_status_loading"></span></p>
 
           </div>
 
@@ -224,32 +238,32 @@
               <li
                 @click="navigateTo('/feeds/' + getUser()?.user_id + '?' + 'media_type=image' + '&' + 'feed_type=public')">
                 <img src="/images/badges/public-photos.png" class="icon" /> Public Photos
-                <span class="badge bg-theme-color ms-2">{{ getFeedCount('public','image') }}</span>
+                <span class="badge bg-theme-color ms-2">{{ getFeedCount('public', 'image') }}</span>
               </li>
               <li
                 @click="navigateTo('/feeds/' + getUser()?.user_id + '?' + 'media_type=video' + '&' + 'feed_type=public')">
                 <img src="/images/badges/public-photos.png" class="icon" /> Public Videos
-                <span class="badge bg-theme-color ms-2">{{ getFeedCount('public','video') }}</span>
+                <span class="badge bg-theme-color ms-2">{{ getFeedCount('public', 'video') }}</span>
               </li>
               <li
                 @click="navigateTo('/feeds/' + getUser()?.user_id + '?' + 'media_type=image' + '&' + 'feed_type=friends')">
                 <img src="/images/badges/friends-only-photos.png" class="icon" /> Friends-Only Photos
-                <span class="badge bg-theme-color ms-2">{{ getFeedCount('friends','image') }}</span>
+                <span class="badge bg-theme-color ms-2">{{ getFeedCount('friends', 'image') }}</span>
               </li>
               <li
                 @click="navigateTo('/feeds/' + getUser()?.user_id + '?' + 'media_type=video' + '&' + 'feed_type=friends')">
                 <img src="/images/badges/friends-only-photos.png" class="icon" /> Friends-Only Videos
-                   <span class="badge bg-theme-color ms-2">{{ getFeedCount('friends','video') }}</span>
+                <span class="badge bg-theme-color ms-2">{{ getFeedCount('friends', 'video') }}</span>
               </li>
               <li
                 @click="navigateTo('/feeds/' + getUser()?.user_id + '?' + 'media_type=image' + '&' + 'feed_type=private')">
                 <img src="/images/badges/private-photos.png" class="icon" /> Private Photos
-                  <span class="badge bg-theme-color ms-2">{{ getFeedCount('private','image') }}</span>
+                <span class="badge bg-theme-color ms-2">{{ getFeedCount('private', 'image') }}</span>
               </li>
               <li
                 @click="navigateTo('/feeds/' + getUser()?.user_id + '?' + 'media_type=video' + '&' + 'feed_type=private')">
                 <img src="/images/badges/private-photos.png" class="icon" /> Private Videos
-                  <span class="badge bg-theme-color ms-2">{{ getFeedCount('private','video') }}</span>
+                <span class="badge bg-theme-color ms-2">{{ getFeedCount('private', 'video') }}</span>
               </li>
             </ul>
           </div>
@@ -350,6 +364,11 @@ const feedCounts = ref([] as UsersModel.FeedCountResponseModel[])
 const is_verified = ref(false);
 const eventBus = useMittEmitter()
 const id_store = idStore()
+const is_photo_uploading = ref(false);
+const previewUrlFile = ref<Blob | null>(null);
+const fileInput = ref<HTMLInputElement | null>(null);
+const previewUrl = ref<string | null>(null);
+
 if (isMine() === false) {
   const fetchUserDetails = async () => {
     const api_url = getUrl(RequestURL.getProfileDetails);
@@ -425,7 +444,7 @@ feedCounts.value = await fetchfeedCounts() as UsersModel.FeedCountResponseModel[
 
 onMounted(() => {
 
-   eventBus.on('callDeclineAlert', (eventModel) => {
+  eventBus.on('callDeclineAlert', (eventModel) => {
     showToastError('Call declined')
   })
   eventBus.on('callAcceptAlert', async (eventModel) => {
@@ -504,8 +523,7 @@ function showVerificationAlert() {
 }
 
 function showCodeAlert(is_video: boolean) {
-  if (isMine())
-  {
+  if (isMine()) {
     return;
   }
   Swal.fire({
@@ -610,7 +628,7 @@ function editStatus() {
     // Watch input changes
     statusInput.addEventListener("input", () => {
       statusInput.value = statusInput.value.replace(emojiRegex, "")
-       statusInput.focus();
+      statusInput.focus();
     })
   });
 }
@@ -620,7 +638,7 @@ function handleToggle() {
   }
 }
 
-function getFeedCount(feed_type : string , media_type :string) : number {
+function getFeedCount(feed_type: string, media_type: string): number {
   let count = feedCounts.value.find(fc => fc.feed_type === feed_type && fc.media_type === media_type)?.count ?? 0
   return count
 }
@@ -628,23 +646,23 @@ function getFeedCount(feed_type : string , media_type :string) : number {
 function selectedEmoji(emoji: string) {
   const statusInput = document.getElementById('status-input') as HTMLInputElement;
   if (statusInput) {
-      const start = statusInput.selectionStart;
-  const end = statusInput.selectionEnd;
-  const value = statusInput.value;
+    const start = statusInput.selectionStart;
+    const end = statusInput.selectionEnd;
+    const value = statusInput.value;
 
-  statusInput.value = value.substring(0, start) + emoji + value.substring(end);
+    statusInput.value = value.substring(0, start) + emoji + value.substring(end);
 
-  // Move cursor after the emoji
-  const newPos = start + emoji.length;
-  statusInput.setSelectionRange(newPos, newPos);
+    // Move cursor after the emoji
+    const newPos = start + emoji.length;
+    statusInput.setSelectionRange(newPos, newPos);
 
-  // Ensure input stays focused
-  statusInput.focus();
+    // Ensure input stays focused
+    statusInput.focus();
   }
 }
 
-async function updateStatus(profile_status:string) {
-if (is_status_loading.value) {
+async function updateStatus(profile_status: string) {
+  if (is_status_loading.value) {
     return;
   }
   const api_url = getUrl(RequestURL.updateUserStatus);
@@ -797,8 +815,7 @@ async function openChat() {
   if (isMine()) {
     await navigateTo('/chat')
   }
-  else
-  {
+  else {
     await navigateTo('/chat/' + String(props.user_id ?? 0))
   }
 }
@@ -808,4 +825,107 @@ function isMine(): boolean {
   let login_id = Number(login_store.getUserDetails?.user_id ?? 0)
   return user_id === login_id
 }
+
+async function removeProfilePhoto() {
+  const api_url = getUrl(RequestURL.removeProfilePhoto);
+  is_photo_uploading.value = true;
+  const response = await $fetch<SuccessError<UsersModel.LoginResponseModel>>(
+    api_url,
+    {
+      method: "POST",
+      body: {
+        user_id: login_store.getUserDetails?.user_id
+      },
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+  is_photo_uploading.value = false;
+  if (response.success) {
+     reloadNuxtApp({
+        path: "/profile",
+        ttl: 1000
+      })
+  }
+  else {
+    showToastError("Failed to remove photo. Please try again.");
+  }
+}
+
+function triggerFileInput() {
+  fileInput.value?.click();
+}
+
+async function handleFileUpload(event: Event) {
+  const target = event.target as HTMLInputElement;
+  const file = target.files?.[0];
+  if (file) {
+    const profile_image = await file.arrayBuffer()
+    previewUrl.value = URL.createObjectURL(file)
+    previewUrlFile.value = new Blob([profile_image])
+    await uploadPhoto(file.type)
+  }
+  target.value = ''
+}
+
+async function uploadPhoto(contentType: string = 'image/jpeg') {
+  let api_url = getUrl(RequestURL.getProfilePhotoURL);
+  is_photo_uploading.value = true;
+  let response = await $fetch<SuccessError<UsersModel.ProfilePhotoResponseModel>>(api_url, {
+    method: 'POST',
+    body: {
+      "user_id": login_store.getUserDetails?.user_id,
+      "contentType": contentType
+    },
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+  let worker_model = response.response?.worker_model as WorkerModel
+  worker_model.timeStamp = Date.now()
+  upload(worker_model, contentType)
+}
+
+function upload(worker_model: WorkerModel, contentType: string = 'image/jpeg') {
+  const xhr = new XMLHttpRequest()
+  xhr.upload.addEventListener('progress', (e) => {
+    if (e.lengthComputable) {
+      let value = Math.round((e.loaded / e.total) * 100)
+      worker_model.progress = value
+      sendmsgtoworker(worker_model, true)
+    }
+  })
+
+  xhr.upload.addEventListener('error', () => {
+    // error.value = 'Upload failed'
+    // uploading.value = false
+    is_photo_uploading.value = false;
+    showToastError('Photo upload failed. Please try again.')
+    worker_model.progress = -1
+    sendmsgtoworker(worker_model, true)
+  })
+
+  xhr.onreadystatechange = () => {
+    if (xhr.readyState === 4) {
+      is_photo_uploading.value = false;
+      worker_model.progress = 100
+      sendmsgtoworker(worker_model, true)
+
+      reloadNuxtApp({
+        path: "/profile",
+        ttl: 1000
+      })
+
+    }
+  }
+
+  xhr.open('PUT', worker_model.url ?? '')
+  xhr.setRequestHeader('Content-Type', contentType)
+  // add headers if needed: xhr.setRequestHeader('Authorization', 'Bearer ...')
+
+  xhr.send(previewUrlFile.value)
+}
+
+
 </script>
