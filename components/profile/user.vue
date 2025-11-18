@@ -238,33 +238,39 @@
             <ul class="list-unstyled photo-list mb-0">
               <li
                 @click="navigateTo('/feeds/' + getUser()?.user_id + '?' + 'media_type=image' + '&' + 'feed_type=public')">
+                 <span class="badge bg-theme-color ms-2">{{ getFeedCount('public', 'image') }}</span>
                 <img src="/images/badges/public-photos.png" class="icon" /> Public Photos
-                <span class="badge bg-theme-color ms-2">{{ getFeedCount('public', 'image') }}</span>
+               
               </li>
               <li
                 @click="navigateTo('/feeds/' + getUser()?.user_id + '?' + 'media_type=video' + '&' + 'feed_type=public')">
+                 <span class="badge bg-theme-color ms-2">{{ getFeedCount('public', 'video') }}</span>
                 <img src="/images/badges/public-photos.png" class="icon" /> Public Videos
-                <span class="badge bg-theme-color ms-2">{{ getFeedCount('public', 'video') }}</span>
+               
               </li>
               <li
                 @click="navigateTo('/feeds/' + getUser()?.user_id + '?' + 'media_type=image' + '&' + 'feed_type=friends')">
+                  <span class="badge bg-theme-color ms-2">{{ getFeedCount('friends', 'image') }}</span>
                 <img src="/images/badges/friends-only-photos.png" class="icon" /> Friends-Only Photos
-                <span class="badge bg-theme-color ms-2">{{ getFeedCount('friends', 'image') }}</span>
+              
               </li>
               <li
                 @click="navigateTo('/feeds/' + getUser()?.user_id + '?' + 'media_type=video' + '&' + 'feed_type=friends')">
+                 <span class="badge bg-theme-color ms-2">{{ getFeedCount('friends', 'video') }}</span>
                 <img src="/images/badges/friends-only-photos.png" class="icon" /> Friends-Only Videos
-                <span class="badge bg-theme-color ms-2">{{ getFeedCount('friends', 'video') }}</span>
+               
               </li>
               <li
                 @click="navigateTo('/feeds/' + getUser()?.user_id + '?' + 'media_type=image' + '&' + 'feed_type=private')">
+                  <span class="badge bg-theme-color ms-2">{{ getFeedCount('private', 'image') }}</span>
                 <img src="/images/badges/private-photos.png" class="icon" /> Private Photos
-                <span class="badge bg-theme-color ms-2">{{ getFeedCount('private', 'image') }}</span>
+              
               </li>
               <li
                 @click="navigateTo('/feeds/' + getUser()?.user_id + '?' + 'media_type=video' + '&' + 'feed_type=private')">
+                  <span class="badge bg-theme-color ms-2">{{ getFeedCount('private', 'video') }}</span>
                 <img src="/images/badges/private-photos.png" class="icon" /> Private Videos
-                <span class="badge bg-theme-color ms-2">{{ getFeedCount('private', 'video') }}</span>
+              
               </li>
             </ul>
           </div>
