@@ -82,22 +82,24 @@
 
           <!-- Left: Avatar + Badge -->
           <div class="col-12 col-md-3 d-flex justify-content-center justify-content-md-start">
-            <div class="d-flex flex-column align-items-center">
-              <button @click="removeProfilePhoto()" v-if="!is_photo_uploading && isMine() && (getUser()?.profile_image ?? '').length !== 0"
-                type="button" class="btn btn-theme-color rounded-circle "
-                style="top: 2px; right: 8px; width: 40px; height: 40px; display: flex; align-items: left; justify-content: left; ">
-               <i class="fa fa-close text-white fa-lg"></i>
-              </button>
-              <button v-if="!is_photo_uploading && isMine()" type="button" class="btn btn-theme-color rounded-circle "
-                style="top: 2px; right: 8px; width: 40px; height: 40px; display: flex; align-items: left; justify-content: left; "
-                @click="triggerFileInput">
-                <i class="fa fa-pencil text-white fa-lg"></i>
-              </button>
+            <div class="d-flex flex-column align-items-center position-relative">
+              <div class="position-relative profile-avatar-container">
+                <img :src="getProfilePlaceholder()" alt="Profile" class="rounded-circle mb-2"
+                  style="width: 90px; height: 90px; object-fit: cover" />
+                <!-- Upload/Edit button - top right -->
+                <button v-if="!is_photo_uploading && isMine()" type="button" class="btn btn-transparent rounded-circle position-absolute profile-edit-btn"
+                  @click="triggerFileInput">
+                  <i class="fa fa-camera text-white"></i>
+                </button>
+                <!-- Remove button - bottom right -->
+                <button @click="removeProfilePhoto()" v-if="!is_photo_uploading && isMine() && (getUser()?.profile_image ?? '').length !== 0"
+                  type="button" class="btn btn-transparent rounded-circle position-absolute profile-remove-btn">
+                 <i class="fa fa-trash text-white"></i>
+                </button>
+              </div>
               <input type="file" v-if="!is_photo_uploading && isMine()" accept="image/png,image/jpeg" class="d-none"
                 ref="fileInput" @change="handleFileUpload" />
               <span class="btn-loader" v-if="is_photo_uploading"></span>
-              <img :src="getProfilePlaceholder()" alt="Profile" class="rounded-circle mb-2"
-                style="width: 90px; height: 90px; object-fit: cover" />
               <span class="badge bg-theme-color fs-6 mt-2">{{ (getUser()?.tier_name ?? '').length === 0
                 ? 'Free' :
                 (getUser()?.tier_name ?? '') }}</span>
