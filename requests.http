@@ -29,7 +29,7 @@ Content-Type: application/json
 
 ###
 
-POST https://linkswingers.co.uk/api/addEmoji
+POST http://0.0.0.0:8080/api/addEmoji
 Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
 
 ------WebKitFormBoundary7MA4YWxkTrZu0gW
@@ -43,3 +43,22 @@ Content-Type: application/json
 < /Users/scallercell_2/Downloads/emojis/animated/JASON/18.json
 ------WebKitFormBoundary7MA4YWxkTrZu0gW--
 
+###
+
+POST http://0.0.0.0:8080/api/fetchFeedComments
+Content-Type: application/json
+
+{
+  "feed_id": 1
+}
+
+
+###
+
+POST http://0.0.0.0:8080/api/feedLikeDisLike
+Content-Type: application/json
+
+{
+  "feed_id": 1,
+  "user_id" : 1
+}
