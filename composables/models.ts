@@ -47,7 +47,10 @@ export enum RequestURL {
   getFeedCount ="/getFeedCount",
   removeProfilePhoto = "/removeProfilePhoto",
   deleteWholeChat = "/deleteWholeChat",
-  fetchEmojis = "/fetchEmojis"
+  fetchEmojis = "/fetchEmojis",
+  addFeedComment = "/addFeedComment",
+  feedLikeDisLike = "/feedLikeDisLike",
+  fetchFeedComments = "/fetchFeedComments",
 }
 
 export var online_user_ids : number[] = []
