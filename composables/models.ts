@@ -46,7 +46,8 @@ export enum RequestURL {
   updateUserStatus = "/updateUserStatus",
   getFeedCount ="/getFeedCount",
   removeProfilePhoto = "/removeProfilePhoto",
-  deleteWholeChat = "/deleteWholeChat"
+  deleteWholeChat = "/deleteWholeChat",
+  fetchEmojis = "/fetchEmojis"
 }
 
 export var online_user_ids : number[] = []
@@ -544,6 +545,15 @@ export namespace MeetVerificationsModel
          review? : string
          is_public? : boolean
          is_verified? : boolean
+    }
+}
+
+export namespace EmojisModel {
+    
+    export class FetchEmojiResponseModel {
+         emoji_id? : number
+         emoji? : string
+         media_path? : string
     }
 }
 

@@ -1,7 +1,7 @@
 <template>
     <div class="absolute" ref="emojiButtonRef">
         <!-- Floating Emoji Picker -->
-
+ 
         <transition name="fade">
             <div v-if="showEmojiPicker" ref="emojiPickerRef" class="fixed z-50 bg-white border rounded-lg shadow-lg"
                 :style="{
@@ -41,9 +41,12 @@
                         <NuxtEmojiPicker @select="onSelectEmoji" />
                     </div>
                     <div v-else-if="activeTab === 'stickers'" class="grid-container">
-                        <Lottie class="grid-item" v-for="sticker in ['01', '02', '03', '04']" :name=sticker
-                            style="width: 80px; height: 80px;" @click="onSelectCustomEmoji(sticker)"></Lottie>
+                        <Lottie class="grid-item" v-for="sticker in emojis" :link="(sticker.media_path ?? '') + sticker.emoji" :key="sticker.emoji_id"
+                            style="width: 80px; height: 80px;" ></Lottie>
                     </div>
+                  
+
+                    
                     <!-- Stickers -->
 
                 </div>
@@ -52,6 +55,8 @@
     </div>
 </template>
 <script setup lang="ts">
+import type { EmojisModel } from '~/composables/models';
+
 
 const activeTab = ref('emoji');
 
@@ -63,6 +68,7 @@ const dragOffset = ref({ x: 0, y: 0 })
 const pickerPosition = ref({ x: 500, y: 200 }) // initial position
 const pickerWidth = ref(300)
 const pickerHeight = ref(410)
+const emojis = ref([] as EmojisModel.FetchEmojiResponseModel[])
 const emit = defineEmits(['selectedEmoji','onSelectCustomEmoji'])
 
 
@@ -123,6 +129,25 @@ defineExpose({
     toggleEmojiPicker
 })
 
+onMounted(async () => {
+  
+const fetchEmojis = async () => {
+  const api_url = getUrl(RequestURL.fetchEmojis);
+  let response_model = await $fetch<SuccessError<EmojisModel.FetchEmojiResponseModel>>(api_url, {
+    cache: "no-cache",
+    method: "post",
+    body: {},
+    headers: {
+      "content-type": "application/json"
+    }
+  });
+  return response_model.result ?? []
+}
+ emojis.value = await fetchEmojis() as EmojisModel.FetchEmojiResponseModel[]
+});
+
+
+
 </script>
 
 <style scoped>
@@ -130,7 +155,9 @@ defineExpose({
 .grid-container {
   display: grid; /* Declares the element as a grid container */
   grid-template-columns: repeat(3, 1fr); /* Creates 3 columns, each taking equal fractional space */
-  grid-template-rows: repeat(3, 1fr); /* Creates 3 rows, each taking equal fractional space */
+  grid-template-rows: repeat(3, 1fr);
+  height: 320px;
+  max-height: 320px; /* Creates 3 rows, each taking equal fractional space */
 }
 
 .grid-item {
