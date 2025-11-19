@@ -7,12 +7,12 @@
     <h1 class="hw-title">How it works</h1>
     <p class="subtitle">We’re launching soon — join the waitlist to get <strong>promotional access for free</strong>. Below is a quick tour of the platform: profile browsing, calls and HD video calls, video roulette, and secure media uploads.</p>
     <div class="cta-row">
-      <a class="btn primary" href="/waitlist">Join waitlist</a>
+      <a class="btn primary" href="/early-access">Join waitlist</a>
       <a class="btn ghost" href="#features">See features</a>
     </div>
     <!-- Top email form -->
-    <form class="email-form" action="/waitlist" method="GET">
-      <input type="email" name="email" placeholder="Enter your email to join the waitlist…" required />
+    <form class="email-form" @submit.prevent="handleSubmit">
+      <input type="email" name="email" v-model="email" placeholder="Enter your email to join the waitlist…" required />
       <button type="submit">Get Early Access</button>
     </form>
     <div class="email-form"><small>We’ll only email you about launch and early access. You can opt out any time.</small></div>
@@ -229,6 +229,43 @@
   </div>
 </div>
 </template>
+
+<script setup lang="ts">
+import type { EarlyAccessModel } from '~/composables/models'
+const email = ref('')
+const success = ref(false)
+const error = ref<string | null>(null)
+
+const handleSubmit = async () => {
+  success.value = false
+  error.value = null
+  // Basic email validation
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  if (!emailRegex.test(email.value)) {
+    error.value = 'Please enter a valid email.'
+    return
+  }
+  try {
+    let url = getUrl(RequestURL.addEarlyAccess)
+    const res = await $fetch<SuccessError<EarlyAccessModel.AddResponseModel>>(url, {
+      method: 'POST',
+      body: { email: email.value , should_receive_updates: false },
+    })
+
+    if (res.success)
+     {
+      success.value = true
+      email.value = ''
+      await navigateTo('/thank-you')
+    } else {
+     showToastError(res.message)
+    }
+  } catch (e) {
+    showToastError('That didn’t work. Please try again.')
+  }
+}
+
+</script>
 
 
 
