@@ -1,4 +1,5 @@
 import Swal from 'sweetalert2'
+import { number } from 'yup';
 
 
 export const getUrl = (request: RequestURL) => {
@@ -44,7 +45,7 @@ export enum RequestURL {
   fetchCallDetails = "/fetchCallDetails",
   deleteChat = "/deleteChat",
   updateUserStatus = "/updateUserStatus",
-  getFeedCount ="/getFeedCount",
+  getFeedCount = "/getFeedCount",
   removeProfilePhoto = "/removeProfilePhoto",
   deleteWholeChat = "/deleteWholeChat",
   fetchEmojis = "/fetchEmojis",
@@ -53,7 +54,7 @@ export enum RequestURL {
   fetchFeedComments = "/fetchFeedComments",
 }
 
-export var online_user_ids : number[] = []
+export var online_user_ids: number[] = []
 export function showalert(title: string, is_success: boolean = false, timer: number = 2000) {
   if (is_success) {
     Swal.fire({
@@ -78,7 +79,7 @@ export function showalert(title: string, is_success: boolean = false, timer: num
 }
 
 export function clearOnlineIds() {
-online_user_ids = []
+  online_user_ids = []
 }
 export function validateEmail(email: string): boolean {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -105,16 +106,16 @@ export function convertToInches(cm: number): { feet: number; inches: number } {
   return { feet, inches };
 }
 
-export function getDistanceFromLatLonInKm(lat1 : number , lon1 : number , lat2 : number , lon2 : number) : number {
+export function getDistanceFromLatLonInKm(lat1: number, lon1: number, lat2: number, lon2: number): number {
   const R = 6371 // Radius of the Earth in km
   const dLat = deg2rad(lat2 - lat1)
   const dLon = deg2rad(lon2 - lon1)
   const a =
     Math.sin(dLat / 2) * Math.sin(dLat / 2) +
     Math.cos(deg2rad(lat1)) *
-      Math.cos(deg2rad(lat2)) *
-      Math.sin(dLon / 2) *
-      Math.sin(dLon / 2)
+    Math.cos(deg2rad(lat2)) *
+    Math.sin(dLon / 2) *
+    Math.sin(dLon / 2)
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
   const distance = R * c
   return distance
@@ -130,7 +131,7 @@ export function getDistanceFromLatLonInMiles(
   return km * milesPerKm
 }
 
-function deg2rad(deg : number) {
+function deg2rad(deg: number) {
   return deg * (Math.PI / 180)
 }
 
@@ -145,13 +146,13 @@ export interface SuccessError<T> {
 }
 
 export namespace PromotionsModel {
-    export class AddRequestModel{
-         text? : string
-    }
-    export class FetchResponseModel {
-       text? : string
-       speed?: number
-    }
+  export class AddRequestModel {
+    text?: string
+  }
+  export class FetchResponseModel {
+    text?: string
+    speed?: number
+  }
 }
 
 export namespace UsersModel {
@@ -177,7 +178,7 @@ export namespace UsersModel {
   }
 
   export class SignUpRequestModel {
-    user_id? : number
+    user_id?: number
     first_name?: string;
     last_name?: string;
     nick_name?: string;
@@ -261,48 +262,43 @@ export namespace UsersModel {
   export class ActivateUserResponseModel {
 
   }
-  export class FetchTownRequestModel
-  {
-     search?: string;
+  export class FetchTownRequestModel {
+    search?: string;
   }
-  export class FetchTownResponseModel
-  {
-     town_id?: number;
-     town?: string;
-      latitude?: number;
-      longitude?: number;
+  export class FetchTownResponseModel {
+    town_id?: number;
+    town?: string;
+    latitude?: number;
+    longitude?: number;
 
   }
-   export class FetchPostCodeRequestModel
-  {
-     search?: string;
+  export class FetchPostCodeRequestModel {
+    search?: string;
   }
-  export class FetchPostCodeResponseModel
-  {
-     post_code_id?: number;
-     post_code?: string;
-     latitude?: number;
-      longitude?: number;
+  export class FetchPostCodeResponseModel {
+    post_code_id?: number;
+    post_code?: string;
+    latitude?: number;
+    longitude?: number;
   }
-   export class FetchTownPostCodesResponseModel
-  {
-     id?: number;
-     name?: string;
-     type?: string;
-      latitude?: number;
-      longitude?: number;
+  export class FetchTownPostCodesResponseModel {
+    id?: number;
+    name?: string;
+    type?: string;
+    latitude?: number;
+    longitude?: number;
 
   }
-   export class ProfileDetailsRequestModel {
+  export class ProfileDetailsRequestModel {
     user_id?: number;
   }
-   export class ProfileDetailsResponseModel {
+  export class ProfileDetailsResponseModel {
     user_id?: number;
     user_udid?: string;
     nick_name?: string;
     email?: string;
     call_code?: string;
-    profile_status?:string;
+    profile_status?: string;
     profile_image?: string;
     sd_profile_image?: string;
     hd_profile_image?: string;
@@ -329,17 +325,17 @@ export namespace UsersModel {
     town?: string;
     interests?: InterestsModel[];
     meet_perferences?: MeetPreferencesModel[];
-    gender?:string
-    partner_gender?:string
-    tier_id?:number
-    tier_name?:string
-    price?:number
-     about_me?: string;
+    gender?: string
+    partner_gender?: string
+    tier_id?: number
+    tier_name?: string
+    price?: number
+    about_me?: string;
     is_photo_verified?: boolean;
     is_meet_verified?: boolean;
-    verified_photo?:string;
-    assets_path?:string;
-    media_path?:string;
+    verified_photo?: string;
+    assets_path?: string;
+    media_path?: string;
     latitude?: number;
     longitude?: number;
     is_typing?: boolean;
@@ -353,9 +349,9 @@ export namespace UsersModel {
   export class FetchMembershipRequestModel {
     user_id?: number;
     tier_id?: number;
-}
+  }
 
-export class FetchMembershipResponseModel {
+  export class FetchMembershipResponseModel {
     user_membership_id?: number;
     user_id?: number;
     tier_id?: number;
@@ -363,14 +359,14 @@ export class FetchMembershipResponseModel {
     end_date?: string;
     tier_price?: number;
     price_difference?: number;
-}
+  }
 
-export class CreateMembershipRequestModel {
+  export class CreateMembershipRequestModel {
     user_id?: number;
     tier_id?: number;
-}
+  }
 
-export class CreateMembershipResponseModel {
+  export class CreateMembershipResponseModel {
     user_membership_id?: number;
     user_id?: number;
     tier_id?: number;
@@ -378,45 +374,40 @@ export class CreateMembershipResponseModel {
     end_date?: string;
     tier_price?: number;
     price_difference?: number;
-    session_url?:string
-}
+    session_url?: string
+  }
 
-export class ProfilePhotoRequestModel
-{
-  user_id?: number;
-}
-export class ProfilePhotoResponseModel
-{
-  worker_model?: WorkerModel;
-}
+  export class ProfilePhotoRequestModel {
+    user_id?: number;
+  }
+  export class ProfilePhotoResponseModel {
+    worker_model?: WorkerModel;
+  }
 
-export class FetchCallCodeRequestModel
-{
-  user_id?: number;
-}
-export class FetchCallCodeResponseModel
-{
-  call_code?: string;
-}
+  export class FetchCallCodeRequestModel {
+    user_id?: number;
+  }
+  export class FetchCallCodeResponseModel {
+    call_code?: string;
+  }
 
-export class FeedCountResponseModel
-{
-  feed_type?: string;
-  media_type?: string;
-  count?: number;
-}
+  export class FeedCountResponseModel {
+    feed_type?: string;
+    media_type?: string;
+    count?: number;
+  }
 
 }
 export namespace MembershipsModel {
 
-export class FetchMembershipsResponseModel {
+  export class FetchMembershipsResponseModel {
     tier_id?: number;
     tier_name?: string;
     price?: number;
     tier_features?: TierFeaturesModel[];
-}
+  }
 
-export class TierFeaturesModel {
+  export class TierFeaturesModel {
     tier_feature_id?: number;
     tier_id?: number;
     feature_id?: number;
@@ -434,43 +425,39 @@ export class TierFeaturesModel {
     can_view_livestream?: boolean;
     can_chat_in_livestream?: boolean;
     can_host_livestream?: boolean;
-}
+  }
 
 }
 
 
 export namespace EarlyAccessModel {
-    export class AddRequestModel {
-         email? : string
-         should_receive_updates? : boolean
-    }
-    export class AddResponseModel {
-        
-    }
- 
+  export class AddRequestModel {
+    email?: string
+    should_receive_updates?: boolean
+  }
+  export class AddResponseModel {
+
+  }
+
 }
-export namespace FeedsModel
-{
-   export class FeedsURLRequestModel
-   {
+export namespace FeedsModel {
+  export class FeedsURLRequestModel {
     user_id?: number;
     contentType?: string;
-     feed_type?: string;
+    feed_type?: string;
     feed_desc?: string;
-   }
-   export class FeedsURLResponseModel
-   {
+  }
+  export class FeedsURLResponseModel {
     worker_model?: WorkerModel;
-   }
+  }
 
-    export class FeedsRequestModel
-   {
+  export class FeedsRequestModel {
+    login_id? : number
     user_id?: number;
     media_type?: string;
-     feed_type?: string;
-   }
-   export class FeedsResponseModel
-   {
+    feed_type?: string;
+  }
+  export class FeedsResponseModel {
     media_path?: string;
     media_type?: string;
     feed_id?: number;
@@ -478,88 +465,137 @@ export namespace FeedsModel
     nick_name?: string;
     profile_image?: string
     hd_profile_image?: string
+    profile_type?:string
     feed_thumbnail?: string
-     lq_feed_image?: string
-     hd_feed_image?: string
-      lq_feed_video?: string
-      sd_feed_video?: string
-      hd_feed_video?: string
-          feed_desc?: string
-          feed_type?: string
-   }
+    lq_feed_image?: string
+    hd_feed_image?: string
+    lq_feed_video?: string
+    sd_feed_video?: string
+    hd_feed_video?: string
+    feed_desc?: string
+    feed_type?: string
+    is_liked?: boolean
+    comment_count?: number
+
+  }
+
+
+  export class FeedLikeDisLikeRequestModel {
+         user_id?: number
+         feed_id?: number
+    }
+    
+    export class FeedLikeDisLikeResponseModel {
+         user_id?: number
+         feed_id?: number
+         state? : string
+    }
+    
+    export class AddFeedCommentRequestModel {
+         user_id?: number
+         feed_id?: number
+         comment?: string
+         comment_type?: string
+    }
+    
+    export class AddFeedCommentResponseModel {
+         feed_comment_id? : number
+         user_id?: number
+         feed_id?: number
+         comment?: string
+         comment_type?: string
+    }
+    
+    export class FetchFeedCommentRequestModel {
+         feed_id?: number
+    }
+    
+    export class FetchFeedCommentResponseModel {
+         feed_comment_id? : number
+         user_id?: number
+         feed_id?: number
+         comment?: string
+         comment_type?: string
+         nick_name? : string
+         profile_type? : string
+         profile_image? : string
+         hd_profile_image? : string
+         media_path? : string
+    }
+    
+
+
 }
 
 export namespace ChatsModel {
 
-  export class  ChatResponseModel {
-  chat_id?: number;
-  from_id?: number;
-  to_id?: number;
-  message_type?: string;
-  message?: string;
-  created_at?: string;
-  status?: string;
-  is_read?:boolean
-  is_deleted?:boolean
-  is_deleting?:boolean
+  export class ChatResponseModel {
+    chat_id?: number;
+    from_id?: number;
+    to_id?: number;
+    message_type?: string;
+    message?: string;
+    created_at?: string;
+    status?: string;
+    is_read?: boolean
+    is_deleted?: boolean
+    is_deleting?: boolean
 
-  user_id?:number
-  badge_count?:number
-  is_typing?:boolean
+    user_id?: number
+    badge_count?: number
+    is_typing?: boolean
 
-  page?: number;
-  media_path?: string;
-  nick_name?: string;
-  profile_image?: string;
-  profile_type? : string;
+    page?: number;
+    media_path?: string;
+    nick_name?: string;
+    profile_image?: string;
+    profile_type?: string;
 
-  tier_id? : number;
-  tier_name? : string;
-  price? : number;
+    tier_id?: number;
+    tier_name?: string;
+    price?: number;
 
-    url? : string;
-    key? : string;
-  
+    url?: string;
+    key?: string;
+
   }
 
- 
+
 }
 
-export namespace MeetVerificationsModel
-{
-    export class AddVerifyRequestModel {
-         from_id? : number
-         to_id? : number
-         review? : string
-    }
-    export class AddVerifyResponseModel {
-       
-    }
-    export class FetchVerifyRequestModel {
-         from_id? : number
-         to_id? : number
-    }
-    
-    export class FetchVerifyResponseModel
-    {
-         from_id? : number
-         to_id? : number
-         nick_name? : string
-         review? : string
-         is_public? : boolean
-         is_verified? : boolean
-    }
+export namespace MeetVerificationsModel {
+  export class AddVerifyRequestModel {
+    from_id?: number
+    to_id?: number
+    review?: string
+  }
+  export class AddVerifyResponseModel {
+
+  }
+  export class FetchVerifyRequestModel {
+    from_id?: number
+    to_id?: number
+  }
+
+  export class FetchVerifyResponseModel {
+    from_id?: number
+    to_id?: number
+    nick_name?: string
+    review?: string
+    is_public?: boolean
+    is_verified?: boolean
+  }
 }
 
 export namespace EmojisModel {
-    
-    export class FetchEmojiResponseModel {
-         emoji_id? : number
-         emoji? : string
-         media_path? : string
-    }
+
+  export class FetchEmojiResponseModel {
+    emoji_id?: number
+    emoji?: string
+    media_path?: string
+  }
 }
 
 
-  
-    
+
+

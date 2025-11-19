@@ -11,7 +11,8 @@
                         <img :key="item.feed_id" :src="`${item.media_path}${item.feed_thumbnail}`" class="short-image"
                             loading="lazy" v-if="item.media_type === 'video'" />
                         <video v-if="item.media_type === 'video'" ref="videoRefs"
-                            class="video-js vjs-defaultskin short-video"  playsinline webkit-playsinline x5-playsinline></video>
+                            class="video-js vjs-defaultskin short-video" playsinline webkit-playsinline
+                            x5-playsinline></video>
                         <!-- ✅ Simple Play / Pause Button -->
                         <!-- ✅ Play/Pause button with fade -->
                         <transition name="fade" v-if="item.media_type === 'video'">
@@ -22,22 +23,36 @@
                         <div class="swiper-lazy-preloader swiper-lazy-preloader-white"></div>
                         <div class="overlay">
                             <div class="overlay-inner d-flex flex-wrap justify-content-between">
-                            <div class="overlay-left">
-                                <div class="vd-name">
-                                    <div class="vd-img">
-                                        <img :src="getImagePath(item)" />
+                                <div class="overlay-left">
+                                    <div class="vd-name">
+                                        <div class="vd-img">
+                                            <img :src="getProfilePlaceholder(item.media_path ?? '', item.profile_image ?? '', item.profile_type ?? '')" />
+                                        </div>
+                                        <div class="vdo-name">
+                                            <h3>{{ item.nick_name }}</h3>
+                                        </div>
                                     </div>
-                                    <div class="vdo-name">
-                                        <h3>{{ item.nick_name }}</h3>
-                                    </div>
+                                    <h3 style="color: white;">{{ item.feed_desc }}</h3>
                                 </div>
-                                <h3 style="color: white;">{{ item.feed_desc }}</h3>
-                            </div>
-                            <div class="overlay-right">
-                                <button><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" focusable="false" aria-hidden="true" style="pointer-events: none; display: inherit; width: 100%; height: 100%;"><path d="M9.221 1.795a1 1 0 011.109-.656l1.04.173a4 4 0 013.252 4.784L14 9h4.061a3.664 3.664 0 013.576 2.868A3.68 3.68 0 0121 14.85l.02.087A3.815 3.815 0 0120 18.5v.043l-.01.227a2.82 2.82 0 01-.135.663l-.106.282A3.754 3.754 0 0116.295 22h-3.606l-.392-.007a12.002 12.002 0 01-5.223-1.388l-.343-.189-.27-.154a2.005 2.005 0 00-.863-.26l-.13-.004H3.5a1.5 1.5 0 01-1.5-1.5V12.5A1.5 1.5 0 013.5 11h1.79l.157-.013a1 1 0 00.724-.512l.063-.145 2.987-8.535Zm-1.1 9.196A3 3 0 015.29 13H4v4.998h1.468a4 4 0 011.986.528l.27.155.285.157A10 10 0 0012.69 20h3.606c.754 0 1.424-.483 1.663-1.2l.03-.126a.819.819 0 00.012-.131v-.872l.587-.586c.388-.388.577-.927.523-1.465l-.038-.23-.02-.087-.21-.9.55-.744A1.663 1.663 0 0018.061 11H14a2.002 2.002 0 01-1.956-2.418l.623-2.904a2 2 0 00-1.626-2.392l-.21-.035-2.71 7.741Z"></path></svg></button>
-                                <button aria-label="Go to Comment" data-bs-toggle="modal"
-                    data-bs-target="#commentmodal"><svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" focusable="false" aria-hidden="true" style="pointer-events: none; display: inherit; width: 100%; height: 100%;"><path d="M1 6a4 4 0 014-4h14a4 4 0 014 4v10a4 4 0 01-4 4h-4.8l-5.105 2.836A1.41 1.41 0 017 21.604V20H5a4 4 0 01-4-4V6Zm8 12v2.601l4.229-2.35.453-.251H19a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2h4ZM7 8a1 1 0 000 2h10a1 1 0 100-2H7Zm-1 5a1 1 0 001 1h6a1 1 0 000-2H7a1 1 0 00-1 1Z"></path></svg></button>
-                            </div>
+                                <div class="overlay-right">
+                                    <span class="btn-loader" v-if="is_like_loading"></span>
+                                    <button :style="{ backgroundColor: item.is_liked ? 'green' : 'white' }" v-if="!is_like_loading" @click="addLikeDisLike(item.feed_id ?? 0)"><svg
+                                            xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24"
+                                            width="24" focusable="false" aria-hidden="true"
+                                            style="pointer-events: none; display: inherit; width: 100%; height: 100%;">
+                                            <path
+                                                d="M9.221 1.795a1 1 0 011.109-.656l1.04.173a4 4 0 013.252 4.784L14 9h4.061a3.664 3.664 0 013.576 2.868A3.68 3.68 0 0121 14.85l.02.087A3.815 3.815 0 0120 18.5v.043l-.01.227a2.82 2.82 0 01-.135.663l-.106.282A3.754 3.754 0 0116.295 22h-3.606l-.392-.007a12.002 12.002 0 01-5.223-1.388l-.343-.189-.27-.154a2.005 2.005 0 00-.863-.26l-.13-.004H3.5a1.5 1.5 0 01-1.5-1.5V12.5A1.5 1.5 0 013.5 11h1.79l.157-.013a1 1 0 00.724-.512l.063-.145 2.987-8.535Zm-1.1 9.196A3 3 0 015.29 13H4v4.998h1.468a4 4 0 011.986.528l.27.155.285.157A10 10 0 0012.69 20h3.606c.754 0 1.424-.483 1.663-1.2l.03-.126a.819.819 0 00.012-.131v-.872l.587-.586c.388-.388.577-.927.523-1.465l-.038-.23-.02-.087-.21-.9.55-.744A1.663 1.663 0 0018.061 11H14a2.002 2.002 0 01-1.956-2.418l.623-2.904a2 2 0 00-1.626-2.392l-.21-.035-2.71 7.741Z">
+                                            </path>
+                                        </svg></button>
+                                    <button aria-label="Go to Comment" @click="openComments(item.feed_id ?? 0)"><svg
+                                            xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24"
+                                            width="24" focusable="false" aria-hidden="true"
+                                            style="pointer-events: none; display: inherit; width: 100%; height: 100%;">
+                                            <path
+                                                d="M1 6a4 4 0 014-4h14a4 4 0 014 4v10a4 4 0 01-4 4h-4.8l-5.105 2.836A1.41 1.41 0 017 21.604V20H5a4 4 0 01-4-4V6Zm8 12v2.601l4.229-2.35.453-.251H19a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2h4ZM7 8a1 1 0 000 2h10a1 1 0 100-2H7Zm-1 5a1 1 0 001 1h6a1 1 0 000-2H7a1 1 0 00-1 1Z">
+                                            </path>
+                                        </svg></button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -46,57 +61,55 @@
         </Swiper>
     </div>
 
-<div class="modal fade comment-modal" id="commentmodal" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable" role="document">
-      <div class="modal-content bg-dark text-white">
-        <!-- Header -->
+    <div class="modal fade comment-modal" id="commentmodal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable" role="document">
+            <div class="modal-content bg-dark text-white">
+                <!-- Header -->
 
-        <div class="modal-header ad-sc-header border-0">
-          <h2 class="modal-title text-white">Comments</h2>
-          <button class="close text-danger fs-3 fw-bold" type="button" data-bs-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-
-        <!-- Body -->
-        <div class="modal-body comment-body">
-            <div class="comment-list">
-                <div class="comment-items">
-                    <div class="cmt-img">
-                        <img src="https://media.linkswingers.co.uk/low-quality-images/1E035B26-D176-4C08-9B54-91D210CC75D9.jpg"/>
-                    </div>
-                    <div class="cmt-content">
-                        <h3> @acchainsaan_67 </h3>
-                        <p>Aaron finch best catches</p>
-                    </div>
+                <div class="modal-header ad-sc-header border-0">
+                    <h2 class="modal-title text-white">Comments</h2>
+                    <button class="close text-danger fs-3 fw-bold" type="button" data-bs-dismiss="modal"
+                        aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
-                <div class="comment-items">
-                    <div class="cmt-img">
-                        <img src="https://media.linkswingers.co.uk/low-quality-images/1E035B26-D176-4C08-9B54-91D210CC75D9.jpg"/>
+
+                <!-- Body -->
+                <div class="modal-body comment-body">
+                    <div class="comment-list">
+                        <span class="btn-loader" v-if="is_comment_loading"></span>
+                        <div v-if="!is_comment_loading" class="comment-items" v-for="comment in comments"
+                            :key="comment.feed_comment_id">
+                            <div class="cmt-img">
+                                <img
+                                    :src="getProfilePlaceholder(comment.media_path ?? '', comment.profile_image ?? '', comment.profile_type ?? '')" />
+                            </div>
+                            <div class="cmt-content">
+                                <h3> {{ comment.nick_name }} </h3>
+                                <p>{{ comment.comment }}</p>
+                            </div>
+                        </div>
                     </div>
-                    <div class="cmt-content">
-                        <h3> @acchainsaan_67 </h3>
-                        <p>Aaron finch best catches</p>
+                    <div class="comment-footer">
+                        <div class="cmt-ath">
+                            <img
+                                :src="getProfilePlaceholder(login_store.getUserDetails?.media_path ?? '', login_store.getUserDetails?.profile_image ?? '', login_store.getUserDetails?.profile_type ?? '')" />
+                        </div>
+                        <div class="cmt-text">
+                            <input v-model="commentTxt" type="text" placeholder="Add a comment" />
+                            <div class="comt-buttons">
+                                <button class="cmt-cancel-btn">Cancel</button>
+                                <button v-if="!is_add_comment_loading" class="cmt-send-btn"
+                                    @click="addComment()">Comment</button>
+                                <span class="btn-loader" v-if="is_add_comment_loading"></span>
+                            </div>
+                        </div>
                     </div>
+
                 </div>
             </div>
-            <div class="comment-footer">
-                <div class="cmt-ath">
-                    <img src="https://media.linkswingers.co.uk/low-quality-images/1E035B26-D176-4C08-9B54-91D210CC75D9.jpg"/>
-                </div>
-                <div class="cmt-text">
-                    <input type="text" placeholder="Add a comment"/>
-                    <div class="comt-buttons">
-                        <button class="cmt-cancel-btn">Cancel</button>
-                        <button class="cmt-send-btn">Comment</button>
-                    </div>
-                </div>
-            </div>
-
         </div>
-      </div>
     </div>
-  </div>    
 </template>
 
 <script setup lang="ts">
@@ -110,8 +123,17 @@ const players = ref([])
 const showPlayBtn = ref([])
 const playingStates = ref([]) // track play/pause per video
 let fadeTimers = [] // store timeout IDs
+const { $bootstrap } = useNuxtApp();
+var commentModal: any = null
+const selectedFeedId = ref(0);
+const commentTxt = ref('');
 import "swiper/css";
 const route = useRoute();
+const login_store = useLoginStore()
+const comments = ref([] as FeedsModel.FetchFeedCommentResponseModel[])
+const is_comment_loading = ref(false);
+const is_like_loading = ref(false);
+const is_add_comment_loading = ref(false);
 definePageMeta({
     middleware: 'auth'
 })
@@ -122,6 +144,7 @@ const fetchFeeds = async () => {
         cache: "no-cache",
         method: "post",
         body: {
+            login_id: login_store.getUserDetails?.user_id ?? 0,
             user_id: Number(route.params.id),
             media_type: route.query.media_type,
             feed_type: route.query.feed_type
@@ -134,60 +157,66 @@ const fetchFeeds = async () => {
 }
 allFeeds.value = await fetchFeeds() as FeedsModel.FeedsResponseModel[]
 onMounted(async () => {
+    commentModal = new ($bootstrap as any).Modal(document.getElementById('commentmodal'));
     await nextTick()
-    allFeeds.value.forEach((feed, i) => {
-        const videoEl = videoRefs.value[i]
-        const player = videojs(videoEl, {
-            controls: false, // ✅ hide default UI
-            autoplay: false,
-            preload: 'auto',
-            muted: false,
-            loop: true,
-            fluid: true,
-            sources: [
-                {
-                    src: `${feed.media_path}${feed.hd_feed_video}`,
-                    type: 'application/x-mpegURL'
-                }
-            ],
-            html5: {
-                vhs: {
-                    overrideNative: true
-                },
-                nativeAudioTracks: false,
-                nativeVideoTracks: false
-            }
+    if (route.query.media_type === 'video') {
 
-        })
-        players.value.push(player)
-        playingStates.value.push(false)
-        showPlayBtn.value.push(true) // show initially
-    })
 
-    // 🧠 Observe which slide is visible → play/pause automatically
-    const observer = new IntersectionObserver(
-        entries => {
-            entries.forEach(entry => {
-                const index = entry.target.querySelector('video')?.dataset.index
-                const player = players.value[index]
-                if (!player) return
-                if (entry.isIntersecting) {
-                    player.play().catch(() => { })
-                    playingStates.value[index] = true
-                } else {
-                    player.pause()
-                    playingStates.value[index] = false
+        allFeeds.value.forEach((feed, i) => {
+
+            const videoEl = videoRefs.value[i]
+            const player = videojs(videoEl, {
+                controls: false, // ✅ hide default UI
+                autoplay: false,
+                preload: 'auto',
+                muted: false,
+                loop: true,
+                fluid: true,
+                sources: [
+                    {
+                        src: `${feed.media_path}${feed.hd_feed_video}`,
+                        type: 'application/x-mpegURL'
+                    }
+                ],
+                html5: {
+                    vhs: {
+                        overrideNative: true
+                    },
+                    nativeAudioTracks: false,
+                    nativeVideoTracks: false
                 }
+
             })
-        },
-        { threshold: 0.7 }
-    )
-    document.querySelectorAll('.short-slide').forEach(el => observer.observe(el))
+            players.value.push(player)
+            playingStates.value.push(false)
+            showPlayBtn.value.push(true) // show initially
+        })
 
-    onBeforeUnmount(() => {
-        observer.disconnect()
-        players.value.forEach(p => p.dispose())
-    })
+        // 🧠 Observe which slide is visible → play/pause automatically
+        const observer = new IntersectionObserver(
+            entries => {
+                entries.forEach(entry => {
+                    const index = entry.target.querySelector('video')?.dataset.index
+                    const player = players.value[index]
+                    if (!player) return
+                    if (entry.isIntersecting) {
+                        player.play().catch(() => { })
+                        playingStates.value[index] = true
+                    } else {
+                        player.pause()
+                        playingStates.value[index] = false
+                    }
+                })
+            },
+            { threshold: 0.7 }
+        )
+        document.querySelectorAll('.short-slide').forEach(el => observer.observe(el))
+
+        onBeforeUnmount(() => {
+            observer.disconnect()
+            players.value.forEach(p => p.dispose())
+        })
+    }
 })
 
 
@@ -274,15 +303,114 @@ const onReachEnd = () => {
     }
 }
 
-function getImagePath(item: FeedsModel.FeedsResponseModel) {
-    let profile_image = item.profile_image  ?? '';
-    if (profile_image.length === 0) {
-        return 'public/images/avtar/1.jpg';
-    }
 
-    return `${item.media_path}${item.profile_image}`;
+
+function openComments(feed_id: number) {
+    commentTxt.value = ''
+    selectedFeedId.value = feed_id
+    commentModal.show();
+    fetchComments(feed_id)
 }
 
+async function addLikeDisLike(feed_id: number) {
+    if (is_like_loading.value) {
+        return;
+    }
+    comments.value = []
+    is_like_loading.value = true;
+    let api_url = getUrl(RequestURL.feedLikeDisLike);
+    let postData = {
+        feed_id: feed_id,
+        user_id: login_store.getUserDetails?.user_id
+    }
+    let response = await $fetch<SuccessError<FeedsModel.FeedLikeDisLikeResponseModel>>(api_url, {
+        method: 'POST',
+        body: postData,
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+    is_like_loading.value = false;
+    if (response.success) {
+        let state = response.response?.state ?? ''
+        let feed = allFeeds.value.filter((history: FeedsModel.FeedsResponseModel) => history.feed_id === feed_id)
+        if (feed.length > 0) {
+        if (state === 'liked') {
+                feed[0].is_liked = true
+            }
+            else
+            {
+                feed[0].is_liked = false
+            }
+        }
+    }
+    else {
+        showToastError(response.message)
+    }
+}
+
+async function addComment() {
+    let trim = commentTxt.value.trim() ?? ''
+    if (is_add_comment_loading.value || trim.length === 0) {
+        return;
+    }
+    is_add_comment_loading.value = true;
+    let postData = {
+        feed_id: selectedFeedId.value,
+        user_id: login_store.getUserDetails?.user_id,
+        comment: trim,
+        comment_type: 'text'
+    }
+
+    let api_url = getUrl(RequestURL.addFeedComment);
+    let response = await $fetch<SuccessError<FeedsModel.FetchFeedCommentResponseModel>>(api_url, {
+        method: 'POST',
+        body: postData,
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+    is_add_comment_loading.value = false;
+    if (response.success) {
+        comments.value.push(response.response ?? {})
+        commentTxt.value = ''
+    }
+    else {
+        showToastError(response.message)
+    }
+
+}
+async function fetchComments(feed_id: number) {
+    if (is_comment_loading.value) {
+        return;
+    }
+    comments.value = []
+    is_comment_loading.value = true;
+    let api_url = getUrl(RequestURL.fetchFeedComments);
+    let postData = {
+        feed_id: feed_id
+    }
+    let response = await $fetch<SuccessError<FeedsModel.FetchFeedCommentResponseModel>>(api_url, {
+        method: 'POST',
+        body: postData,
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+    is_comment_loading.value = false;
+    comments.value = response.result ?? []
+}
+
+function getProfilePlaceholder(media_path: string, profile_image: string, profile_type: string): string {
+    if (media_path.length > 0 && profile_image.length > 0) {
+        return media_path + profile_image
+    }
+    if (profile_type === 'Couple') return "/images/profile-placeholders/MF-COUPLE.png";
+    if (profile_type === 'Others') return "/images/profile-placeholders/TRANS.png";
+    if (profile_type === 'Woman') return "/images/profile-placeholders/WOMEN.png";
+    if (profile_type === 'Man') return "/images/profile-placeholders/man.png";
+    return "/images/profile-placeholders/man.png"
+}
 
 </script>
 
