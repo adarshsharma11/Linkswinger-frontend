@@ -44,7 +44,7 @@
                           stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                       </svg>
                     </button>
-                     <span class="btn-loader" v-if="historymodel.is_deleting"></span>
+                    <span class="btn-loader" v-if="historymodel.is_deleting"></span>
                   </div>
                   <small class="text-secondary" v-if="(historymodel.is_typing ?? false) === true">Typing...</small>
                   <div v-if="(historymodel.is_deleted ?? false) === false">
@@ -52,7 +52,16 @@
                       v-if="(historymodel.is_typing ?? false) === false && historymodel.message_type === 'text'">{{
                         historymodel.message }}</small>
                     <small class="text-secondary"
-                      v-if="(historymodel.is_typing ?? false) === false && historymodel.message_type !== 'text'">Media</small>
+                      v-if="(historymodel.is_typing ?? false) === false && (historymodel.message_type === 'image' || historymodel.message_type === 'video')">Media</small>
+                    <div class="text-secondary"
+                      v-if="(historymodel.is_typing ?? false) === false && (historymodel.message_type === 'emoji')">
+                      <Lottie v-if="getFileExtension(historymodel.message ?? '') === '.json'"
+                        :link="(historymodel.media_path ?? '') + (historymodel.message ?? '')"
+                        style="max-width: 40px; max-height: 40px;">
+                      </Lottie><img v-if="getFileExtension(historymodel.message ?? '') !== '.json'"
+                        :src="(historymodel.media_path ?? '') + (historymodel.message ?? '')"
+                        style="max-width: 40px; max-height: 40px;" />
+                    </div>
                   </div>
                   <div
                     v-if="(historymodel.is_deleted ?? false) === true && (historymodel.is_typing ?? false) === false">
@@ -185,6 +194,12 @@
                 <div v-if="chat.message_type === 'video'"><video :src="(chat.media_path ?? '') + (chat.message ?? '')"
                     style="max-width: 300px; max-height: 300px;" controls></video></div>
 
+                <div v-if="chat.message_type === 'emoji'">
+                  <Lottie v-if="getFileExtension(chat.message ?? '') === '.json'"
+                    :link="(chat.media_path ?? '') + (chat.message ?? '')" style="max-width: 80px; max-height: 80px;">
+                  </Lottie><img v-if="getFileExtension(chat.message ?? '') !== '.json'"
+                    :src="(chat.media_path ?? '') + (chat.message ?? '')" style="max-width: 80px; max-height: 80px;" />
+                </div>
               </div>
               <div class="message-time" v-if="chat.from_id !== login_store.getUserDetails?.user_id">{{ chat.created_at
               }}
@@ -274,7 +289,8 @@
 
   <Teleport to="body">
     <div style="position: fixed; z-index: 999999; left: 0; top: 0;">
-      <EmojiPicker ref="emojiPickerRef" v-on:selected-emoji="selectedEmoji" />
+      <EmojiPicker ref="emojiPickerRef" v-on:selected-emoji="selectedEmoji"
+        v-on:select-custom-emoji="selectCustomEmoji" />
     </div>
   </Teleport>
 
@@ -425,6 +441,14 @@ function goBack() {
   }
 }
 
+function getFileExtension(filename: string): string {
+  const lastDotIndex = filename.lastIndexOf('.');
+  if (lastDotIndex === -1) {
+    return ''; // No extension found
+  }
+  return filename.slice(lastDotIndex);
+}
+
 function selectUserForMobile(userId: number) {
   // Navigate to chat with user and show chat view on mobile
   if (isMobile.value) {
@@ -550,6 +574,28 @@ async function updatecallcode(callcode: string) {
 
     }
   });
+}
+
+function selectCustomEmoji(emoji: string) {
+
+  if (isWSConnected.value) {
+    let to_id = Number(route.params.id) ?? 0
+    if (to_id === 0) {
+      return
+    }
+    let eventmodel = new ChatEventSocketModel()
+    eventmodel.event_name = 'chat'
+    eventmodel.from_id = login_store.getUserDetails?.user_id ?? 0
+    eventmodel.to_id = to_id
+    eventmodel.message_type = 'emoji'
+    eventmodel.message = emoji
+    eventmodel.socket_id = id_store.getDeviceId
+    sendmsgtoworker(eventmodel, true)
+  }
+  else {
+    showToastError('Socket not connected')
+  }
+
 }
 
 function selectedEmoji(emoji: string) {
@@ -750,7 +796,7 @@ onMounted(() => {
     }
     let user_id = responseevent.from_id === login_store.getUserDetails?.user_id ? responseevent.to_id : responseevent.from_id
 
-    appendLastMessagetohistory(responseevent.chat_id ?? 0, user_id ?? 0, responseevent.message ?? '')
+    appendLastMessagetohistory(responseevent.chat_id ?? 0, user_id ?? 0, responseevent.message ?? '',responseevent.message_type ?? 'text')
     nextTick(() => {
       if (scrollContainer.value) {
         scrollContainer.value.scrollTop = scrollContainer.value.scrollHeight;
@@ -922,6 +968,7 @@ async function deleteChat(chat: ChatResponseModel) {
                 histories[0].to_id = lastMessage.to_id ?? 0
                 histories[0].chat_id = lastMessage.chat_id ?? 0
                 histories[0].message = lastMessage.message ?? ''
+                histories[0].message_type = lastMessage.message_type ?? ''
                 histories[0].is_deleted = lastMessage.is_deleted ?? false
               }
 
@@ -955,7 +1002,7 @@ async function deleteWholeChat(chat: ChatResponseModel) {
     body: {
       "chat_id": chat.chat_id,
       "from_id": login_store.getUserDetails?.user_id,
-      "to_id" : chat.user_id
+      "to_id": chat.user_id
     },
     headers: {
       "content-type": "application/json"
@@ -1004,7 +1051,7 @@ function updateBadgeCount(to_id: number) {
   }
 }
 
-function appendLastMessagetohistory(chat_id: number, to_id: number, message: string) {
+function appendLastMessagetohistory(chat_id: number, to_id: number, message: string,message_type:string) {
   let histories = chatHistoryModels.value.filter((history: ChatsModel.ChatResponseModel) => history.user_id === to_id)
 
   if (histories.length > 0) {
@@ -1012,6 +1059,7 @@ function appendLastMessagetohistory(chat_id: number, to_id: number, message: str
     histories[0].badge_count = 0
     histories[0].message = message
     histories[0].is_deleted = false
+    histories[0].message_type = message_type
   }
 }
 

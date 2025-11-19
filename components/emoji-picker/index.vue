@@ -42,7 +42,7 @@
                     </div>
                     <div v-else-if="activeTab === 'stickers'" class="grid-container">
                         <Lottie class="grid-item" v-for="sticker in emojis" :link="(sticker.media_path ?? '') + sticker.emoji" :key="sticker.emoji_id"
-                            style="width: 80px; height: 80px;" ></Lottie>
+                            style="width: 80px; height: 80px;" @click="onSelectCustomEmoji(sticker.emoji ?? '')" ></Lottie>
                     </div>
                   
 
@@ -69,7 +69,7 @@ const pickerPosition = ref({ x: 500, y: 200 }) // initial position
 const pickerWidth = ref(300)
 const pickerHeight = ref(410)
 const emojis = ref([] as EmojisModel.FetchEmojiResponseModel[])
-const emit = defineEmits(['selectedEmoji','onSelectCustomEmoji'])
+const emit = defineEmits(['selectedEmoji','selectCustomEmoji'])
 
 
 const toggleEmojiPicker = () => {
@@ -85,7 +85,7 @@ const onSelectEmoji = (emoji: any) => {
 }
 
 const onSelectCustomEmoji = (name: string) => {
-    emit('onSelectCustomEmoji', name)
+    emit('selectCustomEmoji', name)
 }
 
 const startDrag = (e: any) => {
