@@ -199,7 +199,7 @@
                       <img src="/images/badges/animated/50X50px/call.gif" alt="Message" class="rounded-circle"
                         style="width: 25px; height: 25px; object-fit: cover" />
                     </span>Call</button>
-                  <button @click="showCodeAlert(user.user_id ?? 0,true)" class="action primary" data-action="video" aria-label="Video call"><span class="act-icon"><img
+                  <button @click="showCodeAlert(user.user_id ?? 0,true)" class="action" data-action="video" aria-label="Video call"><span class="act-icon"><img
                         src="/images/badges/animated/50X50px/video-call.gif" alt="Message" class="rounded-circle"
                         style="width: 25px; height: 25px; object-fit: cover" />
                     </span>Video</button>
