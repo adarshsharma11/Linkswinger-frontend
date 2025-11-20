@@ -26,7 +26,8 @@
                                 <div class="overlay-left">
                                     <div class="vd-name">
                                         <div class="vd-img">
-                                            <img :src="getProfilePlaceholder(item.media_path ?? '', item.profile_image ?? '', item.profile_type ?? '')" />
+                                            <img
+                                                :src="getProfilePlaceholder(item.media_path ?? '', item.profile_image ?? '', item.profile_type ?? '')" />
                                         </div>
                                         <div class="vdo-name">
                                             <h3>{{ item.nick_name }}</h3>
@@ -36,7 +37,8 @@
                                 </div>
                                 <div class="overlay-right">
                                     <span class="btn-loader" v-if="is_like_loading"></span>
-                                    <button :style="{ backgroundColor: item.is_liked ? 'green' : 'white' }" v-if="!is_like_loading" @click="addLikeDisLike(item.feed_id ?? 0)"><svg
+                                    <button :style="{ backgroundColor: item.is_liked ? 'green' : 'white' }"
+                                        v-if="!is_like_loading" @click="addLikeDisLike(item.feed_id ?? 0)"><svg
                                             xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24"
                                             width="24" focusable="false" aria-hidden="true"
                                             style="pointer-events: none; display: inherit; width: 100%; height: 100%;">
@@ -86,7 +88,19 @@
                             </div>
                             <div class="cmt-content">
                                 <h3> {{ comment.nick_name }} </h3>
-                                <p>{{ comment.comment }}</p>
+                                <div v-if="comment.comment_type !== 'emoji'">
+                                    <p>{{ comment.comment }}</p>
+                                </div>
+                                <div v-if="comment.comment_type === 'emoji'">
+                                    <Lottie v-if="getFileExtension(comment.comment ?? '') === '.json'"
+                                        :link="(comment.media_path ?? '') + (comment.comment ?? '')"
+                                        style="max-width: 80px; max-height: 80px;">
+                                    </Lottie><img v-if="getFileExtension(comment.comment ?? '') !== '.json'"
+                                        :src="(comment.media_path ?? '') + (comment.comment ?? '')"
+                                        style="max-width: 80px; max-height: 80px;" />
+                                </div>
+
+
                             </div>
                         </div>
                     </div>
@@ -96,7 +110,8 @@
                                 :src="getProfilePlaceholder(login_store.getUserDetails?.media_path ?? '', login_store.getUserDetails?.profile_image ?? '', login_store.getUserDetails?.profile_type ?? '')" />
                         </div>
                         <div class="cmt-text">
-                            <input v-model="commentTxt" type="text" placeholder="Add a comment" />
+                            <input ref="commentRef" v-model="commentTxt" type="text" placeholder="Add a comment" />
+                            <button class="btn btn-link text-light fs-5" @click="handleToggle">😊</button>
                             <div class="comt-buttons">
                                 <button class="cmt-cancel-btn">Cancel</button>
                                 <button v-if="!is_add_comment_loading" class="cmt-send-btn"
@@ -110,6 +125,13 @@
             </div>
         </div>
     </div>
+
+    <Teleport to="body">
+        <div style="position: fixed; z-index: 999999; left: 0; top: 0;">
+            <EmojiPicker ref="emojiPickerRef" v-on:selected-emoji="selectedEmoji"
+                v-on:select-custom-emoji="selectCustomEmoji" />
+        </div>
+    </Teleport>
 </template>
 
 <script setup lang="ts">
@@ -117,6 +139,7 @@ import { FeedsModel, RequestURL } from '~/composables/models';
 import videojs from "video.js";
 import { Swiper, SwiperSlide } from "swiper/vue";
 import { Mousewheel, Navigation, Pagination } from 'swiper/modules'
+import "swiper/css";
 let swiperInstance = null
 const videoRefs = ref([])
 const players = ref([])
@@ -127,13 +150,14 @@ const { $bootstrap } = useNuxtApp();
 var commentModal: any = null
 const selectedFeedId = ref(0);
 const commentTxt = ref('');
-import "swiper/css";
 const route = useRoute();
 const login_store = useLoginStore()
 const comments = ref([] as FeedsModel.FetchFeedCommentResponseModel[])
 const is_comment_loading = ref(false);
 const is_like_loading = ref(false);
 const is_add_comment_loading = ref(false);
+const commentRef = ref<HTMLInputElement | null>(null);
+const emojiPickerRef = ref(null)
 definePageMeta({
     middleware: 'auth'
 })
@@ -311,6 +335,67 @@ function openComments(feed_id: number) {
     commentModal.show();
     fetchComments(feed_id)
 }
+function getFileExtension(filename: string): string {
+  const lastDotIndex = filename.lastIndexOf('.');
+  if (lastDotIndex === -1) {
+    return ''; // No extension found
+  }
+  return filename.slice(lastDotIndex);
+}
+
+function selectedEmoji(emoji: string) {
+    const statusInput = commentRef.value;
+    if (statusInput) {
+        const start = statusInput.selectionStart;
+        const end = statusInput.selectionEnd;
+        const value = statusInput.value;
+
+        statusInput.value = value.substring(0, start) + emoji + value.substring(end);
+
+        // Move cursor after the emoji
+        const newPos = start + emoji.length;
+        statusInput.setSelectionRange(newPos, newPos);
+
+        // Ensure input stays focused
+        statusInput.focus();
+    }
+}
+
+async function selectCustomEmoji(emoji: string) {
+
+    if (is_add_comment_loading.value) {
+        return;
+    }
+    is_add_comment_loading.value = true;
+    let postData = {
+        feed_id: selectedFeedId.value,
+        user_id: login_store.getUserDetails?.user_id,
+        comment: emoji,
+        comment_type: 'emoji'
+    }
+
+    let api_url = getUrl(RequestURL.addFeedComment);
+    let response = await $fetch<SuccessError<FeedsModel.FetchFeedCommentResponseModel>>(api_url, {
+        method: 'POST',
+        body: postData,
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+    is_add_comment_loading.value = false;
+    if (response.success) {
+        comments.value.push(response.response ?? {})
+    }
+    else {
+        showToastError(response.message)
+    }
+}
+
+function handleToggle() {
+    if (emojiPickerRef.value) {
+        emojiPickerRef.value.toggleEmojiPicker()
+    }
+}
 
 async function addLikeDisLike(feed_id: number) {
     if (is_like_loading.value) {
@@ -335,11 +420,10 @@ async function addLikeDisLike(feed_id: number) {
         let state = response.response?.state ?? ''
         let feed = allFeeds.value.filter((history: FeedsModel.FeedsResponseModel) => history.feed_id === feed_id)
         if (feed.length > 0) {
-        if (state === 'liked') {
+            if (state === 'liked') {
                 feed[0].is_liked = true
             }
-            else
-            {
+            else {
                 feed[0].is_liked = false
             }
         }
