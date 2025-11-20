@@ -22,6 +22,17 @@
                         </transition>
                         <div class="swiper-lazy-preloader swiper-lazy-preloader-white"></div>
                         <div class="overlay">
+                            <!-- Seekbar for video -->
+                            <div v-if="item.media_type === 'video'" class="seekbar-container">
+                                <div class="seekbar-track" @click="seekToPosition($event, index)" @touchstart="seekToPosition($event, index)" @touchmove="seekToPosition($event, index)">
+                                    <div class="seekbar-progress" :style="{ width: getProgressWidth(index) + '%' }"></div>
+                                    <div class="seekbar-handle" :style="{ left: getProgressWidth(index) + '%' }"></div>
+                                </div>
+                                <div class="seekbar-time">
+                                    <span class="current-time text-white">{{ formatTime(getCurrentTime(index)) }}</span>
+                                    <span class="duration text-white">{{ formatTime(getDuration(index)) }}</span>
+                                </div>
+                            </div>
                             <div class="overlay-inner d-flex flex-wrap justify-content-between">
                                 <div class="overlay-left">
                                     <div class="vd-name">
@@ -33,12 +44,14 @@
                                             <h3>{{ item.nick_name }}</h3>
                                         </div>
                                     </div>
-                                    <h3 style="color: white;">{{ item.feed_desc }}</h3>
+                                    <div class="feed-description">
+                                        <h3 style="color: white;">{{ item.feed_desc }}</h3>
+                                    </div>
                                 </div>
                                 <div class="overlay-right">
-                                    <span class="btn-loader" v-if="is_like_loading"></span>
+                                    <span class="btn-loader" v-if="is_like_loading[index]"></span>
                                     <button :style="{ backgroundColor: item.is_liked ? 'green' : 'white' }"
-                                        v-if="!is_like_loading" @click="addLikeDisLike(item.feed_id ?? 0)"><svg
+                                        v-if="!is_like_loading[index]" @click.stop="addLikeDisLike(item.feed_id ?? 0, index)"><svg
                                             xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24"
                                             width="24" focusable="false" aria-hidden="true"
                                             style="pointer-events: none; display: inherit; width: 100%; height: 100%;">
@@ -46,7 +59,7 @@
                                                 d="M9.221 1.795a1 1 0 011.109-.656l1.04.173a4 4 0 013.252 4.784L14 9h4.061a3.664 3.664 0 013.576 2.868A3.68 3.68 0 0121 14.85l.02.087A3.815 3.815 0 0120 18.5v.043l-.01.227a2.82 2.82 0 01-.135.663l-.106.282A3.754 3.754 0 0116.295 22h-3.606l-.392-.007a12.002 12.002 0 01-5.223-1.388l-.343-.189-.27-.154a2.005 2.005 0 00-.863-.26l-.13-.004H3.5a1.5 1.5 0 01-1.5-1.5V12.5A1.5 1.5 0 013.5 11h1.79l.157-.013a1 1 0 00.724-.512l.063-.145 2.987-8.535Zm-1.1 9.196A3 3 0 015.29 13H4v4.998h1.468a4 4 0 011.986.528l.27.155.285.157A10 10 0 0012.69 20h3.606c.754 0 1.424-.483 1.663-1.2l.03-.126a.819.819 0 00.012-.131v-.872l.587-.586c.388-.388.577-.927.523-1.465l-.038-.23-.02-.087-.21-.9.55-.744A1.663 1.663 0 0018.061 11H14a2.002 2.002 0 01-1.956-2.418l.623-2.904a2 2 0 00-1.626-2.392l-.21-.035-2.71 7.741Z">
                                             </path>
                                         </svg></button>
-                                    <button aria-label="Go to Comment" @click="openComments(item.feed_id ?? 0)"><svg
+                                    <button aria-label="Go to Comment" @click.stop="openComments(item.feed_id ?? 0, index)"><svg
                                             xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24"
                                             width="24" focusable="false" aria-hidden="true"
                                             style="pointer-events: none; display: inherit; width: 100%; height: 100%;">
@@ -54,6 +67,16 @@
                                                 d="M1 6a4 4 0 014-4h14a4 4 0 014 4v10a4 4 0 01-4 4h-4.8l-5.105 2.836A1.41 1.41 0 017 21.604V20H5a4 4 0 01-4-4V6Zm8 12v2.601l4.229-2.35.453-.251H19a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2h4ZM7 8a1 1 0 000 2h10a1 1 0 100-2H7Zm-1 5a1 1 0 001 1h6a1 1 0 000-2H7a1 1 0 00-1 1Z">
                                             </path>
                                         </svg></button>
+                                    <button aria-label="Fullscreen" @click.stop="toggleFullscreen(item.feed_id ?? 0, index)" class="fullscreen-btn">
+                                        <svg v-if="!isFullscreen[index]" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" focusable="false" aria-hidden="true"
+                                            style="pointer-events: none; display: inherit; width: 100%; height: 100%;">
+                                            <path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>
+                                        </svg>
+                                        <svg v-else xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" focusable="false" aria-hidden="true"
+                                            style="pointer-events: none; display: inherit; width: 100%; height: 100%;">
+                                            <path d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z"/>
+                                        </svg>
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -145,6 +168,9 @@ const videoRefs = ref([])
 const players = ref([])
 const showPlayBtn = ref([])
 const playingStates = ref([]) // track play/pause per video
+const videoProgress = ref([]) // track video progress
+const videoDurations = ref([]) // track video durations
+const videoCurrentTimes = ref([]) // track current time
 let fadeTimers = [] // store timeout IDs
 const { $bootstrap } = useNuxtApp();
 var commentModal: any = null
@@ -154,10 +180,11 @@ const route = useRoute();
 const login_store = useLoginStore()
 const comments = ref([] as FeedsModel.FetchFeedCommentResponseModel[])
 const is_comment_loading = ref(false);
-const is_like_loading = ref(false);
+const is_like_loading = ref([] as boolean[]);
 const is_add_comment_loading = ref(false);
 const commentRef = ref<HTMLInputElement | null>(null);
 const emojiPickerRef = ref(null)
+const isFullscreen = ref([]) // track fullscreen state per video
 definePageMeta({
     middleware: 'auth'
 })
@@ -180,41 +207,70 @@ const fetchFeeds = async () => {
     return feed_response.value?.result ?? []
 }
 allFeeds.value = await fetchFeeds() as FeedsModel.FeedsResponseModel[]
+// Initialize per-video loading states
+is_like_loading.value = new Array(allFeeds.value.length).fill(false);
 onMounted(async () => {
     commentModal = new ($bootstrap as any).Modal(document.getElementById('commentmodal'));
+    
+    // Listen for fullscreen changes to update button state
+    document.addEventListener('fullscreenchange', () => {
+        players.value.forEach((player, index) => {
+            if (player) {
+                isFullscreen.value[index] = !!document.fullscreenElement;
+            }
+        });
+    });
+    
     await nextTick()
     if (route.query.media_type === 'video') {
 
 
         allFeeds.value.forEach((feed, i) => {
 
-            const videoEl = videoRefs.value[i]
-            const player = videojs(videoEl, {
-                controls: false, // ✅ hide default UI
-                autoplay: false,
-                preload: 'auto',
-                muted: false,
-                loop: true,
-                fluid: true,
-                sources: [
-                    {
-                        src: `${feed.media_path}${feed.hd_feed_video}`,
-                        type: 'application/x-mpegURL'
-                    }
-                ],
-                html5: {
-                    vhs: {
-                        overrideNative: true
-                    },
-                    nativeAudioTracks: false,
-                    nativeVideoTracks: false
-                }
+                    const videoEl = videoRefs.value[i]
+                    const player = videojs(videoEl, {
+                        controls: false, // ✅ hide default UI
+                        autoplay: false,
+                        preload: 'auto',
+                        muted: false,
+                        loop: true,
+                        fluid: true,
+                        sources: [
+                            {
+                                src: `${feed.media_path}${feed.hd_feed_video}`,
+                                type: 'application/x-mpegURL'
+                            }
+                        ],
+                        html5: {
+                            vhs: {
+                                overrideNative: true
+                            },
+                            nativeAudioTracks: false,
+                            nativeVideoTracks: false
+                        }
 
-            })
-            players.value.push(player)
-            playingStates.value.push(false)
-            showPlayBtn.value.push(true) // show initially
-        })
+                    })
+                    players.value.push(player)
+                    playingStates.value.push(false)
+                    showPlayBtn.value.push(true) // show initially
+                    videoProgress.value[i] = 0
+                    videoCurrentTimes.value[i] = 0
+                    videoDurations.value[i] = 0
+                    isFullscreen.value.push(false) // initialize fullscreen state
+
+                    player.on('timeupdate', () => {
+                        updateSeekbar(i)
+                    })
+
+                    player.on('loadedmetadata', () => {
+                        videoDurations.value[i] = player.duration()
+                    })
+
+                    // Listen for fullscreen change events to update state
+                    player.on('fullscreenchange', () => {
+                        isFullscreen.value[i] = player.isFullscreen();
+                    });
+                })
 
         // 🧠 Observe which slide is visible → play/pause automatically
         const observer = new IntersectionObserver(
@@ -397,12 +453,12 @@ function handleToggle() {
     }
 }
 
-async function addLikeDisLike(feed_id: number) {
-    if (is_like_loading.value) {
+async function addLikeDisLike(feed_id: number, index: number) {
+    if (is_like_loading.value[index]) {
         return;
     }
     comments.value = []
-    is_like_loading.value = true;
+    is_like_loading.value[index] = true;
     let api_url = getUrl(RequestURL.feedLikeDisLike);
     let postData = {
         feed_id: feed_id,
@@ -415,7 +471,7 @@ async function addLikeDisLike(feed_id: number) {
             'Content-Type': 'application/json'
         }
     });
-    is_like_loading.value = false;
+    is_like_loading.value[index] = false;
     if (response.success) {
         let state = response.response?.state ?? ''
         let feed = allFeeds.value.filter((history: FeedsModel.FeedsResponseModel) => history.feed_id === feed_id)
@@ -496,8 +552,95 @@ function getProfilePlaceholder(media_path: string, profile_image: string, profil
     return "/images/profile-placeholders/man.png"
 }
 
+// Seekbar functions
+function formatTime(seconds: number): string {
+    if (isNaN(seconds) || seconds < 0) return '0:00';
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+}
+
+function getProgressWidth(index: number): number {
+    const progress = videoProgress.value[index];
+    return progress || 0;
+}
+
+function getCurrentTime(index: number): number {
+    const currentTime = videoCurrentTimes.value[index];
+    return currentTime || 0;
+}
+
+function getDuration(index: number): number {
+    const duration = videoDurations.value[index];
+    return duration || 0;
+}
+
+function seekToPosition(event: MouseEvent | TouchEvent, index: number) {
+    const player = players.value[index];
+    if (!player) return;
+    
+    event.preventDefault(); // Prevent default touch behavior
+    event.stopPropagation(); // Prevent event bubbling
+    
+    const track = event.currentTarget as HTMLElement;
+    const rect = track.getBoundingClientRect();
+    
+    // Handle both mouse and touch events
+    const clientX = 'touches' in event ? event.touches[0].clientX : event.clientX;
+    const clickX = clientX - rect.left;
+    const percentage = Math.max(0, Math.min(1, clickX / rect.width));
+    const newTime = percentage * player.duration();
+    
+    player.currentTime(newTime);
+}
+
+function updateSeekbar(index: number) {
+    const player = players.value[index];
+    if (!player) return;
+    
+    const currentTime = player.currentTime();
+    const duration = player.duration();
+    
+    if (duration > 0) {
+        videoProgress.value[index] = (currentTime / duration) * 100;
+        videoCurrentTimes.value[index] = currentTime;
+        videoDurations.value[index] = duration;
+    }
+}
+
+function toggleFullscreen(feed_id: number, index: number) {
+    const player = players.value[index];
+    if (!player) return;
+    
+    try {
+        if (player.isFullscreen()) {
+            player.exitFullscreen();
+            isFullscreen.value[index] = false;
+        } else {
+            player.requestFullscreen();
+            isFullscreen.value[index] = true;
+        }
+    } catch (error) {
+        // Fallback to native fullscreen API
+        const videoElement = videoRefs.value[index];
+        if (videoElement) {
+            if (!document.fullscreenElement) {
+                videoElement.requestFullscreen().then(() => {
+                    isFullscreen.value[index] = true;
+                }).catch(err => {
+                    console.log('Fullscreen failed:', err);
+                });
+            } else {
+                document.exitFullscreen().then(() => {
+                    isFullscreen.value[index] = false;
+                });
+            }
+        }
+    }
+}
+
 </script>
 
-<style>
+<style scoped>
 @import "video.js/dist/video-js.css";
 </style>

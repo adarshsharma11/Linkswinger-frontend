@@ -296,7 +296,7 @@ body,
     overflow: hidden;
 }   
 .shorts-wrapper {
-    width: 360px;
+    width: 100%;
 }
 .shorts-wrapper {
     height: calc(100vh - 50px);
@@ -362,4 +362,458 @@ body,
     right: 10px;
     bottom: 60px;
     top: auto;
+}
+
+/* Override global pointer-events: none */
+.overlay-right {
+    pointer-events: auto !important;
+}
+
+.overlay-left {
+    pointer-events: auto !important;
+    max-height: 40%;
+    padding-right: 15px;
+}
+
+/* Custom scrollbar for overlay-left */
+.overlay-left::-webkit-scrollbar {
+    width: 4px;
+}
+
+.overlay-left::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 2px;
+}
+
+.overlay-left::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 2px;
+}
+
+.overlay-left::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.5);
+}
+
+/* Text styling */
+.vd-name {
+    margin-bottom: 10px;
+}
+
+.feed_desc {
+    line-height: 1.4;
+    word-wrap: break-word;
+}
+
+/* Feed description container for consistent text length */
+.feed-description {
+    max-height: 80px; /* Fixed max height for desktop */
+    overflow: hidden;
+    position: relative;
+    margin-bottom: 10px;
+}
+
+.feed-description h3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 4; /* Limit to 4 lines on desktop */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 15px;
+    line-height: 1.4;
+    margin-bottom: 0;
+    color: white;
+}
+
+/* Seekbar styles */
+.seekbar-container {
+    position: absolute;
+    bottom: 20px; /* Position above the like/comment icons */
+    left: 20px;
+    right: 20px;
+    z-index: 15;
+    pointer-events: auto;
+    margin-bottom: 10px;
+}
+
+.seekbar-track {
+    position: relative;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 3px;
+    cursor: pointer;
+    margin-bottom: 8px;
+    backdrop-filter: blur(2px);
+}
+
+.seekbar-progress {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background: #ff6b6b;
+    border-radius: 2px;
+    transition: width 0.1s ease;
+}
+
+.seekbar-handle {
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 14px;
+    height: 14px;
+    background: #ff6b6b;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform 0.1s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.seekbar-handle:hover {
+    transform: translate(-50%, -50%) scale(1.2);
+}
+
+.seekbar-time {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: white;
+    margin-top: 4px;
+    font-weight: 500;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+/* Mobile responsive styles */
+@media (max-width: 768px) {
+    .seekbar-container {
+        bottom: 120px; /* Higher position to avoid text overlay */
+        left: 15px;
+        right: 15px;
+        margin-bottom: 8px;
+        z-index: 20; /* Higher z-index for mobile */
+    }
+    
+    .fullscreen-btn {
+        width: 36px;
+        height: 36px;
+    }
+    
+    .seekbar-track {
+        height: 10px; /* Larger touch target for mobile */
+        border-radius: 5px;
+        margin-bottom: 8px;
+        padding: 6px 0; /* Increase clickable area */
+        background-clip: content-box;
+        position: relative;
+        z-index: 21;
+    }
+    
+    .seekbar-handle {
+        width: 20px; /* Larger handle for mobile */
+        height: 20px;
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4);
+        z-index: 22;
+    }
+    
+    .seekbar-time {
+        font-size: 14px; /* Larger text for mobile */
+        font-weight: 600;
+    }
+    
+    /* Mobile overlay adjustments */
+    .overlay-left {
+        max-height: 25%; /* Reduce height on mobile */
+        padding-right: 10px;
+        overflow: hidden; /* Prevent overflow */
+    }
+    
+    .overlay-left h3 {
+        font-size: 14px; /* Smaller text on mobile */
+        line-height: 1.3;
+        margin-bottom: 8px;
+        margin-top: 0;
+    }
+    
+    /* Feed description container for consistent text length */
+    .feed-description {
+        max-height: 60px; /* Fixed max height for 3 lines */
+        overflow: hidden;
+        position: relative;
+    }
+    
+    .feed-description h3 {
+        display: -webkit-box;
+        -webkit-line-clamp: 3; /* Limit to 3 lines */
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-size: 13px; /* Consistent smaller size */
+        line-height: 1.4;
+        margin-bottom: 0;
+    }
+    
+    /* Ensure proper touch interaction */
+    .seekbar-track,
+    .seekbar-handle {
+        -webkit-tap-highlight-color: transparent;
+        touch-action: manipulation;
+        user-select: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+    }
+    
+    /* Mobile button positioning */
+    .overlay-right {
+        right: 15px; /* Adjust for mobile */
+        top: 40%;
+        gap: 12px;
+    }
+    
+    .overlay-right button {
+        width: 44px; /* Larger buttons on mobile */
+        height: 44px;
+        padding: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .seekbar-container {
+        bottom: 25px; /* Even higher for small screens */
+        left: 10px;
+        right: 10px;
+    }
+    .overlay-right[data-v-0ce431ab] {
+        top: 20%;
+    }
+    
+    .fullscreen-btn {
+        width: 32px;
+        height: 32px;
+    }
+    
+    .seekbar-track {
+        height: 12px; /* Even larger touch target */
+        border-radius: 6px;
+        padding: 7px 0;
+    }
+    
+    .seekbar-handle {
+        width: 22px;
+        height: 22px;
+    }
+    
+    /* Smaller text for very small screens */
+    .overlay-left h3 {
+        font-size: 12px;
+    }
+    
+    .feed-description {
+        max-height: 40px; /* Reduce to 2 lines for small screens */
+    }
+    
+    .feed-description h3 {
+        font-size: 11px; /* Even smaller text */
+        -webkit-line-clamp: 2; /* Limit to 2 lines on small screens */
+    }
+    
+    .seekbar-time {
+        font-size: 12px;
+    }
+    
+    .overlay-right {
+        right: 10px;
+        gap: 10px;
+    }
+    
+    .overlay-right button {
+        width: 40px;
+        height: 40px;
+        padding: 8px;
+    }
+}
+
+/* Enhanced touch handling for seekbar */
+.seekbar-track {
+    cursor: pointer;
+    position: relative;
+}
+
+.seekbar-track::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: 0;
+    right: 0;
+    height: calc(100% + 20px);
+    z-index: 1;
+}
+
+.seekbar-handle {
+    cursor: grab;
+    position: relative;
+    z-index: 2;
+}
+
+.seekbar-handle:active {
+    cursor: grabbing;
+    transform: translate(-50%, -50%) scale(1.3);
+}
+
+/* Mobile-specific enhancements */
+@media (max-width: 768px) {
+    /* Prevent text selection on mobile */
+    .overlay-left,
+    .overlay-right,
+    .seekbar-container {
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        -webkit-touch-callout: none;
+        -webkit-tap-highlight-color: transparent;
+    }
+    
+    /* Ensure seekbar is always clickable */
+    .seekbar-container {
+        touch-action: manipulation;
+        pointer-events: auto !important;
+    }
+    
+    /* Prevent text overlay issues */
+    .overlay-left {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+    }
+    
+    /* Better spacing on mobile */
+    .overlay-inner {
+        padding-bottom: 40px; /* Extra space for seekbar */
+    }
+}
+
+/* Very small screens */
+@media (max-width: 375px) {
+    .overlay-left {
+        max-height: 20%; /* Further reduce height */
+    }
+    
+    .feed-description {
+        max-height: 35px; /* Reduce to 2 lines */
+    }
+    
+    .feed-description h3 {
+        font-size: 10px; /* Smallest readable text */
+        -webkit-line-clamp: 2;
+    }
+    
+    .overlay-inner {
+        padding-bottom: 130px;
+    }
+    
+    .seekbar-container {
+        bottom: 100px;
+    }
+}
+
+/* Fullscreen button styling */
+.fullscreen-btn {
+    background: white;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    flex-shrink: 0;
+}
+
+.fullscreen-btn:hover {
+    transform: scale(1.1);
+}
+
+/* Override global pointer-events: none !important */
+.short-video,
+.video-js {
+    pointer-events: auto !important;
+}
+
+.overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+    color: white;
+    padding: 20px 20px 70px;
+    z-index: 10;
+    pointer-events: auto !important; /* Override global none */
+}
+
+.overlay-right {
+    position: absolute;
+    right: 20px;
+    bottom: 120px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    z-index: 15;
+}
+
+.overlay-right button {
+    background-color: white;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    border: none;
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.overlay-right button:hover {
+    transform: scale(1.1);
+}
+
+/* Ensure proper positioning and pointer events */
+.overlay-right {
+  pointer-events: auto !important;
+  position: absolute;
+  right: 75px;
+  top: 24%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 16px;
+}
+
+.overlay-right button {
+    pointer-events: auto !important;
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    border-radius: 50%;
+    padding: 12px;
+    margin: 0;
+    transition: background-color 0.3s ease;
+    position: relative;
+}
+
+.overlay-left {
+    pointer-events: auto !important;
+}
+
+button {
+    pointer-events: auto !important;
+    cursor: pointer;
 }
