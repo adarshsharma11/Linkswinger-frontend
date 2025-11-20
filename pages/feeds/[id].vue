@@ -92,7 +92,7 @@
                                     <p>{{ comment.comment }}</p>
                                 </div>
                                 <div v-if="comment.comment_type === 'emoji'">
-                                    <Lottie v-if="getFileExtension(comment.comment ?? '') === '.json'"
+                                    <Lottie renderer="svg" v-if="getFileExtension(comment.comment ?? '') === '.json'"
                                         :link="(comment.media_path ?? '') + (comment.comment ?? '')"
                                         style="max-width: 80px; max-height: 80px;">
                                     </Lottie><img v-if="getFileExtension(comment.comment ?? '') !== '.json'"

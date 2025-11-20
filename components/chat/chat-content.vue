@@ -55,7 +55,7 @@
                       v-if="(historymodel.is_typing ?? false) === false && (historymodel.message_type === 'image' || historymodel.message_type === 'video')">Media</small>
                     <div class="text-secondary"
                       v-if="(historymodel.is_typing ?? false) === false && (historymodel.message_type === 'emoji')">
-                      <Lottie v-if="getFileExtension(historymodel.message ?? '') === '.json'"
+                      <Lottie renderer="svg" v-if="getFileExtension(historymodel.message ?? '') === '.json'"
                         :link="(historymodel.media_path ?? '') + (historymodel.message ?? '')"
                         style="max-width: 40px; max-height: 40px;">
                       </Lottie><img v-if="getFileExtension(historymodel.message ?? '') !== '.json'"
@@ -195,7 +195,7 @@
                     style="max-width: 300px; max-height: 300px;" controls></video></div>
 
                 <div v-if="chat.message_type === 'emoji'">
-                  <Lottie v-if="getFileExtension(chat.message ?? '') === '.json'"
+                  <Lottie renderer="svg" v-if="getFileExtension(chat.message ?? '') === '.json'"
                     :link="(chat.media_path ?? '') + (chat.message ?? '')" style="max-width: 80px; max-height: 80px;">
                   </Lottie><img v-if="getFileExtension(chat.message ?? '') !== '.json'"
                     :src="(chat.media_path ?? '') + (chat.message ?? '')" style="max-width: 80px; max-height: 80px;" />

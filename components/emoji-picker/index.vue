@@ -41,7 +41,7 @@
                         <NuxtEmojiPicker @select="onSelectEmoji" />
                     </div>
                     <div v-else-if="activeTab === 'stickers'" class="grid-container">
-                        <Lottie class="grid-item" v-for="sticker in emojis" :link="(sticker.media_path ?? '') + sticker.emoji" :key="sticker.emoji_id"
+                        <Lottie renderer="svg" class="grid-item" v-for="sticker in emojis" :link="(sticker.media_path ?? '') + sticker.emoji" :key="sticker.emoji_id"
                             style="width: 80px; height: 80px;" @click="onSelectCustomEmoji(sticker.emoji ?? '')" ></Lottie>
                     </div>
                   
