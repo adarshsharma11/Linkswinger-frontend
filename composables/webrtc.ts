@@ -133,21 +133,32 @@ export class WebRTCClient {
             try {
 
                 this.mediaConstraints = {
-                audio: {
-                    echoCancellation: true,
-                    noiseSuppression: true,
-                    autoGainControl: true
-                },
-                video: {
-                    width: { max: 640 },
-                    height: { max: 480 },
-                    frameRate: { max: 60 },
-                    advanced: [{ facingMode: this.currentFacingMode }]
-                }
-            };
+                    audio: {
+                        echoCancellation: true,
+                        noiseSuppression: true,
+                        autoGainControl: true
+                    },
+                    video: {
+                        width: { max: 640 },
+                        height: { max: 480 },
+                        frameRate: { max: 60 },
+                        advanced: [{ facingMode: this.currentFacingMode }]
+                    }
+                };
                 // Try to get new stream
-                this.localStream = await navigator.mediaDevices.getUserMedia(this.mediaConstraints);
+                const newStream = await navigator.mediaDevices.getUserMedia(this.mediaConstraints);
 
+                const newVideoTrack = newStream.getVideoTracks()[0];
+
+                // 3. Replace track in RTCPeerConnection so remote gets update
+                const sender = this.peerConnection?.getSenders().find(s => s.track?.kind === "video");
+                if (sender) {
+                    await sender.replaceTrack(newVideoTrack);
+                }
+                if (this.localStream) {
+                    this.localStream?.removeTrack(this.localStream.getVideoTracks()[0]);
+                    this.localStream?.addTrack(newVideoTrack);
+                }
                 localVideo.srcObject = this.localStream;
             } catch (err) {
                 console.error("Failed to access camera:", err);
