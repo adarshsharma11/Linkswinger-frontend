@@ -7,7 +7,9 @@ body,
     margin: 0;
 
 }
-
+body::-webkit-scrollbar {
+    display: none;
+}
 /* ✅ Outer wrapper: full height and centered horizontally */
 .shorts-wrapper {
     height: 100vh;
@@ -154,12 +156,12 @@ body,
 }
 
 .shorts-wrapper .swiper-slide {
-    border-radius: 30px;
+    border-radius: 0px;
     overflow: hidden;
     margin-bottom: 10px;
 }
 .shorts-wrapper {
-    height: calc(100vh - 50px);
+    height: calc(100vh - 60px);
 }
 .comment-items {
     display: flex;
@@ -358,9 +360,9 @@ body,
     height: 100% !important;
 }
 .short-container .overlay {
-    left: 10px;
-    right: 10px;
-    bottom: 60px;
+    left: 0;
+    right: 0;
+    bottom: 0;
     top: auto;
 }
 
@@ -485,13 +487,16 @@ body,
 /* Mobile responsive styles */
 @media (max-width: 768px) {
     .seekbar-container {
-        bottom: 120px; /* Higher position to avoid text overlay */
-        left: 15px;
-        right: 15px;
+        bottom: 25px; /* Higher position to avoid text overlay */
+        left: 10px;
+        right: 10px;
         margin-bottom: 8px;
         z-index: 20; /* Higher z-index for mobile */
     }
-    
+    .overlay-right[data-v-0ce431ab] {
+        top: 20%;
+    }
+       
     .fullscreen-btn {
         width: 36px;
         height: 36px;
@@ -565,8 +570,11 @@ body,
     /* Mobile button positioning */
     .overlay-right {
         right: 15px; /* Adjust for mobile */
-        top: 40%;
+        top: 20%;
         gap: 12px;
+    }
+    .overlay-right[data-v-0ce431ab] {
+        top: 20%;
     }
     
     .overlay-right button {
@@ -577,14 +585,6 @@ body,
 }
 
 @media (max-width: 480px) {
-    .seekbar-container {
-        bottom: 25px; /* Even higher for small screens */
-        left: 10px;
-        right: 10px;
-    }
-    .overlay-right[data-v-0ce431ab] {
-        top: 20%;
-    }
     
     .fullscreen-btn {
         width: 32px;
