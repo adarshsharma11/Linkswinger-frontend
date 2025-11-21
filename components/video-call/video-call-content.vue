@@ -37,11 +37,17 @@
 
                     <!-- Controls -->
                     <div class="d-flex flex-wrap align-items-center justify-content-center gap-2 md:gap-3 vd-controls">
-                        <button id="btnMic" class="d-inline-flex align-items-center gap-2" data-on="0"><span>🎤</span>
-                            Mic off</button>
-                        <button id="btnCam" class="d-inline-flex align-items-center gap-2" data-on="0"><span>📷</span>
-                            <span class="hidden sm:inline">Cam off</span></button>
-                        <button id="btnFlip" class="d-inline-flex align-items-center gap-2"><span>🔁</span><span
+                        <button @click="enabledisableaudio()" id="btnMic" class="d-inline-flex align-items-center gap-2"
+                            data-on="0"><span>🎤</span>
+                            Mic <span v-if="isMicActive" class="hidden sm:inline">Off</span> <span v-if="!isMicActive"
+                                class="hidden sm:inline">On</span></button>
+                        <button @click="enabledisablevideo()" v-if="props.is_video" id="btnCam"
+                            class="d-inline-flex align-items-center gap-2" data-on="0"><span>📷</span>
+                            <span class="hidden sm:inline">Cam </span><span v-if="isVideoActive"
+                                class="hidden sm:inline">Off</span> <span v-if="!isVideoActive"
+                                class="hidden sm:inline">On</span></button>
+                        <button @click="toggleCamera()" v-if="props.is_video" id="btnFlip"
+                            class="d-inline-flex align-items-center gap-2"><span>🔁</span><span
                                 class="hidden sm:inline">Flip</span></button>
                         <button id="btnEnd" class="text-white font-medium" @click="endCall()"
                             v-if="!is_loading">End</button>
@@ -59,7 +65,7 @@ import { CallAlertModel, type CallsModel } from '~/composables/websocketModels';
 import { useCallStore } from '~/store/appstores';
 
 interface Props {
-  is_video: boolean,
+    is_video: boolean,
 }
 const props = defineProps<Props>()
 
@@ -67,6 +73,7 @@ const login_store = useLoginStore()
 const call_store = useCallStore()
 const advisor = ref(null);
 const isMicActive = ref(true)
+const isVideoActive = ref(true)
 const showModal = ref(false);
 const timeLeft = ref(0);
 const timeStart = ref(0);
@@ -119,7 +126,7 @@ onMounted(async () => {
         connectStatus.value = webrtcclient.peerConnection?.connectionState || 'Connecting...'
         if (webrtcclient.peerConnection) {
             if (webrtcclient.peerConnection.connectionState === "connected") {
-                  timeStart.value += 1
+                timeStart.value += 1
             }
             else if (webrtcclient.peerConnection.connectionState === "disconnected" || webrtcclient.peerConnection.connectionState === "failed") {
                 // showalert('Connection lost. Trying to reconnect...', false, 5000)    
@@ -190,6 +197,21 @@ function enabledisableaudio() {
     }
     webrtcclient.toggleMicrophone(isMicActive.value)
 }
+
+function enabledisablevideo() {
+    if (isVideoActive.value === true) {
+        isVideoActive.value = false
+    }
+    else {
+        isVideoActive.value = true
+    }
+    webrtcclient.toggleVideo(isVideoActive.value)
+}
+function toggleCamera() {
+    webrtcclient.toggleCamera()
+}
+
+
 function sendoffer() {
     if (hasAnswer.value === false && isPremissionAccepted.value) {
         if (call_store.getCallDetails?.from_id === login_store.getUserDetails?.user_id) {

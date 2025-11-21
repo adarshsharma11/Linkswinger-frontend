@@ -103,6 +103,57 @@ export class WebRTCClient {
         }
     }
 
+    async hasBackCamera(): Promise<boolean> {
+        const devices = await navigator.mediaDevices.enumerateDevices();
+        return devices.some(d => d.kind === "videoinput" && d.label.toLowerCase().includes("back"));
+    }
+
+    currentFacingMode: 'user' | 'environment' = 'user';
+
+    async toggleCamera() {
+        const backCameraExists = await this.hasBackCamera();
+
+        // If user tries to switch to back but it's not available → stay on front
+        if (this.currentFacingMode === 'user' && !backCameraExists) {
+            console.warn("No back camera available");
+            return;
+        }
+
+        // Stop current tracks
+        if (this.localStream) {
+            this.localStream.getVideoTracks().forEach(track => track.stop());
+        }
+
+        const localVideo = document.getElementById("local-video-track") as HTMLVideoElement | null;
+        if (localVideo) {
+            // Switch mode
+            this.currentFacingMode =
+                this.currentFacingMode === 'user' ? 'environment' : 'user';
+
+            try {
+                // Try to get new stream
+                this.localStream = await navigator.mediaDevices.getUserMedia({
+                    video: { facingMode: this.currentFacingMode },
+                    audio: true
+                });
+
+                localVideo.srcObject = this.localStream;
+            } catch (err) {
+                console.error("Failed to access camera:", err);
+                // If switching to back fails → fall back to front
+                this.currentFacingMode = 'user';
+                this.localStream = await navigator.mediaDevices.getUserMedia({
+                    video: { facingMode: "user" },
+                    audio: true
+                });
+                localVideo.srcObject = this.localStream;
+            }
+        }
+
+    }
+
+
+
 
 
     getLocalStream(): void {
@@ -186,7 +237,7 @@ export class WebRTCClient {
                 // this.peerConnection!.onconnectionstatechange = evt => {
                 //     console.log("Connection state changed:", evt);
                 // };
-               
+
             })
             .catch(reason => {
                 console.error("Offer creation failed:", reason);
@@ -242,7 +293,7 @@ export class WebRTCClient {
                         candidatecallback(evt.candidate)
                     }
                 };
-                  
+
             })
             .catch(error => {
                 console.error("Answer creation failed:", error);
