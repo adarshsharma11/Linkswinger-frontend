@@ -131,11 +131,22 @@ export class WebRTCClient {
                 this.currentFacingMode === 'user' ? 'environment' : 'user';
 
             try {
+
+                this.mediaConstraints = {
+                audio: {
+                    echoCancellation: true,
+                    noiseSuppression: true,
+                    autoGainControl: true
+                },
+                video: {
+                    width: { max: 640 },
+                    height: { max: 480 },
+                    frameRate: { max: 60 },
+                    advanced: [{ facingMode: this.currentFacingMode }]
+                }
+            };
                 // Try to get new stream
-                this.localStream = await navigator.mediaDevices.getUserMedia({
-                    video: { facingMode: this.currentFacingMode },
-                    audio: true
-                });
+                this.localStream = await navigator.mediaDevices.getUserMedia(this.mediaConstraints);
 
                 localVideo.srcObject = this.localStream;
             } catch (err) {
