@@ -12,18 +12,19 @@ body::-webkit-scrollbar {
 }
 /* ✅ Outer wrapper: full height and centered horizontally */
 .shorts-wrapper {
-    height: 100vh;
+   height: calc(100% );
     width: 100%;
     margin: 0 auto;
     overflow: hidden;
     display: flex;
     justify-content: center;
     align-items: center;
+    
 }
 
 /* ✅ Swiper must fill the wrapper fully */
 .shorts-swiper {
-    height: 100%;
+    height: calc(100% - 40px);
     width: 100%;
 }
 
@@ -37,6 +38,7 @@ body::-webkit-scrollbar {
     background-color: black;
 }
 
+
 /* ✅ Container centers the frame */
 .short-container {
     display: flex;
@@ -45,12 +47,17 @@ body::-webkit-scrollbar {
     height: 100%;
     width: 100%;
 }
+.short-frame video {
+    object-fit: contain;
+    
+}
 
 /* ✅ Frame simulates 9:16 Shorts card */
 
 .shorts-wrapper {
     width: 100%;
-    max-width: 1600px;
+    height: 100%;
+    max-width: 100%;
 }
 .short-video {
     width: 100%;
@@ -158,10 +165,10 @@ body::-webkit-scrollbar {
 .shorts-wrapper .swiper-slide {
     border-radius: 0px;
     overflow: hidden;
-    margin-bottom: 10px;
+   
 }
 .shorts-wrapper {
-    height: calc(100vh - 60px);
+    height: calc(100vh - 30px);
 }
 .comment-items {
     display: flex;

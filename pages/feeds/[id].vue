@@ -7,11 +7,11 @@
                 <div class="short-container" :key="item.feed_id">
                     <div class="short-frame" :key="item.feed_id" @click="onFrameTap(index)">
                         <img :key="item.feed_id" :src="`${item.media_path}${item.hd_feed_image}`" class="short-image"
-                            loading="lazy" v-if="item.media_type === 'image'" />
+                            loading="lazy" v-if="item.media_type === 'image'"  />
                         <img :key="item.feed_id" :src="`${item.media_path}${item.feed_thumbnail}`" class="short-image"
                             loading="lazy" v-if="item.media_type === 'video'" />
                         <video v-if="item.media_type === 'video'" ref="videoRefs"
-                            class="video-js vjs-defaultskin short-video" playsinline webkit-playsinline
+                            class="video-js vjs-defaultskin short-video vjs-16-9" playsinline webkit-playsinline
                             x5-playsinline></video>
                         <!-- ✅ Simple Play / Pause Button -->
                         <!-- ✅ Play/Pause button with fade -->
