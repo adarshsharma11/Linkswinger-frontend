@@ -1,3 +1,4 @@
+import type { RouletteWorkerModel } from "./models";
 import { detectonline } from "./useDatabase";
 
 var is_reconnecting = false
@@ -147,12 +148,17 @@ else if (event_name === "call_alert")
         let json = JSON.parse(jsontext) as  CallAlertModel
          sendmsgtoworker(json, true,true)
     }
-    
     else if (event_name === "call") 
     {
         let json = JSON.parse(jsontext) as  CallSocketModel
          sendmsgtoworker(json, true,true)
     }
+    else if (event_name === "random_match_server_push") 
+    {
+        let json = JSON.parse(jsontext) as  RouletteWorkerModel
+         sendmsgtoworker(json, true,true)
+    }
+    
     
 }
 

@@ -4,6 +4,7 @@ import mitt from 'mitt'
 import { CallAlertModel, CallsModel, CallSocketModel, ChatEventSocketModel, GroupEventSocketModel, LeaderEventModel, TypingEventSocketModel } from './websocketModels';
 import { detectonline } from './useDatabase';
 import { setupWebSocket } from './websockets';
+import type { RouletteWorkerModel } from './models';
 
 const uniqueId = uuid();
 let tab_id = uuid();
@@ -37,7 +38,8 @@ type Events = {
   callDeclineAlert:CallAlertModel,
   callAcceptAlert : CallAlertModel,
   callEndAlert : CallAlertModel,
-  callEvent : CallSocketModel
+  callEvent : CallSocketModel,
+  random_match_server_push: RouletteWorkerModel
 }
 let onlinemodel: OnlineEventResponse | null = null
 
@@ -329,6 +331,11 @@ else if (json.event_name === "call_updates") {
    let json = event.data as CallAlertModel  
 sendtosocket(json)
 }
+else if (json.event_name === "random_match_server_push") {
+   let json = event.data as RouletteWorkerModel  
+  emitter.emit('random_match_server_push', json)
+}
+
 
   
 

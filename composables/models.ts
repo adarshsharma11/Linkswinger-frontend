@@ -596,6 +596,26 @@ export namespace EmojisModel {
   }
 }
 
+export class RouletteWorkerModel 
+{
+     event_name? : string
+     user_id? : number
+     socket_id? : string
+     profile_type? : string
+     latitude? : number
+     longitude? : number
+    
+     radius? : number
+     looking_for? : string[]
+    
+     matched_id? : number
+     matched_socket_id? : string
+     socket_status? : string
+    
+     is_from? : boolean
+     timeStamp? : number
+}
+
 
 
 
