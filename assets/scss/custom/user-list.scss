@@ -452,3 +452,9 @@ ul.nm-icons {
     width: 100%;
 }
 }
+@media only screen and (max-width:767px){
+.qus-fm {
+    flex-wrap: wrap;
+    justify-content: center;
+}
+}

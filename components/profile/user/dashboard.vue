@@ -143,7 +143,7 @@
             <div class="controls">
               <div class="quc-search">
                 <div class="qtitle">Quick Search</div>
-                <div style="display: flex; gap: 10px; align-items: flex-end;">
+                <div class="qus-fm" style="display: flex; gap: 10px; align-items: flex-end;">
                   <input id="q" v-model="searchTxt" class="input" type="search" placeholder="Search by nickname…"
                     style="width: 100%; min-width: 300px;" />
                   <button class="btn primary" style="white-space: nowrap; height: fit-content;"
