@@ -16,7 +16,7 @@ const handleMethodClick = (method: string) => {
 
         <!-- Back Button -->
         <button class="back-btn" @click="handleBack">
-          <span>⟵</span> Back
+          <span class="text-white">⟵</span> Back
         </button>
 
         <!-- HEADER -->
