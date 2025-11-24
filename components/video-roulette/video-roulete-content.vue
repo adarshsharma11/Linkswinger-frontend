@@ -10,15 +10,16 @@
       <section class="video-stage" aria-label="Video stage">
         <div class="video-card">
           <span class="corner-tag">You</span>
-          <video id="local-video-track" muted class="placeholder"
+          <!-- <video id="local-video-track" muted class="placeholder"
             style="background: repeating-conic-gradient(rgb(10, 10, 10) 0%, rgb(10, 10, 10) 25%, rgb(16, 16, 23) 0%, rgb(16, 16, 23) 50%) 50% center / 20px 20px; display: grid; place-items: center; color: rgb(154, 163, 175);">
-            <!-- <p style="padding:16px; text-align:center;">Camera unavailable. Allow access to preview yourself here.</p> -->
-          </video>
+            <p style="padding:16px; text-align:center;">Camera unavailable. Allow access to preview yourself here.</p>
+          </video> -->
+             <video id="local-video-track" class="w-100 h-100 object-cover bg-black" autoplay playsinline muted></video>
         </div>
 
         <div class="video-card">
           <span class="corner-tag">Partner {{ connectStatus }}</span>
-          <video id="remote-video-track"  class="placeholder"  style="display:grid;place-items:center;color:#9aa3af;">
+          <!-- <video id="remote-video-track"  class="placeholder"  style="display:grid;place-items:center;color:#9aa3af;">
             <div style="text-align:center;">
               <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
                 aria-hidden="true">
@@ -27,7 +28,8 @@
               </svg>
               <p style="margin-top:8px;">Waiting for next match…</p>
             </div>
-          </video>
+          </video> -->
+          <video id="remote-video-track" class="w-100 vh-80 object-cover bg-black" autoplay playsinline></video>
         </div>
       </section>
 
@@ -139,7 +141,7 @@ onMounted(async () => {
       }
     }
     if (isSocketConnected()) {
-      sendcallupdates()
+    //  sendcallupdates()
     }
 
   })

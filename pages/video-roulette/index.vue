@@ -8,7 +8,7 @@ import userdetails from '~/middleware/userdetails';
 useHead({
     title: "LinkSwinger – Discover Like-Minded Connections"
 })
-definePageMeta({
-    middleware: [userdetails, roulleteenter],
-})
+// definePageMeta({
+//     middleware: [userdetails, roulleteenter],
+// })
 </script>
