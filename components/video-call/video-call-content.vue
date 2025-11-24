@@ -149,6 +149,10 @@ onMounted(async () => {
         handlecallevent(callModel)
     })
 
+     
+
+    
+
     window.addEventListener("pagehide", (event) => {
         if (event.persisted) return;
         const nav = performance.getEntriesByType("navigation")[0];

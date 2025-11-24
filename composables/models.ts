@@ -52,6 +52,7 @@ export enum RequestURL {
   addFeedComment = "/addFeedComment",
   feedLikeDisLike = "/feedLikeDisLike",
   fetchFeedComments = "/fetchFeedComments",
+  rouletteEnter = "/rouletteEnter"
 }
 
 export var online_user_ids: number[] = []

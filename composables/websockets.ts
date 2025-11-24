@@ -155,7 +155,7 @@ else if (event_name === "call_alert")
     }
     else if (event_name === "random_match_server_push") 
     {
-        let json = JSON.parse(jsontext) as  RouletteWorkerModel
+         let json = JSON.parse(jsontext) as  RouletteWorkerModel
          sendmsgtoworker(json, true,true)
     }
     
