@@ -58,6 +58,14 @@
                   </button>
                 </li>
                 <li>
+                  <button class="dropdown-item text-white d-flex align-items-center"
+                    @click="navigateTo(`/help`)">
+                    <img src="/images/badges/animated/50X50px/profile-settings.gif" alt="Verify"
+                      class="rounded-circle me-2" style="width: 30px; height: 30px; object-fit: cover" />
+                    <span class="text-white">LS Help</span>
+                  </button>
+                </li>
+                <li>
                   <button class="dropdown-item text-white d-flex align-items-center" @click="logout"
                     :disabled="is_logout_loading">
                     <img src="/images/badges/animated/50X50px/logout.gif" alt="Logout" class="rounded-circle me-2"
@@ -167,6 +175,14 @@
                     <img src="/images/badges/animated/50X50px/profile-settings.gif" alt="Verify"
                       class="rounded-circle me-2" style="width: 30px; height: 30px; object-fit: cover" />
                     <span class="text-white">Profile Settings</span>
+                  </button>
+                </li>
+                <li>
+                  <button class="dropdown-item text-white d-flex align-items-center"
+                    @click="navigateTo(`/help`)" v-if="isMine()">
+                    <img src="/images/badges/animated/50X50px/profile-settings.gif" alt="Verify"
+                      class="rounded-circle me-2" style="width: 30px; height: 30px; object-fit: cover" />
+                    <span class="text-white">LS Help</span>
                   </button>
                 </li>
                 <li>
