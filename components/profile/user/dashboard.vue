@@ -38,7 +38,7 @@
               class="sidebar-ic" :src="`/images/badges/animated/50X50px/crush-list.gif`" /></span>Crush List</a>
         <a href="#search" data-route="search" @click.prevent="setActiveNav('search')"
           :class="{ active: activeNav === 'search' }" class="text-white"><span class="icon"><!--🔍--> <img
-              class="sidebar-ic" :src="`/images/badges/animated/50X50px/SEARCH.gif`" /></span>Search</a>
+              class="sidebar-ic" :src="`/images/badges/animated/50X50px/search.gif`" /></span>Search</a>
         <a href="#new-photos" data-route="new-photos" @click.prevent="setActiveNav('new-photos')"
           :class="{ active: activeNav === 'new-photos' }" class="text-white"><span class="icon"><!--🖼--> <img
               class="sidebar-ic" :src="`/images/badges/animated/50X50px/public-photos.gif`" /></span>New Photos</a>

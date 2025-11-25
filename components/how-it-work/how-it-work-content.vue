@@ -61,7 +61,7 @@
       <div class="grid cols-3" style="margin-top:12px">
         <article class="card-hw">
           <div class="d-flex gap-3 align-items-center c-row">
-            <div class="icon"><img src="/public/images/badges/animated/150X150px/SEARCH.gif" alt="Browse Profiles icon" /></div>
+            <div class="icon"><img src="/public/images/badges/animated/150X150px/search.gif" alt="Browse Profiles icon" /></div>
             <div>
               <h3>Browse Profiles</h3>
               <p>Explore profiles with rich details and verification badges. Quick actions: view, favourite, message.</p>
