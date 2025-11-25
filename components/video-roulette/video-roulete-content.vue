@@ -164,6 +164,21 @@ onMounted(async () => {
         })
   })
 
+   window.addEventListener("pagehide", (event) => {
+        if (event.persisted) return;
+        const nav = performance.getEntriesByType("navigation")[0];
+        const isReload = nav && (nav.type === "reload" || nav.type === "navigate");
+        if (isReload) {
+            sendEndRoulleteBeacon()
+            webrtcclient.stopLocalStream()
+            webrtcclient.teardown()
+            reloadNuxtApp({
+                path: "/",
+                ttl: 1000
+            })
+        }
+    });
+
   try {
     await webrtcclient.getAccess()
     webrtcclient.setLocalVideoTrack()
@@ -365,6 +380,18 @@ function handlecallevent(callModel: CallSocketModel) {
     }
   }
 
+}
+
+function sendEndRoulleteBeacon() {
+    const api_url = getUrl(RequestURL.rouletteEnd);
+    let postData = {
+        user_id: login_store.getUserDetails?.user_id,
+    }
+    // Convert to JSON string
+    const blob = new Blob([JSON.stringify(postData)], {
+        type: 'application/json'
+    });
+    navigator.sendBeacon(api_url, blob);
 }
 
 </script>
