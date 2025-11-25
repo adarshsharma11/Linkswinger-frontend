@@ -1,0 +1,311 @@
+
+/* ---------------- MEDIA GRID ---------------- */
+.lsv-media-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+  padding: 16px;
+  background: $elev-soft;
+  border-radius: 20px;
+  border: 1px solid $border-soft;
+}
+
+.lsv-media-item {
+  background: rgba(9, 11, 18, 0.92);
+  border-radius: 16px;
+  overflow: hidden;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    border-color: rgba(0, 245, 154, 0.4);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 245, 154, 0.15);
+  }
+  
+  &--selected {
+    border-color: $accent-green;
+    box-shadow: 0 0 20px rgba(0, 245, 154, 0.3);
+    
+    &:hover {
+      border-color: $accent-green;
+      box-shadow: 0 0 25px rgba(0, 245, 154, 0.4);
+    }
+  }
+}
+
+.lsv-media-image {
+  position: relative;
+  aspect-ratio: 1;
+  overflow: hidden;
+  
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+  
+  &:hover img {
+    transform: scale(1.05);
+  }
+}
+
+.lsv-media-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 245, 154, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(2px);
+}
+
+.lsv-check-icon {
+  font-size: 32px;
+  color: $accent-green;
+  text-shadow: 0 0 10px rgba(0, 245, 154, 0.8);
+}
+
+.lsv-media-info {
+  padding: 12px;
+}
+
+.lsv-media-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: $text;
+  margin-bottom: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.lsv-media-meta {
+  font-size: 11px;
+  color: $text-muted;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* ---------------- SELECTION PREVIEW ---------------- */
+.lsv-selection-preview {
+  background: $elev-soft;
+  border-radius: 20px;
+  border: 1px solid $border-soft;
+  padding: 20px;
+  margin-bottom: 20px;
+  
+  h3 {
+    font-size: 16px;
+    font-weight: 600;
+    color: $text;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    
+    &::before {
+      content: '';
+      width: 4px;
+      height: 16px;
+      background: $accent-green;
+      border-radius: 2px;
+    }
+  }
+}
+
+.lsv-preview-content {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  
+  img {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 12px;
+    border: 2px solid $accent-green;
+    box-shadow: 0 0 15px rgba(0, 245, 154, 0.2);
+  }
+}
+
+.lsv-preview-info {
+  flex: 1;
+  
+  h4 {
+    font-size: 16px;
+    font-weight: 600;
+    color: $text;
+    margin-bottom: 8px;
+  }
+  
+  p {
+    font-size: 13px;
+    color: $text-muted;
+    line-height: 1.5;
+    margin-bottom: 12px;
+  }
+}
+
+.lsv-preview-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  
+  span {
+    font-size: 11px;
+    color: $text-muted;
+    
+    &::before {
+      content: '•';
+      margin-right: 6px;
+      color: $accent-green;
+    }
+  }
+}
+
+/* ---------------- SAVE BUTTON ---------------- */
+.lsv-save {
+  padding: 14px 22px;
+  background: radial-gradient(circle at 0 0, #ff4c7f, $accent-red 45%, #7a0027 100%);
+  border-radius: 999px;
+  border: 1px solid rgba(255, 0, 76, 0.7);
+  box-shadow: 0 0 18px rgba(255, 0, 76, 0.5);
+  color: white;
+  font-weight: 700;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  
+  &:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 0 25px rgba(255, 0, 76, 0.7);
+  }
+  
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: 0 0 18px rgba(255, 0, 76, 0.3);
+  }
+}
+
+/* ---------------- MOBILE RESPONSIVE ---------------- */
+@media (max-width: 768px) {
+  .lsv-media-grid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 12px;
+    padding: 12px;
+  }
+  
+  .lsv-selection-preview {
+    padding: 16px;
+  }
+  
+  .lsv-preview-content {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    
+    img {
+      width: 100px;
+      height: 100px;
+    }
+  }
+  
+  .lsv-preview-info {
+    text-align: center;
+  }
+  
+  .lsv-footer {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    
+    .lsv-save {
+      width: 100%;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .lsv-media-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    padding: 10px;
+  }
+  
+  .lsv-media-info {
+    padding: 8px;
+  }
+  
+  .lsv-media-title {
+    font-size: 12px;
+  }
+  
+  .lsv-media-meta {
+    font-size: 10px;
+  }
+  
+  .lsv-check-icon {
+    font-size: 24px;
+  }
+}
+
+/* ---------------- LOADING STATE ---------------- */
+.lsv-loading {
+  text-align: center;
+  padding: 40px;
+  color: $text-muted;
+  
+  &::after {
+    content: '';
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 2px solid $accent-green;
+    border-radius: 50%;
+    border-top-color: transparent;
+    animation: spin 1s linear infinite;
+    margin-left: 10px;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ---------------- EMPTY STATE ---------------- */
+.lsv-empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: $text-muted;
+  
+  .lsv-empty-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+    opacity: 0.5;
+  }
+  
+  h3 {
+    font-size: 18px;
+    margin-bottom: 8px;
+    color: $text;
+  }
+  
+  p {
+    font-size: 14px;
+    line-height: 1.5;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+}
