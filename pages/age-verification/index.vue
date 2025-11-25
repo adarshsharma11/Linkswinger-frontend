@@ -2,10 +2,12 @@
    <age-verification/>
 </template>
 <script setup>
+import auth from '~/middleware/auth';
+
 useHead({
     title: "LinkSwinger – Age Verification"
 })
  definePageMeta({
-        middleware:'validateuser'
+        middleware:[auth]
     })
 </script>
