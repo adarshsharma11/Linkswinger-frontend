@@ -179,6 +179,33 @@ const approvedMedia = ref([
     fullUrl: '/images/user-list/user-1.jpg',
     uploadDate: '1 month ago',
     category: 'Food'
+  },
+  {
+    id: 6,
+    title: 'Delicious Food',
+    description: 'Amazing dinner experience',
+    thumbnailUrl: '/images/user-list/user-1.jpg',
+    fullUrl: '/images/user-list/user-1.jpg',
+    uploadDate: '1 month ago',
+    category: 'Food'
+  },
+  {
+    id: 6,
+    title: 'Delicious Food',
+    description: 'Amazing dinner experience',
+    thumbnailUrl: '/images/user-list/user-1.jpg',
+    fullUrl: '/images/user-list/user-1.jpg',
+    uploadDate: '1 month ago',
+    category: 'Food'
+  },
+  {
+    id: 6,
+    title: 'Delicious Food',
+    description: 'Amazing dinner experience',
+    thumbnailUrl: '/images/user-list/user-1.jpg',
+    fullUrl: '/images/user-list/user-1.jpg',
+    uploadDate: '1 month ago',
+    category: 'Food'
   }
 ])
 
