@@ -172,10 +172,6 @@ onMounted(async () => {
             sendEndRoulleteBeacon()
             webrtcclient.stopLocalStream()
             webrtcclient.teardown()
-            reloadNuxtApp({
-                path: "/",
-                ttl: 1000
-            })
         }
     });
 
