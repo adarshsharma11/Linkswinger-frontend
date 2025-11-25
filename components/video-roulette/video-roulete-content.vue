@@ -109,6 +109,7 @@ onBeforeUnmount(() => {
   eventBus.off('socketConnection')
   eventBus.off('serverTime')
   eventBus.off('random_match_server_push')
+  eventBus.off('random_user_remove_server_push')
 
   webrtcclient.stopLocalStream()
   webrtcclient.teardown()
