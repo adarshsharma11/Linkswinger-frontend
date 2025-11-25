@@ -14,7 +14,7 @@
             style="background: repeating-conic-gradient(rgb(10, 10, 10) 0%, rgb(10, 10, 10) 25%, rgb(16, 16, 23) 0%, rgb(16, 16, 23) 50%) 50% center / 20px 20px; display: grid; place-items: center; color: rgb(154, 163, 175);">
             <p style="padding:16px; text-align:center;">Camera unavailable. Allow access to preview yourself here.</p>
           </video> -->
-             <video id="local-video-track" class="w-100 h-100 object-cover bg-black" autoplay playsinline muted></video>
+          <video id="local-video-track" class="w-100 h-100 object-cover bg-black" autoplay playsinline muted></video>
         </div>
 
         <div class="video-card">
@@ -98,6 +98,7 @@ const id_store = idStore();
 const login_store = useLoginStore()
 const call_store = ref<RouletteWorkerModel | null>(null)
 var updatecount = 0
+const route = useRoute()
 const formattedTime = computed(() => {
   const hours = Math.floor(timeStart.value / 3600).toString().padStart(2, '0');
   const mins = Math.floor((timeStart.value % 3600) / 60).toString().padStart(2, '0');
@@ -111,8 +112,10 @@ onBeforeUnmount(() => {
   eventBus.off('random_match_server_push')
   eventBus.off('random_user_remove_server_push')
 
+     sendEndRoulleteBeacon()
   webrtcclient.stopLocalStream()
   webrtcclient.teardown()
+
 });
 
 onMounted(async () => {
@@ -132,7 +135,7 @@ onMounted(async () => {
       }
       else if (webrtcclient.peerConnection.connectionState === "disconnected" || webrtcclient.peerConnection.connectionState === "failed") {
         // showalert('Connection lost. Trying to reconnect...', false, 5000)    
-        
+
         webrtcclient.teardown()
         // sendEndCallBeacon()
         // reloadNuxtApp({
@@ -159,22 +162,22 @@ onMounted(async () => {
   eventBus.on('random_user_remove_server_push', (rouletteModel: RouletteWorkerModel) => {
     webrtcclient.stopLocalStream()
     webrtcclient.teardown()
-     reloadNuxtApp({
-            path: "/",
-            ttl: 1000
-        })
+    reloadNuxtApp({
+      path: "/",
+      ttl: 1000
+    })
   })
 
-   window.addEventListener("pagehide", (event) => {
-        if (event.persisted) return;
-        const nav = performance.getEntriesByType("navigation")[0];
-        const isReload = nav && (nav.type === "reload" || nav.type === "navigate");
-        if (isReload) {
-            sendEndRoulleteBeacon()
-            webrtcclient.stopLocalStream()
-            webrtcclient.teardown()
-        }
-    });
+  window.addEventListener("pagehide", (event) => {
+    if (event.persisted) return;
+    const nav = performance.getEntriesByType("navigation")[0];
+    const isReload = nav && (nav.type === "reload" || nav.type === "navigate");
+    if (isReload) {
+      sendEndRoulleteBeacon()
+      webrtcclient.stopLocalStream()
+      webrtcclient.teardown()
+    }
+  });
 
   try {
     await webrtcclient.getAccess()
@@ -188,6 +191,10 @@ onMounted(async () => {
   }
 
 })
+
+
+
+
 
 function getFromId(): number {
   if (call_store.value) {
@@ -285,11 +292,11 @@ function sendremotedes(remotedes: RTCSessionDescription) {
 
   let socketmodel = new CallSocketModel()
   socketmodel.event_name = 'call'
-    socketmodel.from_id = getToId()
-    socketmodel.from_socket_id = getToSocketId()
-    socketmodel.to_id = getFromId()
-    socketmodel.to_socket_id = getFromSocketId()
-    socketmodel.is_video = true
+  socketmodel.from_id = getToId()
+  socketmodel.from_socket_id = getToSocketId()
+  socketmodel.to_id = getFromId()
+  socketmodel.to_socket_id = getFromSocketId()
+  socketmodel.is_video = true
   socketmodel.type = CallSocketModel.CallType.CANDIDATE
   socketmodel.webrtc_model = Array.from(encodeToUint8Array(createSdpMessage(remotedes)))
   sendmsgtoworker(socketmodel, true)
@@ -299,10 +306,10 @@ function sendremotecandidate(remotecandidate: RTCIceCandidate) {
   let socketmodel = new CallSocketModel()
   socketmodel.event_name = 'call'
   socketmodel.from_id = getToId()
-    socketmodel.from_socket_id = getToSocketId()
-    socketmodel.to_id = getFromId()
-    socketmodel.to_socket_id = getFromSocketId()
-    socketmodel.is_video = true
+  socketmodel.from_socket_id = getToSocketId()
+  socketmodel.to_id = getFromId()
+  socketmodel.to_socket_id = getFromSocketId()
+  socketmodel.is_video = true
   socketmodel.type = CallSocketModel.CallType.CANDIDATE
   socketmodel.webrtc_model = Array.from(encodeToUint8Array(createCandidateMessage(remotecandidate)))
   sendmsgtoworker(socketmodel, true)
@@ -380,15 +387,15 @@ function handlecallevent(callModel: CallSocketModel) {
 }
 
 function sendEndRoulleteBeacon() {
-    const api_url = getUrl(RequestURL.rouletteEnd);
-    let postData = {
-        user_id: login_store.getUserDetails?.user_id,
-    }
-    // Convert to JSON string
-    const blob = new Blob([JSON.stringify(postData)], {
-        type: 'application/json'
-    });
-    navigator.sendBeacon(api_url, blob);
+  const api_url = getUrl(RequestURL.rouletteEnd);
+  let postData = {
+    user_id: login_store.getUserDetails?.user_id,
+  }
+  // Convert to JSON string
+  const blob = new Blob([JSON.stringify(postData)], {
+    type: 'application/json'
+  });
+  navigator.sendBeacon(api_url, blob);
 }
 
 </script>
