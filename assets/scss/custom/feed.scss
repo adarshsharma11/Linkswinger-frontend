@@ -290,39 +290,6 @@ body::-webkit-scrollbar {
 .cmt-send-btn {
     background-color: #fff;
 }
-/* ✅ Responsive: make full width on mobile */
-@media (max-width: 480px) {
-    .shorts-wrapper {
-        width: 100%;
-        border-radius: 0;
-        box-shadow: none;
-    }
- .short-frame {
-    position: relative;
-    width: 360px;
-    height: 640px;
-    /* 9:16 ratio */
-    background: #000;
-    overflow: hidden;
-}   
-.shorts-wrapper {
-    width: 100%;
-}
-.shorts-wrapper {
-    height: calc(100vh - 50px);
-}
-.overlay-left {
-    width: 100%;
-    padding-right: 0;
-}
-
-.overlay-right {
-    position: absolute;
-    right: 0;
-    top: 10px;
-}
-}
-
 .vd-name {
     display: flex;
     flex-wrap: wrap;
@@ -738,8 +705,11 @@ button {
     .overlay-inner {
         padding-bottom: 10px; /* Extra space for seekbar */
     }
+    .shorts-wrapper {
+        height: calc(100vh - 30px);
+    }
 }
-
+/* ✅ Responsive: make full width on mobile */
 @media (max-width: 480px) {
     
     .fullscreen-btn {
