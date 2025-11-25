@@ -94,6 +94,11 @@
               <div class="position-relative profile-avatar-container">
                 <img :src="getProfilePlaceholder()" alt="Profile" class="rounded-circle mb-2"
                   style="width: 90px; height: 90px; object-fit: cover" />
+                <!-- Profile Picture Selection button - top left -->
+                <button v-if="!is_photo_uploading && isMine()" type="button" class="btn btn-transparent rounded-circle position-absolute profile-picture-btn"
+                  @click="navigateTo('/profile-picture')">
+                  <i class="fa fa-photo text-white"></i>
+                </button>
                 <!-- Upload/Edit button - top right -->
                 <button v-if="!is_photo_uploading && isMine()" type="button" class="btn btn-transparent rounded-circle position-absolute profile-edit-btn"
                   @click="triggerFileInput">
