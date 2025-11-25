@@ -1,0 +1,413 @@
+/* ROOT VARIABLES */
+$bg: #05060b;
+$elev: #111319;
+$elev-soft: #141722;
+$border-soft: #262a3b;
+$accent-green: #00f59a;
+$accent-red: #ff004c;
+$text: #f5f7ff;
+$text-muted: #a5afc7;
+
+/* MAIN PAGE WRAPPER */
+.lsv-page {
+  min-height: calc(100vh - 60px);
+  background: radial-gradient(circle at top, #111322 0, #05060b 48%, #000 100%);
+  display: flex;
+  justify-content: center;
+  padding: 24px;
+  color: $text;
+}
+
+.lsv-wrap {
+  width: 100%;
+  margin-top: 20px;
+  max-width: 960px;
+}
+
+/* ---------------- TOP BAR ---------------- */
+.lsv-top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.lsv-top-left {
+  display: flex;
+  gap: 8px;
+}
+
+.lsv-top-btn {
+  font-size: 12px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: rgba(10, 12, 20, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: $text;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.lsv-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: $text-muted;
+
+  .lsv-logo {
+    width: 30px;
+    height: 30px;
+    border-radius: 12px;
+    background: radial-gradient(circle at 20% 0, #ff4c7f, $accent-red 35%, #7a0027 70%, #16000b 100%);
+    box-shadow: 0 0 16px rgba(255, 0, 76, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    color: white;
+  }
+
+  .lsv-brand-sub {
+    font-size: 11px;
+    text-transform: uppercase;
+  }
+}
+
+/* ---------------- CARD ---------------- */
+.lsv-card {
+  background: $elev;
+  border-radius: 26px;
+  padding: 20px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  overflow: hidden;
+}
+
+.lsv-card-inner {
+  background:
+    radial-gradient(circle at top left, rgba(255, 0, 76, 0.12), transparent 55%),
+    radial-gradient(circle at bottom right, rgba(0, 245, 154, 0.1), transparent 60%),
+    $elev;
+  padding: 8px 12px 20px;
+  border-radius: 20px;
+}
+
+/* ---------------- HEADER ---------------- */
+.lsv-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+/* Title */
+.lsv-title {
+  max-width: 560px;
+
+  h1 {
+    font-size: 20px;
+    font-weight: 600;
+    display: flex;
+    gap: 8px;
+    margin-bottom: 8px;
+    color: $text;
+  }
+
+  .lsv-pill {
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    text-transform: uppercase;
+    background: rgba(0, 245, 154, 0.12);
+    border: 1px solid rgba(0, 245, 154, 0.4);
+    color: $accent-green;
+  }
+
+  p {
+    color: $text-muted;
+    font-size: 13px;
+    max-width: 480px;
+  }
+}
+
+/* Profile mini */
+.lsv-profile-mini {
+  min-width: 200px;
+  padding: 10px;
+  border-radius: 18px;
+  background: rgba(11, 13, 20, 0.76);
+  border: 1px solid $border-soft;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  .lsv-profile-top {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .lsv-avatar--md {
+    width: 28px;
+    height: 28px;
+    border-radius: 999px;
+    background: radial-gradient(circle at 20% 10%, #fff, #ffd1e0 32%, $accent-red 70%);
+    box-shadow: 0 0 10px rgba(255, 0, 76, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 600;
+  }
+
+  .lsv-you {
+    color: $text-muted;
+    font-size: 11px;
+    text-transform: uppercase;
+  }
+
+  .lsv-badges {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+
+    .lsv-badge {
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: #181b26;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      font-size: 11px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+
+      .lsv-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 999px;
+        background: $accent-green;
+        box-shadow: 0 0 10px rgba(0, 245, 154, 0.65);
+      }
+    }
+  }
+}
+
+/* ---------------- FILTERS ---------------- */
+.lsv-filters {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 16px;
+
+  .lsv-tag {
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: rgba(9, 11, 18, 0.8);
+    border: 1px solid $border-soft;
+    font-size: 12px;
+    color: $text-muted;
+  }
+
+  .lsv-tag--accent {
+    border-color: rgba(0, 245, 154, 0.5);
+    color: $accent-green;
+  }
+
+  .lsv-hint {
+    font-size: 11px;
+    color: $text-muted;
+  }
+}
+
+/* ---------------- LIST ---------------- */
+.lsv-list {
+  background: $elev-soft;
+  padding: 12px;
+  border-radius: 20px;
+  border: 1px solid $border-soft;
+}
+
+/* ITEM */
+.lsv-item {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 12px;
+  padding: 12px 10px;
+  border-radius: 16px;
+  border: 1px solid transparent;
+  margin-bottom: 8px;
+
+  &:hover {
+    background: rgba(9, 11, 18, 0.92);
+    border-color: rgba(0, 245, 154, 0.25);
+  }
+}
+
+/* Avatar */
+.lsv-avatar--lg {
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  background: radial-gradient(circle at 20% 10%, #fff, #ffd1e0 32%, $accent-red 70%);
+  box-shadow: 0 0 10px rgba(255, 0, 76, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+}
+
+/* Item Body */
+.lsv-meta {
+  font-size: 11px;
+  color: $text-muted;
+}
+
+.lsv-text {
+  margin-top: 6px;
+  font-size: 13px;
+}
+
+.lsv-tags {
+  margin-top: 6px;
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+
+  .lsv-chip {
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    font-size: 11px;
+
+    &.lsv-pill-public {
+      color: $accent-green;
+    }
+
+    &.lsv-pill-friends {
+      color: #6ea9ff;
+    }
+
+    &.lsv-pill-private {
+      color: #ffbb55;
+    }
+  }
+}
+
+/* Visibility Panel */
+.lsv-visibility {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+  min-width: 160px;
+
+  .lsv-vis-label {
+    font-size: 11px;
+    color: $text-muted;
+  }
+
+  .lsv-select {
+    padding: 6px 14px;
+    border-radius: 999px;
+    border: 1px solid $border-soft;
+    background: rgba(11, 13, 20, 0.9);
+    color: $text;
+  }
+
+  .lsv-btn-outline {
+    padding: 8px 12px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    background: transparent;
+    color: $text-muted;
+    text-transform: uppercase;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .lsv-vis-note {
+    font-size: 10px;
+    text-align: right;
+    max-width: 180px;
+    color: $text-muted;
+  }
+}
+
+/* ---------------- FOOTER ---------------- */
+.lsv-footer {
+  margin-top: 16px;
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: center;
+
+  .lsv-hint {
+    font-size: 12px;
+    color: $text-muted;
+  }
+
+  .lsv-save {
+    padding: 14px 22px;
+    background: radial-gradient(circle at 0 0, #ff4c7f, $accent-red 45%, #7a0027 100%);
+    border-radius: 999px;
+    border: 1px solid rgba(255, 0, 76, 0.7);
+    box-shadow: 0 0 18px rgba(255, 0, 76, 0.5);
+    color: white;
+    font-weight: 700;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+}
+
+/* ---------------- MOBILE RESPONSIVE ---------------- */
+@media (max-width: 768px) {
+  .lsv-page {
+    padding: 10px;
+    align-items: flex-start;
+  }
+
+  .lsv-wrap {
+    max-width: 420px;
+  }
+
+  .lsv-header {
+    flex-direction: column-reverse;
+  }
+
+  .lsv-item {
+    grid-template-columns: auto 1fr;
+  }
+
+  .lsv-visibility {
+    grid-column: 1 / -1;
+    align-items: flex-start;
+    text-align: left;
+
+    .lsv-vis-note {
+      text-align: left;
+    }
+  }
+
+  .lsv-footer {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+
+    .lsv-save {
+      width: 100%;
+    }
+  }
+
+  .lsv-avatar--lg {
+    width: 32px;
+    height: 32px;
+  }
+
+  .lsv-avatar--md {
+    width: 24px;
+    height: 24px;
+  }
+}
