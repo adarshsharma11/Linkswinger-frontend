@@ -158,6 +158,10 @@ else if (event_name === "call_alert")
          let json = JSON.parse(jsontext) as  RouletteWorkerModel
          sendmsgtoworker(json, true,true)
     }
+    else if (json.event_name === "random_user_remove_server_push") {
+    let json = JSON.parse(jsontext) as  RouletteWorkerModel
+         sendmsgtoworker(json, true,true)
+    }
     
     
 }

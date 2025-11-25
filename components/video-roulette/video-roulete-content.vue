@@ -131,7 +131,7 @@ onMounted(async () => {
       }
       else if (webrtcclient.peerConnection.connectionState === "disconnected" || webrtcclient.peerConnection.connectionState === "failed") {
         // showalert('Connection lost. Trying to reconnect...', false, 5000)    
-        webrtcclient.stopLocalStream()
+        
         webrtcclient.teardown()
         // sendEndCallBeacon()
         // reloadNuxtApp({
@@ -141,7 +141,7 @@ onMounted(async () => {
       }
     }
     if (isSocketConnected()) {
-    //  sendcallupdates()
+      sendcallupdates()
     }
 
   })
@@ -152,10 +152,16 @@ onMounted(async () => {
   })
 
   eventBus.on('random_match_server_push', (rouletteModel: RouletteWorkerModel) => {
-
     call_store.value = rouletteModel
-    
+  })
 
+  eventBus.on('random_user_remove_server_push', (rouletteModel: RouletteWorkerModel) => {
+    webrtcclient.stopLocalStream()
+    webrtcclient.teardown()
+     reloadNuxtApp({
+            path: "/",
+            ttl: 1000
+        })
   })
 
   try {
@@ -197,11 +203,10 @@ function getToSocketId(): string {
 }
 
 function sendcallupdates() {
-  if (updatecount > 2) {
+  if (updatecount >= 2) {
     let callupdates = new CallAlertModel()
     callupdates.event_name = "roullete_updates"
-    callupdates.from_id = getFromId()
-    callupdates.to_id = getToId()
+    callupdates.from_id = login_store.getUserDetails?.user_id ?? 0
     sendmsgtoworker(callupdates, true)
     updatecount = 0
   }

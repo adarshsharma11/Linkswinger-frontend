@@ -39,7 +39,8 @@ type Events = {
   callAcceptAlert : CallAlertModel,
   callEndAlert : CallAlertModel,
   callEvent : CallSocketModel,
-  random_match_server_push: RouletteWorkerModel
+  random_match_server_push: RouletteWorkerModel,
+  random_user_remove_server_push:RouletteWorkerModel
 }
 let onlinemodel: OnlineEventResponse | null = null
 
@@ -335,7 +336,15 @@ else if (json.event_name === "random_match_server_push") {
    let json = event.data as RouletteWorkerModel  
   emitter.emit('random_match_server_push', json)
 }
-
+else if (json.event_name === "random_user_remove_server_push") {
+   let json = event.data as RouletteWorkerModel  
+   emitter.emit('random_user_remove_server_push', json)
+}
+else if (json.event_name === "roullete_updates") 
+    {
+         let json = event.data as  CallAlertModel
+         sendtosocket(json)
+    }
 
   
 

@@ -39,7 +39,6 @@ onMounted(() => {
 
     window.addEventListener('visibilitychange', () => {
 
-      console.log('visibilitychange...strip', document.visibilityState)
       if (document.visibilityState === 'hidden') {
 
         if (alertModel.value !== null) {
