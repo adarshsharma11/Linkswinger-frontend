@@ -47,7 +47,7 @@
           </div>
           <div>
             <label for="radius">Location radius: <span id="radiusVal">500</span> mi</label><br>
-            <input id="radius" type="range" min="5" max="500" value="50">
+            <input id="radius" type="range" min="5" max="500" value="500">
           </div>
         </div>
 
