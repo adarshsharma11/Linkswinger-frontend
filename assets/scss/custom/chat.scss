@@ -306,7 +306,6 @@ button#btnSend {
     top: 0.5rem;
     right: 0.5rem;
     padding: 0.25rem 0.5rem !important;
-    border-radius: 0.375rem !important;
     font-size: 0.75rem !important;
     opacity: 0.7;
     transition: all 0.2s ease !important;
@@ -316,13 +315,11 @@ button#btnSend {
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-    border: 1px solid rgba(244, 63, 94, 0.3) !important;
 }
 
 .trash-btn:hover {
     opacity: 1;
     transform: scale(1.05);
-    box-shadow: 0 0 15px 2px rgba(244, 63, 94, 0.4) !important;
 }
 
 .trash-btn svg {
@@ -381,4 +378,77 @@ button#btnSend {
         width: 11px !important;
         height: 11px !important;
     }
+}
+/* When selecting messages */
+.message-selected {
+  background-color: rgba(255, 255, 255, 0.08) !important;
+  border-left: 3px solid var(--ls-red);
+}
+
+/* Checkbox next to message */
+.message-select-box {
+  margin-right: 8px;
+  display: flex;
+  align-items: center;
+}
+
+.message-bubble {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+/* Floating toolbar */
+.select-toolbar {
+  position: sticky;
+  bottom: 0;
+  background: rgba(15, 15, 15, 0.95);
+  padding: 10px 15px;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 50;
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  .message-bubble {
+    flex-direction: row;
+  }
+
+  .select-toolbar {
+    padding: 12px;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .select-toolbar button {
+    width: 100%;
+  }
+}
+
+.message-select-btn {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-bottom: 4px;
+  width: 100%;
+}
+
+.select-circle {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid $primary-color;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all .2s ease;
+}
+
+.select-circle.active {
+  background: $primary-color;
+  border-color: $primary-color;
 }
