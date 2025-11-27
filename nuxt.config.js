@@ -36,6 +36,10 @@ export default defineNuxtConfig({
   css: [
     '@/assets/scss/app.scss',
     'video.js/dist/video-js.css',
+    'lightgallery/css/lightgallery.css',
+    'lightgallery/css/lg-thumbnail.css',
+    'lightgallery/css/lg-zoom.css',
+    'lightgallery/css/lg-video.css',
   ],
   modules: ['nuxt-icon', '@pinia/nuxt', 'floating-vue/nuxt', 'nuxt-emoji-picker', 'nuxt-lottie'],
   pinia: {
