@@ -1,6 +1,6 @@
 <template>
   <div class="container py-4">
-    <div class="row g-3">
+    <div class="row g-3 mt-4">
       <!-- Sidebar -->
       <aside class="col-12 col-lg-4 col-xl-3" :class="{ 'd-none': showMobileChat && isMobile }">
         <div class="chat-card p-2">
@@ -10,10 +10,6 @@
               <span>Messages</span>
               <span class="badge bg-success bg-opacity-25 text-success border border-success">Verified only</span>
             </div>
-            <!-- <div class="d-flex gap-2">
-              <button class="btn btn-sm btn-dark border-secondary">New</button>
-              <button class="btn btn-sm btn-dark border-secondary">Group</button>
-            </div> -->
           </div>
           <div class="custom-scroll" style="max-height:70vh;overflow:auto;">
             <!-- Example Conversation Items -->
@@ -72,27 +68,6 @@
               <span class="badge bg-danger glow-red text-white" v-if="(historymodel.badge_count ?? 0) > 0">{{
                 historymodel.badge_count }}</span>
             </div>
-            <!-- <div class="p-2 rounded-3 d-flex align-items-center justify-content-between hover-overlay chat-item"
-              style="background-color:rgba(23,23,23,0.4);margin-bottom:6px;">
-              <div class="d-flex align-items-center gap-3">
-                <div class="position-relative chat-item-left">
-                  <div
-                    class="rounded-circle bg-success text-white d-flex align-items-center justify-content-center fw-bold"
-                    style="width:40px;height:40px;">MT</div>
-                  <span
-                    class="position-absolute bottom-0 end-0 translate-middle rounded-circle bg-success border border-dark"
-                    style="width:12px;height:12px;"></span>
-                </div>
-                <div class="chat-item-right">
-                  <div class="d-flex align-items-center gap-2">
-                    <strong>Ruby</strong>
-                    <span class="badge bg-success bg-opacity-25 text-success border border-success">Plus</span>
-                  </div>
-                  <small class="text-secondary">You free Friday?</small>
-                </div>
-              </div>
-              <span class="badge bg-danger glow-red text-white">2</span>
-            </div> -->
           </div>
         </div>
       </aside>
@@ -125,11 +100,6 @@
                 </svg>
               </button>
               <!-- Mobile Back Button -->
-              <button class="btn btn-sm btn-dark border-secondary d-lg-none" @click="goBack">
-                <svg viewBox="0 0 24 24" class="h-4 w-4" fill="currentColor">
-                  <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" />
-                </svg>
-              </button>
               <div class="position-relative">
                 <img
                   class="rounded-circle bg-danger text-white d-flex align-items-center justify-content-center fw-bold"
@@ -151,6 +121,15 @@
             </div>
             <div class="d-flex gap-2 chat-hd-btn">
               <!-- <button class="btn btn-sm btn-dark border-secondary grp-btn">Create Group</button> -->
+               <button
+                  class="btn btn-sm btn-dark border-secondary"
+                  @click="toggleSelectMode"
+                >
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                    <path d="M9 11H3V5h6v6zm2-6h10v6H11V5zm0 8h10v6H11v-6zM3 13h6v6H3v-6z"/>
+                  </svg>
+                  Select
+                </button>
               <button class="btn btn-sm btn-dark border-secondary" @click="showCodeAlert(false)"><svg
                   viewBox="0 0 24 24" class="h-4 w-4" fill="currentColor">
                   <path
@@ -183,7 +162,8 @@
               'message-incoming': chat.from_id !== login_store.getUserDetails?.user_id,
               'message-outgoing': chat.from_id === login_store.getUserDetails?.user_id,
               'ms-auto': chat.from_id === login_store.getUserDetails?.user_id,
-              'glow-red': chat.from_id === login_store.getUserDetails?.user_id
+              'glow-red': chat.from_id === login_store.getUserDetails?.user_id,
+              'message-selected': selectedMessages.includes(chat.chat_id ?? 0)
             }" :id="`${chat.chat_id ?? 0}`">
               <div v-if="(chat.is_deleted ?? false) === true" class="text-secondary">This message was deleted</div>
               <div v-if="(chat.is_deleted ?? false) === false" class="chat-item">
@@ -207,7 +187,7 @@
               <div class="message-time" v-if="chat.from_id === login_store.getUserDetails?.user_id">{{ chat.created_at
               }}
                 • {{ chat.status }}</div>
-              <button class="btn btn-sm btn-danger glow-red-strong text-white trash-btn" @click="deleteChat(chat)"
+              <!-- <button class="btn btn-sm btn-danger glow-red-strong text-white trash-btn" @click="deleteChat(chat)"
                 v-if="chat.from_id === login_store.getUserDetails?.user_id && (chat.is_deleted ?? false) === false && (chat.is_deleting ?? false) === false">
                 <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor">
                   <path
@@ -223,7 +203,20 @@
                     d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2m3 0v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6h14zM10 11v6M14 11v6"
                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                 </svg>
-              </button>
+              </button> -->
+              <div v-if="selectMode" class="message-select-box trash-btn">
+                 <div
+                    class="select-circle"
+                    :class="{ active: selectedMessages.includes(chat.chat_id ?? 0) }"
+                    @click.stop="toggleMessageSelection(chat.chat_id ?? 0)"
+                  >
+                    <svg v-if="selectedMessages.includes(chat.chat_id ?? 0)"
+                        viewBox="0 0 24 24" width="14" height="14" fill="white">
+                      <path d="M20 6L9 17l-5-5" stroke="white" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </div>
+              </div>
 
               <span class="btn-loader" v-if="chat.is_deleting"></span>
             </div>
@@ -241,6 +234,15 @@
             </div> -->
             <div class="typing-animate" v-if="(userDetails?.is_typing ?? false) === true">
               Typing<span></span><span></span><span></span></div>
+          </div>
+          <div
+            v-if="selectMode && selectedMessages.length > 0"
+            class="select-toolbar"
+          >
+            <span class="text-white">{{ selectedMessages.length }} selected</span>
+            <button class="btn btn-primary btn-sm">
+              Delete Selected
+            </button>
           </div>
 
           <!-- Composer -->
@@ -329,6 +331,21 @@ const contentType = ref('');
 const fileInput = ref<HTMLInputElement | null>(null);
 const activeChatId = ref<number | null>(null); // Add this line to track active chat
 const showMobileChat = ref(false); // For mobile: show chat instead of user list
+const selectMode = ref(false);
+const selectedMessages = ref<number[]>([]);
+
+function toggleSelectMode() {
+  selectMode.value = !selectMode.value;
+  selectedMessages.value = [];
+}
+
+function toggleMessageSelection(chatId: number) {
+  if (selectedMessages.value.includes(chatId)) {
+    selectedMessages.value = selectedMessages.value.filter(id => id !== chatId);
+  } else {
+    selectedMessages.value.push(chatId);
+  }
+}
 // Initialize mobile detection immediately
 const isMobile = ref(process.client ? window.innerWidth < 768 : false); // Mobile detection
 
