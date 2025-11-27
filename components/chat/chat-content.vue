@@ -383,6 +383,7 @@ galleryItems.value = allMedia.map((c) => {
   const src = (c.media_path ?? "") + (c.message ?? "");
   const isVideo = c.message_type === "video";
 
+  console.log(src)
   return {
     id: c.chat_id,
     src,
