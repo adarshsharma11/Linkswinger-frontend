@@ -16,8 +16,7 @@
             <div class="p-2 rounded-3 d-flex align-items-center justify-content-between hover-overlay chat-item"
               :class="{ 'chat-active': activeChatId === (historymodel.user_id ?? 0) }"
               style="background-color:rgba(23,23,23,0.4);margin-bottom:6px;" v-for="historymodel in chatHistoryModels"
-              :key="historymodel.user_id"
-              @click="selectUserForMobile(historymodel.user_id ?? 0)">
+              :key="historymodel.user_id" @click="selectUserForMobile(historymodel.user_id ?? 0)">
               <div class="d-flex align-items-center gap-3">
                 <div class="position-relative chat-item-left">
                   <img
@@ -121,15 +120,12 @@
               </div>
             </div>
             <div class="d-flex gap-2 chat-hd-btn">
-               <button
-                  class="btn btn-sm btn-dark border-secondary"
-                  @click="toggleSelectMode"
-                >
-                  <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
-                    <path d="M9 11H3V5h6v6zm2-6h10v6H11V5zm0 8h10v6H11v-6zM3 13h6v6H3v-6z"/>
-                  </svg>
-                  Select
-                </button>
+              <button class="btn btn-sm btn-dark border-secondary" @click="toggleSelectMode">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                  <path d="M9 11H3V5h6v6zm2-6h10v6H11V5zm0 8h10v6H11v-6zM3 13h6v6H3v-6z" />
+                </svg>
+                Select
+              </button>
               <button class="btn btn-sm btn-dark border-secondary" @click="showCodeAlert(false)"><svg
                   viewBox="0 0 24 24" class="h-4 w-4" fill="currentColor">
                   <path
@@ -169,48 +165,30 @@
               <div v-if="(chat.is_deleted ?? false) === true" class="text-secondary">This message was deleted</div>
               <div v-if="(chat.is_deleted ?? false) === false" class="chat-item">
                 <div v-if="chat.message_type === 'text'">{{ chat.message }}</div>
-               <!-- IMAGE PREVIEW -->
-              <div v-if="chat.message_type === 'image'" class="attachment-preview" @click="openPreview(chat)">
-                <img
-                  :src="(chat.media_path ?? '') + (chat.message ?? '')"
-                  class="attachment-img"
-                  loading="lazy"
-                />
-              </div>
+                <!-- IMAGE PREVIEW -->
+                <div v-if="chat.message_type === 'image'" class="attachment-preview" @click="openPreview(chat)">
+                  <img :src="(chat.media_path ?? '') + (chat.message ?? '')" class="attachment-img" loading="lazy" />
+                </div>
 
-            <!-- VIDEO PREVIEW -->
-            <div
-              v-if="chat.message_type === 'video'"
-              class="attachment-preview video"
-              @click="openPreview(chat)"
-            >
-              <video
-                :src="(chat.media_path ?? '') + (chat.message ?? '')"
-                class="attachment-video"
-                muted
-              ></video>
+                <!-- VIDEO PREVIEW -->
+                <div v-if="chat.message_type === 'video'" class="attachment-preview video" @click="openPreview(chat)">
+                  <video :src="(chat.media_path ?? '') + (chat.message ?? '')" class="attachment-video" muted></video>
 
-              <div class="video-play-overlay">
-                <img
-                  src="/images/icons-folder/Play-150x150px.png"
-                  alt="Play"
-                  class="video-play-icon"
-                />
-              </div>
-            </div>
+                  <div class="video-play-overlay">
+                    <img src="/images/icons-folder/Play-150x150px.png" alt="Play" class="video-play-icon" />
+                  </div>
+                </div>
 
 
-              <!-- FALLBACK FOR UNKNOWN FILES (DOC, PDF etc.) -->
-              <div
-                v-if="chat.message_type !== 'image' && chat.message_type !== 'video' && chat.message_type !== 'text' && chat.message_type !== 'emoji'"
-                class="attachment-file"
-                @click="openPreview(chat)"
-              >
-                <svg viewBox="0 0 24 24" width="40" height="40" fill="currentColor">
-                  <path d="M6 2h9l5 5v15a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z"/>
-                </svg>
-                <small>{{ chat.message }}</small>
-              </div>
+                <!-- FALLBACK FOR UNKNOWN FILES (DOC, PDF etc.) -->
+                <div
+                  v-if="chat.message_type !== 'image' && chat.message_type !== 'video' && chat.message_type !== 'text' && chat.message_type !== 'emoji'"
+                  class="attachment-file" @click="openPreview(chat)">
+                  <svg viewBox="0 0 24 24" width="40" height="40" fill="currentColor">
+                    <path d="M6 2h9l5 5v15a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z" />
+                  </svg>
+                  <small>{{ chat.message }}</small>
+                </div>
 
                 <div v-if="chat.message_type === 'emoji'">
                   <Lottie renderer="svg" v-if="getFileExtension(chat.message ?? '') === '.json'"
@@ -227,17 +205,14 @@
                 • {{ chat.status }}</div>
 
               <div v-if="selectMode" class="message-select-box trash-btn">
-                 <div
-                    class="select-circle"
-                    :class="{ active: selectedMessages.includes(chat.chat_id ?? 0) }"
-                    @click.stop="toggleMessageSelection(chat.chat_id ?? 0)"
-                  >
-                    <svg v-if="selectedMessages.includes(chat.chat_id ?? 0)"
-                        viewBox="0 0 24 24" width="14" height="14" fill="white">
-                      <path d="M20 6L9 17l-5-5" stroke="white" stroke-width="2"
-                            stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                  </div>
+                <div class="select-circle" :class="{ active: selectedMessages.includes(chat.chat_id ?? 0) }"
+                  @click.stop="toggleMessageSelection(chat.chat_id ?? 0)">
+                  <svg v-if="selectedMessages.includes(chat.chat_id ?? 0)" viewBox="0 0 24 24" width="14" height="14"
+                    fill="white">
+                    <path d="M20 6L9 17l-5-5" stroke="white" stroke-width="2" stroke-linecap="round"
+                      stroke-linejoin="round" />
+                  </svg>
+                </div>
               </div>
 
               <span class="btn-loader" v-if="chat.is_deleting"></span>
@@ -246,10 +221,7 @@
             <div class="typing-animate" v-if="(userDetails?.is_typing ?? false) === true">
               Typing<span></span><span></span><span></span></div>
           </div>
-          <div
-            v-if="selectMode && selectedMessages.length > 0"
-            class="select-toolbar"
-          >
+          <div v-if="selectMode && selectedMessages.length > 0" class="select-toolbar">
             <span class="text-white">{{ selectedMessages.length }} selected</span>
             <button class="btn btn-primary btn-sm" @click="deleteSelected">Delete Selected</button>
           </div>
@@ -264,15 +236,16 @@
               <div class="d-flex flex items-center gap-2 chat-ftr-btns">
                 <input type="file" accept="image/png,image/jpeg,video/mp4" class="form-control d-none" ref="fileInput"
                   @change="handleFileUpload" />
-                <button id="attach-btn" class="btn bbtn-dark border-secondary text-white ms-2" @click="triggerFileInput">
+                <button id="attach-btn" class="btn bbtn-dark border-secondary text-white ms-2"
+                  @click="triggerFileInput">
                   <svg viewBox="0 0 24 24" class="h-5 w-5" fill="currentColor">
                     <path d="M16.5 6.5 9 14a3 3 0 1 0 4.24 4.24l7.07-7.07a5 5 0 1 0-7.07-7.07L6.1 7.17" fill="none"
                       stroke="currentColor" stroke-width="1.5"></path>
                   </svg>
                 </button>
 
-                <button v-if="!is_uploading" id="btnSend"
-                  class="btn btn-danger glow-red-strong text-white ms-2" @click="sendMessage()">Send</button>
+                <button v-if="!is_uploading" id="btnSend" class="btn btn-danger glow-red-strong text-white ms-2"
+                  @click="sendMessage()">Send</button>
                 <button v-else class="btn btn-danger glow-red-strong text-white ms-2">Send {{
                   uploadProgress }}</button>
               </div>
@@ -302,23 +275,11 @@
   </Teleport>
 
   <!-- LightGallery: rendered only client-side and only after dynamic import -->
-  <component
-    v-if="LightgalleryComp"
-    :is="LightgalleryComp"
-    ref="lgRef"
-    :settings="{ plugins: plugins, speed: 500, download: false,controls: true,loop: true, slideEndAnimation: true}"
-    :onInit="onGalleryInit"
-    style="display:none;"
-  >
-    <a
-      v-for="item in galleryItems"
-      :key="item.id"
-      :data-src="item.src"
-      :data-poster="item.poster"
-      :data-thumb="item.src"
-      :data-lg-size="item.size"
-      :data-video="item.video"
-    ></a>
+  <component v-if="LightgalleryComp && plugins.length > 0" :is="LightgalleryComp" ref="lgRef"
+    :settings="{ plugins: plugins, thumbnail: false, speed: 500, download: false, controls: true, loop: false, slideEndAnimation: false, exThumbImage: 'data-external-thumb-image' }"
+    :onInit="onGalleryInit">
+    <a v-for="item in galleryItems" :key="item.id" :data-src="item.isVideo ? null : item.src"
+      :data-video="item.isVideo ? item.video : null" data-lg-size="1280-720"></a>
   </component>
 </template>
 
@@ -379,25 +340,24 @@ function openPreview(chat: any) {
     (c) => c.message_type === "image" || c.message_type === "video"
   );
 
-galleryItems.value = allMedia.map((c) => {
-  const src = (c.media_path ?? "") + (c.message ?? "");
-  const isVideo = c.message_type === "video";
+  galleryItems.value = allMedia.map((c) => {
+    const src = (c.media_path ?? "") + (c.message ?? "");
+    const isVideo = c.message_type === "video";
 
-  console.log(src)
-  return {
-    id: c.chat_id,
-    src,
-    thumb: src,
-    poster: isVideo ? src : null,
-    size: "1600-1200",
-    video: isVideo
-      ? {
+    return {
+      id: c.chat_id,
+      isVideo,
+      src,
+      thumb: isVideo ? null : src,   // or a custom poster image
+      video: isVideo
+        ? JSON.stringify({
           source: [{ src, type: "video/mp4" }],
           attributes: { controls: true, preload: "metadata" }
-        }
-      : null
-  };
-});
+        })
+        : null
+    };
+  });
+
 
   const index = galleryItems.value.findIndex(
     (i) => i.id === chat.chat_id
@@ -701,19 +661,24 @@ onMounted(async () => {
     try {
       // dynamically import LightGallery CSS on client only
       await Promise.all([
-        import('lightgallery/css/lightgallery.css').catch(()=>{}),
-        import('lightgallery/css/lg-thumbnail.css').catch(()=>{}),
-        import('lightgallery/css/lg-video.css').catch(()=>{}),
-        import('lightgallery/css/lg-zoom.css').catch(()=>{})
+        import('lightgallery/css/lightgallery.css').catch(() => { }),
+        import('lightgallery/css/lg-thumbnail.css').catch(() => { }),
+        import('lightgallery/css/lg-video.css').catch(() => { }),
+        import('lightgallery/css/lg-zoom.css').catch(() => { })
       ]);
       // dynamic import of the component and plugins
       const mod = await import('lightgallery/vue');
-      const zoom = (await import('lightgallery/plugins/zoom')).default ?? (await import('lightgallery/plugins/zoom'));
-      const thumbnail = (await import('lightgallery/plugins/thumbnail')).default ?? (await import('lightgallery/plugins/thumbnail'));
-      const video = (await import('lightgallery/plugins/video')).default ?? (await import('lightgallery/plugins/video'));
+      const { default: zoom } = await import('lightgallery/plugins/zoom');
+      const { default: thumbnail } = await import('lightgallery/plugins/thumbnail');
+      const { default: video } = await import('lightgallery/plugins/video');
       LightgalleryComp.value = mod.default ?? mod;
       // set plugins array (LightGallery expects the plugin functions)
-      plugins.value = [zoom, thumbnail, video].filter(Boolean);
+      plugins.value = [zoom, video].filter(Boolean);
+
+      document.querySelectorAll('.lg-html5').forEach(v => {
+        v.style.objectFit = 'contain';
+      });
+
     } catch (err) {
       // if LightGallery fails to load, keep component non-blocking
       console.warn('LightGallery dynamic import failed:', err);
@@ -821,10 +786,10 @@ const handleScroll = async () => {
         onResponse: async ({ response }) => {
           const response_model = response._data as SuccessError<ChatsModel.ChatResponseModel>
           if (response_model.success) {
-            const filterarray = response_model.result?.sort((a,b)=> (a.chat_id ?? 0)-(b.chat_id ?? 0));
+            const filterarray = response_model.result?.sort((a, b) => (a.chat_id ?? 0) - (b.chat_id ?? 0));
             const lastMessage = (filterarray ?? []).at(-1);
             chatModels.value.push(...filterarray ?? [])
-            chatModels.value.sort((a,b)=>(a.chat_id ?? 0)-(b.chat_id ?? 0));
+            chatModels.value.sort((a, b) => (a.chat_id ?? 0) - (b.chat_id ?? 0));
             scrollToMessage(lastMessage?.chat_id ?? 0)
           } else {
             pageIndex.value = pageIndex.value - 1
@@ -835,7 +800,7 @@ const handleScroll = async () => {
     }
   }
 };
-const scrollToMessage = (messageId: number) => { nextTick(()=>{ const messageElement = document.getElementById(`${messageId}`); if (messageElement) messageElement.scrollIntoView({ behavior: "smooth", block: "center" }); }) };
+const scrollToMessage = (messageId: number) => { nextTick(() => { const messageElement = document.getElementById(`${messageId}`); if (messageElement) messageElement.scrollIntoView({ behavior: "smooth", block: "center" }); }) };
 
 function checkuseronline() {
   if (isWSConnected.value) {
@@ -945,7 +910,7 @@ function updateBadgeCount(to_id2: number) {
   if (histories.length > 0) histories[0].badge_count = 0
 }
 
-function appendLastMessagetohistory(chat_id: number, to_id2: number, message: string, message_type:string) {
+function appendLastMessagetohistory(chat_id: number, to_id2: number, message: string, message_type: string) {
   const histories = chatHistoryModels.value.filter(h => h.user_id === to_id2)
   if (histories.length > 0) {
     histories[0].chat_id = chat_id
@@ -1085,18 +1050,52 @@ function deleteSelected() {
   border-left: 3px solid #ff6b6b;
 }
 
-/* keep any extra styles you had for gallery preview */
-.attachment-preview { cursor: pointer; }
-.attachment-img { max-width: 240px; border-radius: 8px; }
-.attachment-video { max-width: 240px; border-radius: 8px; display:block; }
-.video-play-overlay { position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); pointer-events:none; }
-.video-play-icon { width:48px; height:48px; opacity:0.9; }
+
+:deep(video) {
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
+  object-fit: contain;
+  background: black !important;
+}
+
+
+
+.attachment-preview {
+  cursor: pointer;
+}
+
+.attachment-img {
+  max-width: 240px;
+  border-radius: 8px;
+}
+
+.attachment-video {
+  max-width: 240px;
+  border-radius: 8px;
+  display: block;
+}
+
+.video-play-overlay {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.video-play-icon {
+  width: 48px;
+  height: 48px;
+  opacity: 0.9;
+}
 
 .select-toolbar {
   position: sticky;
   bottom: 0;
   z-index: 50;
   padding: 0.5rem;
-  background: rgba(15,15,15,0.6);
+  background: rgba(15, 15, 15, 0.6);
 }
 </style>
