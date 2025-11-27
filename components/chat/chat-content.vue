@@ -276,10 +276,11 @@
 
   <!-- LightGallery: rendered only client-side and only after dynamic import -->
   <component v-if="LightgalleryComp && plugins.length > 0" :is="LightgalleryComp" ref="lgRef"
-    :settings="{ plugins: plugins, thumbnail: false, speed: 500, download: false, controls: true, loop: false, slideEndAnimation: false, exThumbImage: 'data-external-thumb-image' }"
-    :onInit="onGalleryInit">
+    :settings="{ plugins: plugins, thumbnail: false, speed: 500, download: false, controls: true, loop: false, slideEndAnimation: false,  }"
+    :onInit="onGalleryInit"
+     >
     <a v-for="item in galleryItems" :key="item.id" :data-src="item.isVideo ? null : item.src"
-      :data-video="item.isVideo ? item.video : null" data-lg-size="1280-720"></a>
+      :data-video="item.isVideo ? item.video : null" :data-lg-size="item.isVideo ? item.size : null"></a>
   </component>
 </template>
 
@@ -334,30 +335,80 @@ const galleryItems = ref<any[]>([]);
 function onGalleryInit(detail: any) {
   lgInstance = detail.instance;
 }
+function getVideoSize(url) {
+  return new Promise(resolve => {
+    const video = document.createElement('video');
+    video.preload = 'metadata';
+    video.src = url;
 
-function openPreview(chat: any) {
-  const allMedia = chatModels.value.filter(
+    video.onloadedmetadata = () => {
+      resolve({
+        width: video.videoWidth,
+        height: video.videoHeight
+      });
+    };
+
+    video.onerror = () => resolve(null);
+  });
+}
+
+
+
+async function buildGalleryItems() 
+{
+ const allMedia = chatModels.value.filter(
     (c) => c.message_type === "image" || c.message_type === "video"
   );
 
-  galleryItems.value = allMedia.map((c) => {
-    const src = (c.media_path ?? "") + (c.message ?? "");
-    const isVideo = c.message_type === "video";
+  const items = await Promise.all(
+    allMedia.map(async (c) => {
+      const src = (c.media_path ?? "") + (c.message ?? "");
+      const isVideo = c.message_type === "video";
 
-    return {
-      id: c.chat_id,
-      isVideo,
-      src,
-      thumb: isVideo ? null : src,   // or a custom poster image
-      video: isVideo
-        ? JSON.stringify({
-          source: [{ src, type: "video/mp4" }],
-          attributes: { controls: true, preload: "metadata" }
-        })
-        : null
-    };
-  });
+      if (isVideo) {
+        const size = await getVideoSize(src);
 
+        // fallback in case metadata fails
+        const width = size?.width || 720;
+        const height = size?.height || 1280;
+
+        console.log(size)
+        return {
+          id: c.chat_id,
+          isVideo: true,
+          src,
+          size: `${width}-${height}`,
+          thumb: null,
+          poster: null,
+          video: JSON.stringify({
+            source: [{ src, type: "video/mp4" }],
+            attributes: {
+              controls: true,
+              preload: "metadata"
+            }
+          })
+        };
+      }
+
+      // Not a video → return image entry
+      return {
+        id: c.chat_id,
+        isVideo: false,
+        src,
+        thumb: src,
+        poster: null,
+        size: "1600-1200",
+        video: null
+      };
+    })
+  );
+
+  galleryItems.value = items;
+}
+
+
+async function openPreview(chat: any) {
+  await buildGalleryItems()
 
   const index = galleryItems.value.findIndex(
     (i) => i.id === chat.chat_id
@@ -675,9 +726,9 @@ onMounted(async () => {
       // set plugins array (LightGallery expects the plugin functions)
       plugins.value = [zoom, video].filter(Boolean);
 
-      document.querySelectorAll('.lg-html5').forEach(v => {
-        v.style.objectFit = 'contain';
-      });
+      
+
+
 
     } catch (err) {
       // if LightGallery fails to load, keep component non-blocking
@@ -1048,16 +1099,6 @@ function deleteSelected() {
 .chat-active {
   background-color: rgba(255, 255, 255, 0.1) !important;
   border-left: 3px solid #ff6b6b;
-}
-
-
-:deep(video) {
-  width: 100% !important;
-  height: 100% !important;
-  max-width: 100% !important;
-  max-height: 100% !important;
-  object-fit: contain;
-  background: black !important;
 }
 
 
