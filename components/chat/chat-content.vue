@@ -163,16 +163,57 @@
               'message-outgoing': chat.from_id === login_store.getUserDetails?.user_id,
               'ms-auto': chat.from_id === login_store.getUserDetails?.user_id,
               'glow-red': chat.from_id === login_store.getUserDetails?.user_id,
-              'message-selected': selectedMessages.includes(chat.chat_id ?? 0)
+              'message-selected': selectedMessages.includes(chat.chat_id ?? 0),
+              'emoji-bubble': chat.message_type === 'emoji',
             }" :id="`${chat.chat_id ?? 0}`">
               <div v-if="(chat.is_deleted ?? false) === true" class="text-secondary">This message was deleted</div>
               <div v-if="(chat.is_deleted ?? false) === false" class="chat-item">
                 <div v-if="chat.message_type === 'text'">{{ chat.message }}</div>
-                <div v-if="chat.message_type === 'image'"><img :src="(chat.media_path ?? '') + (chat.message ?? '')"
-                    style="max-width: 300px; max-height: 300px;" />
-                </div>
-                <div v-if="chat.message_type === 'video'"><video :src="(chat.media_path ?? '') + (chat.message ?? '')"
-                    style="max-width: 300px; max-height: 300px;" controls></video></div>
+               <!-- IMAGE PREVIEW -->
+              <div v-if="chat.message_type === 'image'" class="attachment-preview" @click="openPreview(chat)">
+                <img
+                  :src="(chat.media_path ?? '') + (chat.message ?? '')"
+                  class="attachment-img"
+                  loading="lazy"
+                />
+              </div>
+
+            <!-- VIDEO PREVIEW -->
+            <div
+              v-if="chat.message_type === 'video'"
+              class="attachment-preview video"
+              @click="openPreview(chat)"
+            >
+              <video
+                :src="(chat.media_path ?? '') + (chat.message ?? '')"
+                class="attachment-video"
+                muted
+              ></video>
+
+              <div class="video-play-overlay">
+                <img
+                  src="/images/icons-folder/Play-150x150px.png"
+                  alt="Play"
+                  class="video-play-icon"
+                />
+              </div>
+            </div>
+
+
+              <!-- FALLBACK FOR UNKNOWN FILES (DOC, PDF etc.) -->
+              <div
+                v-if="chat.message_type !== 'image' && chat.message_type !== 'video' && chat.message_type !== 'text' && chat.message_type !== 'emoji'"
+                class="attachment-file"
+                @click="openPreview(chat)"
+              >
+                <svg viewBox="0 0 24 24" width="40" height="40" fill="currentColor">
+                  <path d="M6 2h9l5 5v15a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z"/>
+                </svg>
+                <small>{{ chat.message }}</small>
+              </div>
+
+                <!-- <div v-if="chat.message_type === 'video'"><video :src="(chat.media_path ?? '') + (chat.message ?? '')"
+                    style="max-width: 300px; max-height: 300px;" controls></video></div> -->
 
                 <div v-if="chat.message_type === 'emoji'">
                   <Lottie renderer="svg" v-if="getFileExtension(chat.message ?? '') === '.json'"
@@ -333,6 +374,19 @@ const activeChatId = ref<number | null>(null); // Add this line to track active 
 const showMobileChat = ref(false); // For mobile: show chat instead of user list
 const selectMode = ref(false);
 const selectedMessages = ref<number[]>([]);
+const previewActive = ref(false);
+const previewSrc = ref('');
+const previewType = ref<'image' | 'video'>('image');
+
+function openPreview(chat: any) {
+  const base = (chat.media_path ?? '') + (chat.message ?? '');
+  previewSrc.value = base;
+
+  if (chat.message_type === 'image') previewType.value = 'image';
+  if (chat.message_type === 'video') previewType.value = 'video';
+
+  previewActive.value = true;
+}
 
 function toggleSelectMode() {
   selectMode.value = !selectMode.value;
