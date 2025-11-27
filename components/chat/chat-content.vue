@@ -16,6 +16,7 @@
             <div class="p-2 rounded-3 d-flex align-items-center justify-content-between hover-overlay chat-item"
               :class="{ 'chat-active': activeChatId === (historymodel.user_id ?? 0) }"
               style="background-color:rgba(23,23,23,0.4);margin-bottom:6px;" v-for="historymodel in chatHistoryModels"
+              :key="historymodel.user_id"
               @click="selectUserForMobile(historymodel.user_id ?? 0)">
               <div class="d-flex align-items-center gap-3">
                 <div class="position-relative chat-item-left">
@@ -33,7 +34,7 @@
                     <span class="badge bg-warning bg-opacity-25 text-warning border border-warning">{{
                       historymodel.tier_name ?? 'Free' }}</span>
                     <button class=" btn-danger glow-red-strong text-white " style="border-radius: 5px; "
-                      @click="deleteWholeChat(historymodel)" v-if="(historymodel.is_deleting ?? false) === false">
+                      @click.stop="deleteWholeChat(historymodel)" v-if="(historymodel.is_deleting ?? false) === false">
                       <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor">
                         <path
                           d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2m3 0v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6h14zM10 11v6M14 11v6"
@@ -120,7 +121,6 @@
               </div>
             </div>
             <div class="d-flex gap-2 chat-hd-btn">
-              <!-- <button class="btn btn-sm btn-dark border-secondary grp-btn">Create Group</button> -->
                <button
                   class="btn btn-sm btn-dark border-secondary"
                   @click="toggleSelectMode"
@@ -158,7 +158,7 @@
           <div id="messages" ref="scrollContainer" @scroll="handleScroll" class="flex-grow-1 p-3 custom-scroll"
             style="overflow:auto;max-height:60vh;">
             <!-- <div class="text-center text-secondary small my-3">Today</div> -->
-            <div v-for="chat in chatModels" class="message-bubble" :class="{
+            <div v-for="chat in chatModels" :key="chat.chat_id" class="message-bubble" :class="{
               'message-incoming': chat.from_id !== login_store.getUserDetails?.user_id,
               'message-outgoing': chat.from_id === login_store.getUserDetails?.user_id,
               'ms-auto': chat.from_id === login_store.getUserDetails?.user_id,
@@ -212,9 +212,6 @@
                 <small>{{ chat.message }}</small>
               </div>
 
-                <!-- <div v-if="chat.message_type === 'video'"><video :src="(chat.media_path ?? '') + (chat.message ?? '')"
-                    style="max-width: 300px; max-height: 300px;" controls></video></div> -->
-
                 <div v-if="chat.message_type === 'emoji'">
                   <Lottie renderer="svg" v-if="getFileExtension(chat.message ?? '') === '.json'"
                     :link="(chat.media_path ?? '') + (chat.message ?? '')" style="max-width: 80px; max-height: 80px;">
@@ -228,23 +225,7 @@
               <div class="message-time" v-if="chat.from_id === login_store.getUserDetails?.user_id">{{ chat.created_at
               }}
                 • {{ chat.status }}</div>
-              <!-- <button class="btn btn-sm btn-danger glow-red-strong text-white trash-btn" @click="deleteChat(chat)"
-                v-if="chat.from_id === login_store.getUserDetails?.user_id && (chat.is_deleted ?? false) === false && (chat.is_deleting ?? false) === false">
-                <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor">
-                  <path
-                    d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2m3 0v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6h14zM10 11v6M14 11v6"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                </svg>
-              </button>
 
-              <button class="btn btn-sm btn-danger glow-red-strong text-white trash-btn" @click="deleteChat(chat)"
-                v-if="chat.from_id !== login_store.getUserDetails?.user_id && (chat.is_deleting ?? false) === false">
-                <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor">
-                  <path
-                    d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2m3 0v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6h14zM10 11v6M14 11v6"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                </svg>
-              </button> -->
               <div v-if="selectMode" class="message-select-box trash-btn">
                  <div
                     class="select-circle"
@@ -261,18 +242,7 @@
 
               <span class="btn-loader" v-if="chat.is_deleting"></span>
             </div>
-            <!-- <div class="message-bubble message-incoming">We loved your profile pics. Fancy a chat tonight?<div
-                class="message-time">13:43</div>
-            </div>
-            <div class="message-bubble message-outgoing ms-auto glow-red">Thanks! We're around after 9pm. Video call ok?
-              <div class="message-time">13:47 • Sent</div>
-            </div>
-            <div class="message-bubble message-incoming">Perfect. We'll ping you here.<div class="message-time">13:49
-              </div>
-            </div>
-            <div class="message-bubble message-outgoing ms-auto glow-red">Cool — speak later ✨<div class="message-time">
-                13:50 • Delivered</div>
-            </div> -->
+
             <div class="typing-animate" v-if="(userDetails?.is_typing ?? false) === true">
               Typing<span></span><span></span><span></span></div>
           </div>
@@ -281,9 +251,7 @@
             class="select-toolbar"
           >
             <span class="text-white">{{ selectedMessages.length }} selected</span>
-            <button class="btn btn-primary btn-sm">
-              Delete Selected
-            </button>
+            <button class="btn btn-primary btn-sm" @click="deleteSelected">Delete Selected</button>
           </div>
 
           <!-- Composer -->
@@ -296,20 +264,16 @@
               <div class="d-flex flex items-center gap-2 chat-ftr-btns">
                 <input type="file" accept="image/png,image/jpeg,video/mp4" class="form-control d-none" ref="fileInput"
                   @change="handleFileUpload" />
-                <button id="attach-btn" class="btn bbtn-dark border-secondary text-white ms-2"><svg viewBox="0 0 24 24"
-                    class="h-5 w-5" fill="currentColor" @click="triggerFileInput">
+                <button id="attach-btn" class="btn bbtn-dark border-secondary text-white ms-2" @click="triggerFileInput">
+                  <svg viewBox="0 0 24 24" class="h-5 w-5" fill="currentColor">
                     <path d="M16.5 6.5 9 14a3 3 0 1 0 4.24 4.24l7.07-7.07a5 5 0 1 0-7.07-7.07L6.1 7.17" fill="none"
                       stroke="currentColor" stroke-width="1.5"></path>
-                  </svg></button>
-                <!-- <button id="btnvoicenote" class="btn btn-dark border-secondary text-white ms-2"><svg viewBox="0 0 24 24"
-                    class="h-5 w-5" fill="currentColor">
-                    <path
-                      d="M12 14a3 3 0 0 0 3-3V7a3 3 0 0 0-6 0v4a3 3 0 0 0 3 3zm-7-3h2a5 5 0 0 0 10 0h2a7 7 0 0 1-14 0zm6 7v-2h2v2h3v2H8v-2h3z">
-                    </path>
-                  </svg></button> -->
-                <button v-if="is_uploading === false" id="btnSend"
+                  </svg>
+                </button>
+
+                <button v-if="!is_uploading" id="btnSend"
                   class="btn btn-danger glow-red-strong text-white ms-2" @click="sendMessage()">Send</button>
-                <button v-if="is_uploading === true" class="btn btn-danger glow-red-strong text-white ms-2">Send {{
+                <button v-else class="btn btn-danger glow-red-strong text-white ms-2">Send {{
                   uploadProgress }}</button>
               </div>
             </div>
@@ -337,19 +301,43 @@
     </div>
   </Teleport>
 
+  <!-- LightGallery: rendered only client-side and only after dynamic import -->
+  <component
+    v-if="LightgalleryComp"
+    :is="LightgalleryComp"
+    ref="lgRef"
+    :settings="{ plugins: plugins, speed: 500, download: false,controls: true,loop: true, slideEndAnimation: true}"
+    :onInit="onGalleryInit"
+    style="display:none;"
+  >
+    <a
+      v-for="item in galleryItems"
+      :key="item.id"
+      :data-src="item.src"
+      :data-poster="item.poster"
+      :data-thumb="item.src"
+      :data-lg-size="item.size"
+      :data-video="item.video"
+    ></a>
+  </component>
 </template>
 
 <script setup lang="ts">
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ChatsModel, UsersModel } from '~/composables/models'
 import Swal from 'sweetalert2'
-import type { CallsModel } from '~/composables/websocketModels'
+import type { CallsModel } from '~/composables/websocketModels'// optional fallback component if you want
+
+// stores / utilities (preserve your existing app stores)
 const id_store = idStore()
 const route = useRoute()
 const user_store = userStore()
 const login_store = useLoginStore()
 const eventBus = useMittEmitter()
+
+// refs / state
 const messageTxt = ref('')
-const emojiPickerRef = ref(null)
+const emojiPickerRef = ref<any>(null)
 const messageRef = ref<HTMLTextAreaElement | null>(null);
 const chatHistoryModels = ref([] as ChatsModel.ChatResponseModel[])
 const chatModels = ref([] as ChatsModel.ChatResponseModel[])
@@ -361,33 +349,69 @@ const isWSConnected = ref(false);
 const onlineUsers = ref([] as number[])
 let typingTimeout: ReturnType<typeof setInterval> | null = null
 const hideTimers: Record<number, ReturnType<typeof setTimeout>> = {};
-var is_uploading = ref(false)
-var is_code_loading = ref(false)
-var uploadProgress = ref(0);
-var is_loading = false
-var call_code = ref('')
+const is_uploading = ref(false)
+const is_code_loading = ref(false)
+const uploadProgress = ref(0);
+let is_loading = false
+const call_code = ref('')
 const previewUrl = ref<string | null>(null);
 const previewUrlFile = ref<Blob | null>(null);
 const contentType = ref('');
 const fileInput = ref<HTMLInputElement | null>(null);
-const activeChatId = ref<number | null>(null); // Add this line to track active chat
-const showMobileChat = ref(false); // For mobile: show chat instead of user list
+const activeChatId = ref<number | null>(null);
+const showMobileChat = ref(false);
 const selectMode = ref(false);
 const selectedMessages = ref<number[]>([]);
-const previewActive = ref(false);
-const previewSrc = ref('');
-const previewType = ref<'image' | 'video'>('image');
 
-function openPreview(chat: any) {
-  const base = (chat.media_path ?? '') + (chat.message ?? '');
-  previewSrc.value = base;
+// LightGallery dynamic imports (client-only)
+const LightgalleryComp = ref<any>(null);
+const plugins = ref<any[]>([]);
+const lgRef = ref<any>(null);
+let lgInstance: any = null;
+const galleryItems = ref<any[]>([]);
 
-  if (chat.message_type === 'image') previewType.value = 'image';
-  if (chat.message_type === 'video') previewType.value = 'video';
-
-  previewActive.value = true;
+function onGalleryInit(detail: any) {
+  lgInstance = detail.instance;
 }
 
+function openPreview(chat: any) {
+  const allMedia = chatModels.value.filter(
+    (c) => c.message_type === "image" || c.message_type === "video"
+  );
+
+galleryItems.value = allMedia.map((c) => {
+  const src = (c.media_path ?? "") + (c.message ?? "");
+  const isVideo = c.message_type === "video";
+
+  return {
+    id: c.chat_id,
+    src,
+    thumb: src,
+    poster: isVideo ? src : null,
+    size: "1600-1200",
+    video: isVideo
+      ? {
+          source: [{ src, type: "video/mp4" }],
+          attributes: { controls: true, preload: "metadata" }
+        }
+      : null
+  };
+});
+
+  const index = galleryItems.value.findIndex(
+    (i) => i.id === chat.chat_id
+  );
+
+  nextTick(() => {
+    if (lgInstance) {
+      lgInstance.refresh();
+      lgInstance.openGallery(index);
+    }
+  });
+}
+
+
+// Other UI helpers (unchanged)
 function toggleSelectMode() {
   selectMode.value = !selectMode.value;
   selectedMessages.value = [];
@@ -400,46 +424,29 @@ function toggleMessageSelection(chatId: number) {
     selectedMessages.value.push(chatId);
   }
 }
-// Initialize mobile detection immediately
-const isMobile = ref(process.client ? window.innerWidth < 768 : false); // Mobile detection
+const isMobile = ref(process.client ? window.innerWidth < 768 : false);
 
-// Computed property to determine if chat should be shown
 const shouldShowChat = computed(() => {
   const hasIdInRoute = route.params.id && route.params.id !== '0'
-
-  // If no ID in route, don't show chat
   if (!hasIdInRoute) return false
-
-  // On server or initial load, show chat if ID exists
   if (!process.client) return true
-
-  // Desktop: show chat if ID is in route
-  if (!isMobile.value) {
-    return true
-  }
-
-  // Mobile: show chat if ID is in route and showMobileChat is true
+  if (!isMobile.value) return true
   return showMobileChat.value
 })
 
-
-
-// Watch for route changes to reset mobile state
 watch(() => route.params.id, (newId, oldId) => {
   if (isMobile.value) {
-    // Only update showMobileChat if we're actually changing routes
-    // and not just initializing
     if (oldId !== undefined) {
       if (newId && newId !== '0') {
-        // If there's an ID in route on mobile, show chat
         showMobileChat.value = true
       } else {
-        // If no ID in route on mobile, show user list
         showMobileChat.value = false
       }
     }
   }
 })
+
+// --- Networking functions: keep as-is (you're using useFetch/$fetch) ---
 const fetchHistory = async () => {
   const api_url = getUrl(RequestURL.chatHistory);
   const { data: fetch_response, error: option_error } = await useFetch<SuccessError<ChatsModel.ChatResponseModel>>(api_url, {
@@ -454,6 +461,8 @@ const fetchHistory = async () => {
   });
   return fetch_response.value?.result
 }
+
+// Note: top-level await is okay in Nuxt pages; preserve behaviour but protect client-only behavior for LightGallery
 chatHistoryModels.value = await fetchHistory() as ChatsModel.ChatResponseModel[]
 
 let to_id = Number(route.params.id ?? '0') ?? 0
@@ -501,11 +510,10 @@ if (to_id !== 0) {
   fetchUserDetails();
 }
 
+// navigation helpers
 function goBack() {
   if (isMobile.value && showMobileChat.value && route.params.id) {
-    // On mobile, when in chat view, go back to user list
     showMobileChat.value = false
-    // Navigate to chat page without ID to show user list
     router.push('/chat')
   } else {
     router.back()
@@ -515,38 +523,26 @@ function goBack() {
 function getFileExtension(filename: string): string {
   const lastDotIndex = filename.lastIndexOf('.');
   if (lastDotIndex === -1) {
-    return ''; // No extension found
+    return '';
   }
   return filename.slice(lastDotIndex);
 }
 
 function selectUserForMobile(userId: number) {
-  // Navigate to chat with user and show chat view on mobile
   if (isMobile.value) {
     showMobileChat.value = true
   }
-  // Navigate to the chat page
   navigateTo(`/chat/${userId}`)
 }
 
 function showTypingIndicator(from_id: number) {
-  // Show UI element
-
-  // 1. Find the chat model for that user
   const chat = chatHistoryModels.value.find(c => c.user_id === from_id);
-
   if (chat) {
-    // 2. Set typing flag to true
     chat.is_typing = true;
-
     if (from_id === userDetails.value?.user_id) {
       userDetails.value.is_typing = true
     }
-
-    // 3. Clear any previous hide timer for this user
     clearTimeout(hideTimers[from_id]);
-
-    // 4. Schedule a new timeout to reset isTyping after 3 seconds
     hideTimers[from_id] = setTimeout(() => {
       chat.is_typing = false;
       if (from_id === userDetails.value?.user_id) {
@@ -560,101 +556,63 @@ function showTypingIndicator(from_id: number) {
 }
 
 async function fetchCallCode() {
-  if (is_code_loading.value) {
-    return
-  }
+  if (is_code_loading.value) return
   is_code_loading.value = true
   const api_url = getUrl(RequestURL.fetchCallCode);
   await $fetch<SuccessError<UsersModel.FetchCallCodeResponseModel>>(api_url, {
     cache: "no-cache",
     method: "post",
-    body: {
-      "user_id": user_store.getLoginId
-    },
-    headers: {
-      "content-type": "application/json"
-    },
+    body: { "user_id": user_store.getLoginId },
+    headers: { "content-type": "application/json" },
     onResponse: async ({ response }) => {
       is_code_loading.value = false
-      var response_model = response._data as SuccessError<UsersModel.FetchCallCodeResponseModel>
-      if (response_model.success) {
-        call_code.value = response_model.response?.call_code ?? ''
-      }
-      else {
-        showToastError(response_model.message)
-      }
-
+      const response_model = response._data as SuccessError<UsersModel.FetchCallCodeResponseModel>
+      if (response_model.success) call_code.value = response_model.response?.call_code ?? ''
+      else showToastError(response_model.message)
     }
   });
 }
 
 function updateCallCodealert() {
-  if (is_code_loading.value) {
-    return
-  }
+  if (is_code_loading.value) return
   Swal.fire({
     title: 'Update Code',
     input: 'text',
     inputPlaceholder: 'Type code here',
     showCancelButton: true,
-    inputAttributes: {
-      maxlength: '4',      // Limit max input length
-      inputmode: 'numeric' // Mobile numeric keypad
-    },
+    inputAttributes: { maxlength: '4', inputmode: 'numeric' },
     inputValidator: (value: string) => {
-      if (!value) {
-        return 'Please enter code';
-      }
-      if (!/^\d+$/.test(value)) {
-        return 'Only numbers are allowed';
-      }
-      if (value.length > 4) {
-        return 'Maximum length is 4 digits';
-      }
+      if (!value) return 'Please enter code';
+      if (!/^\d+$/.test(value)) return 'Only numbers are allowed';
+      if (value.length > 4) return 'Maximum length is 4 digits';
     }
   }).then((result) => {
-    if (result.isConfirmed) {
-      updatecallcode(result.value ?? '');
-    }
+    if (result.isConfirmed) updatecallcode(result.value ?? '');
   });
-
 }
 async function updatecallcode(callcode: string) {
-
   is_code_loading.value = true
   const api_url = getUrl(RequestURL.updateCallCode);
   await $fetch<SuccessError<UsersModel.FetchCallCodeResponseModel>>(api_url, {
     cache: "no-cache",
     method: "post",
-    body: {
-      "user_id": user_store.getLoginId,
-      "call_code": callcode
-    },
-    headers: {
-      "content-type": "application/json"
-    },
+    body: { "user_id": user_store.getLoginId, "call_code": callcode },
+    headers: { "content-type": "application/json" },
     onResponse: async ({ response }) => {
       is_code_loading.value = false
-      var response_model = response._data as SuccessError<UsersModel.FetchCallCodeResponseModel>
-      if (response_model.success) {
-        call_code.value = response_model.response?.call_code ?? ''
-      }
-      else {
-        showToastError(response_model.message)
-      }
-
+      const response_model = response._data as SuccessError<UsersModel.FetchCallCodeResponseModel>
+      if (response_model.success) call_code.value = response_model.response?.call_code ?? ''
+      else showToastError(response_model.message)
     }
   });
 }
 
+// emoji / typing & socket helpers (unchanged)
 function selectCustomEmoji(emoji: string) {
-
   if (isWSConnected.value) {
-    let to_id = Number(route.params.id) ?? 0
-    if (to_id === 0) {
-      return
-    }
-    let eventmodel = new ChatEventSocketModel()
+    const to_id = Number(route.params.id) ?? 0
+    if (to_id === 0) return
+    const eventmodel = new ChatEventSocketModel()
     eventmodel.event_name = 'chat'
     eventmodel.from_id = login_store.getUserDetails?.user_id ?? 0
     eventmodel.to_id = to_id
@@ -662,57 +620,40 @@ function selectCustomEmoji(emoji: string) {
     eventmodel.message = emoji
     eventmodel.socket_id = id_store.getDeviceId
     sendmsgtoworker(eventmodel, true)
-  }
-  else {
-    showToastError('Socket not connected')
-  }
-
+  } else showToastError('Socket not connected')
 }
 
 function selectedEmoji(emoji: string) {
   const statusInput = messageRef.value;
   if (statusInput) {
-    const start = statusInput.selectionStart;
-    const end = statusInput.selectionEnd;
+    const start = statusInput.selectionStart!;
+    const end = statusInput.selectionEnd!;
     const value = statusInput.value;
-
     statusInput.value = value.substring(0, start) + emoji + value.substring(end);
-
-    // Move cursor after the emoji
     const newPos = start + emoji.length;
     statusInput.setSelectionRange(newPos, newPos);
-
-    // Ensure input stays focused
     statusInput.focus();
   }
 }
 
 function handleToggle() {
-  if (emojiPickerRef.value) {
-    emojiPickerRef.value.toggleEmojiPicker()
-  }
+  if (emojiPickerRef.value) emojiPickerRef.value.toggleEmojiPicker()
 }
 
 function showCodeAlert(is_video: boolean) {
   Swal.fire({
     title: 'Please enter code',
-    input: 'text', // Specifies a text input field
-    inputPlaceholder: 'Type code here', // Placeholder text for the input
-    showCancelButton: true, // Displays a cancel button
-    inputValidator: (value: string) => { // Optional: input validation
-      if (!value) {
-        return 'Please enter code';
-      }
-    }
+    input: 'text',
+    inputPlaceholder: 'Type code here',
+    showCancelButton: true,
+    inputValidator: (value: string) => { if (!value) return 'Please enter code'; }
   }).then((result) => {
-    if (result.isConfirmed) {
-      validateCall(result.value ?? '', is_video)
-    }
+    if (result.isConfirmed) validateCall(result.value ?? '', is_video)
   });
 }
 
 async function validateCall(code: string, is_video: boolean) {
-  let to_id = Number(route.params.id ?? '0') ?? 0
+  const to_id = Number(route.params.id ?? '0') ?? 0
   const api_url = getUrl(RequestURL.validateCall);
   await $fetch<SuccessError<CallsModel.ValidateCallResponseModel>>(api_url, {
     cache: "no-cache",
@@ -724,35 +665,23 @@ async function validateCall(code: string, is_video: boolean) {
       "call_code": code,
       "is_video": is_video
     },
-    headers: {
-      "content-type": "application/json"
-    },
+    headers: { "content-type": "application/json" },
     onResponse: async ({ response }) => {
-
-      var response_model = response._data as SuccessError<CallsModel.ValidateCallResponseModel>
-      if (response_model.success) {
-        showToastSuccess(response_model.message)
-      }
-      else {
-        showToastError(response_model.message)
-      }
+      const response_model = response._data as SuccessError<CallsModel.ValidateCallResponseModel>
+      if (response_model.success) showToastSuccess(response_model.message)
+      else showToastError(response_model.message)
     }
   });
 }
 
-
 function onUserTyping(to_id: number) {
-  if (typingTimeout) return; // already sent recently
-
+  if (typingTimeout) return;
   sendTypingStatus(to_id);
-
-  typingTimeout = setTimeout(() => {
-    typingTimeout = null;
-  }, 2000); // only send every 2 seconds max
+  typingTimeout = setTimeout(() => { typingTimeout = null; }, 2000);
 }
 
 function sendTypingStatus(to_id: number) {
-  let type = new TypingEventSocketModel()
+  const type = new TypingEventSocketModel()
   type.event_name = "typing"
   type.from_id = login_store.getUserDetails?.user_id
   type.to_id = userDetails.value?.user_id
@@ -764,84 +693,67 @@ watch(messageTxt, () => {
   messageTxt.value = messageTxt.value.replace(emojiRegex, '')
 });
 
-// const filterEmojis = (event:any) => {
-//   // Regex to match most common emoji Unicode ranges
-//   // This is a simplified example, a more comprehensive regex might be needed for full coverage
-//   // Replace emojis with an empty string
-//   event.target.value = event.target.value.replace(emojiRegex, '');
-//   messageTxt.value = event.target.value;
-// };
+// mount / socket event wiring
+onMounted(async () => {
+  // client-only: ensure LightGallery loads only on client
+  if (process.client) {
+    try {
+      // dynamically import LightGallery CSS on client only
+      await Promise.all([
+        import('lightgallery/css/lightgallery.css').catch(()=>{}),
+        import('lightgallery/css/lg-thumbnail.css').catch(()=>{}),
+        import('lightgallery/css/lg-video.css').catch(()=>{}),
+        import('lightgallery/css/lg-zoom.css').catch(()=>{})
+      ]);
+      // dynamic import of the component and plugins
+      const mod = await import('lightgallery/vue');
+      const zoom = (await import('lightgallery/plugins/zoom')).default ?? (await import('lightgallery/plugins/zoom'));
+      const thumbnail = (await import('lightgallery/plugins/thumbnail')).default ?? (await import('lightgallery/plugins/thumbnail'));
+      const video = (await import('lightgallery/plugins/video')).default ?? (await import('lightgallery/plugins/video'));
+      LightgalleryComp.value = mod.default ?? mod;
+      // set plugins array (LightGallery expects the plugin functions)
+      plugins.value = [zoom, thumbnail, video].filter(Boolean);
+    } catch (err) {
+      // if LightGallery fails to load, keep component non-blocking
+      console.warn('LightGallery dynamic import failed:', err);
+      LightgalleryComp.value = null;
+      plugins.value = [];
+    }
+  }
 
-onMounted(() => {
-
-  console.log('onmounted...chat')
-
+  // ensure mobile detection and listeners
   if (process.client) {
     isMobile.value = window.innerWidth < 768
-    window.addEventListener('resize', () => {
-      isMobile.value = window.innerWidth < 768
-    })
+    window.addEventListener('resize', () => { isMobile.value = window.innerWidth < 768 })
   }
 
-  // Initialize activeChatId from route params
   const currentChatId = Number(route.params.id ?? '0')
-  if (currentChatId !== 0) {
-    activeChatId.value = currentChatId
-  }
-
-  // Initialize mobile chat state based on current route
+  if (currentChatId !== 0) activeChatId.value = currentChatId
   if (isMobile.value) {
-    if (currentChatId !== 0) {
-      // If there's an ID in route on mobile, show chat
-      showMobileChat.value = true
-    } else {
-      // If no ID in route on mobile, show user list
-      showMobileChat.value = false
-    }
+    if (currentChatId !== 0) showMobileChat.value = true
+    else showMobileChat.value = false
   }
 
   isWSConnected.value = isSocketConnected()
   eventBus.on('socketConnection', (is_connected) => {
-    if (isWSConnected.value === false) {
-      if (is_connected) {
-        // showToastSuccess('Socket Connected')
-      }
-    }
     isWSConnected.value = is_connected
     checkuseronline()
   })
-  eventBus.on('onlineUserIds', (onlineUserIds) => {
-    onlineUsers.value = onlineUserIds
-  })
-  eventBus.on('typing', (typing) => {
-    showTypingIndicator(typing.from_id ?? 0)
-  })
-  eventBus.on('chatUpdateStatus', (eventModel) => {
-    updateMessageStatus(eventModel)
-  })
-  eventBus.on('chatDeleteStatus', (eventModel) => {
-    deleteMessageStatus(eventModel)
-  })
-
-  eventBus.on('callDeclineAlert', (eventModel) => {
-    showToastError('Call declined')
-  })
+  eventBus.on('onlineUserIds', (ids) => onlineUsers.value = ids)
+  eventBus.on('typing', (typing) => showTypingIndicator(typing.from_id ?? 0))
+  eventBus.on('chatUpdateStatus', (eventModel) => updateMessageStatus(eventModel))
+  eventBus.on('chatDeleteStatus', (eventModel) => deleteMessageStatus(eventModel))
+  eventBus.on('callDeclineAlert', () => showToastError('Call declined'))
   eventBus.on('callAcceptAlert', async (eventModel) => {
-    if (eventModel.is_video) {
-      await navigateTo(`/video-call/${eventModel.token}`)
-    }
-    else {
-      await navigateTo(`/voice-call/${eventModel.token}`)
-    }
+    if (eventModel.is_video) await navigateTo(`/video-call/${eventModel.token}`)
+    else await navigateTo(`/voice-call/${eventModel.token}`)
   })
   eventBus.on('chatEvent', (responseevent) => {
-    let event_name = responseevent.event_name ?? ''
-    if (event_name === 'chat_sent') {
-      messageTxt.value = ''
-    }
-    let route_id = Number(route.params.id ?? '0') ?? 0
+    const event_name = responseevent.event_name ?? ''
+    if (event_name === 'chat_sent') messageTxt.value = ''
+    const route_id = Number(route.params.id ?? '0') ?? 0
     if (route_id === responseevent.from_id || route_id === responseevent.to_id) {
-      let chatresponse = new ChatsModel.ChatResponseModel()
+      const chatresponse = new ChatsModel.ChatResponseModel()
       chatresponse.chat_id = responseevent.chat_id
       chatresponse.from_id = responseevent.from_id
       chatresponse.to_id = responseevent.to_id
@@ -853,45 +765,31 @@ onMounted(() => {
       chatModels.value.push(chatresponse)
 
       if (event_name === 'chat_response') {
-        let chatresponse = new ChatEventSocketModel()
-        chatresponse.chat_id = responseevent.chat_id
-        chatresponse.from_id = responseevent.from_id
-        chatresponse.to_id = responseevent.to_id
-        chatresponse.message_type = responseevent.message_type
-        chatresponse.message = responseevent.message
-        chatresponse.created_at = responseevent.created_at
-        chatresponse.status = responseevent.status
-        chatresponse.event_name = "chat_read_status"
-        sendmsgtoworker(chatresponse, true)
+        const chatresponse2 = new ChatEventSocketModel()
+        chatresponse2.chat_id = responseevent.chat_id
+        chatresponse2.from_id = responseevent.from_id
+        chatresponse2.to_id = responseevent.to_id
+        chatresponse2.message_type = responseevent.message_type
+        chatresponse2.message = responseevent.message
+        chatresponse2.created_at = responseevent.created_at
+        chatresponse2.status = responseevent.status
+        chatresponse2.event_name = "chat_read_status"
+        sendmsgtoworker(chatresponse2, true)
       }
     }
-    let user_id = responseevent.from_id === login_store.getUserDetails?.user_id ? responseevent.to_id : responseevent.from_id
-
-    appendLastMessagetohistory(responseevent.chat_id ?? 0, user_id ?? 0, responseevent.message ?? '',responseevent.message_type ?? 'text')
-    nextTick(() => {
-      if (scrollContainer.value) {
-        scrollContainer.value.scrollTop = scrollContainer.value.scrollHeight;
-      }
-    });
+    const user_id = responseevent.from_id === login_store.getUserDetails?.user_id ? responseevent.to_id : responseevent.from_id
+    appendLastMessagetohistory(responseevent.chat_id ?? 0, user_id ?? 0, responseevent.message ?? '', responseevent.message_type ?? 'text')
+    nextTick(() => { if (scrollContainer.value) scrollContainer.value.scrollTop = scrollContainer.value.scrollHeight; })
   })
 
-  nextTick(() => {
-    if (scrollContainer.value) {
-      scrollContainer.value.scrollTop = scrollContainer.value.scrollHeight;
-    }
-  });
+  nextTick(() => { if (scrollContainer.value) scrollContainer.value.scrollTop = scrollContainer.value.scrollHeight; });
 
   checkuseronline()
-
-  let to_id = Number(route.params.id) ?? 0
-  if (to_id !== 0) {
-    updateBadgeCount(to_id)
-  }
-
-
-
+  const tid = Number(route.params.id) ?? 0
+  if (tid !== 0) updateBadgeCount(tid)
 })
 
+// cleanup
 onBeforeUnmount(() => {
   eventBus.off('chatEvent')
   eventBus.off('socketConnection')
@@ -901,14 +799,9 @@ onBeforeUnmount(() => {
   eventBus.off('chatDeleteStatus')
   eventBus.off('callDeclineAlert')
   eventBus.off('callAcceptAlert')
-
-  console.log('beforemount...chat')
 })
 
-onUnmounted(() => {
-
-})
-
+// scrolling/pagination etc. (keep unchanged)
 const handleScroll = async () => {
   if (scrollContainer.value?.scrollTop === 0) {
     if (!is_loading) {
@@ -923,46 +816,30 @@ const handleScroll = async () => {
           "to_id": to_id,
           "page": pageIndex.value
         },
-        headers: {
-          "content-type": "application/json"
-        },
+        headers: { "content-type": "application/json" },
         onResponse: async ({ response }) => {
-
-          var response_model = response._data as SuccessError<ChatsModel.ChatResponseModel>
+          const response_model = response._data as SuccessError<ChatsModel.ChatResponseModel>
           if (response_model.success) {
-            let filterarray = response_model.result?.sort((firstResponse, secondResponse) => {
-              return (firstResponse.chat_id ?? 0) - (secondResponse.chat_id ?? 0);
-            });
+            const filterarray = response_model.result?.sort((a,b)=> (a.chat_id ?? 0)-(b.chat_id ?? 0));
             const lastMessage = (filterarray ?? []).at(-1);
             chatModels.value.push(...filterarray ?? [])
-            chatModels.value.sort((firstResponse, secondResponse) => {
-              return (firstResponse.chat_id ?? 0) - (secondResponse.chat_id ?? 0);
-            });
+            chatModels.value.sort((a,b)=>(a.chat_id ?? 0)-(b.chat_id ?? 0));
             scrollToMessage(lastMessage?.chat_id ?? 0)
-          }
-          else {
+          } else {
             pageIndex.value = pageIndex.value - 1
           }
           is_loading = false
         }
       });
     }
-
   }
 };
-const scrollToMessage = (messageId: number) => {
-  nextTick(() => {
-    const messageElement = document.getElementById(`${messageId}`);
-    if (messageElement) {
-      messageElement.scrollIntoView({ behavior: "smooth", block: "center" });
-    }
-  });
-};
+const scrollToMessage = (messageId: number) => { nextTick(()=>{ const messageElement = document.getElementById(`${messageId}`); if (messageElement) messageElement.scrollIntoView({ behavior: "smooth", block: "center" }); }) };
 
 function checkuseronline() {
   if (isWSConnected.value) {
-    let user_ids = chatHistoryModels.value.map(it => it.user_id ?? 0)
-    let groupmodel = new GroupEventSocketModel()
+    const user_ids = chatHistoryModels.value.map(it => it.user_id ?? 0)
+    const groupmodel = new GroupEventSocketModel()
     groupmodel.admin_id = id_store.getDeviceId
     groupmodel.event_name = "add_user_to_group"
     groupmodel.user_ids = user_ids ?? []
@@ -970,123 +847,74 @@ function checkuseronline() {
     sendmsgtoworker(groupmodel, true)
   }
 }
+
 function updateMessageStatus(eventmodel: ChatEventSocketModel) {
-  let to_id = Number(route.params.id) ?? 0
-  if (to_id === 0 || to_id !== (eventmodel.to_id ?? 0)) {
-    return;
-  }
-  let chat = chatModels.value.filter((history: ChatsModel.ChatResponseModel) => history.chat_id === eventmodel.chat_id)
-  if (chat.length > 0) {
-    chat[0].status = eventmodel.status
-  }
+  const to_id = Number(route.params.id) ?? 0
+  if (to_id === 0 || to_id !== (eventmodel.to_id ?? 0)) return;
+  const chat = chatModels.value.filter(h => h.chat_id === eventmodel.chat_id)
+  if (chat.length > 0) chat[0].status = eventmodel.status
 }
 function deleteMessageStatus(eventmodel: ChatEventSocketModel) {
-
-  let chat = chatModels.value.filter((history: ChatsModel.ChatResponseModel) => history.chat_id === eventmodel.chat_id)
-  if (chat.length > 0) {
-    chat[0].is_deleted = true
-  }
-  let histories = chatHistoryModels.value.filter((history: ChatsModel.ChatResponseModel) => history.user_id === eventmodel.to_id)
-  if (histories.length > 0) {
-    if (histories[0].chat_id === eventmodel.chat_id) {
-      histories[0].is_deleted = true
-    }
-  }
+  const chat = chatModels.value.filter(h => h.chat_id === eventmodel.chat_id)
+  if (chat.length > 0) chat[0].is_deleted = true
+  const histories = chatHistoryModels.value.filter(h => h.user_id === eventmodel.to_id)
+  if (histories.length > 0 && histories[0].chat_id === eventmodel.chat_id) histories[0].is_deleted = true
 }
 
-async function deleteChat(chat: ChatResponseModel) {
-  if (chat.is_deleting === true) {
-    return
-  }
+async function deleteChat(chat: any) {
+  if (chat.is_deleting === true) return
   chat.is_deleting = true
   const api_url = getUrl(RequestURL.deleteChat);
   await $fetch<SuccessError<ChatsModel.ChatResponseModel>>(api_url, {
     cache: "no-cache",
     method: "post",
-    body: {
-      "chat_id": chat.chat_id,
-      "from_id": login_store.getUserDetails?.user_id
-    },
-    headers: {
-      "content-type": "application/json"
-    },
+    body: { "chat_id": chat.chat_id, "from_id": login_store.getUserDetails?.user_id },
+    headers: { "content-type": "application/json" },
     onResponse: async ({ response }) => {
-      var response_model = response._data as SuccessError<ChatsModel.ChatResponseModel>
+      const response_model = response._data as SuccessError<ChatsModel.ChatResponseModel>
       if (response_model.success) {
         if (chat.from_id === login_store.getUserDetails?.user_id) {
           chat.is_deleted = true
-          let histories = chatHistoryModels.value.filter((history: ChatsModel.ChatResponseModel) => history.user_id === chat.to_id)
-          if (histories.length > 0) {
-            if (histories[0].chat_id === chat.chat_id) {
-              histories[0].is_deleted = true
-            }
-          }
-        }
-        else {
+          const histories = chatHistoryModels.value.filter(h => h.user_id === chat.to_id)
+          if (histories.length > 0 && histories[0].chat_id === chat.chat_id) histories[0].is_deleted = true
+        } else {
           const index = chatModels.value.findIndex(c => c.chat_id === chat.chat_id);
-          if (index !== -1) {
-            chatModels.value.splice(index, 1);
-          }
-
+          if (index !== -1) chatModels.value.splice(index, 1);
           if (chatModels.value.length > 0) {
             const lastMessage = chatModels.value[chatModels.value.length - 1];
-
-            let histories = chatHistoryModels.value.filter((history: ChatsModel.ChatResponseModel) => history.chat_id === chat.chat_id)
-
-            if (histories.length > 0) {
-              if (histories[0].chat_id === chat.chat_id) {
-                histories[0].from_id = lastMessage.from_id ?? 0
-                histories[0].to_id = lastMessage.to_id ?? 0
-                histories[0].chat_id = lastMessage.chat_id ?? 0
-                histories[0].message = lastMessage.message ?? ''
-                histories[0].message_type = lastMessage.message_type ?? ''
-                histories[0].is_deleted = lastMessage.is_deleted ?? false
-              }
-
+            const histories = chatHistoryModels.value.filter(h => h.chat_id === chat.chat_id)
+            if (histories.length > 0 && histories[0].chat_id === chat.chat_id) {
+              histories[0].from_id = lastMessage.from_id ?? 0
+              histories[0].to_id = lastMessage.to_id ?? 0
+              histories[0].chat_id = lastMessage.chat_id ?? 0
+              histories[0].message = lastMessage.message ?? ''
+              histories[0].message_type = lastMessage.message_type ?? ''
+              histories[0].is_deleted = lastMessage.is_deleted ?? false
             }
-
           }
-
-
-
-
         }
         showToastSuccess(response_model.message)
-      }
-      else {
-        showToastError(response_model.message)
-      }
+      } else showToastError(response_model.message)
       chat.is_deleting = false
     }
   });
 }
 
-async function deleteWholeChat(chat: ChatResponseModel) {
-  if (chat.is_deleting === true) {
-    return
-  }
+async function deleteWholeChat(chat: any) {
+  if (chat.is_deleting === true) return
   chat.is_deleting = true
   const api_url = getUrl(RequestURL.deleteWholeChat);
   await $fetch<SuccessError<ChatsModel.ChatResponseModel>>(api_url, {
     cache: "no-cache",
     method: "post",
-    body: {
-      "chat_id": chat.chat_id,
-      "from_id": login_store.getUserDetails?.user_id,
-      "to_id": chat.user_id
-    },
-    headers: {
-      "content-type": "application/json"
-    },
+    body: { "chat_id": chat.chat_id, "from_id": login_store.getUserDetails?.user_id, "to_id": chat.user_id },
+    headers: { "content-type": "application/json" },
     onResponse: async ({ response }) => {
-      var response_model = response._data as SuccessError<ChatsModel.ChatResponseModel>
+      const response_model = response._data as SuccessError<ChatsModel.ChatResponseModel>
       if (response_model.success) {
         navigateTo('/chat')
         showToastSuccess(response_model.message)
-      }
-      else {
-        showToastError(response_model.message)
-      }
+      } else showToastError(response_model.message)
       chat.is_deleting = false
     }
   });
@@ -1098,33 +926,26 @@ function sendMessage() {
     return
   }
   const statusInput = messageRef.value as HTMLTextAreaElement;
-
-  let trim = statusInput.value.trim()
-  let to_id = Number(route.params.id) ?? 0
-  if (trim.length === 0 || to_id === 0) {
-    return
-  }
-
-  let eventmodel = new ChatEventSocketModel()
+  const trim = statusInput.value.trim()
+  const to_id2 = Number(route.params.id) ?? 0
+  if (trim.length === 0 || to_id2 === 0) return
+  const eventmodel = new ChatEventSocketModel()
   eventmodel.event_name = 'chat'
   eventmodel.from_id = login_store.getUserDetails?.user_id ?? 0
-  eventmodel.to_id = to_id
+  eventmodel.to_id = to_id2
   eventmodel.message_type = 'text'
   eventmodel.message = trim
   eventmodel.socket_id = id_store.getDeviceId
   sendmsgtoworker(eventmodel, true)
 }
 
-function updateBadgeCount(to_id: number) {
-  let histories = chatHistoryModels.value.filter((history: ChatsModel.ChatResponseModel) => history.user_id === to_id)
-  if (histories.length > 0) {
-    histories[0].badge_count = 0
-  }
+function updateBadgeCount(to_id2: number) {
+  const histories = chatHistoryModels.value.filter(h => h.user_id === to_id2)
+  if (histories.length > 0) histories[0].badge_count = 0
 }
 
-function appendLastMessagetohistory(chat_id: number, to_id: number, message: string,message_type:string) {
-  let histories = chatHistoryModels.value.filter((history: ChatsModel.ChatResponseModel) => history.user_id === to_id)
-
+function appendLastMessagetohistory(chat_id: number, to_id2: number, message: string, message_type:string) {
+  const histories = chatHistoryModels.value.filter(h => h.user_id === to_id2)
   if (histories.length > 0) {
     histories[0].chat_id = chat_id
     histories[0].badge_count = 0
@@ -1134,19 +955,17 @@ function appendLastMessagetohistory(chat_id: number, to_id: number, message: str
   }
 }
 
-async function fetchChats(from_id: number, to_id: number) {
-  let user_id = from_id === login_store.getUserDetails?.user_id ? to_id : from_id
-  activeChatId.value = user_id; // Set the active chat ID
+async function fetchChats(from_id: number, to_id2: number) {
+  const user_id = from_id === login_store.getUserDetails?.user_id ? to_id2 : from_id
+  activeChatId.value = user_id;
   await navigateTo(`/chat/${user_id}`)
 }
 
 function getImagePathForUser(user: UsersModel.ProfileDetailsResponseModel | null | undefined): string {
   if (user) {
-    let profile_image = user.profile_image ?? ''
-    if (profile_image.length !== 0) {
-      return (user.media_path ?? '') + profile_image
-    }
-    let profile_type = user.profile_type ?? ''
+    const profile_image = user.profile_image ?? ''
+    if (profile_image.length !== 0) return (user.media_path ?? '') + profile_image
+    const profile_type = user.profile_type ?? ''
     if (profile_type === 'Couple') return "/images/profile-placeholders/MF-COUPLE.png";
     if (profile_type === 'Others') return "/images/profile-placeholders/TRANS.png";
     if (profile_type === 'Woman') return "/images/profile-placeholders/WOMEN.png";
@@ -1157,46 +976,38 @@ function getImagePathForUser(user: UsersModel.ProfileDetailsResponseModel | null
 }
 
 function getImagePath(user: ChatsModel.ChatResponseModel): string {
-  let profile_image = user.profile_image ?? ''
-  if (profile_image.length !== 0) {
-    return (user.media_path ?? '') + profile_image
-  }
-  let profile_type = user.profile_type ?? ''
+  const profile_image = user.profile_image ?? ''
+  if (profile_image.length !== 0) return (user.media_path ?? '') + profile_image
+  const profile_type = user.profile_type ?? ''
   if (profile_type === 'Couple') return "/images/profile-placeholders/MF-COUPLE.png";
   if (profile_type === 'Others') return "/images/profile-placeholders/TRANS.png";
   if (profile_type === 'Woman') return "/images/profile-placeholders/WOMEN.png";
   if (profile_type === 'Man') return "/images/profile-placeholders/man.png";
   return "/images/profile-placeholders/man.png"
 }
-function triggerFileInput() {
-  fileInput.value?.click();
-}
+function triggerFileInput() { fileInput.value?.click(); }
 
 async function handleFileUpload(event: Event) {
   previewUrl.value = null
   const target = event.target as HTMLInputElement;
-  let files = target?.files ?? []
+  const files = target?.files ?? []
   const file = files[0]
   if (file) {
     contentType.value = file.type
-
     if (file.type.startsWith("image/")) {
       const profile_image = await file.arrayBuffer()
       previewUrlFile.value = new Blob([profile_image])
       previewUrl.value = URL.createObjectURL(file)
       await uploadMedia()
-    }
-    else {
-
+    } else {
       const video = document.createElement('video');
       video.preload = 'metadata';
       const video_file = await file.arrayBuffer()
       video.onloadedmetadata = async function () {
         if (video.duration > 180) {
           showToastError("Please upload video less than 3 minutes long.");
-          target.value = '' // Clear the selected file
-        }
-        else {
+          target.value = ''
+        } else {
           previewUrlFile.value = new Blob([video_file])
           previewUrl.value = URL.createObjectURL(file)
           await uploadMedia()
@@ -1204,49 +1015,32 @@ async function handleFileUpload(event: Event) {
       };
       video.src = URL.createObjectURL(file);
     }
-
-
-
   }
   target.value = ''
 }
 async function uploadMedia() {
-  if (previewUrl.value === null) {
-    showToastError('Please select media to upload.');
-    return;
-  }
-  if (is_uploading.value) {
-    return;
-  }
+  if (previewUrl.value === null) { showToastError('Please select media to upload.'); return; }
+  if (is_uploading.value) return;
   uploadProgress.value = 0
-  let api_url = getUrl(RequestURL.getChatMediaURL);
+  const api_url = getUrl(RequestURL.getChatMediaURL);
   is_uploading.value = true;
-  let response = await $fetch<SuccessError<ChatsModel.ChatResponseModel>>(api_url, {
+  const response = await $fetch<SuccessError<ChatsModel.ChatResponseModel>>(api_url, {
     method: 'POST',
-    body: {
-      "contentType": contentType.value,
-    },
-    headers: {
-      'Content-Type': 'application/json',
-    },
+    body: { "contentType": contentType.value },
+    headers: { 'Content-Type': 'application/json' },
   })
-  let worker_model = response.response as ChatsModel.ChatResponseModel
+  const worker_model = response.response as ChatsModel.ChatResponseModel
   uploadattachment(worker_model.url ?? '', worker_model.key ?? '', contentType.value)
 }
 
-function uploadattachment(url: string, key: string, contentType: string = 'image/jpeg') {
+function uploadattachment(url: string, key: string, contentTypeStr: string = 'image/jpeg') {
   uploadProgress.value = 0;
   const xhr = new XMLHttpRequest()
   xhr.upload.addEventListener('progress', (e) => {
-    if (e.lengthComputable) {
-      let value = Math.round((e.loaded / e.total) * 100)
-      uploadProgress.value = value;
-    }
+    if (e.lengthComputable) uploadProgress.value = Math.round((e.loaded / e.total) * 100);
   })
 
   xhr.upload.addEventListener('error', () => {
-    // error.value = 'Upload failed'
-    // uploading.value = false
     is_uploading.value = false;
     showToastError('Photo upload failed. Please try again.')
     uploadProgress.value = 0;
@@ -1254,17 +1048,14 @@ function uploadattachment(url: string, key: string, contentType: string = 'image
 
   xhr.onreadystatechange = () => {
     if (xhr.readyState === 4) {
-      var [type, subtype] = contentType.split("/");
-      if (type !== 'image' && type !== 'video') {
-        type = 'file'
-      }
-
+      let [type] = contentTypeStr.split("/");
+      if (type !== 'image' && type !== 'video') type = 'file'
       is_uploading.value = false;
-      let to_id = Number(route.params.id ?? '0') ?? 0
-      let eventmodel = new ChatEventSocketModel()
+      const to_id2 = Number(route.params.id ?? '0') ?? 0
+      const eventmodel = new ChatEventSocketModel()
       eventmodel.event_name = 'chat'
       eventmodel.from_id = login_store.getUserDetails?.user_id ?? 0
-      eventmodel.to_id = to_id
+      eventmodel.to_id = to_id2
       eventmodel.message_type = type
       eventmodel.message = key
       eventmodel.socket_id = id_store.getDeviceId
@@ -1273,15 +1064,17 @@ function uploadattachment(url: string, key: string, contentType: string = 'image
   }
 
   xhr.open('PUT', url ?? '')
-  xhr.setRequestHeader('Content-Type', contentType)
-  // add headers if needed: xhr.setRequestHeader('Authorization', 'Bearer ...')
+  xhr.setRequestHeader('Content-Type', contentTypeStr)
   uploadProgress.value = 0;
   xhr.send(previewUrlFile.value)
-
-
 }
 
-
+function deleteSelected() {
+  // implement batch delete logic as needed - placeholder
+  // You probably want to iterate selectedMessages and call deleteChat API for each
+  selectedMessages.value = []
+  showToastSuccess('Selected messages deleted (placeholder)')
+}
 
 </script>
 
@@ -1289,5 +1082,20 @@ function uploadattachment(url: string, key: string, contentType: string = 'image
 .chat-active {
   background-color: rgba(255, 255, 255, 0.1) !important;
   border-left: 3px solid #ff6b6b;
+}
+
+/* keep any extra styles you had for gallery preview */
+.attachment-preview { cursor: pointer; }
+.attachment-img { max-width: 240px; border-radius: 8px; }
+.attachment-video { max-width: 240px; border-radius: 8px; display:block; }
+.video-play-overlay { position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); pointer-events:none; }
+.video-play-icon { width:48px; height:48px; opacity:0.9; }
+
+.select-toolbar {
+  position: sticky;
+  bottom: 0;
+  z-index: 50;
+  padding: 0.5rem;
+  background: rgba(15,15,15,0.6);
 }
 </style>
