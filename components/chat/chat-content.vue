@@ -124,7 +124,8 @@
                 <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
                   <path d="M9 11H3V5h6v6zm2-6h10v6H11V5zm0 8h10v6H11v-6zM3 13h6v6H3v-6z" />
                 </svg>
-                Select
+                <span style="color: white;" v-if="selectMode === false">Select</span>
+                <span style="color: white;" v-if="selectMode">DeSelect</span>
               </button>
               <button class="btn btn-sm btn-dark border-secondary" @click="showCodeAlert(false)"><svg
                   viewBox="0 0 24 24" class="h-4 w-4" fill="currentColor">
@@ -204,7 +205,8 @@
               }}
                 • {{ chat.status }}</div>
 
-              <div v-if="selectMode" class="message-select-box trash-btn">
+              <div v-if="selectMode && (chat.is_deleting ?? false) === false && (chat.is_deleted ?? false) === false"
+                class="message-select-box trash-btn">
                 <div class="select-circle" :class="{ active: selectedMessages.includes(chat.chat_id ?? 0) }"
                   @click.stop="toggleMessageSelection(chat.chat_id ?? 0)">
                   <svg v-if="selectedMessages.includes(chat.chat_id ?? 0)" viewBox="0 0 24 24" width="14" height="14"
@@ -350,7 +352,7 @@ function buildGalleryItems() {
     // fallback in case metadata fails
     const width = c?.width || 720;
     const height = c?.height || 1280;
-   
+
     if (isVideo) {
       return {
         id: c.chat_id,
@@ -407,7 +409,9 @@ function toggleMessageSelection(chatId: number) {
   if (selectedMessages.value.includes(chatId)) {
     selectedMessages.value = selectedMessages.value.filter(id => id !== chatId);
   } else {
-    selectedMessages.value.push(chatId);
+    if (selectedMessages.value.length < 20) {
+      selectedMessages.value.push(chatId);
+    }
   }
 }
 const isMobile = ref(process.client ? window.innerWidth < 768 : false);
@@ -854,29 +858,55 @@ function deleteMessageStatus(eventmodel: ChatEventSocketModel) {
   if (histories.length > 0 && histories[0].chat_id === eventmodel.chat_id) histories[0].is_deleted = true
 }
 
-async function deleteChat(chat: any) {
-  if (chat.is_deleting === true) return
-  chat.is_deleting = true
+async function deleteChat() {
+
+  let is_deleting = chatModels.value.filter((el) => {
+    return el.is_deleting
+  })
+  if (is_deleting.length > 0) {
+    return;
+  }
+
+  selectedMessages.value.forEach((el) => {
+    let first = chatModels.value.filter((chel) => {
+      return chel.chat_id === el
+    })
+    if (first.length > 0) {
+      first[0].is_deleting = true
+    }
+  })
+
   const api_url = getUrl(RequestURL.deleteChat);
   await $fetch<SuccessError<ChatsModel.ChatResponseModel>>(api_url, {
     cache: "no-cache",
     method: "post",
-    body: { "chat_id": chat.chat_id, "from_id": login_store.getUserDetails?.user_id },
+    body: { "chat_ids": selectedMessages.value, "from_id": login_store.getUserDetails?.user_id },
     headers: { "content-type": "application/json" },
     onResponse: async ({ response }) => {
       const response_model = response._data as SuccessError<ChatsModel.ChatResponseModel>
-      if (response_model.success) {
-        if (chat.from_id === login_store.getUserDetails?.user_id) {
-          chat.is_deleted = true
-          const histories = chatHistoryModels.value.filter(h => h.user_id === chat.to_id)
-          if (histories.length > 0 && histories[0].chat_id === chat.chat_id) histories[0].is_deleted = true
-        } else {
-          const index = chatModels.value.findIndex(c => c.chat_id === chat.chat_id);
-          if (index !== -1) chatModels.value.splice(index, 1);
-          if (chatModels.value.length > 0) {
-            const lastMessage = chatModels.value[chatModels.value.length - 1];
-            const histories = chatHistoryModels.value.filter(h => h.chat_id === chat.chat_id)
-            if (histories.length > 0 && histories[0].chat_id === chat.chat_id) {
+      if (response_model.success) 
+      {
+        selectedMessages.value.forEach((el) => {
+          const index = chatModels.value.findIndex(c => c.chat_id === el);
+          if (index !== -1) {
+             let chat = chatModels.value[index]
+             if (chat.from_id === login_store.getUserDetails?.user_id) {
+                 chat.is_deleted = true
+             }
+             else
+             {
+                chatModels.value.splice(index, 1); 
+             }
+          }
+        })
+
+        if (chatModels.value.length > 0)
+        {
+           const lastMessage = chatModels.value[chatModels.value.length - 1];
+           let user_id = lastMessage.from_id === login_store.getUserDetails?.user_id ? lastMessage.to_id : lastMessage.from_id
+           const histories = chatHistoryModels.value.filter(h => h.user_id === user_id)
+            if (histories.length > 0)
+             {
               histories[0].from_id = lastMessage.from_id ?? 0
               histories[0].to_id = lastMessage.to_id ?? 0
               histories[0].chat_id = lastMessage.chat_id ?? 0
@@ -884,11 +914,32 @@ async function deleteChat(chat: any) {
               histories[0].message_type = lastMessage.message_type ?? ''
               histories[0].is_deleted = lastMessage.is_deleted ?? false
             }
-          }
         }
         showToastSuccess(response_model.message)
-      } else showToastError(response_model.message)
-      chat.is_deleting = false
+        selectedMessages.value.forEach((el) => {
+          let first = chatModels.value.filter((chel) => {
+            return chel.chat_id === el
+          })
+          if (first.length > 0) {
+            first[0].is_deleting = false
+          }
+        })
+        selectMode.value = false
+        selectedMessages.value = []
+      }
+      else {
+        showToastError(response_model.message)
+        selectedMessages.value.forEach((el) => {
+          let first = chatModels.value.filter((chel) => {
+            return chel.chat_id === el
+          })
+          if (first.length > 0) {
+            first[0].is_deleting = false
+          }
+        })
+      }
+
+
     }
   });
 }
@@ -1075,11 +1126,15 @@ function uploadattachment(url: string, key: string, contentTypeStr: string = 'im
   xhr.send(previewUrlFile.value)
 }
 
-function deleteSelected() {
+async function deleteSelected() {
   // implement batch delete logic as needed - placeholder
   // You probably want to iterate selectedMessages and call deleteChat API for each
-  selectedMessages.value = []
-  showToastSuccess('Selected messages deleted (placeholder)')
+  // selectedMessages.value = []
+  // showToastSuccess('Selected messages deleted (placeholder)')
+
+  if (selectedMessages.value.length > 0) {
+    await deleteChat()
+  }
 }
 
 </script>
