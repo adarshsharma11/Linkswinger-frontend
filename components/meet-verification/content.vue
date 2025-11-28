@@ -35,16 +35,18 @@
 
             <div class="lsv-profile-mini">
               <div class="lsv-profile-top">
-                <div class="lsv-avatar lsv-avatar--md">U2</div>
+                <img class="lsv-avatar lsv-avatar--md"
+                  :src="getImagePath(login_store.getUserDetails?.profile_type ?? '', login_store.getUserDetails?.media_path ?? '', login_store.getUserDetails?.profile_image ?? '')"></img>
                 <div>
-                  <div><strong>User 2</strong> · Birmingham</div>
-                  <div class="lsv-you">YOU</div>
+                  <div><strong>{{ login_store.getUserDetails?.nick_name }}</strong> · {{
+                    login_store.getUserDetails?.town }}</div>
                 </div>
               </div>
 
               <div class="lsv-badges">
-                <div class="lsv-badge"><span class="lsv-dot"></span> Photo verified</div>
-                <div class="lsv-badge">Meet history · 4</div>
+                <div class="lsv-badge" v-if="login_store.getUserDetails?.is_photo_verified === true"><span
+                    class="lsv-dot"></span> Photo verified</div>
+                <!-- <div class="lsv-badge">Meet history · 4</div> -->
               </div>
             </div>
           </div>
@@ -52,8 +54,8 @@
           <!-- Filters -->
           <div class="lsv-filters">
             <div class="lsv-filter-left">
-              <span class="lsv-tag lsv-tag--accent">Received (3)</span>
-              <span class="lsv-tag">Given (1)</span>
+              <span class="lsv-tag lsv-tag--accent">Received ({{ recCount }})</span>
+              <span class="lsv-tag">Given ({{ givenCount }})</span>
             </div>
             <div class="lsv-filter-right lsv-hint">
               Tip: “Private” still shows “Verified by man / woman / couple / TS” without revealing who.
@@ -63,76 +65,35 @@
           <!-- List -->
           <div class="lsv-list">
             <!-- ITEM 1 -->
-            <article class="lsv-item">
-              <div class="lsv-avatar lsv-avatar--lg">U1</div>
+            <article class="lsv-item" v-for="verification in verifications" :key="verification.meet_verification_id">
+              <img class="lsv-avatar lsv-avatar--lg"
+                :src="getImagePath(verification.profile_type ?? '', verification.media_path ?? '', verification.profile_image ?? '')"></img>
 
               <div class="lsv-item-body">
-                <div class="lsv-meta"><strong>User 1</strong> · Couple M/F · 2 days ago · Meet</div>
-                <div class="lsv-text">“Met at a club event in Birmingham. 100% real couple, respectful and fun.”</div>
+                <div class="lsv-meta"><strong>{{ verification.nick_name }}</strong> · {{ verification.profile_type }} {{
+                  getGender(verification) }} · {{ formatRelativeDate(verification.created_at ?? '') }}</div>
+                <div class="lsv-text">“{{ verification.review }}”</div>
                 <div class="lsv-tags">
-                  <span class="lsv-chip">Verified by Couple M/F</span>
-                  <span class="lsv-chip lsv-pill-public">Visible: Public</span>
+                  <span class="lsv-chip">Verified by {{ verification.profile_type }} {{ getGender(verification)
+                    }}</span>
+                  <span class="lsv-chip lsv-pill-public" v-if="(verification.visibility ?? '').length > 0">Visible: {{
+                    verification.visibility?.toUpperCase() }}</span>
                 </div>
               </div>
 
               <div class="lsv-visibility">
                 <div class="lsv-vis-label">Visibility on your profile</div>
-                <select class="lsv-select">
-                  <option selected>Public</option>
-                  <option>Friends only</option>
-                  <option>Private</option>
+                <select v-model="verification.visibility" class="lsv-select">
+                  <option value="" disabled>Select Visibility</option>
+                  <option value="public">Public</option>
+                  <option value="friends">Friends only</option>
+                  <option value="private">Private</option>
                 </select>
-                <button class="lsv-btn-outline">VERIFY USER 1 BACK</button>
-              </div>
-            </article>
-
-            <!-- ITEM 2 -->
-            <article class="lsv-item">
-              <div class="lsv-avatar lsv-avatar--lg">A</div>
-
-              <div class="lsv-item-body">
-                <div class="lsv-meta"><strong>Alice_88</strong> · Woman · 5 days ago · Meet</div>
-                <div class="lsv-text">“Coffee meet went great. On time and exactly as in photos.”</div>
-                <div class="lsv-tags">
-                  <span class="lsv-chip">Verified by Woman</span>
-                  <span class="lsv-chip lsv-pill-friends">Visible: Friends only</span>
-                </div>
-              </div>
-
-              <div class="lsv-visibility">
-                <div class="lsv-vis-label">Visibility on your profile</div>
-                <select class="lsv-select">
-                  <option>Public</option>
-                  <option selected>Friends only</option>
-                  <option>Private</option>
-                </select>
-                <button class="lsv-btn-outline">VERIFY ALICE BACK</button>
-              </div>
-            </article>
-
-            <!-- ITEM 3 -->
-            <article class="lsv-item">
-              <div class="lsv-avatar lsv-avatar--lg">TS</div>
-
-              <div class="lsv-item-body">
-                <div class="lsv-meta"><strong>TS_RealDeal</strong> · TS · 1 week ago · Meet</div>
-                <div class="lsv-text">“Chilled hotel meet, felt safe and comfortable the whole time.”</div>
-                <div class="lsv-tags">
-                  <span class="lsv-chip">Verified by TS</span>
-                  <span class="lsv-chip lsv-pill-private">Visible: Private</span>
-                </div>
-              </div>
-
-              <div class="lsv-visibility">
-                <div class="lsv-vis-label">Visibility on your profile</div>
-                <select class="lsv-select">
-                  <option>Public</option>
-                  <option>Friends only</option>
-                  <option selected>Private</option>
-                </select>
-                <div class="lsv-vis-note">
-                  Profile will only show: <strong>“Verified by TS”</strong> – it will not show this user’s name or text.
-                </div>
+                <button @click="showVerificationAlert(verification)" class="lsv-btn-outline"
+                  v-if="(verification.is_verified ?? false) === false && (verification.is_verify_loading ?? false) === false">VERIFY
+                  {{
+                    verification.nick_name }} BACK</button>
+                <span class="btn-loader" v-if="verification.is_verify_loading === true"> </span>
               </div>
             </article>
           </div>
@@ -142,7 +103,8 @@
             <div class="lsv-hint">
               When you verify someone back, they will see it on their “My verifications” page.
             </div>
-            <button class="lsv-save">SAVE VISIBILITY SETTINGS</button>
+            <button class="lsv-save" v-if="is_updating === false" @click="updateVisibility()">SAVE VISIBILITY SETTINGS</button>
+            <span class="btn-loader" v-if="is_updating === true"> </span>
           </div>
 
         </div>
@@ -150,3 +112,194 @@
     </div>
   </div>
 </template>
+<script setup lang="ts">
+import Swal from 'sweetalert2'
+import type { MeetVerificationsModel } from '~/composables/models';
+const verifications = ref([] as MeetVerificationsModel.FetchVerifyResponseModel[])
+const user_store = userStore()
+const login_store = useLoginStore();
+const givenCount = ref(0)
+const recCount = ref(0)
+const is_updating = ref(false)
+
+const fetchMeetVerifications = async () => {
+  const api_url = getUrl(RequestURL.fetchMeetVerifications);
+  const { data: response, error: option_error } = await useFetch<SuccessError<MeetVerificationsModel.FetchVerifyResponseModel>>(
+    api_url,
+    {
+      method: "POST",
+      body: {
+        from_id: 0,
+        to_id: user_store.getLoginId
+      },
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  if (response.value?.success) {
+    if (response.value.result) {
+      givenCount.value = response.value.result[0].given_count ?? 0
+      recCount.value = response.value.result[0].received_count ?? 0
+    }
+
+    return response.value.result
+  }
+  else {
+    return []
+  }
+};
+verifications.value = await fetchMeetVerifications() as MeetVerificationsModel.FetchVerifyResponseModel[]
+
+
+
+function getImagePath(profile_type: string, media_path: string, profile_image: string): string {
+  if (profile_image.length !== 0) {
+    return media_path + profile_image
+  }
+  if (profile_type === 'Couple') return "/images/profile-placeholders/MF-COUPLE.png";
+  if (profile_type === 'Others') return "/images/profile-placeholders/TRANS.png";
+  if (profile_type === 'Woman') return "/images/profile-placeholders/WOMEN.png";
+  if (profile_type === 'Man') return "/images/profile-placeholders/man.png";
+  return "/images/profile-placeholders/man.png"
+}
+
+function getGender(user: MeetVerificationsModel.FetchVerifyResponseModel): string {
+  let profile_type = user.profile_type ?? ''
+  let gender = user.gender ?? ''
+  let partner_gender = user.partner_gender ?? ''
+  if (profile_type === 'Couple') {
+    let genderShot = 'M';
+    let partnerGenderShot = 'M';
+    if (gender === 'Woman') {
+      genderShot = 'F'
+    }
+    else if (gender === 'Others') {
+      genderShot = 'TS'
+    }
+
+    if (partner_gender === 'Woman') {
+      partnerGenderShot = 'F'
+    }
+    else if (partner_gender === 'Others') {
+      partnerGenderShot = 'TS'
+    }
+
+    return genderShot + partnerGenderShot
+  }
+  return ''
+}
+
+function formatRelativeDate(inputDate: string) {
+  const date = new Date(inputDate);
+  const today = new Date();
+
+  // Difference in ms → days
+  const diffTime = today - date;
+  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+  if (diffDays < 1) return "Today";
+  if (diffDays === 1) return "1 day ago";
+  if (diffDays < 7) return `${diffDays} days ago`;
+
+  const diffWeeks = Math.floor(diffDays / 7);
+  if (diffWeeks === 1) return "1 week ago";
+  if (diffWeeks <= 4) return `${diffWeeks} weeks ago`;
+
+  // If more than 4 weeks → return date
+  return date.toISOString().split("T")[0]; // YYYY-MM-DD
+}
+
+function showVerificationAlert(verifyModel: MeetVerificationsModel.FetchVerifyResponseModel) {
+  Swal.fire({
+    title: 'Please enter review',
+    input: 'text', // Specifies a text input field
+    inputPlaceholder: 'Type review here', // Placeholder text for the input
+    showCancelButton: true, // Displays a cancel button
+    inputValidator: (value: string) => { // Optional: input validation
+      let trim = value.trim()
+      if (trim.length === 0) {
+        return 'Please enter review';
+      }
+    }
+  }).then((result) => {
+    if (result.isConfirmed) {
+      addVerification(verifyModel, result.value ?? '')
+    }
+  });
+}
+
+async function addVerification(verifyModel: MeetVerificationsModel.FetchVerifyResponseModel, review: string) {
+  if (verifyModel.is_verify_loading) {
+    return;
+  }
+  const api_url = getUrl(RequestURL.addMeetVerification);
+  verifyModel.is_verify_loading = true;
+  const response = await $fetch<SuccessError<MeetVerificationsModel.FetchVerifyResponseModel>>(
+    api_url,
+    {
+      method: "POST",
+      body: {
+        from_id: user_store.getLoginId,
+        to_id: verifyModel.from_id ?? 0,
+        review: review
+      },
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+  verifyModel.is_verify_loading = false;
+  if (response.success) {
+    verifyModel.is_verified = true
+    givenCount.value = givenCount.value + 1
+    showToastSuccess(response.message)
+  }
+  else {
+    showToastError("Logout failed. Please try again.");
+  }
+}
+
+async function updateVisibility() {
+  if (is_updating.value) {
+    return;
+  }
+
+  var visibilities = [] as MeetVerificationsModel.FetchVerifyResponseModel[]
+  verifications.value.forEach((el) => {
+    if ((el.visibility ?? '').length > 0) {
+      visibilities.push({
+        meet_verification_id: el.meet_verification_id,
+        visibility: el.visibility
+      })
+    }
+  })
+  if (visibilities.length === 0)
+  {
+      return;
+  }
+  const api_url = getUrl(RequestURL.updateVisibility);
+  is_updating.value = true;
+  const response = await $fetch<SuccessError<MeetVerificationsModel.FetchVerifyResponseModel>>(
+    api_url,
+    {
+      method: "POST",
+      body: {
+        visibilities: visibilities
+      },
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+  is_updating.value = false;
+  if (response.success) {
+    showToastSuccess(response.message)
+  }
+  else {
+    showToastError("Logout failed. Please try again.");
+  }
+}
+
+</script>

@@ -54,7 +54,8 @@ export enum RequestURL {
   fetchFeedComments = "/fetchFeedComments",
   rouletteEnter = "/rouletteEnter",
   rouletteEnd = "/rouletteEnd",
-  updateProfilePicture = "/updateProfilePicture"
+  updateProfilePicture = "/updateProfilePicture",
+  updateVisibility = "/updateVisibility"
 }
 
 export var online_user_ids: number[] = []
@@ -583,12 +584,26 @@ export namespace MeetVerificationsModel {
   }
 
   export class FetchVerifyResponseModel {
+    meet_verification_id? : number
     from_id?: number
     to_id?: number
     nick_name?: string
+    visibility?:string
     review?: string
     is_public?: boolean
     is_verified?: boolean
+
+    profile_type? : string
+    gender? : string
+    partner_gender? : string
+    media_path? : string
+    profile_image? : string
+    created_at? : string
+    given_count? : number
+    received_count? : number
+
+    is_verify_loading? : boolean
+
   }
 }
 
