@@ -370,8 +370,11 @@
           <div class="card bg-black text-white">
             <div class="card-body">
               <h5 class="text-white mb-3">Meet Verification</h5>
-              <p v-for="verification in verifications"><strong>{{ verification.nick_name }}:</strong>{{
-                verification.review }}</p>
+              <p v-for="verification in verifications">
+                <div v-if="verification.visibility === 'public'"><strong>{{ verification.nick_name }}:</strong>{{verification.review }}</div>
+                <div v-if="verification.visibility === 'friends'"><strong>Verified by {{ verification.profile_type }}</strong></div>
+                <div v-if="verification.visibility === 'private'"><strong>Verified by {{ verification.profile_type }}</strong></div>
+                </p>
               <button v-if="isMine() === false && is_verified === false && is_verify_loading === false"
                 class="btn btn-sm btn-outline-light mt-2" @click="showVerificationAlert()">Verify</button>
               <span class="btn-loader" v-if="is_verify_loading"></span>
