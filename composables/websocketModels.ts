@@ -53,6 +53,8 @@ export class ChatEventSocketModel implements SocketEventModel {
   chat_id?: number;
   from_id?: number;
   to_id?: number;
+      width?: number;
+    height?: number;
   from_type?: string;
   to_type?: string;
   message_type?: string;

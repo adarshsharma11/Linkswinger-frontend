@@ -276,9 +276,8 @@
 
   <!-- LightGallery: rendered only client-side and only after dynamic import -->
   <component v-if="LightgalleryComp && plugins.length > 0" :is="LightgalleryComp" ref="lgRef"
-    :settings="{ plugins: plugins, thumbnail: false, speed: 500, download: false, controls: true, loop: false, slideEndAnimation: false,  }"
-    :onInit="onGalleryInit"
-     >
+    :settings="{ plugins: plugins, thumbnail: false, speed: 500, download: false, controls: true, loop: false, slideEndAnimation: false, }"
+    :onInit="onGalleryInit">
     <a v-for="item in galleryItems" :key="item.id" :data-src="item.isVideo ? null : item.src"
       :data-video="item.isVideo ? item.video : null" :data-lg-size="item.isVideo ? item.size : null"></a>
   </component>
@@ -296,6 +295,7 @@ const route = useRoute()
 const user_store = userStore()
 const login_store = useLoginStore()
 const eventBus = useMittEmitter()
+
 
 // refs / state
 const messageTxt = ref('')
@@ -332,83 +332,57 @@ const lgRef = ref<any>(null);
 let lgInstance: any = null;
 const galleryItems = ref<any[]>([]);
 
+const fileWidth = ref(0);
+const fileHeight = ref(0);
+
 function onGalleryInit(detail: any) {
   lgInstance = detail.instance;
 }
-function getVideoSize(url) {
-  return new Promise(resolve => {
-    const video = document.createElement('video');
-    video.preload = 'metadata';
-    video.src = url;
 
-    video.onloadedmetadata = () => {
-      resolve({
-        width: video.videoWidth,
-        height: video.videoHeight
-      });
-    };
-
-    video.onerror = () => resolve(null);
-  });
-}
-
-
-
-async function buildGalleryItems() 
-{
- const allMedia = chatModels.value.filter(
+function buildGalleryItems() {
+  const allMedia = chatModels.value.filter(
     (c) => c.message_type === "image" || c.message_type === "video"
   );
 
-  const items = await Promise.all(
-    allMedia.map(async (c) => {
-      const src = (c.media_path ?? "") + (c.message ?? "");
-      const isVideo = c.message_type === "video";
-
-      if (isVideo) {
-        const size = await getVideoSize(src);
-
-        // fallback in case metadata fails
-        const width = size?.width || 720;
-        const height = size?.height || 1280;
-
-        console.log(size)
-        return {
-          id: c.chat_id,
-          isVideo: true,
-          src,
-          size: `${width}-${height}`,
-          thumb: null,
-          poster: null,
-          video: JSON.stringify({
-            source: [{ src, type: "video/mp4" }],
-            attributes: {
-              controls: true,
-              preload: "metadata"
-            }
-          })
-        };
-      }
-
-      // Not a video → return image entry
+  galleryItems.value = allMedia.map((c) => {
+    const src = (c.media_path ?? "") + (c.message ?? "");
+    const isVideo = c.message_type === "video";
+    // fallback in case metadata fails
+    const width = c?.width || 720;
+    const height = c?.height || 1280;
+   
+    if (isVideo) {
       return {
         id: c.chat_id,
-        isVideo: false,
+        isVideo: true,
         src,
-        thumb: src,
+        size: `${width}-${height}`,
+        thumb: null,
         poster: null,
-        size: "1600-1200",
-        video: null
+        video: JSON.stringify({
+          source: [{ src, type: "video/mp4" }],
+          attributes: {
+            controls: true,
+            preload: "metadata"
+          }
+        })
       };
-    })
-  );
-
-  galleryItems.value = items;
+    }
+    return {
+      id: c.chat_id,
+      isVideo: false,
+      src,
+      thumb: src,
+      poster: null,
+      size: `${width}-${height}`,
+      video: null
+    };
+  })
 }
 
 
-async function openPreview(chat: any) {
-  await buildGalleryItems()
+function openPreview(chat: any) {
+  buildGalleryItems()
 
   const index = galleryItems.value.findIndex(
     (i) => i.id === chat.chat_id
@@ -726,7 +700,7 @@ onMounted(async () => {
       // set plugins array (LightGallery expects the plugin functions)
       plugins.value = [zoom, video].filter(Boolean);
 
-      
+
 
 
 
@@ -779,6 +753,8 @@ onMounted(async () => {
       chatresponse.created_at = responseevent.created_at
       chatresponse.status = responseevent.status
       chatresponse.media_path = responseevent.media_path
+      chatresponse.width = responseevent.width
+      chatresponse.height = responseevent.height
       chatModels.value.push(chatresponse)
 
       if (event_name === 'chat_response') {
@@ -1012,19 +988,30 @@ async function handleFileUpload(event: Event) {
   if (file) {
     contentType.value = file.type
     if (file.type.startsWith("image/")) {
+      const img = new Image();
       const profile_image = await file.arrayBuffer()
       previewUrlFile.value = new Blob([profile_image])
+      img.onload = async function () {
+        fileWidth.value = img.width
+        fileHeight.value = img.height
+        await uploadMedia()
+      }
+      img.src = URL.createObjectURL(file)
       previewUrl.value = URL.createObjectURL(file)
-      await uploadMedia()
+
+
     } else {
       const video = document.createElement('video');
       video.preload = 'metadata';
       const video_file = await file.arrayBuffer()
       video.onloadedmetadata = async function () {
+
         if (video.duration > 180) {
           showToastError("Please upload video less than 3 minutes long.");
           target.value = ''
         } else {
+          fileWidth.value = video.videoWidth
+          fileHeight.value = video.videoHeight
           previewUrlFile.value = new Blob([video_file])
           previewUrl.value = URL.createObjectURL(file)
           await uploadMedia()
@@ -1076,6 +1063,8 @@ function uploadattachment(url: string, key: string, contentTypeStr: string = 'im
       eventmodel.message_type = type
       eventmodel.message = key
       eventmodel.socket_id = id_store.getDeviceId
+      eventmodel.width = fileWidth.value
+      eventmodel.height = fileHeight.value
       sendmsgtoworker(eventmodel, true)
     }
   }

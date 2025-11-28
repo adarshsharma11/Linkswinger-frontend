@@ -535,6 +535,8 @@ export namespace ChatsModel {
     chat_id?: number;
     from_id?: number;
     to_id?: number;
+    width?: number;
+    height?: number;
     message_type?: string;
     message?: string;
     created_at?: string;
