@@ -24,35 +24,18 @@
             <div class="lsv-title">
               <h1>
                 Select Profile Picture
-                <span class="lsv-pill">APPROVED MEDIA</span>
+                <span class="lsv-pill">All Photos</span>
               </h1>
               <p>
-                Choose a photo from your approved media to use as your profile picture. 
-                Only photos that have been approved by our moderation team are available for selection.
+                Choose a photo from your photos to use as your profile picture. 
               </p>
-            </div>
-
-            <div class="lsv-profile-mini">
-              <div class="lsv-profile-top">
-                <div class="lsv-avatar lsv-avatar--md">{{ userInitials }}</div>
-                <div>
-                  <div><strong>{{ userName }}</strong> · {{ userLocation }}</div>
-                  <div class="lsv-you">YOU</div>
-                </div>
-              </div>
-
-              <div class="lsv-badges">
-                <div class="lsv-badge"><span class="lsv-dot"></span> {{ approvedMediaCount }} Approved</div>
-                <div class="lsv-badge">Photo verified</div>
-              </div>
             </div>
           </div>
 
           <!-- Filters -->
           <div class="lsv-filters">
             <div class="lsv-filter-left">
-              <span class="lsv-tag lsv-tag--accent">Approved Media</span>
-              <span class="lsv-tag">All Photos</span>
+              <span class="lsv-tag lsv-tag--accent">All Photos</span>
             </div>
             <div class="lsv-filter-right lsv-hint">
               Tip: Your selected photo will be visible to all members.
@@ -62,22 +45,19 @@
           <!-- Media Grid -->
           <div class="lsv-media-grid">
             <div 
-              v-for="media in approvedMedia" 
-              :key="media.id"
+              v-for="media in allFeeds" 
+              :key="media.feed_id"
               class="lsv-media-item"
-              :class="{ 'lsv-media-item--selected': selectedMediaId === media.id }"
+              :class="{ 'lsv-media-item--selected': selectedMedia?.feed_id === media.feed_id }"
               @click="selectMedia(media)"
             >
               <div class="lsv-media-image">
-                <img :src="media.thumbnailUrl" :alt="media.title" />
-                <div class="lsv-media-overlay" v-if="selectedMediaId === media.id">
+                <img :src="(media.media_path ?? '') + media.hd_feed_image"  />
+                <div class="lsv-media-overlay" v-if="selectedMedia?.feed_id === media.feed_id">
                   <span class="lsv-check-icon">✓</span>
                 </div>
               </div>
-              <div class="lsv-media-info">
-                <div class="lsv-media-title">{{ media.title }}</div>
-                <div class="lsv-media-meta">{{ media.uploadDate }} · {{ media.category }}</div>
-              </div>
+             
             </div>
           </div>
 
@@ -85,15 +65,7 @@
           <div v-if="selectedMedia" class="lsv-selection-preview">
             <h3>Current Selection</h3>
             <div class="lsv-preview-content">
-              <img :src="selectedMedia.fullUrl" :alt="selectedMedia.title" />
-              <div class="lsv-preview-info">
-                <h4>{{ selectedMedia.title }}</h4>
-                <p>{{ selectedMedia.description }}</p>
-                <div class="lsv-preview-meta">
-                  <span>Uploaded: {{ selectedMedia.uploadDate }}</span>
-                  <span>Category: {{ selectedMedia.category }}</span>
-                </div>
-              </div>
+              <img :src="(selectedMedia.media_path ?? '') + selectedMedia.hd_feed_image"  />
             </div>
           </div>
 
@@ -103,12 +75,14 @@
               Selected photo will become your new profile picture immediately.
             </div>
             <button 
+              v-if="!is_uploading"
               class="lsv-save" 
               @click="saveProfilePicture"
-              :disabled="!selectedMediaId"
+              :disabled="!selectedMedia"
             >
               Set as Profile Picture
             </button>
+            <span class="btn-loader" v-if="is_uploading"></span>
           </div>
         </div>
       </div>
@@ -116,116 +90,64 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
+import type { FeedsModel } from '~/composables/models'
 
-// Mock user data
-const userName = ref('User 2')
-const userLocation = ref('Birmingham')
-const userInitials = computed(() => userName.value.split(' ').map(n => n[0]).join(''))
-
-// Mock approved media data
-const approvedMedia = ref([
-  {
-    id: 1,
-    title: 'Beach Vacation',
-    description: 'Summer vacation photo from Miami Beach',
-    thumbnailUrl: '/images/user-list/user-2.jpg',
-    fullUrl: '/images/user-list/user-2.jpg',
-    uploadDate: '2 days ago',
-    category: 'Travel'
-  },
-  {
-    id: 2,
-    title: 'Mountain Adventure',
-    description: 'Hiking in the mountains',
-    thumbnailUrl: '/images/user-list/user-1.jpg',
-    fullUrl: '/images/user-list/user-1.jpg',
-    uploadDate: '1 week ago',
-    category: 'Adventure'
-  },
-  {
-    id: 3,
-    title: 'City Night Out',
-    description: 'Night out with friends',
-    thumbnailUrl: '/images/user-list/user-3.jpg',
-    fullUrl: '/images/user-list/user-3.jpg',
-    uploadDate: '2 weeks ago',
-    category: 'Social'
-  },
-  {
-    id: 4,
-    title: 'Nature Walk',
-    description: 'Exploring the forest trails',
-    thumbnailUrl: '/images/user-list/user-4.jpg',
-    fullUrl: '/images/user-list/user-4.jpg',
-    uploadDate: '3 weeks ago',
-    category: 'Nature'
-  },
-  {
-    id: 5,
-    title: 'Beautiful Sunset',
-    description: 'Sunset at the beach',
-    thumbnailUrl: '/images/user-list/user-2.jpg',
-    fullUrl: '/images/user-list/user-2.jpg',
-    uploadDate: '1 month ago',
-    category: 'Travel'
-  },
-  {
-    id: 6,
-    title: 'Delicious Food',
-    description: 'Amazing dinner experience',
-    thumbnailUrl: '/images/user-list/user-1.jpg',
-    fullUrl: '/images/user-list/user-1.jpg',
-    uploadDate: '1 month ago',
-    category: 'Food'
-  },
-  {
-    id: 6,
-    title: 'Delicious Food',
-    description: 'Amazing dinner experience',
-    thumbnailUrl: '/images/user-list/user-1.jpg',
-    fullUrl: '/images/user-list/user-1.jpg',
-    uploadDate: '1 month ago',
-    category: 'Food'
-  },
-  {
-    id: 6,
-    title: 'Delicious Food',
-    description: 'Amazing dinner experience',
-    thumbnailUrl: '/images/user-list/user-1.jpg',
-    fullUrl: '/images/user-list/user-1.jpg',
-    uploadDate: '1 month ago',
-    category: 'Food'
-  },
-  {
-    id: 6,
-    title: 'Delicious Food',
-    description: 'Amazing dinner experience',
-    thumbnailUrl: '/images/user-list/user-1.jpg',
-    fullUrl: '/images/user-list/user-1.jpg',
-    uploadDate: '1 month ago',
-    category: 'Food'
-  }
-])
-
-const approvedMediaCount = computed(() => approvedMedia.value.length)
-const selectedMediaId = ref(null)
-
-const selectedMedia = computed(() => {
-  return approvedMedia.value.find(media => media.id === selectedMediaId.value)
-})
+const allFeeds = ref([] as FeedsModel.FeedsResponseModel[])
+const login_store = useLoginStore()
+const selectedMedia = ref<FeedsModel.FeedsResponseModel | null>(null)
+const is_uploading = ref(false)
+const fetchFeeds = async () => {
+    const api_url = getUrl(RequestURL.fetchFeeds);
+    const { data: feed_response, error: option_error } = await useFetch<SuccessError<FeedsModel.FeedsResponseModel>>(api_url, {
+        cache: "no-cache",
+        method: "post",
+        body: {
+            login_id: login_store.getUserDetails?.user_id ?? 0,
+            user_id: login_store.getUserDetails?.user_id ?? 0,
+            media_type: 'image',
+            feed_type : ''
+        },
+        headers: {
+            "content-type": "application/json"
+        }
+    });
+    return feed_response.value?.result ?? []
+}
+allFeeds.value = await fetchFeeds() as FeedsModel.FeedsResponseModel[]
 
 // Methods
-const selectMedia = (media) => {
-  selectedMediaId.value = media.id
+const selectMedia = (media : FeedsModel.FeedsResponseModel) => {
+  selectedMedia.value = media
 }
 
-const saveProfilePicture = () => {
-  if (selectedMediaId.value) {
-    // Here you would typically make an API call to save the selection
-    alert(`Profile picture updated to: ${selectedMedia.value.title}`)
-    // Navigate back or show success message
+const saveProfilePicture = async  () => {
+  if (selectedMedia.value) {
+    is_uploading.value = true
+    let api_url = getUrl(RequestURL.updateProfilePicture);
+    let postData = {
+      user_id: login_store.getUserDetails?.user_id ?? 0,
+      profile_image : selectedMedia.value.lq_feed_image,
+      hd_profile_image : selectedMedia.value.hd_feed_image
+    }
+    let response = await $fetch<SuccessError<FeedsModel.FeedsResponseModel>>(api_url, {
+      method: 'POST',
+      body: postData,
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+    is_uploading.value = false
+    if (response.success) {
+      showToastSuccess(response.message ?? "Success!!");
+      login_store.setProfilePic(selectedMedia.value.lq_feed_image ?? '',selectedMedia.value.hd_feed_image ?? '')
+      selectedMedia.value = null
+      await navigateTo('/')
+    }
+    else {
+      showToastError(response.message ?? "Something went wrong");
+    }
   }
 }
 

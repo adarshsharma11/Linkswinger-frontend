@@ -53,7 +53,8 @@ export enum RequestURL {
   feedLikeDisLike = "/feedLikeDisLike",
   fetchFeedComments = "/fetchFeedComments",
   rouletteEnter = "/rouletteEnter",
-  rouletteEnd = "/rouletteEnd"
+  rouletteEnd = "/rouletteEnd",
+  updateProfilePicture = "/updateProfilePicture"
 }
 
 export var online_user_ids: number[] = []

@@ -66,6 +66,15 @@ export const useLoginStore = defineStore('login_details', {
        {
            this.user = user
        },
+        setProfilePic(profile_image : string , hd_profile_image:string)
+       {
+        if(this.user)
+        {
+           this.user.profile_image = profile_image
+           this.user.hd_profile_image = hd_profile_image
+        }
+         
+       },
        clear()
       {
         this.setUserDetails(null)
