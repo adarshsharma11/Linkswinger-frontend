@@ -54,8 +54,9 @@
           <!-- Filters -->
           <div class="lsv-filters">
             <div class="lsv-filter-left">
-              <span class="lsv-tag lsv-tag--accent">Received ({{ recCount }})</span>
-              <span class="lsv-tag">Given ({{ givenCount }})</span>
+              <button v-if="is_loading === false" class="lsv-tag" :class="{ 'lsv-tag--accent': !is_given_open }" @click="fetchRecVerification()">Received ({{ recCount }})</button>
+              <button v-if="is_loading === false" class="lsv-tag" :class="{ 'lsv-tag--accent': is_given_open }" @click="fetchGivenVerification()">Given ({{ givenCount }})</button>
+              <span class="btn-loader" v-if="is_loading"></span>
             </div>
             <div class="lsv-filter-right lsv-hint">
               Tip: “Private” still shows “Verified by man / woman / couple / TS” without revealing who.
@@ -74,14 +75,14 @@
                   getGender(verification) }} · {{ formatRelativeDate(verification.created_at ?? '') }}</div>
                 <div class="lsv-text">“{{ verification.review }}”</div>
                 <div class="lsv-tags">
-                  <span class="lsv-chip">Verified by {{ verification.profile_type }} {{ getGender(verification)
+                  <span v-if="is_given_open === false" class="lsv-chip">Verified by {{ verification.profile_type }} {{ getGender(verification)
                     }}</span>
                   <span class="lsv-chip lsv-pill-public" v-if="(verification.visibility ?? '').length > 0">Visible: {{
                     verification.visibility?.toUpperCase() }}</span>
                 </div>
               </div>
 
-              <div class="lsv-visibility">
+              <div class="lsv-visibility" v-if="is_given_open === false">
                 <div class="lsv-vis-label">Visibility on your profile</div>
                 <select v-model="verification.visibility" class="lsv-select">
                   <option value="" disabled>Select Visibility</option>
@@ -90,7 +91,7 @@
                   <option value="private">Private</option>
                 </select>
                 <button @click="showVerificationAlert(verification)" class="lsv-btn-outline"
-                  v-if="(verification.is_verified ?? false) === false && (verification.is_verify_loading ?? false) === false">VERIFY
+                  v-if="(verification.is_verified ?? false) === false && (verification.is_verify_loading ?? false) === false && is_given_open === false">VERIFY
                   {{
                     verification.nick_name }} BACK</button>
                 <span class="btn-loader" v-if="verification.is_verify_loading === true"> </span>
@@ -103,7 +104,7 @@
             <div class="lsv-hint">
               When you verify someone back, they will see it on their “My verifications” page.
             </div>
-            <button class="lsv-save" v-if="is_updating === false" @click="updateVisibility()">SAVE VISIBILITY SETTINGS</button>
+            <button class="lsv-save" v-if="is_updating === false && is_given_open === false" @click="updateVisibility()">SAVE VISIBILITY SETTINGS</button>
             <span class="btn-loader" v-if="is_updating === true"> </span>
           </div>
 
@@ -121,6 +122,8 @@ const login_store = useLoginStore();
 const givenCount = ref(0)
 const recCount = ref(0)
 const is_updating = ref(false)
+const is_loading = ref(false)
+const is_given_open = ref(false)
 
 const fetchMeetVerifications = async () => {
   const api_url = getUrl(RequestURL.fetchMeetVerifications);
@@ -301,5 +304,49 @@ async function updateVisibility() {
     showToastError("Logout failed. Please try again.");
   }
 }
+async function fetchRecVerification() 
+{
+  is_given_open.value = false
+     is_loading.value = true
+  verifications.value = []
+    const api_url = getUrl(RequestURL.fetchMeetVerifications);
+const response = await $fetch<SuccessError<MeetVerificationsModel.FetchVerifyResponseModel>>(
+    api_url,
+    {
+      method: "POST",
+      body: {
+        from_id: 0,
+        to_id: user_store.getLoginId
+      },
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+    is_loading.value = false
+   verifications.value = response.result ?? []
+}
+async function fetchGivenVerification() 
+{
+  verifications.value = []
+    is_given_open.value = true
+  is_loading.value = true
+ const api_url = getUrl(RequestURL.fetchGivenMeetVerifications);
+const response = await $fetch<SuccessError<MeetVerificationsModel.FetchVerifyResponseModel>>(
+    api_url,
+    {
+      method: "POST",
+      body: {
+        from_id: user_store.getLoginId,
+      },
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+   is_loading.value = false
+     verifications.value = response.result ?? []
+}
+
 
 </script>

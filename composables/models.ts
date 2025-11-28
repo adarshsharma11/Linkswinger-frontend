@@ -55,7 +55,8 @@ export enum RequestURL {
   rouletteEnter = "/rouletteEnter",
   rouletteEnd = "/rouletteEnd",
   updateProfilePicture = "/updateProfilePicture",
-  updateVisibility = "/updateVisibility"
+  updateVisibility = "/updateVisibility",
+  fetchGivenMeetVerifications = "/fetchGivenMeetVerifications"
 }
 
 export var online_user_ids: number[] = []
