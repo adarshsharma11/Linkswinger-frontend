@@ -8,6 +8,7 @@ export class WebRTCClient {
     private handleId: string | null;
     private sessionId: string | null;
     private isVideo: boolean;
+    private alreadyFlipped = false;
 
     constructor(isVideo: boolean = true) {
         if (isVideo) {
@@ -53,33 +54,11 @@ export class WebRTCClient {
             const isFront = this.mediaConstraints.video &&
                 (this.mediaConstraints.video as any).advanced?.some((x: any) => x.facingMode === "user");
 
-            if (this.isVideo && isFront) {
-                const video = document.createElement("video");
-                video.srcObject = this.localStream;
-                await video.play();
-
-                const canvas = document.createElement("canvas");
-                const ctx = canvas.getContext("2d")!;
-
-                const draw = () => {
-                    if (video.videoWidth > 0 && video.videoHeight > 0) {
-                        canvas.width = video.videoWidth;
-                        canvas.height = video.videoHeight;
-
-                        ctx.setTransform(-1, 0, 0, 1, canvas.width, 0); // Flip horizontally
-                        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-                    }
-                    requestAnimationFrame(draw);
-                };
-                draw();
-
-                const flippedStream = canvas.captureStream(30);
-                const flippedTrack = flippedStream.getVideoTracks()[0];
-
-                const oldTrack = this.localStream.getVideoTracks()[0];
-                this.localStream.removeTrack(oldTrack);
-                oldTrack.stop();
-                this.localStream.addTrack(flippedTrack);
+            if (this.isVideo && isFront && !this.alreadyFlipped) {
+                this.localStream = await this.applyFrontCameraFlip(this.localStream);
+                this.alreadyFlipped = true;
+            } else {
+                this.alreadyFlipped = false;
             }
 
 
@@ -199,38 +178,20 @@ export class WebRTCClient {
                 // ------------------------------
                 // FLIP ONLY FRONT CAMERA
                 // ------------------------------
-                if (this.currentFacingMode === "user" && this.localStream) {
-                    const video = document.createElement("video");
-                    video.srcObject = this.localStream;
-                    await video.play();
-
-                    const canvas = document.createElement("canvas");
-                    const ctx = canvas.getContext("2d")!;
-
-                    const draw = () => {
-                        if (video.videoWidth > 0 && video.videoHeight > 0) {
-                            canvas.width = video.videoWidth;
-                            canvas.height = video.videoHeight;
-
-                            ctx.setTransform(-1, 0, 0, 1, canvas.width, 0);
-                            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-                        }
-                        requestAnimationFrame(draw);
-                    };
-                    draw();
-
-                    const flippedStream = canvas.captureStream(30);
-                    const flippedTrack = flippedStream.getVideoTracks()[0];
-
-                    const oldTrack = this.localStream.getVideoTracks()[0];
-                    this.localStream.removeTrack(oldTrack);
-                    oldTrack.stop();
-                    this.localStream.addTrack(flippedTrack);
+                // FRONT camera → apply flip ONCE
+                if (this.currentFacingMode === "user" && !this.alreadyFlipped && this.localStream) {
+                    this.localStream = await this.applyFrontCameraFlip(this.localStream);
+                    this.alreadyFlipped = true;
 
                     const sender = this.peerConnection?.getSenders().find(s => s.track?.kind === "video");
-                    if (sender) await sender.replaceTrack(flippedTrack);
+                    if (sender) await sender.replaceTrack(this.localStream.getVideoTracks()[0]);
 
                     localVideo.srcObject = this.localStream;
+                }
+
+                // BACK camera → no flip
+                if (this.currentFacingMode === "environment") {
+                    this.alreadyFlipped = false;
                 }
                 // ------------------------------
             } catch (err) {
@@ -247,6 +208,36 @@ export class WebRTCClient {
 
     }
 
+    private async applyFrontCameraFlip(stream: MediaStream): Promise<MediaStream> {
+        const video = document.createElement("video");
+        video.srcObject = stream;
+        await video.play();
+
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d")!;
+
+        const draw = () => {
+            if (video.videoWidth > 0 && video.videoHeight > 0) {
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+
+                ctx.setTransform(-1, 0, 0, 1, canvas.width, 0);
+                ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+            }
+            requestAnimationFrame(draw);
+        };
+        draw();
+
+        const flippedStream = canvas.captureStream(30);
+        const flippedTrack = flippedStream.getVideoTracks()[0];
+
+        const oldTrack = stream.getVideoTracks()[0];
+        stream.removeTrack(oldTrack);
+        oldTrack.stop();
+        stream.addTrack(flippedTrack);
+
+        return stream;
+    }
 
 
 
