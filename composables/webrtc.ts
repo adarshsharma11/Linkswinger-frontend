@@ -48,6 +48,41 @@ export class WebRTCClient {
         try {
             //   console.log('getaccess')
             this.localStream = await navigator.mediaDevices.getUserMedia(this.mediaConstraints);
+
+
+            const isFront = this.mediaConstraints.video &&
+                (this.mediaConstraints.video as any).advanced?.some((x: any) => x.facingMode === "user");
+
+            if (this.isVideo && isFront) {
+                const video = document.createElement("video");
+                video.srcObject = this.localStream;
+                await video.play();
+
+                const canvas = document.createElement("canvas");
+                const ctx = canvas.getContext("2d")!;
+
+                const draw = () => {
+                    if (video.videoWidth > 0 && video.videoHeight > 0) {
+                        canvas.width = video.videoWidth;
+                        canvas.height = video.videoHeight;
+
+                        ctx.setTransform(-1, 0, 0, 1, canvas.width, 0); // Flip horizontally
+                        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                    }
+                    requestAnimationFrame(draw);
+                };
+                draw();
+
+                const flippedStream = canvas.captureStream(30);
+                const flippedTrack = flippedStream.getVideoTracks()[0];
+
+                const oldTrack = this.localStream.getVideoTracks()[0];
+                this.localStream.removeTrack(oldTrack);
+                oldTrack.stop();
+                this.localStream.addTrack(flippedTrack);
+            }
+
+
         } catch (error) {
             this.localStream = new MediaStream();
             this.localStream.addTrack(this.getSilentAudioTrack());
@@ -160,6 +195,44 @@ export class WebRTCClient {
                     this.localStream?.addTrack(newVideoTrack);
                 }
                 localVideo.srcObject = this.localStream;
+
+                // ------------------------------
+                // FLIP ONLY FRONT CAMERA
+                // ------------------------------
+                if (this.currentFacingMode === "user" && this.localStream) {
+                    const video = document.createElement("video");
+                    video.srcObject = this.localStream;
+                    await video.play();
+
+                    const canvas = document.createElement("canvas");
+                    const ctx = canvas.getContext("2d")!;
+
+                    const draw = () => {
+                        if (video.videoWidth > 0 && video.videoHeight > 0) {
+                            canvas.width = video.videoWidth;
+                            canvas.height = video.videoHeight;
+
+                            ctx.setTransform(-1, 0, 0, 1, canvas.width, 0);
+                            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                        }
+                        requestAnimationFrame(draw);
+                    };
+                    draw();
+
+                    const flippedStream = canvas.captureStream(30);
+                    const flippedTrack = flippedStream.getVideoTracks()[0];
+
+                    const oldTrack = this.localStream.getVideoTracks()[0];
+                    this.localStream.removeTrack(oldTrack);
+                    oldTrack.stop();
+                    this.localStream.addTrack(flippedTrack);
+
+                    const sender = this.peerConnection?.getSenders().find(s => s.track?.kind === "video");
+                    if (sender) await sender.replaceTrack(flippedTrack);
+
+                    localVideo.srcObject = this.localStream;
+                }
+                // ------------------------------
             } catch (err) {
                 console.error("Failed to access camera:", err);
                 // If switching to back fails → fall back to front
