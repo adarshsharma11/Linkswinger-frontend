@@ -175,18 +175,8 @@ onMounted(async () => {
         webrtcclient.setLocalVideoTrack()
         isPremissionAccepted.value = true;
 
-        setTimeout(() => {
-            const localVideo = document.getElementById("local-video-track") as HTMLVideoElement;
-            if (!localVideo) return;
-
-            if (webrtcclient.currentFacingMode === "user") {
-                // front camera → show mirror view
-                localVideo.style.transform = "scaleX(-1)";
-            } else {
-                // back camera → normal
-                localVideo.style.transform = "scaleX(1)";
-            }
-        }, 150);
+          const localVideo = document.getElementById("local-video-track") as HTMLVideoElement;
+              localVideo.style.transform = "scaleX(-1)";
     }
     catch (error) {
         webrtcclient.setLocalVideoTrack()

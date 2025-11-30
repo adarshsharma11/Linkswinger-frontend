@@ -184,6 +184,8 @@ onMounted(async () => {
     await webrtcclient.getAccess()
     webrtcclient.setLocalVideoTrack()
     isPremissionAccepted.value = true;
+      const localVideo = document.getElementById("local-video-track") as HTMLVideoElement;
+              localVideo.style.transform = "scaleX(-1)";
   }
   catch (error) {
     webrtcclient.setLocalVideoTrack()
