@@ -89,7 +89,7 @@ const connectStatus = ref('Connecting...')
 var queueCandidates: RTCIceCandidate[] = []
 const isPremissionAccepted = ref(false);
 var updatecount = 0
-const isFrontCamera = ref(true)
+
 const formattedTime = computed(() => {
     const hours = Math.floor(timeStart.value / 3600).toString().padStart(2, '0');
     const mins = Math.floor((timeStart.value % 3600) / 60).toString().padStart(2, '0');
@@ -183,7 +183,7 @@ onMounted(async () => {
 });
 
 function sendcallupdates() {
-    if (updatecount > 2) {
+    if (updatecount >= 2) {
         let callupdates = new CallAlertModel()
         callupdates.event_name = "call_updates"
         callupdates.from_id = call_store.getCallDetails?.from_id

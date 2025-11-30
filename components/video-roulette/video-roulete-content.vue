@@ -98,7 +98,7 @@ const id_store = idStore();
 const login_store = useLoginStore()
 const call_store = ref<RouletteWorkerModel | null>(null)
 var updatecount = 0
-const isFrontCamera = ref(true)
+
 const route = useRoute()
 const formattedTime = computed(() => {
   const hours = Math.floor(timeStart.value / 3600).toString().padStart(2, '0');
@@ -392,9 +392,18 @@ function handlecallevent(callModel: CallSocketModel) {
 function toggleCamera() {
     webrtcclient.toggleCamera()
 
-       setTimeout(() => {
-        isFrontCamera.value = webrtcclient.currentFacingMode === "user"
-    }, 200)
+    setTimeout(() => {
+        const localVideo = document.getElementById("local-video-track") as HTMLVideoElement;
+        if (!localVideo) return;
+
+        if (webrtcclient.currentFacingMode === "user") {
+            // front camera → show mirror view
+            localVideo.style.transform = "scaleX(-1)";
+        } else {
+            // back camera → normal
+            localVideo.style.transform = "scaleX(1)";
+        }
+    }, 150);
 }
 
 function sendEndRoulleteBeacon() {

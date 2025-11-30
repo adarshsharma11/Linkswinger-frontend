@@ -139,13 +139,14 @@ export class WebRTCClient {
         }
 
         const localVideo = document.getElementById("local-video-track") as HTMLVideoElement | null;
+
         if (localVideo) {
+
             // Switch mode
             this.currentFacingMode =
                 this.currentFacingMode === 'user' ? 'environment' : 'user';
 
             try {
-
                 this.mediaConstraints = {
                     audio: {
                         echoCancellation: true,
@@ -159,44 +160,63 @@ export class WebRTCClient {
                         advanced: [{ facingMode: this.currentFacingMode }]
                     }
                 };
+
                 // Try to get new stream
                 const newStream = await navigator.mediaDevices.getUserMedia(this.mediaConstraints);
-
                 const newVideoTrack = newStream.getVideoTracks()[0];
 
-                // 3. Replace track in RTCPeerConnection so remote gets update
+                // Replace track in RTCPeerConnection
                 const sender = this.peerConnection?.getSenders().find(s => s.track?.kind === "video");
                 if (sender) {
                     await sender.replaceTrack(newVideoTrack);
                 }
+
+                // Replace track in localStream
                 if (this.localStream) {
-                    this.localStream?.removeTrack(this.localStream.getVideoTracks()[0]);
-                    this.localStream?.addTrack(newVideoTrack);
+                    const oldTrack = this.localStream.getVideoTracks()[0];
+                    this.localStream.removeTrack(oldTrack);
+                    oldTrack.stop();
+                    this.localStream.addTrack(newVideoTrack);
                 }
+
                 localVideo.srcObject = this.localStream;
 
-                // ------------------------------
-                // FLIP ONLY FRONT CAMERA
-                // ------------------------------
-                // FRONT camera → apply flip ONCE
-                // if (this.currentFacingMode === "user" && !this.alreadyFlipped && this.localStream) {
-                //     this.localStream = await this.applyFrontCameraFlip(this.localStream);
-                //     this.alreadyFlipped = true;
+                // -----------------------------------
+                // FLIP ONLY FRONT CAMERA (CORRECTED)
+                // -----------------------------------
+                if (this.currentFacingMode === "user" && !this.alreadyFlipped && this.localStream) {
 
-                //     const sender = this.peerConnection?.getSenders().find(s => s.track?.kind === "video");
-                //     if (sender) await sender.replaceTrack(this.localStream.getVideoTracks()[0]);
+                    // Create flipped track
+                    const flippedTrack = await this.applyFrontCameraFlip(newStream);
 
-                //     localVideo.srcObject = this.localStream;
-                // }
+                    // Replace localStream track
+                    const oldTrack = this.localStream.getVideoTracks()[0];
+                    this.localStream.removeTrack(oldTrack);
+                    oldTrack.stop();
+                    this.localStream.addTrack(flippedTrack);
 
-                // // BACK camera → no flip
-                // if (this.currentFacingMode === "environment") {
-                //     this.alreadyFlipped = false;
-                // }
-                // ------------------------------
+                    // Replace remote sender track
+                    if (sender) {
+                        await sender.replaceTrack(flippedTrack);
+                    }
+
+                    // Update preview
+                    localVideo.srcObject = this.localStream;
+
+                    // Mark front camera as flipped once
+                    this.alreadyFlipped = true;
+                }
+
+                // BACK CAMERA — reset flip state
+                if (this.currentFacingMode === "environment") {
+                    this.alreadyFlipped = false;
+                }
+                // -----------------------------------
+
             } catch (err) {
                 console.error("Failed to access camera:", err);
-                // If switching to back fails → fall back to front
+
+                // Fallback to front camera
                 this.currentFacingMode = 'user';
                 this.localStream = await navigator.mediaDevices.getUserMedia({
                     video: { facingMode: "user" },
@@ -205,10 +225,10 @@ export class WebRTCClient {
                 localVideo.srcObject = this.localStream;
             }
         }
-
     }
 
-    private async applyFrontCameraFlip(stream: MediaStream): Promise<MediaStream> {
+
+    private async applyFrontCameraFlip(stream: MediaStream): Promise<MediaStreamTrack> {
         const video = document.createElement("video");
         video.srcObject = stream;
         await video.play();
@@ -217,7 +237,7 @@ export class WebRTCClient {
         const ctx = canvas.getContext("2d")!;
 
         const draw = () => {
-            if (video.videoWidth > 0 && video.videoHeight > 0) {
+            if (video.videoWidth && video.videoHeight) {
                 canvas.width = video.videoWidth;
                 canvas.height = video.videoHeight;
 
@@ -226,17 +246,10 @@ export class WebRTCClient {
             }
             requestAnimationFrame(draw);
         };
+
         draw();
 
-        const flippedStream = canvas.captureStream();
-        const flippedTrack = flippedStream.getVideoTracks()[0];
-
-        const oldTrack = stream.getVideoTracks()[0];
-        stream.removeTrack(oldTrack);
-        oldTrack.stop();
-        stream.addTrack(flippedTrack);
-
-        return stream;
+        return canvas.captureStream().getVideoTracks()[0];
     }
 
 
