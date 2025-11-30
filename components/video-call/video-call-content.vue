@@ -29,7 +29,7 @@
                             connectStatus }}</div>
                         <!-- Local PiP -->
                         <div class="position-absolute bottom-12 right-12 selfVideo aspect-video overflow-hidden">
-                            <video id="local-video-track" class="w-100 h-100 object-cover bg-black" autoplay playsinline
+                            <video id="local-video-track" :class="{ 'flip-x': isFrontCamera }" class="w-100 h-100 object-cover bg-black" autoplay playsinline
                                 muted></video>
                             <div class="position-absolute bottom-4 left-4 px-2 py-0.5">You</div>
                         </div>
@@ -89,12 +89,14 @@ const connectStatus = ref('Connecting...')
 var queueCandidates: RTCIceCandidate[] = []
 const isPremissionAccepted = ref(false);
 var updatecount = 0
+const isFrontCamera = ref(true)
 const formattedTime = computed(() => {
     const hours = Math.floor(timeStart.value / 3600).toString().padStart(2, '0');
     const mins = Math.floor((timeStart.value % 3600) / 60).toString().padStart(2, '0');
     const secs = (timeStart.value % 60).toString().padStart(2, '0');
     return `${hours}:${mins}:${secs}`;
 });
+
 onBeforeUnmount(() => {
     eventBus.off('callEvent')
     eventBus.off('socketConnection')
@@ -213,6 +215,10 @@ function enabledisablevideo() {
 }
 function toggleCamera() {
     webrtcclient.toggleCamera()
+
+       setTimeout(() => {
+        isFrontCamera.value = webrtcclient.currentFacingMode === "user"
+    }, 200)
 }
 
 
