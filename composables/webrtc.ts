@@ -51,15 +51,15 @@ export class WebRTCClient {
             this.localStream = await navigator.mediaDevices.getUserMedia(this.mediaConstraints);
 
 
-            const isFront = this.mediaConstraints.video &&
-                (this.mediaConstraints.video as any).advanced?.some((x: any) => x.facingMode === "user");
+            // const isFront = this.mediaConstraints.video &&
+            //     (this.mediaConstraints.video as any).advanced?.some((x: any) => x.facingMode === "user");
 
-            if (this.isVideo && isFront && !this.alreadyFlipped) {
-                this.localStream = await this.applyFrontCameraFlip(this.localStream);
-                this.alreadyFlipped = true;
-            } else {
-                this.alreadyFlipped = false;
-            }
+            // if (this.isVideo && isFront && !this.alreadyFlipped) {
+            //     this.localStream = await this.applyFrontCameraFlip(this.localStream);
+            //     this.alreadyFlipped = true;
+            // } else {
+            //     this.alreadyFlipped = false;
+            // }
 
 
         } catch (error) {
