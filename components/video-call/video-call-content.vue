@@ -102,6 +102,7 @@ onBeforeUnmount(() => {
     eventBus.off('socketConnection')
     eventBus.off('serverTime')
     eventBus.off('callEndAlert')
+    window.removeEventListener('pagehide',onPageHide)
     webrtcclient.stopLocalStream()
     webrtcclient.teardown()
 });
@@ -151,24 +152,7 @@ onMounted(async () => {
         handlecallevent(callModel)
     })
 
-
-
-
-
-    window.addEventListener("pagehide", (event) => {
-        if (event.persisted) return;
-        const nav = performance.getEntriesByType("navigation")[0];
-        const isReload = nav && (nav.type === "reload" || nav.type === "navigate");
-        if (isReload) {
-            sendEndCallBeacon()
-            webrtcclient.stopLocalStream()
-            webrtcclient.teardown()
-            reloadNuxtApp({
-                path: "/",
-                ttl: 1000
-            })
-        }
-    });
+    window.addEventListener("pagehide", onPageHide);
 
     try {
         await webrtcclient.getAccess()
@@ -184,6 +168,21 @@ onMounted(async () => {
         // showalert('Unable to get permission of microphone or camera', false, 5000)
     }
 });
+
+function onPageHide(event : any) {
+  if (event.persisted) return;
+        const nav = performance.getEntriesByType("navigation")[0];
+        const isReload = nav && (nav.type === "reload" || nav.type === "navigate");
+        if (isReload) {
+            sendEndCallBeacon()
+            webrtcclient.stopLocalStream()
+            webrtcclient.teardown()
+            reloadNuxtApp({
+                path: "/",
+                ttl: 1000
+            })
+        }
+}
 
 function sendcallupdates() {
     if (updatecount >= 2) {

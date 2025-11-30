@@ -113,6 +113,7 @@ onBeforeUnmount(() => {
   eventBus.off('random_match_server_push')
   eventBus.off('random_user_remove_server_push')
 
+  window.removeEventListener('pagehide',onPageHide)
      sendEndRoulleteBeacon()
   webrtcclient.stopLocalStream()
   webrtcclient.teardown()
@@ -169,22 +170,13 @@ onMounted(async () => {
     })
   })
 
-  window.addEventListener("pagehide", (event) => {
-    if (event.persisted) return;
-    const nav = performance.getEntriesByType("navigation")[0];
-    const isReload = nav && (nav.type === "reload" || nav.type === "navigate");
-    if (isReload) {
-      sendEndRoulleteBeacon()
-      webrtcclient.stopLocalStream()
-      webrtcclient.teardown()
-    }
-  });
+  window.addEventListener("pagehide", onPageHide);
 
   try {
     await webrtcclient.getAccess()
     webrtcclient.setLocalVideoTrack()
     isPremissionAccepted.value = true;
-      const localVideo = document.getElementById("local-video-track") as HTMLVideoElement;
+    const localVideo = document.getElementById("local-video-track") as HTMLVideoElement;
               localVideo.style.transform = "scaleX(-1)";
   }
   catch (error) {
@@ -195,7 +187,16 @@ onMounted(async () => {
 
 })
 
-
+function onPageHide(event : any) {
+if (event.persisted) return;
+    const nav = performance.getEntriesByType("navigation")[0];
+    const isReload = nav && (nav.type === "reload" || nav.type === "navigate");
+    if (isReload) {
+      sendEndRoulleteBeacon()
+      webrtcclient.stopLocalStream()
+      webrtcclient.teardown()
+    }
+}
 
 
 
