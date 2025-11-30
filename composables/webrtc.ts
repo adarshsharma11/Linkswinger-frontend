@@ -179,20 +179,20 @@ export class WebRTCClient {
                 // FLIP ONLY FRONT CAMERA
                 // ------------------------------
                 // FRONT camera → apply flip ONCE
-                if (this.currentFacingMode === "user" && !this.alreadyFlipped && this.localStream) {
-                    this.localStream = await this.applyFrontCameraFlip(this.localStream);
-                    this.alreadyFlipped = true;
+                // if (this.currentFacingMode === "user" && !this.alreadyFlipped && this.localStream) {
+                //     this.localStream = await this.applyFrontCameraFlip(this.localStream);
+                //     this.alreadyFlipped = true;
 
-                    const sender = this.peerConnection?.getSenders().find(s => s.track?.kind === "video");
-                    if (sender) await sender.replaceTrack(this.localStream.getVideoTracks()[0]);
+                //     const sender = this.peerConnection?.getSenders().find(s => s.track?.kind === "video");
+                //     if (sender) await sender.replaceTrack(this.localStream.getVideoTracks()[0]);
 
-                    localVideo.srcObject = this.localStream;
-                }
+                //     localVideo.srcObject = this.localStream;
+                // }
 
-                // BACK camera → no flip
-                if (this.currentFacingMode === "environment") {
-                    this.alreadyFlipped = false;
-                }
+                // // BACK camera → no flip
+                // if (this.currentFacingMode === "environment") {
+                //     this.alreadyFlipped = false;
+                // }
                 // ------------------------------
             } catch (err) {
                 console.error("Failed to access camera:", err);
@@ -228,7 +228,7 @@ export class WebRTCClient {
         };
         draw();
 
-        const flippedStream = canvas.captureStream(30);
+        const flippedStream = canvas.captureStream();
         const flippedTrack = flippedStream.getVideoTracks()[0];
 
         const oldTrack = stream.getVideoTracks()[0];

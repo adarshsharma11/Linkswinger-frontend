@@ -216,9 +216,18 @@ function enabledisablevideo() {
 function toggleCamera() {
     webrtcclient.toggleCamera()
 
-       setTimeout(() => {
-        isFrontCamera.value = webrtcclient.currentFacingMode === "user"
-    }, 200)
+    setTimeout(() => {
+        const localVideo = document.getElementById("local-video-track") as HTMLVideoElement;
+        if (!localVideo) return;
+
+        if (webrtcclient.currentFacingMode === "user") {
+            // front camera → show mirror view
+            localVideo.style.transform = "scaleX(-1)";
+        } else {
+            // back camera → normal
+            localVideo.style.transform = "scaleX(1)";
+        }
+    }, 150);
 }
 
 
