@@ -29,7 +29,7 @@
                             connectStatus }}</div>
                         <!-- Local PiP -->
                         <div class="position-absolute bottom-12 right-12 selfVideo aspect-video overflow-hidden">
-                            <video id="local-video-track" :class="{ 'flip-x': isFrontCamera }" class="w-100 h-100 object-cover bg-black" autoplay playsinline
+                            <video id="local-video-track"  class="w-100 h-100 object-cover bg-black" autoplay playsinline
                                 muted></video>
                             <div class="position-absolute bottom-4 left-4 px-2 py-0.5">You</div>
                         </div>

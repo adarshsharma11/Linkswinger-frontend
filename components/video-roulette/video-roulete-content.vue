@@ -14,7 +14,7 @@
             style="background: repeating-conic-gradient(rgb(10, 10, 10) 0%, rgb(10, 10, 10) 25%, rgb(16, 16, 23) 0%, rgb(16, 16, 23) 50%) 50% center / 20px 20px; display: grid; place-items: center; color: rgb(154, 163, 175);">
             <p style="padding:16px; text-align:center;">Camera unavailable. Allow access to preview yourself here.</p>
           </video> -->
-          <video id="local-video-track" :class="{ 'flip-x': isFrontCamera }" class="w-100 h-100 object-cover bg-black" autoplay playsinline muted></video>
+          <video id="local-video-track"  class="w-100 h-100 object-cover bg-black" autoplay playsinline muted></video>
         </div>
 
         <div class="video-card">
