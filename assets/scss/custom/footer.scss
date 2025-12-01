@@ -1,0 +1,38 @@
+   .ls-social {
+      width: 100%;
+      text-align: center;
+      padding: 15px 0;
+    }
+
+    .ls-x-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 22px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 20% 20%, #ff3333 0, #cc0000 40%, #550000 100%);
+      color: #fff;
+      text-decoration: none;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      box-shadow: 0 0 10px #ff3333;
+      transition:
+        transform 0.15s ease,
+        box-shadow 0.15s ease,
+        background 0.15s ease;
+      font-size: 14px;
+      span {
+        font-size: 14px;
+      }
+    }
+
+    .ls-x-link:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 0 18px #ff4444;
+      background: radial-gradient(circle at 20% 20%, #ff6666 0, #ff0000 40%, #660000 100%);
+    }
+
+    .ls-x-icon {
+      font-size: 18px;
+      line-height: 1;
+    }

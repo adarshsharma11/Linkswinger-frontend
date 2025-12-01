@@ -1,5 +1,14 @@
 <template>
   <footer>
+  <div class="ls-social">
+    <a href="https://x.com/Linkswingers"
+       target="_blank"
+       rel="noopener"
+       class="ls-x-link">
+      <span class="ls-x-icon text-white">𝕏</span>
+      <span class="ls-x-text text-white">Follow us on X @Linkswingers</span>
+    </a>
+  </div>
     <div class="container copyright-footer">
       <div class="row copyright">
         <div class="col-md-12 col-sm-12">
