@@ -186,7 +186,11 @@ onMounted(async () => {
 
   eventBus.on('roullete_partner_left', (rouletteModel: RouletteWorkerModel) => {
 
+    call_store.value = null
+    hasAnswer.value = false
+    isAnswerSent.value = false
     webrtcclient.teardown()
+    console.log('roullete_partner_left',rouletteModel)
     
   })
   
