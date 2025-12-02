@@ -40,7 +40,9 @@ type Events = {
   callEndAlert: CallAlertModel,
   callEvent: CallSocketModel,
   random_match_server_push: RouletteWorkerModel,
-  random_user_remove_server_push: RouletteWorkerModel
+  random_user_remove_server_push: RouletteWorkerModel,
+  roullete_session_expired:RouletteWorkerModel,
+  roullete_partner_left : RouletteWorkerModel
 }
 let onlinemodel: OnlineEventResponse | null = null
 
@@ -337,6 +339,14 @@ async function handleworkerevent(event: MessageEvent<any>) {
   else if (json.event_name === "random_user_remove_server_push") {
     let json = event.data as RouletteWorkerModel
     emitter.emit('random_user_remove_server_push', json)
+  }
+  else if (json.event_name === "roullete_session_expired") {
+    let json = event.data as RouletteWorkerModel
+    emitter.emit('roullete_session_expired', json)
+  }
+  else if (json.event_name === "roullete_partner_left") {
+    let json = event.data as RouletteWorkerModel
+    emitter.emit('roullete_partner_left', json)
   }
   else if (json.event_name === "roullete_updates") {
     let json = event.data as CallAlertModel

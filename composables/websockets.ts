@@ -162,7 +162,16 @@ else if (event_name === "call_alert")
     let json = JSON.parse(jsontext) as  RouletteWorkerModel
          sendmsgtoworker(json, true,true)
     }
+    else if (json.event_name === "roullete_session_expired") {
+    let json = JSON.parse(jsontext) as  RouletteWorkerModel
+         sendmsgtoworker(json, true,true)
+    }
+    else if (json.event_name === "roullete_partner_left") {
+    let json = JSON.parse(jsontext) as  RouletteWorkerModel
+         sendmsgtoworker(json, true,true)
+    }
      
+    
 
     
     

@@ -112,6 +112,9 @@ onBeforeUnmount(() => {
   eventBus.off('serverTime')
   eventBus.off('random_match_server_push')
   eventBus.off('random_user_remove_server_push')
+  eventBus.off('roullete_session_expired')
+  eventBus.off('roullete_partner_left')
+  
 
   window.removeEventListener('pagehide',onPageHide)
      sendEndRoulleteBeacon()
@@ -172,6 +175,21 @@ onMounted(async () => {
       ttl: 1000
     })
   })
+   eventBus.on('roullete_session_expired', (rouletteModel: RouletteWorkerModel) => {
+    webrtcclient.stopLocalStream()
+    webrtcclient.teardown()
+    reloadNuxtApp({
+      path: "/",
+      ttl: 1000
+    })
+  })
+
+  eventBus.on('roullete_partner_left', (rouletteModel: RouletteWorkerModel) => {
+
+    webrtcclient.teardown()
+    
+  })
+  
 
   window.addEventListener("pagehide", onPageHide);
 
