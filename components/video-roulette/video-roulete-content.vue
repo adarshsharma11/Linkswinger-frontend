@@ -251,7 +251,6 @@ function sendserverstatusupdates() {
 function sendoffer() {
   if (hasAnswer.value === false && isPremissionAccepted.value && call_store.value) {
     if (getFromId() === login_store.getUserDetails?.user_id) {
-
       let socketmodel = new CallSocketModel()
       socketmodel.event_name = 'call'
       socketmodel.from_id = getFromId()
