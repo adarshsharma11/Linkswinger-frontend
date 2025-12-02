@@ -54,7 +54,7 @@
                     @click="navigateTo(`/meet-verification`)">
                     <img src="/images/badges/animated/50X50px/profile-settings.gif" alt="Verify"
                       class="rounded-circle me-2" style="width: 30px; height: 30px; object-fit: cover" />
-                    <span class="text-white">Meet Verification</span>
+                    <span class="text-white">Meet Verifications</span>
                   </button>
                 </li>
                 <li>
@@ -103,13 +103,17 @@
                 <img :src="getProfilePlaceholder()" alt="Profile" class="rounded-circle mb-2"
                   style="width: 90px; height: 90px; object-fit: cover" />
                 <!-- Profile Picture Selection button - top left -->
-                <button v-if="!is_photo_uploading && isMine()" type="button" class="btn btn-transparent rounded-circle position-absolute profile-picture-btn"
+                <!-- <button v-if="!is_photo_uploading && isMine()" type="button" class="btn btn-transparent rounded-circle position-absolute profile-picture-btn"
                   @click="navigateTo('/profile-picture')">
                   <i class="fa fa-photo text-white"></i>
-                </button>
+                </button> -->
                 <!-- Upload/Edit button - top right -->
-                <button v-if="!is_photo_uploading && isMine()" type="button" class="btn btn-transparent rounded-circle position-absolute profile-edit-btn"
+                <!-- <button v-if="!is_photo_uploading && isMine()" type="button" class="btn btn-transparent rounded-circle position-absolute profile-edit-btn"
                   @click="triggerFileInput">
+                  <i class="fa fa-camera text-white"></i>
+                </button> -->
+                 <button v-if="!is_photo_uploading && isMine()" type="button" class="btn btn-transparent rounded-circle position-absolute profile-edit-btn"
+                 @click="navigateTo('/profile-picture')">
                   <i class="fa fa-camera text-white"></i>
                 </button>
                 <!-- Remove button - bottom right -->
@@ -185,9 +189,9 @@
                 <li>
                   <button class="dropdown-item text-white d-flex align-items-center"
                     @click="navigateTo(`/meet-verification`)">
-                    <img src="/images/badges/animated/50X50px/profile-settings.gif" alt="Verify"
+                    <img src="/images/badges/animated/50X50px/meet-verification.gif" alt="Verify"
                       class="rounded-circle me-2" style="width: 30px; height: 30px; object-fit: cover" />
-                    <span class="text-white">Meet Verification</span>
+                    <span class="text-white">Meet Verifications</span>
                   </button>
                 </li>
                 <li>

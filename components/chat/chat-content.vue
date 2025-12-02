@@ -3,6 +3,15 @@
     <div class="row g-3 mt-4">
       <!-- Sidebar -->
       <aside class="col-12 col-lg-4 col-xl-3" :class="{ 'd-none': showMobileChat && isMobile }">
+        <!-- Dashboard Button - Positioned above the chat card -->
+        <div class="mb-3 d-flex justify-content-end">
+          <button class="btn btn-dashboard d-flex align-items-center gap-2" @click="navigateTo('/dashboard')" title="Go to Dashboard">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+              <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
+            </svg>
+            <span class="text-white d-lg-inline">Dashboard</span>
+          </button>
+        </div>
         <div class="chat-card p-2">
           <div
             class="d-flex justify-content-between align-items-center border-bottom border-secondary pb-2 mb-2 cht-top">
@@ -1145,7 +1154,98 @@ async function deleteSelected() {
   border-left: 3px solid #ff6b6b;
 }
 
+/* Dashboard Button Styling */
+.btn-dashboard {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.9);
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 0.2s ease-in-out;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
 
+.btn-dashboard:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.btn-dashboard:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.btn-dashboard svg {
+  transition: transform 0.2s ease;
+}
+
+.btn-dashboard:hover svg {
+  transform: scale(1.1);
+}
+
+/* Original btn-outline-light styles for other elements */
+.btn-outline-light {
+  color: rgba(255, 255, 255, 0.8);
+  border-color: rgba(255, 255, 255, 0.3);
+  transition: all 0.2s ease-in-out;
+}
+
+.btn-outline-light:hover {
+  color: #fff;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: translateY(-1px);
+}
+
+.btn-outline-light:active {
+  transform: translateY(0);
+}
+
+/* Mobile optimizations */
+@media (max-width: 576px) {
+  .chat-hd-btn {
+    gap: 0.5rem !important;
+  }
+  
+  .btn-sm {
+    padding: 0.375rem 0.75rem;
+    font-size: 0.8rem;
+  }
+  
+  .btn-outline-light svg {
+    width: 14px;
+    height: 14px;
+  }
+  
+  /* Sidebar dashboard button mobile optimizations */
+  .cht-top .btn-outline-light {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+  }
+  
+  .cht-top .btn-outline-light svg {
+    width: 12px;
+    height: 12px;
+  }
+}
+
+/* Tablet optimizations */
+@media (min-width: 577px) and (max-width: 768px) {
+  .btn-outline-light {
+    padding: 0.5rem 0.875rem;
+  }
+  
+  .cht-top .btn-outline-light {
+    padding: 0.375rem 0.625rem;
+    font-size: 0.8rem;
+  }
+}
 
 .attachment-preview {
   cursor: pointer;
