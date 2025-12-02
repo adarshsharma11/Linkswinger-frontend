@@ -30,17 +30,17 @@ type Events = {
   serverTime: Date,
   socketConnection: boolean,
   chatEvent: ChatEventSocketModel,
-  chatUpdateStatus:ChatEventSocketModel,
-  chatDeleteStatus:ChatEventSocketModel,
-  onlineUserIds : number[],
-  typing:TypingEventSocketModel,
-  callAlert:CallAlertModel,
-  callDeclineAlert:CallAlertModel,
-  callAcceptAlert : CallAlertModel,
-  callEndAlert : CallAlertModel,
-  callEvent : CallSocketModel,
+  chatUpdateStatus: ChatEventSocketModel,
+  chatDeleteStatus: ChatEventSocketModel,
+  onlineUserIds: number[],
+  typing: TypingEventSocketModel,
+  callAlert: CallAlertModel,
+  callDeclineAlert: CallAlertModel,
+  callAcceptAlert: CallAlertModel,
+  callEndAlert: CallAlertModel,
+  callEvent: CallSocketModel,
   random_match_server_push: RouletteWorkerModel,
-  random_user_remove_server_push:RouletteWorkerModel
+  random_user_remove_server_push: RouletteWorkerModel
 }
 let onlinemodel: OnlineEventResponse | null = null
 
@@ -146,7 +146,7 @@ function askForLeader() {
   }, 1000); // wait 1s for a reply
 }
 
-export async function sendmsgtoworker(message: any, is_self: boolean = false , from_socket: boolean = false) {
+export async function sendmsgtoworker(message: any, is_self: boolean = false, from_socket: boolean = false) {
   // if (typeof SharedWorker === 'undefined') {
   //   sharedWorker.port.postMessage(message)
   // }
@@ -161,7 +161,7 @@ export async function sendmsgtoworker(message: any, is_self: boolean = false , f
   channel.postMessage(message)
 }
 
-export function useServerTime(initialServerTime: string) {  
+export function useServerTime(initialServerTime: string) {
   let serverTime = new Date(initialServerTime)
   emitter.emit('serverTime', serverTime)
 }
@@ -271,11 +271,11 @@ async function handleworkerevent(event: MessageEvent<any>) {
     let onlinemodel = event.data as GroupEventSocketModel
     sendtosocket(onlinemodel)
   }
-   else if (json.event_name === "typing") {
+  else if (json.event_name === "typing") {
     let typingmodel = event.data as TypingEventSocketModel
     sendtosocket(typingmodel)
   }
-   else if (json.event_name === "typing_response") {
+  else if (json.event_name === "typing_response") {
     let typingmodel = event.data as TypingEventSocketModel
     emitter.emit('typing', typingmodel)
   }
@@ -287,68 +287,68 @@ async function handleworkerevent(event: MessageEvent<any>) {
     console.log("user_updated_to_group", from_socket)
   }
   else if (json.event_name === "chat_update_status") {
-    let json = event.data as ChatEventSocketModel   
+    let json = event.data as ChatEventSocketModel
     emitter.emit('chatUpdateStatus', json)
   }
-else if (json.event_name === "chat_read_status") {
-    let json = event.data as ChatEventSocketModel   
+  else if (json.event_name === "chat_read_status") {
+    let json = event.data as ChatEventSocketModel
     sendtosocket(json)
   }
   else if (json.event_name === "chat_delete") {
-    let json = event.data as ChatEventSocketModel   
-     emitter.emit('chatDeleteStatus', json)
+    let json = event.data as ChatEventSocketModel
+    emitter.emit('chatDeleteStatus', json)
   }
-  
+
   else if (json.event_name === "call_alert") {
-   let json = event.data as CallAlertModel   
+    let json = event.data as CallAlertModel
     emitter.emit('callAlert', json)
   }
-   else if (json.event_name === "call_decline_alert") {
-   let json = event.data as CallAlertModel   
+  else if (json.event_name === "call_decline_alert") {
+    let json = event.data as CallAlertModel
     emitter.emit('callDeclineAlert', json)
   }
   else if (json.event_name === "call_accept_alert") {
-   let json = event.data as CallAlertModel   
+    let json = event.data as CallAlertModel
     emitter.emit('callAcceptAlert', json)
   }
   else if (json.event_name === "call_end_alert") {
-   let json = event.data as CallAlertModel   
+    let json = event.data as CallAlertModel
     emitter.emit('callEndAlert', json)
   }
-  
+
   else if (json.event_name === "call") {
-    let json = event.data as CallSocketModel  
-    if (from_socket)
-    {
-       emitter.emit('callEvent', json)
+    let json = event.data as CallSocketModel
+    if (from_socket) {
+      emitter.emit('callEvent', json)
     }
-    else
-    {
-    sendtosocket(json)
+    else {
+      sendtosocket(json)
     }
 
   }
-else if (json.event_name === "call_updates") {
-   let json = event.data as CallAlertModel  
-sendtosocket(json)
-}
-else if (json.event_name === "random_match_server_push") {
-   let json = event.data as RouletteWorkerModel  
-  emitter.emit('random_match_server_push', json)
-}
-else if (json.event_name === "random_user_remove_server_push") {
-   let json = event.data as RouletteWorkerModel  
-   emitter.emit('random_user_remove_server_push', json)
-}
-else if (json.event_name === "roullete_updates") 
-    {
-         let json = event.data as  CallAlertModel
-         sendtosocket(json)
-    }
+  else if (json.event_name === "call_updates") {
+    let json = event.data as CallAlertModel
+    sendtosocket(json)
+  }
+  else if (json.event_name === "random_match_server_push") {
+    let json = event.data as RouletteWorkerModel
+    emitter.emit('random_match_server_push', json)
+  }
+  else if (json.event_name === "random_user_remove_server_push") {
+    let json = event.data as RouletteWorkerModel
+    emitter.emit('random_user_remove_server_push', json)
+  }
+  else if (json.event_name === "roullete_updates") {
+    let json = event.data as CallAlertModel
+    sendtosocket(json)
+  }
+  else if (json.event_name === "roullete_socket_status_updates") {
+    let json = event.data as CallAlertModel
+    sendtosocket(json)
+  }
 
-  
 
-  
+
 
 }
 

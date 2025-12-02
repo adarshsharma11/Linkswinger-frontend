@@ -159,6 +159,9 @@ onMounted(async () => {
 
   eventBus.on('random_match_server_push', (rouletteModel: RouletteWorkerModel) => {
     call_store.value = rouletteModel
+    if (isSocketConnected()) {
+      sendserverstatusupdates()
+    }
   })
 
   eventBus.on('random_user_remove_server_push', (rouletteModel: RouletteWorkerModel) => {
@@ -202,25 +205,25 @@ if (event.persisted) return;
 
 function getFromId(): number {
   if (call_store.value) {
-    return call_store.value.user_id ?? 0
+    return call_store.value.is_from ? call_store.value.user_id ?? 0 : call_store.value.matched_id ?? 0
   }
   return 0
 }
 function getFromSocketId(): string {
   if (call_store.value) {
-    return call_store.value.socket_id ?? ''
+    return call_store.value.is_from ? call_store.value.socket_id ?? '' : call_store.value.matched_socket_id ?? ''
   }
   return ''
 }
 function getToId() {
   if (call_store.value) {
-    return call_store.value.matched_id ?? 0
+    return call_store.value.is_from ? call_store.value.matched_id ?? 0 : call_store.value.user_id ?? 0
   }
   return 0
 }
 function getToSocketId(): string {
   if (call_store.value) {
-    return call_store.value.matched_socket_id ?? ''
+    return call_store.value.is_from ? call_store.value.matched_socket_id ?? '' : call_store.value.socket_id ?? ''
   }
   return ''
 }
@@ -236,6 +239,13 @@ function sendcallupdates() {
     updatecount = 0
   }
   updatecount += 1
+}
+
+function sendserverstatusupdates() {
+    let callupdates = new CallAlertModel()
+    callupdates.event_name = "roullete_socket_status_updates"
+    callupdates.from_id = login_store.getUserDetails?.user_id ?? 0
+    sendmsgtoworker(callupdates, true)
 }
 
 function sendoffer() {

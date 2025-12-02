@@ -162,6 +162,9 @@ else if (event_name === "call_alert")
     let json = JSON.parse(jsontext) as  RouletteWorkerModel
          sendmsgtoworker(json, true,true)
     }
+     
+
+    
     
     
 }
