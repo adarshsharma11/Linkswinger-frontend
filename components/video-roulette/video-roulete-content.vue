@@ -182,6 +182,7 @@ onMounted(async () => {
       path: "/",
       ttl: 1000
     })
+    console.log('roullete_session_expired')
   })
 
   eventBus.on('roullete_partner_left', (rouletteModel: RouletteWorkerModel) => {
@@ -190,8 +191,8 @@ onMounted(async () => {
     hasAnswer.value = false
     isAnswerSent.value = false
     webrtcclient.teardown()
-    console.log('roullete_partner_left',rouletteModel)
     
+     console.log('roullete_partner_left')
   })
   
 
