@@ -224,4 +224,18 @@ button#settingsMenuMobile {
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7);
   transition: all 0.3s ease;
 }
+.chat-count-badge {
+  top: -20px;
+  width: 28px;
+  height: 28px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.menu-item-span {
+     font-size: 15px;
+     font-weight: bold;
+     margin-right: 6px;
+}
 
