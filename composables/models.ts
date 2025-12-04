@@ -481,6 +481,10 @@ export namespace FeedsModel {
     feed_type?: string
     is_liked?: boolean
     comment_count?: number
+    can_comment?:boolean
+    can_like?:boolean
+    approval_status?:string
+    classification?:string
 
   }
 

@@ -72,11 +72,11 @@
                                     <button>
                                         <img src="/public/images/icons-folder/Report-150x150px.png" class="Report-icon"/>
                                     </button>
-                                    <button :style="{ backgroundColor: item.is_liked ? 'green' : 'white' }"
-                                        v-if="!is_like_loading[index]" @click.stop="addLikeDisLike(item.feed_id ?? 0, index)">
+                                    <button  :style="{ backgroundColor: item.is_liked ? 'green' : 'white' }"
+                                        v-if="!is_like_loading[index] && item.can_like === true" @click.stop="addLikeDisLike(item.feed_id ?? 0, index)">
                                         <img src="/public/images/icons-folder/Like-150x150px.png" class="like-icon"/>
                                     </button>
-                                    <button aria-label="Go to Comment" @click.stop="openComments(item.feed_id ?? 0, index)">
+                                    <button v-if="item.can_comment === true"  aria-label="Go to Comment" @click.stop="openComments(item.feed_id ?? 0, index)">
                                         <img src="/public/images/icons-folder/Comments-150x150px.png" class="comment-icon"/>
                                     </button>
                                     <!--<button aria-label="Fullscreen" @click.stop="toggleFullscreen(item.feed_id ?? 0, index)" class="fullscreen-btn">
@@ -205,7 +205,7 @@ const commentRef = ref<HTMLInputElement | null>(null);
 const emojiPickerRef = ref(null)
 const isFullscreen = ref([]) // track fullscreen state per video
 definePageMeta({
-    middleware: 'auth'
+    middleware: 'auth',
 })
 const allFeeds = ref([] as FeedsModel.FeedsResponseModel[])
 const fetchFeeds = async () => {
@@ -226,6 +226,7 @@ const fetchFeeds = async () => {
     return feed_response.value?.result ?? []
 }
 allFeeds.value = await fetchFeeds() as FeedsModel.FeedsResponseModel[]
+
 // Initialize per-video loading states
 is_like_loading.value = new Array(allFeeds.value.length).fill(false);
 onMounted(async () => {
