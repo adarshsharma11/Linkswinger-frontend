@@ -62,7 +62,7 @@ interface Props {
   user: UsersModel.ProfileDetailsResponseModel
   onlineUsers: number[]
 }
-
+const login_store = useLoginStore();
 const props = defineProps<Props>()
 
 // Computed properties for better performance
@@ -124,9 +124,21 @@ function getmembershipIcon(user: UsersModel.ProfileDetailsResponseModel): string
   return "/images/badges/free.gif"
 }
 
+// function getDistance(user: UsersModel.ProfileDetailsResponseModel): string {
+//   // Handle different possible distance property names
+//   const distance = (user as any).distance ?? (user as any).miles ?? 0
+//   return distance.toString()
+// }
+
 function getDistance(user: UsersModel.ProfileDetailsResponseModel): string {
-  // Handle different possible distance property names
-  const distance = (user as any).distance ?? (user as any).miles ?? 0
-  return distance.toString()
+  let lat = login_store.getUserDetails?.latitude ?? 0
+  let lon = login_store.getUserDetails?.longitude ?? 0
+  let distance = getDistanceFromLatLonInMiles(
+    user.latitude ?? 0,
+    user.longitude ?? 0,
+    lat,
+    lon)
+  return distance.toFixed(2) as string
 }
+
 </script>
