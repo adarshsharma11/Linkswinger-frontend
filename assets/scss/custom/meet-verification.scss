@@ -59,13 +59,16 @@ $text-muted: #a5afc7;
     width: 30px;
     height: 30px;
     border-radius: 12px;
-    background: radial-gradient(circle at 20% 0, #ff4c7f, $accent-red 35%, #7a0027 70%, #16000b 100%);
     box-shadow: 0 0 16px rgba(255, 0, 76, 0.7);
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: 800;
     color: white;
+    img {
+      width: 30px;
+      height: 30px;
+    }
   }
 
   .lsv-brand-sub {

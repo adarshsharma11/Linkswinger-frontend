@@ -296,21 +296,21 @@
                   <small>Chat</small>
                 </div>
 
-              <div class="d-flex flex-column align-items-center" @click="showCodeAlert(false)">
-                <img src="/images/badges/animated/50X50px/call.gif" alt="Call" class="badge-icon" />
-                <small>Call</small>
-              </div>
-              <div class="d-flex flex-column align-items-center" @click="showCodeAlert(true)">
-                <img src="/images/badges/animated/50X50px/video-call.gif" alt="Video Call" class="badge-icon" />
-                <small>Video</small>
+              <div class="d-flex flex-column align-items-center">
+                <img src="/images/badges/animated/50X50px/my-friends.gif" alt="Call" class="badge-icon" />
+                <small>Friends List</small>
               </div>
               <div class="d-flex flex-column align-items-center">
-                <img src="/images/badges/animated/50X50px/ls-like.gif" alt="Like" class="badge-icon" />
-                <small>Like</small>
+                <img src="/images/badges/animated/50X50px/crush-list.gif" alt="Video Call" class="badge-icon" />
+                <small>Crush List</small>
               </div>
               <div class="d-flex flex-column align-items-center">
-                <img src="/images/badges/animated/50X50px/video-roulette-available.gif" alt="VIP" class="badge-icon" />
-                <small>VIP</small>
+                <img src="/images/badges/animated/50X50px/views.gif" alt="Like" class="badge-icon" />
+                <small>Views</small>
+              </div>
+              <div class="d-flex flex-column align-items-center">
+                <img src="/images/badges/animated/50X50px/location.gif" alt="VIP" class="badge-icon" />
+                <small>Nearby</small>
               </div>
             </div>
           </div>

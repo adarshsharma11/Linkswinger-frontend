@@ -4,11 +4,11 @@
       <!-- Top bar -->
       <div class="lsv-top-bar">
         <div class="lsv-top-left">
-          <button class="lsv-top-btn"><span class="icon">←</span> Back</button>
-          <button class="lsv-top-btn"><span class="icon">🏠</span> Home</button>
+          <button class="lsv-top-btn" @click="goBack()"><span class="icon">←</span> Back</button>
+          <button class="lsv-top-btn" @click="goHome()"><span class="icon">🏠</span> Home</button>
         </div>
         <div class="lsv-brand">
-          <div class="lsv-logo">LS</div>
+          <div class="lsv-logo"><img src="/images/logo/landing-logo.gif" alt="LinkSwinger" /></div>
           <div>
             <div>LinkSwingers</div>
             <div class="lsv-brand-sub">MY VERIFICATIONS</div>
@@ -124,6 +124,19 @@ const recCount = ref(0)
 const is_updating = ref(false)
 const is_loading = ref(false)
 const is_given_open = ref(false)
+
+// Navigation functions
+const goBack = () => {
+  if (window.history.length > 1) {
+    window.history.back()
+  } else {
+    navigateTo('/profile')
+  }
+}
+
+const goHome = () => {
+  navigateTo('/dashboard')
+}
 
 const fetchMeetVerifications = async () => {
   const api_url = getUrl(RequestURL.fetchMeetVerifications);
@@ -350,3 +363,33 @@ const response = await $fetch<SuccessError<MeetVerificationsModel.FetchVerifyRes
 
 
 </script>
+
+<style scoped>
+/* Enhanced button styling for better UX */
+.lsv-top-btn {
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+}
+
+.lsv-top-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.lsv-top-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Ensure proper spacing for mobile */
+@media (max-width: 576px) {
+  .lsv-top-left {
+    gap: 0.5rem;
+  }
+  
+  .lsv-top-btn {
+    padding: 0.375rem 0.75rem;
+    font-size: 0.875rem;
+  }
+}
+</style>
