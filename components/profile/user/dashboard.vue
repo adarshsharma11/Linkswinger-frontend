@@ -159,53 +159,15 @@
 
 
           <div id="grid" class="grid user-grid" aria-live="polite">
-            <article class="card" v-for="user in users" :key="user.user_id">
-              <div class="media" @click="openProfile(user)">
-                <img :src="getImagePath(user)" alt="Maya" loading="lazy" decoding="async">
-                <span class="online-dot" title="Online now" v-if="onlineUsers.includes(user.user_id ?? 0)"></span>
-                <span class="badge-elite"><img :src="getmembershipIcon(user)"></span>
-
-              </div>
-              <div class="content">
-                <div class="row1">
-                  <div>
-                    <div class="name d-flex flex-wrap align-items-center">{{ user.nick_name }}
-                      <ul class="nm-icons">
-                        <li><img :src="getmembershipIcon(user)" alt="Message" class="rounded-circle" /></li>
-                        <li><img v-if="user.is_meet_verified" src="/images/badges/animated/150X150px/MEET-VERIFYED.gif"
-                            alt="Message" class="rounded-circle" /></li>
-                        <li><img v-if="user.is_photo_verified"
-                            src="/images/badges/animated/150X150px/FLAG-ANIMATION.gif" alt="Message"
-                            class="rounded-circle" /></li>
-                      </ul>
-                    </div>
-                    <div class="meta">{{ user.town }} • {{ getDistance(user) }} miles </div>
-                  </div>
-                </div>
-                <!--<div class="chips">
-                  <span class="chip" v-for="interest in user.interests?.slice(0, 3)">{{ interest.interest_name }}</span>
-                  <button class="chip" v-if="(user.interests?.length ?? 0) > 3" @click="openProfile(user)"> +{{
-                    (user.interests?.length ?? 0) - 3 }} more</button>
-                </div>-->
-                <div class="chips">
-                  <span style="color: white;">{{ user.profile_status }}</span>
-                </div>
-                <div class="actions">
-                  <button class="action" data-action="message" aria-label="Message" @click="openChat(user)"><span
-                      class="act-icon"><img src="/images/badges/animated/50X50px/chat.gif" alt="Message"
-                        class="rounded-circle" style="width: 25px; height: 25px; object-fit: cover" /></span>
-                    Message</button>
-                  <button @click="showCodeAlert(user.user_id ?? 0,false)" class="action" data-action="call" aria-label="Voice call"><span class="act-icon">
-                      <img src="/images/badges/animated/50X50px/call.gif" alt="Message" class="rounded-circle"
-                        style="width: 25px; height: 25px; object-fit: cover" />
-                    </span>Call</button>
-                  <button @click="showCodeAlert(user.user_id ?? 0,true)" class="action" data-action="video" aria-label="Video call"><span class="act-icon"><img
-                        src="/images/badges/animated/50X50px/video-call.gif" alt="Message" class="rounded-circle"
-                        style="width: 25px; height: 25px; object-fit: cover" />
-                    </span>Video</button>
-                </div>
-              </div>
-            </article>
+            <UserCard 
+              v-for="user in users" 
+              :key="user.user_id"
+              :user="user"
+              :online-users="onlineUsers"
+              @open-profile="openProfile"
+              @open-chat="openChat"
+              @show-code-alert="showCodeAlert"
+            />
           </div>
 
         </section>
@@ -301,76 +263,45 @@
 
         <!-- SHORTLIST -->
         <section id="view-crush" :hidden="activeNav !== 'crush'">
-          <div class="dashboard-card glow">
-            <h2 class="text-white" style="margin-bottom: 8px;">Crush List</h2>
-            <p class="muted" style="margin-bottom: 16px;">Save profiles you like (not friends yet). Later this becomes
-              “Add to Crush List” on profile dashboard-cards.</p>
-            <div class="list">
-              <div class="item">
-                <div class="avatar" />
-                <div style="flex:1; font-size: 13px;" class="text-white">Jamie • 4 km • Verified ✅</div>
-                <button class="dash-button" style="font-size: 12px; padding: 6px 10px;">Message</button>
-                <button class="dash-button" style="font-size: 12px; padding: 6px 10px;">Remove</button>
-              </div>
-              <div class="item">
-                <div class="avatar" />
-                <div style="flex:1; font-size: 13px;" class="text-white">Taylor • 9 km • Online 🟢</div>
-                <button class="dash-button" style="font-size: 12px; padding: 6px 10px;">Message</button>
-                <button class="dash-button" style="font-size: 12px; padding: 6px 10px;">Remove</button>
-              </div>
-            </div>
-            <!-- Empty state -->
-            <div style="text-align: center; padding: 24px; color: var(--muted); font-size: 13px;">
-              No crushes yet. Start exploring profiles to find people you like!
-            </div>
+             <div id="grid" class="grid user-grid" aria-live="polite">
+          <UserCard 
+              v-for="user in users" 
+              :key="user.user_id"
+              :user="user"
+              :online-users="onlineUsers"
+              @open-profile="openProfile"
+              @open-chat="openChat"
+              @show-code-alert="showCodeAlert"
+            />
           </div>
         </section>
 
         <!-- SUBPAGES (no sidebar entry) -->
         <section id="view-nearby" :hidden="activeNav !== 'nearby'">
-          <div class="dashboard-card glow">
-            <h2 class="text-white">Nearby People</h2>
-            <p class="muted" style="margin-bottom: 16px;">People within your selected radius. (Hook to geolocation +
-              distance filter.)</p>
-            <div class="list">
-              <div class="item">
-                <div class="avatar" />
-                <div style="flex:1; font-size: 13px;" class="text-white">User A • 1.2 km • Online 🟢</div>
-                <button class="dash-button" style="font-size: 12px; padding: 6px 10px;">Message</button>
-              </div>
-              <div class="item">
-                <div class="avatar" />
-                <div style="flex:1; font-size: 13px;" class="text-white">Couple B • 3.5 km • Verified ✅</div>
-                <button class="dash-button" style="font-size: 12px; padding: 6px 10px;">Call</button>
-              </div>
-            </div>
-            <!-- Empty state -->
-            <div style="text-align: center; padding: 24px; color: var(--muted); font-size: 13px;">
-              No nearby users found. Try expanding your search radius.
-            </div>
+           <div id="grid" class="grid user-grid" aria-live="polite">
+          <UserCard 
+              v-for="user in users" 
+              :key="user.user_id"
+              :user="user"
+              :online-users="onlineUsers"
+              @open-profile="openProfile"
+              @open-chat="openChat"
+              @show-code-alert="showCodeAlert"
+            />
           </div>
         </section>
 
         <section id="view-friends" :hidden="activeNav !== 'friends'">
-          <div class="dashboard-dashboard-card glow">
-            <h2 class="text-white">My Friends</h2>
-            <p class="muted" style="margin-bottom: 16px;">Your connections and favourites.</p>
-            <div class="list">
-              <div class="item">
-                <div class="avatar" />
-                <div style="flex:1; font-size: 13px;" class="text-white">Jess • last active 5m</div>
-                <button class="dash-button" style="font-size: 12px; padding: 6px 10px;">Open chat</button>
-              </div>
-              <div class="item">
-                <div class="avatar" />
-                <div style="flex:1; font-size: 13px;" class="text-white">Alex & Sam • last active 1h</div>
-                <button class="dash-button" style="font-size: 12px; padding: 6px 10px;">Open chat</button>
-              </div>
-            </div>
-            <!-- Empty state -->
-            <div style="text-align: center; padding: 24px; color: var(--muted); font-size: 13px;">
-              No friends yet. Start connecting with people to build your network!
-            </div>
+          <div id="grid" class="grid user-grid" aria-live="polite">
+          <UserCard 
+              v-for="user in users" 
+              :key="user.user_id"
+              :user="user"
+              :online-users="onlineUsers"
+              @open-profile="openProfile"
+              @open-chat="openChat"
+              @show-code-alert="showCodeAlert"
+            />
           </div>
         </section>
 
@@ -744,6 +675,7 @@ import Multiselect from 'vue-multiselect';
 import 'vue-multiselect/dist/vue-multiselect.css';
 import type { CallsModel } from '~/composables/websocketModels';
 import Swal from 'sweetalert2'
+import UserCard from '~/components/profile/user/UserCard.vue';
 const id_store = idStore()
 const route = useRoute()
 const router = useRouter()

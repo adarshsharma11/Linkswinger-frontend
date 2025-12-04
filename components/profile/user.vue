@@ -305,7 +305,7 @@
                 <small>Crush List</small>
               </div>
               <div class="d-flex flex-column align-items-center">
-                <img src="/images/badges/animated/50X50px/public-photos.gif" alt="Like" class="badge-icon" />
+                <img src="/images/badges/animated/50X50px/views.gif" alt="Like" class="badge-icon" />
                 <small>Views</small>
               </div>
               <div class="d-flex flex-column align-items-center">
