@@ -8,7 +8,7 @@
           <button class="lsv-top-btn" @click="goHome"><span class="icon">🏠</span> Home</button>
         </div>
         <div class="lsv-brand">
-          <div class="lsv-logo">LS</div>
+          <div class="lsv-logo"><img src="/images/logo/landing-logo.gif" alt="LinkSwinger" /></div>
           <div>
             <div>LinkSwingers</div>
             <div class="lsv-brand-sub">PROFILE PICTURE</div>
@@ -116,7 +116,7 @@ const fetchFeeds = async () => {
     return feed_response.value?.result ?? []
 }
 allFeeds.value = await fetchFeeds() as FeedsModel.FeedsResponseModel[]
-
+compareProfilePic()
 // Methods
 const selectMedia = (media : FeedsModel.FeedsResponseModel) => {
   selectedMedia.value = media
@@ -158,11 +158,19 @@ const goBack = () => {
 
 const goHome = () => {
   // Navigate to home
-  window.location.href = '/'
+  window.location.href = '/dashboard'
 }
 
 onMounted(() => {
   // Load user's approved media from API in real implementation
   console.log('Profile picture selection page loaded')
 })
+
+function compareProfilePic() {
+  allFeeds.value.forEach(media => {
+    if (media.lq_feed_image === login_store.getUserDetails?.profile_image) {
+      selectedMedia.value = media
+    }
+  })
+}
 </script>

@@ -5,7 +5,4 @@
 useHead({
     title: "LinkSwinger – Billing Policy"
 })
- definePageMeta({
-        middleware:'validateuser'
-    })
 </script>

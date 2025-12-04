@@ -67,6 +67,11 @@
                         <Multiselect v-model="gender" :options="allOptions.genders" :multiple="false"
                             :close-on-select="true" placeholder="Select Gender" :disabled="is_gender_disabled" />
                     </div> -->
+                    <div class="form-group ">
+                        <label>Country</label>
+                        <input class="form-control disabled-input" id="country" type="text" placeholder="Country"
+                                   value="United Kingdom" disabled />
+                    </div>
 
                     <div class="form-group ">
                         <label>Town/City</label>
@@ -722,15 +727,15 @@ function checkValidation(): boolean {
 }
 function getProfileImage() : string
 {
-  let url = previewUrl.value ?? ''
-    if (url.length > 0) return url
+//   let url = previewUrl.value ?? ''
+//     if (url.length > 0) return url
 
-  let media_path = login_store.getUserDetails?.media_path ?? ''
-  let profile_image = login_store.getUserDetails?.profile_image ?? ''
-  if (media_path.length > 0 && profile_image.length > 0)
-  {
-    return media_path + profile_image
-  }
+//   let media_path = login_store.getUserDetails?.media_path ?? ''
+//   let profile_image = login_store.getUserDetails?.profile_image ?? ''
+//   if (media_path.length > 0 && profile_image.length > 0)
+//   {
+//     return media_path + profile_image
+//   }
   return "/images/badges/animated/150X150px/edit-profile.gif"
 }
 </script>
