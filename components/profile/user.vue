@@ -3,15 +3,23 @@
   
     <div class="container">
       <!-- Header -->
-      <div class="profile-header container-fluid px-3 px-md-4">
+      <div class="profile-header container-fluid px-3 px-md-4 mt-4">
 
         <div class="row align-items-center d-md-none">
           <!-- Mobile Settings Menu -->
           <div class="col-12 mb-2 d-md-none">
             <div class="dropdown d-flex justify-content-end">
-              <button v-if="isMine()" id="settingsMenuMobile"
-                class="btn p-0 border-0 bg-transparent d-flex flex-column align-items-center text-white mr-2"
+            <button v-if="isMine()" id="settingsMenuMobile"
+                class="btn p-0 border-0 bg-transparent d-flex flex-column align-items-center text-white mr-2 position-relative"
                 data-bs-toggle="dropdown" aria-expanded="false">
+
+                <!-- Red ! badge -->
+                <span class="position-absolute top-0 start-100 translate-middle 
+                  text-danger"
+                  style="font-size: 15px; width: 16px; height: 16px; display:flex; align-items:center; justify-content:center;">
+                  !
+                </span>
+
                 <img src="/images/badges/animated/50X50px/settings.gif" alt="Settings" class="rounded-circle"
                   style="width: 40px; height: 40px; object-fit: cover" />
                 <small>Settings</small>
@@ -19,7 +27,10 @@
               <ul class="dropdown-menu dropdown-menu-end bg-dark text-white setting-dropdown-menu"
                 aria-labelledby="settingsMenuMobile">
                 <li>
-                  <button class="dropdown-item text-white d-flex align-items-center" @click="navigateTo('/membership')">
+                  <button class="dropdown-item text-white d-flex align-items-center position-relative" @click="navigateTo('/membership')">
+                     <span class="text-danger menu-item-span">
+                        !
+                      </span>
                     <img src="/images/badges/animated/50X50px/elite.gif" alt="Verify" class="rounded-circle me-2"
                       style="width: 30px; height: 30px; object-fit: cover" />
                     <span class="text-white">Membership</span>
@@ -50,8 +61,11 @@
                   </button>
                 </li>
                 <li>
-                  <button class="dropdown-item text-white d-flex align-items-center"
+                  <button class="dropdown-item text-white d-flex align-items-center position-relative"
                     @click="navigateTo(`/meet-verification`)">
+                    <span class="text-danger menu-item-span">
+                        !
+                      </span>
                     <img src="/images/badges/animated/50X50px/profile-settings.gif" alt="Verify"
                       class="rounded-circle me-2" style="width: 30px; height: 30px; object-fit: cover" />
                     <span class="text-white">Meet Verifications</span>
@@ -155,16 +169,27 @@
           <div class="col-md-3 d-none d-md-flex justify-content-center">
             <div class="dropdown">
               <button v-if="isMine()" id="settingsMenu"
-                class="btn p-0 border-0 bg-transparent d-flex flex-column align-items-center text-white"
+                class="btn p-0 border-0 bg-transparent d-flex flex-column align-items-center text-white position-relative"
                 data-bs-toggle="dropdown" aria-expanded="false">
-                <img src="/images/badges/animated/50X50px/settings.gif" alt="Settings" class="rounded-circle"
-                  style="width: 50px; height: 50px; object-fit: cover" />
-                <small>Settings</small>
-              </button>
+
+            <!-- Red ! badge -->
+            <span class="position-absolute top-0 start-100 translate-middle 
+              text-danger"
+              style="font-size: 25px; width: 16px; height: 16px; display:flex; align-items:center; justify-content:center;">
+              !
+            </span>
+
+            <img src="/images/badges/animated/50X50px/settings.gif" alt="Settings" class="rounded-circle"
+              style="width: 50px; height: 50px; object-fit: cover" />
+            <small>Settings</small>
+          </button>
               <ul class="dropdown-menu dropdown-menu-end bg-dark text-white setting-dropdown-menu"
                 aria-labelledby="settingsMenu">
                 <li>
-                  <button class="dropdown-item text-white d-flex align-items-center" @click="navigateTo('/membership')">
+                  <button class="dropdown-item text-white d-flex align-items-center position-relative" @click="navigateTo('/membership')">
+                    <span class="text-danger menu-item-span">
+                        !
+                      </span>
                     <img src="/images/badges/animated/50X50px/elite.gif" alt="Verify" class="rounded-circle me-2"
                       style="width: 30px; height: 30px; object-fit: cover" />
                     <span class="text-white">Membership</span>
@@ -195,8 +220,11 @@
                   </button>
                 </li>
                 <li>
-                  <button class="dropdown-item text-white d-flex align-items-center"
+                  <button class="dropdown-item text-white d-flex align-items-center position-relative"
                     @click="navigateTo(`/meet-verification`)">
+                    <span class="text-danger menu-item-span">
+                        !
+                      </span>
                     <img src="/images/badges/animated/50X50px/meet-verification.gif" alt="Verify"
                       class="rounded-circle me-2" style="width: 30px; height: 30px; object-fit: cover" />
                     <span class="text-white">Meet Verifications</span>
@@ -254,10 +282,20 @@
           <!-- Center: Action icons -->
           <div class="col-12 col-md-6">
             <div class="d-flex gap-3 gap-md-4 flex-wrap justify-content-center">
-              <div class="d-flex flex-column align-items-center" @click="openChat()">
-                <img src="/images/badges/animated/50X50px/chat.gif" alt="Chat" class="badge-icon" />
-                <small>Chat</small>
-              </div>
+             <div class="d-flex flex-column align-items-center position-relative" @click="openChat()">
+
+                  <!-- Square red glowing badge behind the icon -->
+                  <div class="position-absolute chat-count-badge">
+                    <span style="font-size:12px; font-weight:bold;" class="text-danger">
+                      2654
+                    </span>
+                  </div>
+                  <img src="/images/badges/animated/50X50px/chat.gif"
+                      alt="Chat"
+                      class="badge-icon" />
+                  <small>Chat</small>
+                </div>
+
               <div class="d-flex flex-column align-items-center" @click="showCodeAlert(false)">
                 <img src="/images/badges/animated/50X50px/call.gif" alt="Call" class="badge-icon" />
                 <small>Call</small>
