@@ -136,7 +136,7 @@
                 </button> -->
                  <button v-if="!is_photo_uploading && isMine()" type="button" class="btn btn-transparent rounded-circle position-absolute profile-edit-btn"
                  @click="navigateTo('/profile-picture')">
-                  <i class="fa fa-camera text-white"></i>
+                  <i class="fa fa-photo text-white"></i>
                 </button>
                 <!-- Remove button - bottom right -->
                 <button @click="removeProfilePhoto()" v-if="!is_photo_uploading && isMine() && (getUser()?.profile_image ?? '').length !== 0"
