@@ -56,7 +56,11 @@ export enum RequestURL {
   rouletteEnd = "/rouletteEnd",
   updateProfilePicture = "/updateProfilePicture",
   updateVisibility = "/updateVisibility",
-  fetchGivenMeetVerifications = "/fetchGivenMeetVerifications"
+  fetchGivenMeetVerifications = "/fetchGivenMeetVerifications",
+  updateCommentStatus = "/updateCommentStatus",
+  updateLikeStatus = "/updateLikeStatus",
+  updateFeedType = "/updateFeedType",
+  deleteFeed = "/deleteFeed"
 }
 
 export var online_user_ids: number[] = []
@@ -480,6 +484,7 @@ export namespace FeedsModel {
     feed_desc?: string
     feed_type?: string
     is_liked?: boolean
+    is_loading?: boolean
     comment_count?: number
     can_comment?:boolean
     can_like?:boolean

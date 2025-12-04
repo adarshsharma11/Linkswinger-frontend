@@ -78,27 +78,28 @@
 
                 <!-- <span class="st-media-length">Photo</span> -->
               </div>
-              <div class="st-media-controls">
-                <select class="st-media-select" v-model="image.feed_type">
+              <span class="btn-loader" v-if="image.is_loading === true"></span>
+              <div class="st-media-controls" v-if="image.is_loading !== true">
+                <select class="st-media-select" v-model="image.feed_type" @change="updateFeedType(image)">
                   <option value="public" selected>Public</option>
                   <option value="friends">Friends only</option>
                   <option value="private">Private</option>
                 </select>
-                <button class="st-btn-delete">Delete</button>
+                <button class="st-btn-delete" @click="deleteFeed(image)">Delete</button>
               </div>
-              <div class="st-media-options">
+              <div class="st-media-options" v-if="image.is_loading !== true">
                 <div class="st-media-option">
                   <span class="st-option-label">Comments</span>
-                  <select class="st-option-select">
-                    <option selected>On</option>
-                    <option>Off</option>
+                  <select class="st-option-select" v-model="image.can_comment" @change="updateCommentStatus(image)">
+                    <option :value="true">On</option>
+                    <option :value="false">Off</option>
                   </select>
                 </div>
                 <div class="st-media-option">
                   <span class="st-option-label">Likes</span>
-                  <select class="st-option-select">
-                    <option selected>On</option>
-                    <option>Off</option>
+                  <select class="st-option-select" v-model="image.can_like" @change="updateLikeStatus(image)">
+                    <option :value="true">On</option>
+                    <option :value="false">Off</option>
                   </select>
                 </div>
               </div>
@@ -145,27 +146,28 @@
                 <!-- <span class="st-media-name">VID_001.mp4</span>
                 <span class="st-media-length">01:23</span> -->
               </div>
-              <div class="st-media-controls">
-                <select class="st-media-select" v-model="video.feed_type">
+              <span class="btn-loader" v-if="video.is_loading === true"></span>
+              <div class="st-media-controls" v-if="video.is_loading !== true">
+                <select class="st-media-select" v-model="video.feed_type" @change="updateFeedType(video)">
                   <option value="public" selected>Public</option>
                   <option value="friends">Friends only</option>
                   <option value="private">Private</option>
                 </select>
-                <button class="st-btn-delete">Delete</button>
+                <button class="st-btn-delete" @click="deleteFeed(video)">Delete</button>
               </div>
-              <div class="st-media-options">
+              <div class="st-media-options" v-if="video.is_loading !== true">
                 <div class="st-media-option">
                   <span class="st-option-label">Comments</span>
-                  <select class="st-option-select">
-                    <option selected>On</option>
-                    <option>Off</option>
+                  <select class="st-option-select" v-model="video.can_comment" @change="updateCommentStatus(video)">
+                    <option :value="true">On</option>
+                    <option :value="false">Off</option>
                   </select>
                 </div>
                 <div class="st-media-option">
                   <span class="st-option-label">Likes</span>
-                  <select class="st-option-select">
-                    <option selected>On</option>
-                    <option>Off</option>
+                  <select class="st-option-select" v-model="video.can_like" @change="updateLikeStatus(video)">
+                    <option :value=true>On</option>
+                    <option :value=false>Off</option>
                   </select>
                 </div>
               </div>
@@ -245,6 +247,102 @@ function getVideos() : FeedsModel.FeedsResponseModel[]
        return el.media_type === 'video' &&  el.feed_type === feedTypeFilter.value
     })
 }
+
+async function deleteFeed(feed:FeedsModel.FeedsResponseModel)
+{
+  feed.is_loading = true;
+    let api_url = getUrl(RequestURL.deleteFeed);
+    let postData = {
+      feed_id: feed.feed_id
+    }
+    let response = await $fetch<SuccessError<FeedsModel.FeedsResponseModel>>(api_url, {
+      method: 'POST',
+      body: postData,
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+     feed.is_loading = false;
+    
+    if (response.success) {
+      showToastSuccess(response.message ?? "Reset link sent to your email");
+    }
+    else {
+      showToastError(response.message ?? "Something went wrong");
+    }
+}
+async function updateCommentStatus(feed:FeedsModel.FeedsResponseModel)
+{
+  feed.is_loading = true;
+    let api_url = getUrl(RequestURL.updateCommentStatus);
+    let postData = {
+      feed_id: feed.feed_id
+    }
+    let response = await $fetch<SuccessError<FeedsModel.FeedsResponseModel>>(api_url, {
+      method: 'POST',
+      body: postData,
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+     feed.is_loading = false;
+    
+    if (response.success) {
+      showToastSuccess(response.message ?? "Reset link sent to your email");
+    }
+    else {
+      showToastError(response.message ?? "Something went wrong");
+    }
+}
+async function updateLikeStatus(feed:FeedsModel.FeedsResponseModel)
+{
+  feed.is_loading = true;
+    let api_url = getUrl(RequestURL.updateLikeStatus);
+    let postData = {
+      feed_id: feed.feed_id
+    }
+    let response = await $fetch<SuccessError<FeedsModel.FeedsResponseModel>>(api_url, {
+      method: 'POST',
+      body: postData,
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+     feed.is_loading = false;
+    
+    if (response.success) {
+      showToastSuccess(response.message ?? "Reset link sent to your email");
+    }
+    else {
+      showToastError(response.message ?? "Something went wrong");
+    }
+}
+
+async function updateFeedType(feed:FeedsModel.FeedsResponseModel)
+{
+  feed.is_loading = true;
+    let api_url = getUrl(RequestURL.updateFeedType);
+    let postData = {
+      feed_id: feed.feed_id,
+      feed_type : feed.feed_type
+    }
+    let response = await $fetch<SuccessError<FeedsModel.FeedsResponseModel>>(api_url, {
+      method: 'POST',
+      body: postData,
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+     feed.is_loading = false;
+    
+    if (response.success) {
+      showToastSuccess(response.message ?? "Reset link sent to your email");
+    }
+    else {
+      showToastError(response.message ?? "Something went wrong");
+    }
+}
+
 
  onMounted(() => {
     
