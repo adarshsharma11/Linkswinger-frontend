@@ -60,7 +60,8 @@ export enum RequestURL {
   updateCommentStatus = "/updateCommentStatus",
   updateLikeStatus = "/updateLikeStatus",
   updateFeedType = "/updateFeedType",
-  deleteFeed = "/deleteFeed"
+  deleteFeed = "/deleteFeed",
+  getChatReadCount = "/getChatReadCount"
 }
 
 export var online_user_ids: number[] = []
@@ -573,6 +574,7 @@ export namespace ChatsModel {
 
     url?: string;
     key?: string;
+    unread_user_count?:number
 
   }
 

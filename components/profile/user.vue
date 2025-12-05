@@ -286,8 +286,8 @@
 
                   <!-- Square red glowing badge behind the icon -->
                   <div class="position-absolute chat-count-badge">
-                    <span style="font-size:12px; font-weight:bold;" class="text-danger">
-                      2654
+                    <span v-if="unread_user_count > 0" style="font-size:12px; font-weight:bold;" class="text-danger">
+                      {{ unread_user_count }}
                     </span>
                   </div>
                   <img src="/images/badges/animated/50X50px/chat.gif"
@@ -450,7 +450,7 @@
 
 </template>
 <script setup lang="ts">
-import { MeetVerificationsModel, type UsersModel } from '~/composables/models';
+import { ChatsModel, MeetVerificationsModel, type UsersModel } from '~/composables/models';
 import Swal from 'sweetalert2'
 import { EmojiPicker } from '#components';
 import { Teleport } from 'vue';
@@ -475,6 +475,7 @@ const is_photo_uploading = ref(false);
 const previewUrlFile = ref<Blob | null>(null);
 const fileInput = ref<HTMLInputElement | null>(null);
 const previewUrl = ref<string | null>(null);
+const unread_user_count = ref(0);
 
 if (isMine() === false) {
   const fetchUserDetails = async () => {
@@ -496,6 +497,27 @@ if (isMine() === false) {
     }
   };
   fetchUserDetails();
+}
+if (isMine() === true) {
+  const fetchReadCount = async () => {
+    const api_url = getUrl(RequestURL.getChatReadCount);
+    const { data: response, error: option_error } = await useFetch<SuccessError<ChatsModel.ChatResponseModel>>(
+      api_url,
+      {
+        method: "POST",
+        body: {
+          user_id: Number(props.user_id ?? 0),
+        },
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    if (response.value?.success) {
+     unread_user_count.value = response.value?.response?.unread_user_count ?? 0
+    }
+  };
+  fetchReadCount();
 }
 const fetchMeetVerifications = async () => {
   const api_url = getUrl(RequestURL.fetchMeetVerifications);
