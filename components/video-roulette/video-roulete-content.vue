@@ -54,6 +54,7 @@
         <div class="actions">
           <!-- <button class="btn" id="prevBtn" title="Skip backward">⟵ Back</button> -->
           <button class="btn" id="nextBtn" title="Skip forward">Next ⟶</button>
+           <button class="btn" id="nextBtn" title="Skip forward">Start</button>
           <button class="btn btn-danger" id="reportBtn" title="Report current partner">⚠ Report</button>
         </div>
 
@@ -100,6 +101,7 @@ const call_store = ref<RouletteWorkerModel | null>(null)
 var updatecount = 0
 
 const route = useRoute()
+const isStarted = ref(false)
 const formattedTime = computed(() => {
   const hours = Math.floor(timeStart.value / 3600).toString().padStart(2, '0');
   const mins = Math.floor((timeStart.value % 3600) / 60).toString().padStart(2, '0');
