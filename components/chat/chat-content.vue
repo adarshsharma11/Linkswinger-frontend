@@ -788,12 +788,21 @@ onMounted(async () => {
     nextTick(() => { if (scrollContainer.value) scrollContainer.value.scrollTop = scrollContainer.value.scrollHeight; })
   })
 
-  nextTick(() => { if (scrollContainer.value) scrollContainer.value.scrollTop = scrollContainer.value.scrollHeight; });
+  nextTick(() => { scrollBottomSmooth() });
 
   checkuseronline()
   const tid = Number(route.params.id) ?? 0
   if (tid !== 0) updateBadgeCount(tid)
 })
+
+const scrollBottomSmooth = () => {
+  requestAnimationFrame(() => {
+    if (scrollContainer.value) {
+      scrollContainer.value.scrollTop = scrollContainer.value.scrollHeight;
+    }
+  });
+};
+
 
 // cleanup
 onBeforeUnmount(() => {
