@@ -82,7 +82,7 @@
                 <li>
                   <button class="dropdown-item text-white d-flex align-items-center"
                     @click="navigateTo(`/media-settings`)">
-                    <img src="/images/badges/animated/50X50px/profile-settings.gif" alt="Verify"
+                    <img src="/images/badges/animated/50X50px/media-settings.gif" alt="Verify"
                       class="rounded-circle me-2" style="width: 30px; height: 30px; object-fit: cover" />
                     <span class="text-white">Media Settings</span>
                   </button>
@@ -90,7 +90,7 @@
                 <li>
                   <button class="dropdown-item text-white d-flex align-items-center"
                     @click="navigateTo(`/help`)">
-                    <img src="/images/badges/animated/50X50px/profile-settings.gif" alt="Verify"
+                    <img src="/images/badges/animated/50X50px/ls-help.gif" alt="Verify"
                       class="rounded-circle me-2" style="width: 30px; height: 30px; object-fit: cover" />
                     <span class="text-white">LS Help</span>
                   </button>
@@ -241,7 +241,7 @@
                  <li>
                   <button class="dropdown-item text-white d-flex align-items-center"
                     @click="navigateTo(`/media-settings`)" v-if="isMine()">
-                    <img src="/images/badges/animated/50X50px/profile-settings.gif" alt="Verify"
+                    <img src="/images/badges/animated/50X50px/media-settings.gif" alt="Verify"
                       class="rounded-circle me-2" style="width: 30px; height: 30px; object-fit: cover" />
                     <span class="text-white">Media Settings</span>
                   </button>
@@ -249,7 +249,7 @@
                 <li>
                   <button class="dropdown-item text-white d-flex align-items-center"
                     @click="navigateTo(`/help`)" v-if="isMine()">
-                    <img src="/images/badges/animated/50X50px/profile-settings.gif" alt="Verify"
+                    <img src="/images/badges/animated/50X50px/ls-help.gif" alt="Verify"
                       class="rounded-circle me-2" style="width: 30px; height: 30px; object-fit: cover" />
                     <span class="text-white">LS Help</span>
                   </button>
