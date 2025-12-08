@@ -234,8 +234,15 @@ button#settingsMenuMobile {
 }
 
 .menu-item-span {
-     font-size: 15px;
-     font-weight: bold;
-     margin-right: 6px;
+  position: absolute;
+  left: 2px;    
+  top: 50%;
+  transform: translateY(-50%);
+  color: #ff2b2b;
+  font-size: 15px;
+  font-weight: bold;
+  width: 14px;
+  text-align: center;
+  pointer-events: none;
 }
 
