@@ -41,8 +41,12 @@ type Events = {
   callEvent: CallSocketModel,
   random_match_server_push: RouletteWorkerModel,
   random_user_remove_server_push: RouletteWorkerModel,
-  roullete_session_expired:RouletteWorkerModel,
-  roullete_partner_left : RouletteWorkerModel
+  roullete_session_expired: RouletteWorkerModel,
+  roullete_partner_left: RouletteWorkerModel,
+  roullete_started: RouletteWorkerModel,
+  roullete_start_failed: RouletteWorkerModel,
+  roullete_stopped: RouletteWorkerModel,
+  roullete_stop_failed: RouletteWorkerModel
 }
 let onlinemodel: OnlineEventResponse | null = null
 
@@ -317,7 +321,6 @@ async function handleworkerevent(event: MessageEvent<any>) {
     let json = event.data as CallAlertModel
     emitter.emit('callEndAlert', json)
   }
-
   else if (json.event_name === "call") {
     let json = event.data as CallSocketModel
     if (from_socket) {
@@ -326,7 +329,6 @@ async function handleworkerevent(event: MessageEvent<any>) {
     else {
       sendtosocket(json)
     }
-
   }
   else if (json.event_name === "call_updates") {
     let json = event.data as CallAlertModel
@@ -356,9 +358,31 @@ async function handleworkerevent(event: MessageEvent<any>) {
     let json = event.data as CallAlertModel
     sendtosocket(json)
   }
-
-
-
+  else if (json.event_name === "roullete_start") {
+    let json = event.data as RouletteWorkerModel
+    sendtosocket(json)
+  }
+  else if (json.event_name === "roullete_stop") {
+    let json = event.data as RouletteWorkerModel
+    sendtosocket(json)
+  }
+  else if (json.event_name === "roullete_started") {
+    let json = event.data as RouletteWorkerModel
+    emitter.emit('roullete_started', json)
+    console.log("roullete_started received in worker composable")
+  }
+  else if (json.event_name === "roullete_start_failed") {
+    let json = event.data as RouletteWorkerModel
+    emitter.emit('roullete_start_failed', json)
+  }
+  else if (json.event_name === "roullete_stopped") {
+    let json = event.data as RouletteWorkerModel
+    emitter.emit('roullete_stopped', json)
+  }
+  else if (json.event_name === "roullete_stop_failed") {
+    let json = event.data as RouletteWorkerModel
+    emitter.emit('roullete_stop_failed', json)
+  }
 
 }
 

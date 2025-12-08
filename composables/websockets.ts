@@ -170,7 +170,22 @@ else if (event_name === "call_alert")
     let json = JSON.parse(jsontext) as  RouletteWorkerModel
          sendmsgtoworker(json, true,true)
     }
-     
+       else if (json.event_name === "roullete_started") {
+       let json = JSON.parse(jsontext) as  RouletteWorkerModel
+        sendmsgtoworker(json, true,true)
+       }
+       else if (json.event_name === "roullete_start_failed") {
+       let json = JSON.parse(jsontext) as  RouletteWorkerModel
+     sendmsgtoworker(json, true,true)
+       }
+       else if (json.event_name === "roullete_stopped") {
+     let json = JSON.parse(jsontext) as  RouletteWorkerModel
+          sendmsgtoworker(json, true,true)
+       }
+       else if (json.event_name === "roullete_stop_failed") {
+       let json = JSON.parse(jsontext) as  RouletteWorkerModel
+          sendmsgtoworker(json, true,true)
+       }
     
 
     

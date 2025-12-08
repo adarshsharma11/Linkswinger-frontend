@@ -14,7 +14,7 @@
             style="background: repeating-conic-gradient(rgb(10, 10, 10) 0%, rgb(10, 10, 10) 25%, rgb(16, 16, 23) 0%, rgb(16, 16, 23) 50%) 50% center / 20px 20px; display: grid; place-items: center; color: rgb(154, 163, 175);">
             <p style="padding:16px; text-align:center;">Camera unavailable. Allow access to preview yourself here.</p>
           </video> -->
-          <video id="local-video-track"  class="w-100 h-100 object-cover bg-black" autoplay playsinline muted></video>
+          <video id="local-video-track" class="w-100 h-100 object-cover bg-black" autoplay playsinline muted></video>
         </div>
 
         <div class="video-card">
@@ -46,30 +46,32 @@
             </select>
           </div>
           <div>
-            <label for="radius">Location radius: <span id="radiusVal">500</span> mi</label><br>
-            <input id="radius" type="range" min="5" max="500" value="500">
+            <label for="radius">Location radius: <span id="radiusVal">3000</span> mi</label><br>
+            <input id="radius" type="range" min="5" max="3000" value="3000">
           </div>
         </div>
 
         <div class="actions">
           <!-- <button class="btn" id="prevBtn" title="Skip backward">⟵ Back</button> -->
           <button class="btn" id="nextBtn" title="Skip forward">Next ⟶</button>
-           <button class="btn" id="nextBtn" title="Skip forward">Start</button>
+          <button v-if="!isStartLoading" class="btn" id="nextBtn" title="Skip forward" @click="startstopRoullete()">{{
+            isStarted ? 'Stop' : 'Start' }}</button>
+          <span class="btn-loader" v-if="isStartLoading"></span>
           <button class="btn btn-danger" id="reportBtn" title="Report current partner">⚠ Report</button>
         </div>
 
-        <div class="hint">Demo mockup • Buttons are non-functional (no backend). Local camera preview on the left.</div>
+
       </section>
 
-      <section class="ads-section" aria-label="Demo ads">
+      <!-- <section class="ads-section" aria-label="Demo ads">
         <div class="ad-box">Ad Space 1</div>
         <div class="ad-box">Ad Space 2</div>
         <div class="ad-box">Ad Space 3</div>
         <div class="ad-box">Ad Space 4</div>
-      </section>
+      </section> -->
 
       <!-- Scrollable content with demo ad squares -->
-      <section class="ads" aria-label="Sponsored">
+      <!-- <section class="ads" aria-label="Sponsored">
         <h2>Sponsored</h2>
         <div class="ad-grid">
           <div class="ad-card">AD</div>
@@ -81,7 +83,7 @@
           <div class="ad-card">AD</div>
           <div class="ad-card">AD</div>
         </div>
-      </section>
+      </section> -->
     </div>
   </section>
 </template>
@@ -102,6 +104,8 @@ var updatecount = 0
 
 const route = useRoute()
 const isStarted = ref(false)
+const isStartLoading = ref(false)
+
 const formattedTime = computed(() => {
   const hours = Math.floor(timeStart.value / 3600).toString().padStart(2, '0');
   const mins = Math.floor((timeStart.value % 3600) / 60).toString().padStart(2, '0');
@@ -116,10 +120,16 @@ onBeforeUnmount(() => {
   eventBus.off('random_user_remove_server_push')
   eventBus.off('roullete_session_expired')
   eventBus.off('roullete_partner_left')
-  
 
-  window.removeEventListener('pagehide',onPageHide)
-     sendEndRoulleteBeacon()
+  eventBus.off('roullete_started')
+  eventBus.off('roullete_start_failed')
+
+  eventBus.off('roullete_stopped')
+  eventBus.off('roullete_stop_failed')
+
+
+  window.removeEventListener('pagehide', onPageHide)
+  sendEndRoulleteBeacon()
   webrtcclient.stopLocalStream()
   webrtcclient.teardown()
 
@@ -127,7 +137,7 @@ onBeforeUnmount(() => {
 
 onMounted(async () => {
   eventBus.on('socketConnection', (isConnected: boolean) => {
-
+    isStartLoading.value = false;
   })
 
 
@@ -177,7 +187,7 @@ onMounted(async () => {
       ttl: 1000
     })
   })
-   eventBus.on('roullete_session_expired', (rouletteModel: RouletteWorkerModel) => {
+  eventBus.on('roullete_session_expired', (rouletteModel: RouletteWorkerModel) => {
     webrtcclient.stopLocalStream()
     webrtcclient.teardown()
     reloadNuxtApp({
@@ -193,10 +203,32 @@ onMounted(async () => {
     hasAnswer.value = false
     isAnswerSent.value = false
     webrtcclient.teardown()
-    
-     console.log('roullete_partner_left')
+
+    console.log('roullete_partner_left')
   })
-  
+
+  eventBus.on('roullete_started', (rouletteModel: RouletteWorkerModel) => {
+    isStartLoading.value = false;
+    isStarted.value = true;
+
+  })
+
+  eventBus.on('roullete_stopped', (rouletteModel: RouletteWorkerModel) => {
+    isStartLoading.value = false;
+    isStarted.value = false;
+
+  })
+  eventBus.on('roullete_start_failed', (rouletteModel: RouletteWorkerModel) => {
+    isStartLoading.value = false;
+    showError('Failed to start video roulette. Please try again later.')
+
+  })
+
+  eventBus.on('roullete_stop_failed', (rouletteModel: RouletteWorkerModel) => {
+    isStartLoading.value = false;
+    showError('Failed to stop video roulette. Please try again later.')
+
+  })
 
   window.addEventListener("pagehide", onPageHide);
 
@@ -205,7 +237,7 @@ onMounted(async () => {
     webrtcclient.setLocalVideoTrack()
     isPremissionAccepted.value = true;
     const localVideo = document.getElementById("local-video-track") as HTMLVideoElement;
-              localVideo.style.transform = "scaleX(-1)";
+    localVideo.style.transform = "scaleX(-1)";
   }
   catch (error) {
     webrtcclient.setLocalVideoTrack()
@@ -215,15 +247,15 @@ onMounted(async () => {
 
 })
 
-function onPageHide(event : any) {
-if (event.persisted) return;
-    const nav = performance.getEntriesByType("navigation")[0];
-    const isReload = nav && (nav.type === "reload" || nav.type === "navigate");
-    if (isReload) {
-      sendEndRoulleteBeacon()
-      webrtcclient.stopLocalStream()
-      webrtcclient.teardown()
-    }
+function onPageHide(event: any) {
+  if (event.persisted) return;
+  const nav = performance.getEntriesByType("navigation")[0];
+  const isReload = nav && (nav.type === "reload" || nav.type === "navigate");
+  if (isReload) {
+    sendEndRoulleteBeacon()
+    webrtcclient.stopLocalStream()
+    webrtcclient.teardown()
+  }
 }
 
 
@@ -255,6 +287,30 @@ function getToSocketId(): string {
 
 
 
+function startstopRoullete() {
+  if (!isStartLoading.value) {
+    isStartLoading.value = true;
+    if (!isStarted.value) 
+    {
+      let roulleteModel = new RouletteWorkerModel()
+      roulleteModel.event_name = "roullete_start"
+      roulleteModel.user_id = login_store.getUserDetails?.user_id ?? 0
+      sendmsgtoworker(roulleteModel, true)
+    }
+    else {
+      let roulleteModel = new RouletteWorkerModel()
+      roulleteModel.event_name = "roullete_stop"
+      roulleteModel.user_id = login_store.getUserDetails?.user_id ?? 0
+      sendmsgtoworker(roulleteModel, true)
+    }
+  }
+
+
+}
+
+
+
+
 function sendcallupdates() {
   if (updatecount >= 2) {
     let callupdates = new CallAlertModel()
@@ -267,10 +323,10 @@ function sendcallupdates() {
 }
 
 function sendserverstatusupdates() {
-    let callupdates = new CallAlertModel()
-    callupdates.event_name = "roullete_socket_status_updates"
-    callupdates.from_id = login_store.getUserDetails?.user_id ?? 0
-    sendmsgtoworker(callupdates, true)
+  let callupdates = new CallAlertModel()
+  callupdates.event_name = "roullete_socket_status_updates"
+  callupdates.from_id = login_store.getUserDetails?.user_id ?? 0
+  sendmsgtoworker(callupdates, true)
 }
 
 function sendoffer() {
@@ -427,20 +483,20 @@ function handlecallevent(callModel: CallSocketModel) {
 }
 
 function toggleCamera() {
-    webrtcclient.toggleCamera()
+  webrtcclient.toggleCamera()
 
-    setTimeout(() => {
-        const localVideo = document.getElementById("local-video-track") as HTMLVideoElement;
-        if (!localVideo) return;
+  setTimeout(() => {
+    const localVideo = document.getElementById("local-video-track") as HTMLVideoElement;
+    if (!localVideo) return;
 
-        if (webrtcclient.currentFacingMode === "user") {
-            // front camera → show mirror view
-            localVideo.style.transform = "scaleX(-1)";
-        } else {
-            // back camera → normal
-            localVideo.style.transform = "scaleX(1)";
-        }
-    }, 150);
+    if (webrtcclient.currentFacingMode === "user") {
+      // front camera → show mirror view
+      localVideo.style.transform = "scaleX(-1)";
+    } else {
+      // back camera → normal
+      localVideo.style.transform = "scaleX(1)";
+    }
+  }, 150);
 }
 
 function sendEndRoulleteBeacon() {
