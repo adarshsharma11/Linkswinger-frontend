@@ -156,10 +156,12 @@ onMounted(async () => {
       if (webrtcclient.peerConnection.connectionState === "connected") {
         timeStart.value += 1
       }
-      else if (webrtcclient.peerConnection.connectionState === "disconnected" || webrtcclient.peerConnection.connectionState === "failed") {
+      else if (webrtcclient.peerConnection.connectionState === "disconnected" || webrtcclient.peerConnection.connectionState === "failed" ||  webrtcclient.peerConnection.connectionState === "closed") {
         // showalert('Connection lost. Trying to reconnect...', false, 5000)    
 
-        webrtcclient.teardown()
+        queueCandidates = []
+        hasAnswer.value = false
+   
         // sendEndCallBeacon()
         // reloadNuxtApp({
         //     path: "/",
@@ -207,10 +209,12 @@ onMounted(async () => {
 
     console.log('roullete_partner_left',rouletteModel.user_id ?? 0 , getFromId(),getToId())
 
+    webrtcclient.teardown()
+    queueCandidates = []
     call_store.value = null
     hasAnswer.value = false
     isAnswerSent.value = false
-    webrtcclient.teardown()
+ 
 
   })
 
@@ -238,6 +242,7 @@ onMounted(async () => {
   })
   eventBus.on('roullete_next_success', (rouletteModel: RouletteWorkerModel) => {
     isNextLoading.value = false;
+
   
   })
 
@@ -328,11 +333,15 @@ return;
 
 }
 function nextRoullete() {
-  if (!isSocketConnected())
+  if (!isSocketConnected() || call_store.value === null)
   {
 return;
   }
-  webrtcclient.teardown()
+   webrtcclient.teardown()
+    queueCandidates = []
+    call_store.value = null
+    hasAnswer.value = false
+    isAnswerSent.value = false
   let roulleteModel = new RouletteWorkerModel()
       roulleteModel.event_name = "roullete_next"
       roulleteModel.user_id = login_store.getUserDetails?.user_id ?? 0
