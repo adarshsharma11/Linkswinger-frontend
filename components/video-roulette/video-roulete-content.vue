@@ -159,8 +159,11 @@ onMounted(async () => {
       else if (webrtcclient.peerConnection.connectionState === "disconnected" || webrtcclient.peerConnection.connectionState === "failed" ||  webrtcclient.peerConnection.connectionState === "closed") {
         // showalert('Connection lost. Trying to reconnect...', false, 5000)    
 
-        queueCandidates = []
-        hasAnswer.value = false
+  
+    queueCandidates = []
+    call_store.value = null
+    hasAnswer.value = false
+    isAnswerSent.value = false
    
         // sendEndCallBeacon()
         // reloadNuxtApp({
