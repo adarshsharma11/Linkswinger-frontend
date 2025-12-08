@@ -9,7 +9,7 @@
     <div class="container-fluid py-4">
       <section class="video-stage" aria-label="Video stage">
         <div class="video-card">
-          <span class="corner-tag">You</span>
+          <!-- <span class="corner-tag">You</span> -->
           <!-- <video id="local-video-track" muted class="placeholder"
             style="background: repeating-conic-gradient(rgb(10, 10, 10) 0%, rgb(10, 10, 10) 25%, rgb(16, 16, 23) 0%, rgb(16, 16, 23) 50%) 50% center / 20px 20px; display: grid; place-items: center; color: rgb(154, 163, 175);">
             <p style="padding:16px; text-align:center;">Camera unavailable. Allow access to preview yourself here.</p>
@@ -18,7 +18,7 @@
         </div>
 
         <div class="video-card">
-          <span class="corner-tag">Partner {{ connectStatus }}</span>
+          <!-- <span class="corner-tag">Partner {{ connectStatus }}</span> -->
           <!-- <video id="remote-video-track"  class="placeholder"  style="display:grid;place-items:center;color:#9aa3af;">
             <div style="text-align:center;">
               <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
@@ -53,7 +53,8 @@
 
         <div class="actions">
           <!-- <button class="btn" id="prevBtn" title="Skip backward">⟵ Back</button> -->
-          <button class="btn" id="nextBtn" title="Skip forward">Next ⟶</button>
+          <button class="btn" id="nextBtn" title="Skip forward" v-if="!isNextLoading"  @click="nextRoullete()">Next ⟶</button>
+          <span class="btn-loader" v-if="isNextLoading"></span>
           <button v-if="!isStartLoading" class="btn" id="nextBtn" title="Skip forward" @click="startstopRoullete()">{{
             isStarted ? 'Stop' : 'Start' }}</button>
           <span class="btn-loader" v-if="isStartLoading"></span>
@@ -105,6 +106,7 @@ var updatecount = 0
 const route = useRoute()
 const isStarted = ref(false)
 const isStartLoading = ref(false)
+const isNextLoading = ref(false)
 
 const formattedTime = computed(() => {
   const hours = Math.floor(timeStart.value / 3600).toString().padStart(2, '0');
@@ -127,6 +129,9 @@ onBeforeUnmount(() => {
   eventBus.off('roullete_stopped')
   eventBus.off('roullete_stop_failed')
 
+  eventBus.off('roullete_next_success')
+  eventBus.off('roullete_next_failed')
+
 
   window.removeEventListener('pagehide', onPageHide)
   sendEndRoulleteBeacon()
@@ -138,6 +143,7 @@ onBeforeUnmount(() => {
 onMounted(async () => {
   eventBus.on('socketConnection', (isConnected: boolean) => {
     isStartLoading.value = false;
+    isNextLoading.value = false;
   })
 
 
@@ -199,12 +205,13 @@ onMounted(async () => {
 
   eventBus.on('roullete_partner_left', (rouletteModel: RouletteWorkerModel) => {
 
+    console.log('roullete_partner_left',rouletteModel.user_id ?? 0 , getFromId(),getToId())
+
     call_store.value = null
     hasAnswer.value = false
     isAnswerSent.value = false
     webrtcclient.teardown()
 
-    console.log('roullete_partner_left')
   })
 
   eventBus.on('roullete_started', (rouletteModel: RouletteWorkerModel) => {
@@ -228,6 +235,15 @@ onMounted(async () => {
     isStartLoading.value = false;
     showToastError('Failed to stop video roulette. Please try again later.')
 
+  })
+  eventBus.on('roullete_next_success', (rouletteModel: RouletteWorkerModel) => {
+    isNextLoading.value = false;
+  
+  })
+
+  eventBus.on('roullete_next_failed', (rouletteModel: RouletteWorkerModel) => {
+    isNextLoading.value = false;
+    showToastError('Failed to stop video roulette. Please try again later.')
   })
 
   window.addEventListener("pagehide", onPageHide);
@@ -288,6 +304,10 @@ function getToSocketId(): string {
 
 
 function startstopRoullete() {
+  if (!isSocketConnected())
+  {
+return;
+  }
   if (!isStartLoading.value) {
     isStartLoading.value = true;
     if (!isStarted.value) 
@@ -307,7 +327,16 @@ function startstopRoullete() {
 
 
 }
-
+function nextRoullete() {
+  if (!isSocketConnected())
+  {
+return;
+  }
+  let roulleteModel = new RouletteWorkerModel()
+      roulleteModel.event_name = "roullete_next"
+      roulleteModel.user_id = login_store.getUserDetails?.user_id ?? 0
+      sendmsgtoworker(roulleteModel, true)
+}
 
 
 

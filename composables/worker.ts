@@ -46,7 +46,9 @@ type Events = {
   roullete_started: RouletteWorkerModel,
   roullete_start_failed: RouletteWorkerModel,
   roullete_stopped: RouletteWorkerModel,
-  roullete_stop_failed: RouletteWorkerModel
+  roullete_stop_failed: RouletteWorkerModel,
+  roullete_next_success : RouletteWorkerModel,
+  roullete_next_failed : RouletteWorkerModel
 }
 let onlinemodel: OnlineEventResponse | null = null
 
@@ -369,7 +371,6 @@ async function handleworkerevent(event: MessageEvent<any>) {
   else if (json.event_name === "roullete_started") {
     let json = event.data as RouletteWorkerModel
     emitter.emit('roullete_started', json)
-    console.log("roullete_started received in worker composable")
   }
   else if (json.event_name === "roullete_start_failed") {
     let json = event.data as RouletteWorkerModel
@@ -382,8 +383,23 @@ async function handleworkerevent(event: MessageEvent<any>) {
   else if (json.event_name === "roullete_stop_failed") {
     let json = event.data as RouletteWorkerModel
     emitter.emit('roullete_stop_failed', json)
-  }
+  } 
 
+  else if (json.event_name === "roullete_next") {
+    let json = event.data as RouletteWorkerModel
+    sendtosocket(json)
+  }
+   else if (json.event_name === "roullete_next_success") {
+    let json = event.data as RouletteWorkerModel
+    emitter.emit('roullete_next_success', json)
+  } 
+   else if (json.event_name === "roullete_next_failed") {
+    let json = event.data as RouletteWorkerModel
+    emitter.emit('roullete_next_failed', json)
+  } 
+
+
+  
 }
 
 
