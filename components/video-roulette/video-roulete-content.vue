@@ -336,10 +336,11 @@ return;
 
 }
 function nextRoullete() {
-  if (!isSocketConnected() || call_store.value === null)
+  if (!isSocketConnected() || call_store.value === null || isNextLoading.value)
   {
 return;
   }
+  isNextLoading.value = true;
    webrtcclient.teardown()
     queueCandidates = []
     call_store.value = null
