@@ -332,6 +332,7 @@ function nextRoullete() {
   {
 return;
   }
+  webrtcclient.teardown()
   let roulleteModel = new RouletteWorkerModel()
       roulleteModel.event_name = "roullete_next"
       roulleteModel.user_id = login_store.getUserDetails?.user_id ?? 0
