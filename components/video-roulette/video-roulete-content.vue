@@ -220,13 +220,13 @@ onMounted(async () => {
   })
   eventBus.on('roullete_start_failed', (rouletteModel: RouletteWorkerModel) => {
     isStartLoading.value = false;
-    showError('Failed to start video roulette. Please try again later.')
+    showToastError('Failed to start video roulette. Please try again later.')
 
   })
 
   eventBus.on('roullete_stop_failed', (rouletteModel: RouletteWorkerModel) => {
     isStartLoading.value = false;
-    showError('Failed to stop video roulette. Please try again later.')
+    showToastError('Failed to stop video roulette. Please try again later.')
 
   })
 
