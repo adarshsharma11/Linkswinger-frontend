@@ -5,7 +5,7 @@
             @reachEnd="onReachEnd">
             <SwiperSlide v-for="(item, index) in allFeeds" :key="item.feed_id" class="short-slide">
                 <div class="short-container" :key="item.feed_id">
-                    <div class="short-frame" :key="item.feed_id" @click="onFrameTap(index)">
+                    <div class="short-frame" :key="item.feed_id" @click="onFrameTap(index)" @touchstart="onFrameTap(index)">
                         <img :key="item.feed_id" :src="`${item.media_path}${item.hd_feed_image}`" class="short-image"
                             loading="lazy" v-if="item.media_type === 'image'" />
                         <img :key="item.feed_id" :src="`${item.media_path}${item.feed_thumbnail}`" class="short-image"
@@ -22,10 +22,10 @@
                         </transition>-->
                         <transition name="fade" v-if="item.media_type === 'video'">
                             <button v-if="showPlayBtn[index]" class="play-toggle" @click="togglePlay(index)">
-                                <img v-if="playingStates[index]" src="/public/images/icons-folder/Pause-150x150px.png"
+                                <img v-if="playingStates[index]" src="/images/icons-folder/Pause-150x150px.png"
                                     class="play-icon">
 
-                                <img v-else src="/public/images/icons-folder/Play-150x150px.png" class="play-icon">
+                                <img v-else src="/images/icons-folder/Play-150x150px.png" class="play-icon">
                             </button>
                         </transition>
                         <div class="swiper-lazy-preloader swiper-lazy-preloader-white"></div>

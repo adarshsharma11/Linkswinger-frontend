@@ -86,24 +86,6 @@
       <main class="dashboard-content">
         <!-- FEED / HOME -->
         <section id="view-home" :hidden="activeNav !== 'home'">
-          <div class="tabs">
-            <button class="tab active text-white" data-feed="all">Feed</button>
-            <button class="tab text-white" data-feed="nearby">Nearby</button>
-            <button class="tab text-white" data-feed="trending">Trending</button>
-            <button class="tab text-white" data-feed="events">Events</button>
-          </div>
-
-          <div class="dash-row" style="flex-wrap:wrap;gap:8px;margin:8px 0 12px">
-            <a href="#nearby" class="pill text-white" @click.prevent="setActiveNav('nearby')">📍 Nearby people</a>
-            <a href="#friends" class="pill text-white" @click.prevent="setActiveNav('friends')">👥 My friends</a>
-            <a href="#new-photos" class="pill text-white" @click.prevent="setActiveNav('new-photos')">🖼 New photos</a>
-            <a href="#new-video" class="pill text-white" @click.prevent="setActiveNav('new-video')">🎞 New video</a>
-            <a href="#meet-events" class="pill text-white" @click.prevent="setActiveNav('meet-events')">📅 Meet
-              events</a>
-            <a href="#club-events" class="pill text-white" @click.prevent="setActiveNav('club-events')">🏷 Club
-              events</a>
-          </div>
-
           <div class="dashboard-card glow">
             <h2 class="text-white">Recently Uploaded</h2>
             <div class="grid">
@@ -584,7 +566,7 @@
             <div class="group-fd">
               <div class="label">Near town / postcode</div>
               <div class="inline-check"><label class="toggle"><input type="checkbox" id="use_my_location"
-                    name="use_my_location" v-model="current_loc"> 📍 Use my location</label></div>
+                    name="use_my_location" v-model="current_loc"> <img src="/images/badges/animated/50X50px/location.gif" alt="Location" class="me-2" width="20" height="20"> Use my location</label></div>
               <div class="row">
                 <div class="col-md-6 pb-2">
                   <!-- <input class="input" type="text" name="near" placeholder="Enter town or postcode" /> -->
