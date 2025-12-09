@@ -5,10 +5,13 @@ export class WebRTCClient {
     private localVideoTrack: HTMLVideoElement | null;
     private localStream: MediaStream | null;
     private remoteStream: MediaStream | null;
+    dataChannel: RTCDataChannel | null = null;
     private handleId: string | null;
     private sessionId: string | null;
     private isVideo: boolean;
+
     private alreadyFlipped = false;
+    dataChannelListnerCreated = false;
 
     constructor(isVideo: boolean = true) {
         if (isVideo) {
@@ -246,7 +249,18 @@ export class WebRTCClient {
     }
 
     teardown() {
-        this.peerConnection?.close()
+        this.dataChannel?.close()
+        this.dataChannel = null;
+
+        if (this.peerConnection) {
+            this.peerConnection.onicecandidate = null;
+            this.peerConnection.ontrack = null;
+            this.peerConnection.ondatachannel = null;
+            this.peerConnection.oniceconnectionstatechange = null;
+        }
+        this.dataChannelListnerCreated = false;
+        this.peerConnection?.close();
+        this.peerConnection = null;
     }
 
     setRemoteDes(jsep: RTCSessionDescriptionInit, callback: () => void) {
@@ -259,7 +273,7 @@ export class WebRTCClient {
             callback()
         })
     }
-    createOffer(callback: (offer: RTCSessionDescription) => void, candidatecallback: (candidate: RTCIceCandidate) => void): void {
+    createOffer(callback: (offer: RTCSessionDescription) => void, candidatecallback: (candidate: RTCIceCandidate) => void , dataChannelcallback: (event: { type: string; data?: any }) => void  = () => {}): void {
         const configuration: RTCConfiguration = {
             iceServers: [
                 { urls: ["stun:l.google.com:19302"] },
@@ -298,6 +312,11 @@ export class WebRTCClient {
                 offerToReceiveVideo: true,
             };
         }
+
+        this.createDataChannel((event) => {
+dataChannelcallback(event);
+        });
+
         this.peerConnection.createOffer(offerOptions)
             .then(offer => this.peerConnection!.setLocalDescription(offer))
             .then(() => {
@@ -318,9 +337,11 @@ export class WebRTCClient {
             });
 
 
+
+
     }
 
-    createAnswer(jsep: RTCSessionDescriptionInit, callback: (answer: RTCSessionDescription) => void, candidatecallback: (candidate: RTCIceCandidate) => void): void {
+    createAnswer(jsep: RTCSessionDescriptionInit, callback: (answer: RTCSessionDescription) => void, candidatecallback: (candidate: RTCIceCandidate) => void , dataChannelcallback: (event: { type: string; data?: any }) => void  = () => {}): void {
         const configuration: RTCConfiguration = {
             iceServers: [
                 { urls: ["stun:l.google.com:19302"] },
@@ -346,6 +367,11 @@ export class WebRTCClient {
                 remoteVideo.srcObject = evt.streams[0];
             }
         };
+
+  this.createDataChannelListener((event) => {
+ dataChannelcallback(event);
+            });
+
         var answerOptions = {
             offerToReceiveAudio: true, // Disable audio reception
             offerToReceiveVideo: false,  // Enable video reception
@@ -373,4 +399,100 @@ export class WebRTCClient {
                 console.error("Answer creation failed:", error);
             });
     }
+    createDataChannel(callback: (event: { type: string; data?: any }) => void) {
+        if (!this.peerConnection) {
+            console.error("PeerConnection not initialized");
+            return;
+        }
+        if (this.dataChannel) {
+            console.warn("Data channel already exists");
+            return;
+        }
+
+        const dc = this.peerConnection.createDataChannel("chatChannel");
+        this.dataChannel = dc;
+        dc.onopen = () => {
+            console.log("[DC] open12");
+
+        };
+        dc.onmessage = (msgEvent) => {
+            try {
+                const parsed = JSON.parse(msgEvent.data);
+                callback({ type: "message", data: parsed });
+            } catch {
+                callback({ type: "message", data: msgEvent.data });
+            }
+        };
+          dc.onclose = () => {
+                console.log("[DC] closed");
+           
+            };
+
+            // ERROR
+            dc.onerror = (err) => {
+                console.error("[DC] error:", err);
+              
+            };
+
+    }
+
+
+    createDataChannelListener(
+        callback: (event: { type: string; data?: any }) => void
+    ) {
+        if (!this.peerConnection) {
+            console.error("PeerConnection not initialized");
+            return;
+        }
+        this.dataChannelListnerCreated = true;
+        this.peerConnection.ondatachannel = (event) => {
+            const channel = event.channel;
+            if (this.dataChannel === null) {
+                this.dataChannel = channel;
+            }
+
+
+            console.log("[DC] Incoming channel:", channel.label);
+
+            // OPEN
+            channel.onopen = () => {
+                console.log("[DC] open");
+              
+            };
+
+            // MESSAGE
+            channel.onmessage = (msgEvent) => {
+                try {
+                    const parsed = JSON.parse(msgEvent.data);
+                    callback({ type: "message", data: parsed });
+                } catch {
+                    callback({ type: "message", data: msgEvent.data });
+                }
+            };
+
+            // CLOSE
+            channel.onclose = () => {
+                console.log("[DC] closed");
+          
+            };
+
+            // ERROR
+            channel.onerror = (err) => {
+                console.error("[DC] error:", err);
+               
+            };
+        };
+    }
+
+
+    sendHangup() {
+        if (this.dataChannel && this.dataChannel.readyState === "open") {
+            this.dataChannel.send(JSON.stringify({ type: "hangup" }));
+            console.log("[DC] Sent hangup");
+        } else {
+            console.warn("[DC] Cannot send hangup, channel not open");
+        }
+    }
+
+
 }

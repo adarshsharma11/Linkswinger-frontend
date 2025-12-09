@@ -18,7 +18,7 @@
         </div>
 
         <div class="video-card">
-          <!-- <span class="corner-tag">Partner {{ connectStatus }}</span> -->
+          <span class="corner-tag">Partner {{ connectStatus }}</span>
           <!-- <video id="remote-video-track"  class="placeholder"  style="display:grid;place-items:center;color:#9aa3af;">
             <div style="text-align:center;">
               <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
@@ -53,7 +53,8 @@
 
         <div class="actions">
           <!-- <button class="btn" id="prevBtn" title="Skip backward">⟵ Back</button> -->
-          <button class="btn" id="nextBtn" title="Skip forward" v-if="!isNextLoading"  @click="nextRoullete()">Next ⟶</button>
+          <button class="btn" id="nextBtn" title="Skip forward" v-if="!isNextLoading" @click="nextRoullete()">Next
+            ⟶</button>
           <span class="btn-loader" v-if="isNextLoading"></span>
           <button v-if="!isStartLoading" class="btn" id="nextBtn" title="Skip forward" @click="startstopRoullete()">{{
             isStarted ? 'Stop' : 'Start' }}</button>
@@ -155,16 +156,16 @@ onMounted(async () => {
     if (webrtcclient.peerConnection) {
       if (webrtcclient.peerConnection.connectionState === "connected") {
         timeStart.value += 1
+
+
       }
-      else if (webrtcclient.peerConnection.connectionState === "disconnected" || webrtcclient.peerConnection.connectionState === "failed" ||  webrtcclient.peerConnection.connectionState === "closed") {
+      else if (webrtcclient.peerConnection.connectionState === "disconnected" || webrtcclient.peerConnection.connectionState === "failed" || webrtcclient.peerConnection.connectionState === "closed") {
         // showalert('Connection lost. Trying to reconnect...', false, 5000)    
 
-  
-    queueCandidates = []
-    call_store.value = null
-    hasAnswer.value = false
-    isAnswerSent.value = false
-   
+
+        console.log('Connection lost. Teardown and reset state.', login_store.getUserDetails?.user_id)
+
+
         // sendEndCallBeacon()
         // reloadNuxtApp({
         //     path: "/",
@@ -185,6 +186,7 @@ onMounted(async () => {
 
   eventBus.on('random_match_server_push', (rouletteModel: RouletteWorkerModel) => {
     call_store.value = rouletteModel
+    console.log('random_match_server_push', rouletteModel.user_id ?? 0)
     if (isSocketConnected()) {
       sendserverstatusupdates()
     }
@@ -210,14 +212,14 @@ onMounted(async () => {
 
   eventBus.on('roullete_partner_left', (rouletteModel: RouletteWorkerModel) => {
 
-    console.log('roullete_partner_left',rouletteModel.user_id ?? 0 , getFromId(),getToId())
+    console.log('roullete_partner_left', rouletteModel.user_id ?? 0, getFromId(), getToId())
 
     webrtcclient.teardown()
     queueCandidates = []
     call_store.value = null
     hasAnswer.value = false
     isAnswerSent.value = false
- 
+
 
   })
 
@@ -246,7 +248,8 @@ onMounted(async () => {
   eventBus.on('roullete_next_success', (rouletteModel: RouletteWorkerModel) => {
     isNextLoading.value = false;
 
-  
+    console.log('roullete_next_success')
+
   })
 
   eventBus.on('roullete_next_failed', (rouletteModel: RouletteWorkerModel) => {
@@ -312,14 +315,12 @@ function getToSocketId(): string {
 
 
 function startstopRoullete() {
-  if (!isSocketConnected())
-  {
-return;
+  if (!isSocketConnected()) {
+    return;
   }
   if (!isStartLoading.value) {
     isStartLoading.value = true;
-    if (!isStarted.value) 
-    {
+    if (!isStarted.value) {
       let roulleteModel = new RouletteWorkerModel()
       roulleteModel.event_name = "roullete_start"
       roulleteModel.user_id = login_store.getUserDetails?.user_id ?? 0
@@ -336,20 +337,21 @@ return;
 
 }
 function nextRoullete() {
-  if (!isSocketConnected() || call_store.value === null || isNextLoading.value)
-  {
-return;
+  if (!isSocketConnected() || call_store.value === null || isNextLoading.value) {
+    return;
   }
+
   isNextLoading.value = true;
-   webrtcclient.teardown()
-    queueCandidates = []
-    call_store.value = null
-    hasAnswer.value = false
-    isAnswerSent.value = false
+  webrtcclient?.sendHangup()
+  webrtcclient.teardown()
+  queueCandidates = []
+  call_store.value = null
+  hasAnswer.value = false
+  isAnswerSent.value = false
   let roulleteModel = new RouletteWorkerModel()
-      roulleteModel.event_name = "roullete_next"
-      roulleteModel.user_id = login_store.getUserDetails?.user_id ?? 0
-      sendmsgtoworker(roulleteModel, true)
+  roulleteModel.event_name = "roullete_next"
+  roulleteModel.user_id = login_store.getUserDetails?.user_id ?? 0
+  sendmsgtoworker(roulleteModel, true)
 }
 
 
@@ -479,14 +481,24 @@ function createanswer(remote: RTCSessionDescription) {
   if (getToId() === login_store.getUserDetails?.user_id) {
     webrtcclient.createAnswer(remote, (session) => {
       sendremotedes(session)
-
       for (let i = 0; i < queueCandidates.length; i++) {
         setremotecandidate(queueCandidates[i])
       }
       queueCandidates = []
-
     }, (candidate) => {
       sendremotecandidate(candidate)
+    }, (event) => {
+      if (event.type === 'message') {
+          if (event.data.type === 'hangup') {
+            // Respond to ping messages
+            console.log('Data channel remote event:', event);
+            webrtcclient.teardown()
+            queueCandidates = []
+            hasAnswer.value = false
+            isAnswerSent.value = false
+            call_store.value = null
+          }
+        }
     })
   }
 }
@@ -494,6 +506,7 @@ function createanswer(remote: RTCSessionDescription) {
 function handlecallevent(callModel: CallSocketModel) {
 
   if (callModel.type === CallSocketModel.CallType.OFFER) {
+    console.log('Received offer', login_store.getUserDetails?.user_id)
     sendanswer()
   }
   else if (callModel.type === CallSocketModel.CallType.ANSWER) {
@@ -504,6 +517,19 @@ function handlecallevent(callModel: CallSocketModel) {
         sendlocaldes(localdes)
       }, (candidate) => {
         sendlocalcandidate(candidate)
+      }, (event) => {
+
+        if (event.type === 'message') {
+          if (event.data.type === 'hangup') {
+            // Respond to ping messages
+            console.log('Data channel event:', event);
+            webrtcclient.teardown()
+            queueCandidates = []
+            hasAnswer.value = false
+            isAnswerSent.value = false
+            call_store.value = null
+          }
+        }
       })
     }
   }
