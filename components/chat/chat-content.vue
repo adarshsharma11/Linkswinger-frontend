@@ -17,8 +17,18 @@
             class="d-flex justify-content-between align-items-center border-bottom border-secondary pb-2 mb-2 cht-top">
             <div class="d-flex align-items-center gap-2">
               <span>Messages</span>
-              <span class="badge bg-success bg-opacity-25 text-success border border-success">Verified only</span>
             </div>
+            <button class="btn btn-dashboard d-flex align-items-center gap-2 msgf-filter-btn"
+              @click="showFilters = true"
+              title="Filters">
+              
+              <!-- filter icon -->
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                <path d="M3 5h18l-6.5 8v6l-5 3v-9L3 5z"></path>
+              </svg>
+
+              <span class="text-white d-lg-inline">Filters</span>
+            </button>
           </div>
           <div class="custom-scroll" style="max-height:70vh;overflow:auto;">
             <!-- Example Conversation Items -->
@@ -39,15 +49,9 @@
                 <div class="chat-item-right">
                   <div class="d-flex align-items-center gap-2">
                     <strong>{{ historymodel.nick_name }}</strong>
-                    <span class="badge bg-warning bg-opacity-25 text-warning border border-warning">{{
-                      historymodel.tier_name ?? 'Free' }}</span>
-                    <button class=" btn-danger glow-red-strong text-white " style="border-radius: 5px; "
+                    <button class="text-white"
                       @click.stop="deleteWholeChat(historymodel)" v-if="(historymodel.is_deleting ?? false) === false">
-                      <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor">
-                        <path
-                          d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2m3 0v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6h14zM10 11v6M14 11v6"
-                          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                      </svg>
+                      <img src="/images/badges/animated/50X50px/delete.gif" alt="Delete" style="width: 20px; height: 20px;">
                     </button>
                     <span class="btn-loader" v-if="historymodel.is_deleting"></span>
                   </div>
@@ -292,12 +296,14 @@
     <a v-for="item in galleryItems" :key="item.id" :data-src="item.isVideo ? null : item.src"
       :data-video="item.isVideo ? item.video : null" :data-lg-size="item.isVideo ? item.size : null"></a>
   </component>
+  <FilterModal v-if="showFilters" @close="showFilters = false" />
 </template>
 
 <script setup lang="ts">
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ChatsModel, UsersModel } from '~/composables/models'
 import Swal from 'sweetalert2'
+import FilterModal from './filter-modal.vue'
 import type { CallsModel } from '~/composables/websocketModels'// optional fallback component if you want
 
 // stores / utilities (preserve your existing app stores)
@@ -335,6 +341,8 @@ const activeChatId = ref<number | null>(null);
 const showMobileChat = ref(false);
 const selectMode = ref(false);
 const selectedMessages = ref<number[]>([]);
+const showFilters = ref(false);
+
 
 // LightGallery dynamic imports (client-only)
 const LightgalleryComp = ref<any>(null);
