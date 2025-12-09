@@ -18,7 +18,7 @@
         </div>
 
         <div class="video-card">
-          <span class="corner-tag">Partner {{ connectStatus }}</span>
+          <!-- <span class="corner-tag">Partner {{ connectStatus }}</span> -->
           <!-- <video id="remote-video-track"  class="placeholder"  style="display:grid;place-items:center;color:#9aa3af;">
             <div style="text-align:center;">
               <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
