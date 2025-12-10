@@ -48,7 +48,7 @@
           <div>
             <label for="radius">Location radius: <span id="radiusVal">{{ radiusSelect }}</span> mi</label><br>
              <span class="btn-loader" v-if="isRadiusLoading"></span>
-            <input v-model.number="radiusSelect" id="radius" type="range" min="10" max="3000" value="3000" @change="updateRoulleteRadius()" v-if="!isRadiusLoading">
+            <input v-model.number="radiusSelect" id="radius" type="range" min="10" max="3000"  @change="updateRoulleteRadius()" v-if="!isRadiusLoading">
           </div>
         </div>
 
