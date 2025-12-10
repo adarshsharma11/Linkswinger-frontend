@@ -751,7 +751,7 @@ onMounted(async () => {
     isWSConnected.value = is_connected
     checkuseronline()
   })
-  eventBus.on('onlineUserIds', (ids) => onlineUsers.value = ids)
+  eventBus.on('onlineUserIds', (group) => onlineUsers.value = group.user_ids ?? [])
   eventBus.on('typing', (typing) => showTypingIndicator(typing.from_id ?? 0))
   eventBus.on('chatUpdateStatus', (eventModel) => updateMessageStatus(eventModel))
   eventBus.on('chatDeleteStatus', (eventModel) => deleteMessageStatus(eventModel))

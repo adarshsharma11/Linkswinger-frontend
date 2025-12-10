@@ -64,7 +64,7 @@ export enum RequestURL {
   getChatReadCount = "/getChatReadCount"
 }
 
-export var online_user_ids: number[] = []
+
 export function showalert(title: string, is_success: boolean = false, timer: number = 2000) {
   if (is_success) {
     Swal.fire({
@@ -88,9 +88,40 @@ export function showalert(title: string, is_success: boolean = false, timer: num
   }
 }
 
-export function clearOnlineIds() {
-  online_user_ids = []
+export function formatRelativeDate(inputDate: string) {
+  // Parse date as UTC explicitly
+  const date = new Date(inputDate); // input is UTC ISO string
+  const localDate = new Date(date.getTime() + date.getTimezoneOffset() * 60000 * -1);
+
+  const now = new Date();
+
+  const diffMs = now.getTime() - localDate.getTime();
+  const diffMinutes = Math.floor(diffMs / (1000 * 60));
+  const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+  // Minutes
+  if (diffMinutes < 1) return "Just now";
+  if (diffMinutes < 60) return `${diffMinutes} minute${diffMinutes > 1 ? "s" : ""} ago`;
+
+  // Hours
+  if (diffHours < 24) return `${diffHours} hour${diffHours > 1 ? "s" : ""} ago`;
+
+  // Days
+  if (diffDays === 1) return "1 day ago";
+  if (diffDays < 7) return `${diffDays} days ago`;
+
+  // Weeks
+  const diffWeeks = Math.floor(diffDays / 7);
+  if (diffWeeks === 1) return "1 week ago";
+  if (diffWeeks <= 4) return `${diffWeeks} weeks ago`;
+
+  // More than 4 weeks → return local formatted date
+  return localDate.toISOString().split("T")[0]; // YYYY-MM-DD
 }
+
+
+
 export function validateEmail(email: string): boolean {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return emailRegex.test(email);

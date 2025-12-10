@@ -22,7 +22,7 @@
             </ul>
           </div>
           <div class="meta">{{ user.town }} • {{ distance }} miles</div>
-          <div class="meta">Last seen: 2 hours ago</div>
+          <div class="meta" v-if="!isOnline">Last seen: {{ lastDate() }}</div>
         </div>
       </div>
       
@@ -57,11 +57,13 @@
 </template>
 
 <script setup lang="ts">
+
 import type { UsersModel } from '~/composables/models'
 
 interface Props {
   user: UsersModel.ProfileDetailsResponseModel
-  onlineUsers: number[]
+  onlineUsers: number[],
+  lastSeens : LastSeenModel[]
 }
 const login_store = useLoginStore();
 const props = defineProps<Props>()
@@ -70,6 +72,18 @@ const props = defineProps<Props>()
 const isOnline = computed(() => {
   return props.onlineUsers.includes(props.user.user_id ?? 0)
 })
+
+function lastDate(): string {
+
+if (props.lastSeens.length > 0) {
+ 
+  const lastSeen = props.lastSeens.filter(ls => ls.user_id === props.user.user_id)
+  if (lastSeen.length > 0) {
+    return  formatRelativeDate(lastSeen[0].last_active ?? '') ?? ''
+  }
+}
+  return ''
+}
 
 const imagePath = computed(() => {
   return getImagePath(props.user)

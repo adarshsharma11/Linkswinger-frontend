@@ -146,6 +146,7 @@
               :key="user.user_id"
               :user="user"
               :online-users="onlineUsers"
+              :last-seens="lastSeens"
               @open-profile="openProfile"
               @open-chat="openChat"
               @show-code-alert="showCodeAlert"
@@ -251,6 +252,7 @@
               :key="user.user_id"
               :user="user"
               :online-users="onlineUsers"
+              :last-seens="lastSeens"
               @open-profile="openProfile"
               @open-chat="openChat"
               @show-code-alert="showCodeAlert"
@@ -266,6 +268,7 @@
               :key="user.user_id"
               :user="user"
               :online-users="onlineUsers"
+              :last-seens="lastSeens"
               @open-profile="openProfile"
               @open-chat="openChat"
               @show-code-alert="showCodeAlert"
@@ -280,6 +283,7 @@
               :key="user.user_id"
               :user="user"
               :online-users="onlineUsers"
+              :last-seens="lastSeens"
               @open-profile="openProfile"
               @open-chat="openChat"
               @show-code-alert="showCodeAlert"
@@ -655,7 +659,7 @@ import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { UsersModel } from '~/composables/models'
 import Multiselect from 'vue-multiselect';
 import 'vue-multiselect/dist/vue-multiselect.css';
-import type { CallsModel } from '~/composables/websocketModels';
+import type { CallsModel, LastSeenModel } from '~/composables/websocketModels';
 import Swal from 'sweetalert2'
 import UserCard from '~/components/profile/user/UserCard.vue';
 const id_store = idStore()
@@ -670,6 +674,7 @@ const searchTxt = ref('')
 const users = ref([] as UsersModel.ProfileDetailsResponseModel[])
 const eventBus = useMittEmitter()
 const onlineUsers = ref([] as number[])
+const lastSeens = ref([] as LastSeenModel[])
 const isWSConnected = ref(false);
 
 const lookingFor = ref<Array<string>>([])   // binds to "I am looking for"
@@ -1110,8 +1115,9 @@ onMounted(() => {
     isWSConnected.value = is_connected
     checkuseronline()
   })
-  eventBus.on('onlineUserIds', (onlineUserIds) => {
-    onlineUsers.value = onlineUserIds
+  eventBus.on('onlineUserIds', (group) => {
+    onlineUsers.value = group.user_ids ?? []
+    lastSeens.value = group.last_seens ?? []
   })
 
   eventBus.on('callDeclineAlert', (eventModel) => {

@@ -11,6 +11,7 @@
         :key="user.user_id"
         :user="user"
         :online-users="onlineUsers"
+        :last-seens="lastSeens"
         @open-profile="openProfile"
         @open-chat="openChat"
         @show-code-alert="showCodeAlert"
@@ -33,7 +34,8 @@ interface Props {
   subtitle?: string
   showHeader?: boolean
   gridColumns?: number
-  onlineUsers?: number[]
+  onlineUsers?: number[],
+  lastSeens?: LastSeenModel[]
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -41,7 +43,8 @@ const props = withDefaults(defineProps<Props>(), {
   subtitle: '',
   showHeader: true,
   gridColumns: 3,
-  onlineUsers: () => []
+  onlineUsers: () => [],
+  lastSeens: () => []
 })
 
 // Event emitters

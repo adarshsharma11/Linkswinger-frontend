@@ -32,7 +32,7 @@ type Events = {
   chatEvent: ChatEventSocketModel,
   chatUpdateStatus: ChatEventSocketModel,
   chatDeleteStatus: ChatEventSocketModel,
-  onlineUserIds: number[],
+  onlineUserIds: GroupEventSocketModel,
   typing: TypingEventSocketModel,
   callAlert: CallAlertModel,
   callDeclineAlert: CallAlertModel,
@@ -291,9 +291,9 @@ async function handleworkerevent(event: MessageEvent<any>) {
   }
   else if (json.event_name === "user_updated_to_group") {
     let json = event.data as GroupEventSocketModel
-    clearOnlineIds()
-    online_user_ids.push(...json.user_ids ?? [])
-    emitter.emit('onlineUserIds', online_user_ids)
+ 
+    emitter.emit('onlineUserIds', json)
+    console.log("User updated to group event received in worker", json)
   }
   else if (json.event_name === "chat_update_status") {
     let json = event.data as ChatEventSocketModel

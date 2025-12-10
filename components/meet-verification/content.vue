@@ -207,25 +207,6 @@ function getGender(user: MeetVerificationsModel.FetchVerifyResponseModel): strin
   return ''
 }
 
-function formatRelativeDate(inputDate: string) {
-  const date = new Date(inputDate);
-  const today = new Date();
-
-  // Difference in ms → days
-  const diffTime = today - date;
-  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-
-  if (diffDays < 1) return "Today";
-  if (diffDays === 1) return "1 day ago";
-  if (diffDays < 7) return `${diffDays} days ago`;
-
-  const diffWeeks = Math.floor(diffDays / 7);
-  if (diffWeeks === 1) return "1 week ago";
-  if (diffWeeks <= 4) return `${diffWeeks} weeks ago`;
-
-  // If more than 4 weeks → return date
-  return date.toISOString().split("T")[0]; // YYYY-MM-DD
-}
 
 function showVerificationAlert(verifyModel: MeetVerificationsModel.FetchVerifyResponseModel) {
   Swal.fire({
