@@ -37,17 +37,19 @@
         <div class="filters">
           <div>
             <label for="gender">Gender filter</label><br>
-            <select id="gender" name="gender">
+            <span class="btn-loader" v-if="isGenderLoading"></span>
+            <select id="gender" name="gender" v-model="genderSelect" v-if="!isGenderLoading" @change="updateRoulleteGender()">
               <option value="any">Any</option>
-              <option value="male">Man</option>
-              <option value="female">Woman</option>
-              <option value="ts">TS</option>
-              <option value="couple">Couple</option>
+              <option value="Man">Man</option>
+              <option value="Woman">Woman</option>
+              <option value="TS">TS</option>
+              <option value="Couple">Couple</option>
             </select>
           </div>
           <div>
-            <label for="radius">Location radius: <span id="radiusVal">3000</span> mi</label><br>
-            <input id="radius" type="range" min="5" max="3000" value="3000">
+            <label for="radius">Location radius: <span id="radiusVal">{{ radiusSelect }}</span> mi</label><br>
+             <span class="btn-loader" v-if="isRadiusLoading"></span>
+            <input v-model.number="radiusSelect" id="radius" type="range" min="10" max="3000" value="3000" @change="updateRoulleteRadius()" v-if="!isRadiusLoading">
           </div>
         </div>
 
@@ -108,6 +110,10 @@ const route = useRoute()
 const isStarted = ref(false)
 const isStartLoading = ref(false)
 const isNextLoading = ref(false)
+const isRadiusLoading = ref(false)
+const isGenderLoading = ref(false)
+const genderSelect = ref("any");
+const radiusSelect = ref(3000);
 
 const formattedTime = computed(() => {
   const hours = Math.floor(timeStart.value / 3600).toString().padStart(2, '0');
@@ -133,6 +139,10 @@ onBeforeUnmount(() => {
   eventBus.off('roullete_next_success')
   eventBus.off('roullete_next_failed')
 
+  eventBus.off('roullete_radius_success')
+  eventBus.off('roullete_gender_success')
+
+
 
   window.removeEventListener('pagehide', onPageHide)
   sendEndRoulleteBeacon()
@@ -145,6 +155,8 @@ onMounted(async () => {
   eventBus.on('socketConnection', (isConnected: boolean) => {
     isStartLoading.value = false;
     isNextLoading.value = false;
+    isRadiusLoading.value = false;
+    isGenderLoading.value = false;
   })
 
 
@@ -182,6 +194,17 @@ onMounted(async () => {
   eventBus.on('callEvent', (callModel: CallSocketModel) => {
 
     handlecallevent(callModel)
+  })
+
+  eventBus.on('roullete_radius_success', (callModel: RouletteWorkerModel) => {
+    isRadiusLoading.value = false;
+
+
+  })
+
+  eventBus.on('roullete_gender_success', (callModel: RouletteWorkerModel) => {
+    isGenderLoading.value = false;
+
   })
 
   eventBus.on('random_match_server_push', (rouletteModel: RouletteWorkerModel) => {
@@ -333,9 +356,8 @@ function startstopRoullete() {
       sendmsgtoworker(roulleteModel, true)
     }
   }
-
-
 }
+
 function nextRoullete() {
   if (!isSocketConnected() || call_store.value === null || isNextLoading.value) {
     return;
@@ -354,6 +376,36 @@ function nextRoullete() {
   sendmsgtoworker(roulleteModel, true)
 }
 
+function updateRoulleteGender() {
+  if (!isSocketConnected() || isGenderLoading.value) {
+    return;
+  }
+  var looking_for = [] as string[];
+  if (genderSelect.value !== "any") {
+   looking_for = [genderSelect.value];
+  }
+  
+  isGenderLoading.value = true;
+  let roulleteModel = new RouletteWorkerModel()
+  roulleteModel.event_name = "update_roullete_gender"
+  roulleteModel.user_id = login_store.getUserDetails?.user_id ?? 0
+  roulleteModel.looking_for = looking_for
+  sendmsgtoworker(roulleteModel, true)
+}
+
+
+function updateRoulleteRadius() {
+  if (!isSocketConnected() || isRadiusLoading.value) {
+    return;
+  }
+ 
+  isRadiusLoading.value = true;
+  let roulleteModel = new RouletteWorkerModel()
+  roulleteModel.event_name = "update_roullete_radius"
+  roulleteModel.user_id = login_store.getUserDetails?.user_id ?? 0
+  roulleteModel.radius = radiusSelect.value
+  sendmsgtoworker(roulleteModel, true)
+}
 
 
 function sendcallupdates() {
@@ -489,16 +541,16 @@ function createanswer(remote: RTCSessionDescription) {
       sendremotecandidate(candidate)
     }, (event) => {
       if (event.type === 'message') {
-          if (event.data.type === 'hangup') {
-            // Respond to ping messages
-            console.log('Data channel remote event:', event);
-            webrtcclient.teardown()
-            queueCandidates = []
-            hasAnswer.value = false
-            isAnswerSent.value = false
-            call_store.value = null
-          }
+        if (event.data.type === 'hangup') {
+          // Respond to ping messages
+          console.log('Data channel remote event:', event);
+          webrtcclient.teardown()
+          queueCandidates = []
+          hasAnswer.value = false
+          isAnswerSent.value = false
+          call_store.value = null
         }
+      }
     })
   }
 }
