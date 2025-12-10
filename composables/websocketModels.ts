@@ -73,7 +73,14 @@ export class GroupEventSocketModel implements SocketEventModel {
   admin_id?: string;
   user_ids?: number[];
   socket_id? : string
+  last_seens? : LastSeenModel[]
 }
+
+export class LastSeenModel  {
+  user_id?: number;
+  last_active? : string
+}
+
 export class TypingEventSocketModel implements SocketEventModel
 {
   event_name!: string;
