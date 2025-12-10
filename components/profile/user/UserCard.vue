@@ -22,6 +22,7 @@
             </ul>
           </div>
           <div class="meta">{{ user.town }} • {{ distance }} miles</div>
+          <div class="meta">Last seen: 2 hours ago</div>
         </div>
       </div>
       
