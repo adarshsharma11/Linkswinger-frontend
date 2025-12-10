@@ -32,7 +32,6 @@
           <video id="remote-video-track" class="w-100 vh-80 object-cover bg-black" autoplay playsinline></video>
         </div>
       </section>
-
       <section class="vd-roulete-controls" aria-label="Controls">
         <div class="filters">
           <div>
