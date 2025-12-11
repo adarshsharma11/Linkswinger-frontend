@@ -11,7 +11,7 @@
               d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4" />
           </svg></button>
       </div>
-      <nav class="nav" id="sideNav">
+      <nav class="nav" id="sideNav" >
         <a href="#profile" data-route="profile" @click.prevent="setActiveNav('profile')"
           :class="{ active: activeNav === 'profile' }" class="text-white"><span class="icon"><!--👤--> <img
               class="sidebar-ic" :src="`/images/badges/animated/50X50px/edit-profile.gif`" /></span>My Profile</a>
@@ -668,7 +668,7 @@ const router = useRouter()
 const drawerOpen = ref(false)
 const isMobile = ref(false)
 const showAdvancedSearch = ref(false)
-const activeNav = ref("home")
+const activeNav = ref("")
 const login_store = useLoginStore();
 const searchTxt = ref('')
 const users = ref([] as UsersModel.ProfileDetailsResponseModel[])
@@ -787,30 +787,30 @@ function checkMobile() {
 
 
 
-const fetchallusers = async () => {
-  const api_url = getUrl(RequestURL.fetchallusers);
-  const { data: users, error: cat_error } = await useFetch<SuccessError<UsersModel.ProfileDetailsResponseModel>>(api_url, {
-    cache: "no-cache",
-    method: "post",
-    body: {
-      page: 0,
-      search: searchTxt.value,
-      user_id: login_store.getUserDetails?.user_id ?? 0,
+// const fetchallusers = async () => {
+//   const api_url = getUrl(RequestURL.fetchallusers);
+//   const { data: users, error: cat_error } = await useFetch<SuccessError<UsersModel.ProfileDetailsResponseModel>>(api_url, {
+//     cache: "no-cache",
+//     method: "post",
+//     body: {
+//       page: 0,
+//       search: searchTxt.value,
+//       user_id: login_store.getUserDetails?.user_id ?? 0,
      
-    },
-    headers: {
-      "content-type": "application/json"
-    }
-  });
-  return users.value?.result ?? []
-}
-let hash = route.hash
-activeNav.value = hash.slice(1) || 'home'
+//     },
+//     headers: {
+//       "content-type": "application/json"
+//     }
+//   });
+//   return users.value?.result ?? []
+// }
+// let hash = route.hash
+// activeNav.value = hash.slice(1) || 'home'
 
-if (hash === '#userlist') {
-  console.log('Fetching all users for user list view...')
-  users.value = await fetchallusers() as UsersModel.ProfileDetailsResponseModel[]
-}
+// if (hash === '#userlist') {
+//   console.log('Fetching all users for user list view...')
+//   users.value = await fetchallusers() as UsersModel.ProfileDetailsResponseModel[]
+// }
 
 async function fetchUsersList(fromAdvance = false) {
   const api_url = getUrl(RequestURL.fetchallusers);
@@ -1109,7 +1109,7 @@ onMounted(() => {
   // Handle hash-based navigation
 
   advanceModelSub = new ($bootstrap as any).Modal(document.getElementById('advancesearchmodal'));
-  console.log('onMounted...dashboard')
+  
   isWSConnected.value = isSocketConnected()
   eventBus.on('socketConnection', (is_connected) => {
     isWSConnected.value = is_connected
@@ -1136,6 +1136,11 @@ onMounted(() => {
   activeNav.value = hash.slice(1) || 'home'
 
   window.location.hash = activeNav.value
+
+  if (hash === '#userlist') {
+  console.log('Fetching all users for user list view...')
+  fetchUsersList()
+}
 
   console.log(`Initial navigation to ${activeNav.value}`)
 
@@ -1203,7 +1208,6 @@ onBeforeUnmount(() => {
   eventBus.off('onlineUserIds')
    eventBus.off('callDeclineAlert')
   eventBus.off('callAcceptAlert')
-  console.log('beforemount...dashboard')
 })
 
 onUnmounted(() => {
