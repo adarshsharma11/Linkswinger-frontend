@@ -22,7 +22,9 @@
             </ul>
           </div>
           <div class="meta">{{ user.town }} • {{ distance }} miles</div>
-          <div class="meta" v-if="!isOnline">Last seen: {{ lastDate() }}</div>
+          <div class="meta" v-if="(user.viewed_at ?? '').length > 0">Last viewed: {{ viewedAt(user)}}</div>
+          <div class="meta" v-if="!isOnline && lastDate().length > 0">Last seen: {{ lastDate() }}</div>
+          
         </div>
       </div>
       
@@ -65,8 +67,16 @@ interface Props {
   onlineUsers: number[],
   lastSeens : LastSeenModel[]
 }
+
+const props = withDefaults(defineProps<Props>(), {
+  user: () => ({} as UsersModel.ProfileDetailsResponseModel),
+  onlineUsers: () => [],
+  lastSeens: () => [],
+  type: ''   // 👈 your default string
+})
+
 const login_store = useLoginStore();
-const props = defineProps<Props>()
+
 
 // Computed properties for better performance
 const isOnline = computed(() => {
@@ -83,6 +93,10 @@ if (props.lastSeens.length > 0) {
   }
 }
   return ''
+}
+
+function viewedAt(user:UsersModel.ProfileDetailsResponseModel): string {
+return  formatRelativeDate(user.viewed_at ?? '') ?? ''
 }
 
 const imagePath = computed(() => {

@@ -1,13 +1,9 @@
 <template>
   <div class="user-list-container">
-    <div class="user-list-header" v-if="showHeader">
-      <h2>{{ title }}</h2>
-      <p v-if="subtitle">{{ subtitle }}</p>
-    </div>
-    
+   
     <div class="user-grid" :class="gridClass">
       <UserCard 
-        v-for="(user, index) in mockUsers" 
+        v-for="(user, index) in users" 
         :key="user.user_id"
         :user="user"
         :online-users="onlineUsers"
@@ -18,146 +14,176 @@
       />
     </div>
     
-    <div v-if="mockUsers.length === 0" class="no-users">
+    <div v-if="users.length === 0" class="no-users">
       <p>No users found</p>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+  import Swal from 'sweetalert2'
 import { ref, computed } from 'vue'
 import type { UsersModel } from '~/composables/models'
 import UserCard from '~/components/profile/user/UserCard.vue'
-
-interface Props {
-  title?: string
-  subtitle?: string
-  showHeader?: boolean
-  gridColumns?: number
-  onlineUsers?: number[],
-  lastSeens?: LastSeenModel[]
-}
-
-const props = withDefaults(defineProps<Props>(), {
-  title: 'User List',
-  subtitle: '',
-  showHeader: true,
-  gridColumns: 3,
-  onlineUsers: () => [],
-  lastSeens: () => []
-})
-
+import type { CallsModel } from '~/composables/websocketModels'
+const route = useRoute()
+const type = ref('')
+const user_store = userStore()
+const login_store = useLoginStore();
+const users = ref<UsersModel.ProfileDetailsResponseModel[]>([])
+const eventBus = useMittEmitter()
+const id_store = idStore()
+const onlineUsers = ref([] as number[])
+const lastSeens = ref([] as LastSeenModel[])
+const isWSConnected = ref(false)
 // Event emitters
-const emit = defineEmits<{
-  openProfile: [user: UsersModel.ProfileDetailsResponseModel]
-  openChat: [user: UsersModel.ProfileDetailsResponseModel]
-  showCodeAlert: [userId: number, isVideo: boolean]
-}>()
 
-// Extended user type with distance for mock data
-interface UserWithDistance extends UsersModel.ProfileDetailsResponseModel {
-  distance?: number
-}
 
-// Mock user data with local images
-const mockUsers = ref<UserWithDistance[]>([
-  {
-    user_id: 1,
-    nick_name: 'Sarah',
-    profile_type: 'Woman',
-    gender: 'Woman',
-    town: 'London',
-    profile_status: 'Looking for fun and adventure',
-    tier_name: 'Elite',
-    is_photo_verified: true,
-    is_meet_verified: true,
-    media_path: '/images/user-list/',
-    profile_image: 'user-1.jpg',
-    distance: 5,
-    interests: [
-      { interest_id: 1, interest_name: 'Travel' },
-      { interest_id: 2, interest_name: 'Photography' }
-    ]
-  },
-  {
-    user_id: 2,
-    nick_name: 'Mike',
-    profile_type: 'Man',
-    gender: 'Man',
-    town: 'Manchester',
-    profile_status: 'Easy going and friendly',
-    tier_name: 'Plus',
-    is_photo_verified: true,
-    is_meet_verified: false,
-    media_path: '/images/user-list/',
-    profile_image: 'user-2.jpg',
-    distance: 12,
-    interests: [
-      { interest_id: 3, interest_name: 'Sports' },
-      { interest_id: 4, interest_name: 'Music' }
-    ]
-  },
-  {
-    user_id: 3,
-    nick_name: 'Emma & James',
-    profile_type: 'Couple',
-    gender: 'Couple',
-    town: 'Birmingham',
-    profile_status: 'Fun couple looking to meet new people',
-    tier_name: 'Basic',
-    is_photo_verified: false,
-    is_meet_verified: false,
-    media_path: '/images/user-list/',
-    profile_image: 'user-3.jpg',
-    distance: 8,
-    interests: [
-      { interest_id: 5, interest_name: 'Dining' },
-      { interest_id: 6, interest_name: 'Movies' }
-    ]
-  },
-  {
-    user_id: 4,
-    nick_name: 'Alex',
-    profile_type: 'Others',
-    gender: 'Others',
-    town: 'Liverpool',
-    profile_status: 'Open minded and adventurous',
-    tier_name: 'Free',
-    is_photo_verified: true,
-    is_meet_verified: true,
-    media_path: '/images/user-list/',
-    profile_image: 'user-4.jpg',
-    distance: 15,
-    interests: [
-      { interest_id: 7, interest_name: 'Art' },
-      { interest_id: 8, interest_name: 'Fashion' }
-    ]
-  }
-])
+
+type.value = route.query.type as string || 'all'
+
+if (type.value === 'nearby') {
+
+} else if (type.value === 'views')
+ {
+ const addUserViews = async () => {
+    const api_url = getUrl(RequestURL.fetchProfileViews);
+    const { data: response, error: option_error } = await useFetch<SuccessError<UsersModel.ProfileDetailsResponseModel>>(
+      api_url,
+      {
+        method: "POST",
+        body: {
+          user_id: user_store.getLoginId,
+        },
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return response.value?.result || []
+  };
+  users.value = await addUserViews() ;
+  
+} 
+
+
 
 // Computed properties
+// const gridClass = computed(() => {
+//   return {
+//     'grid-1': props.gridColumns === 1,
+//     'grid-2': props.gridColumns === 2,
+//     'grid-3': props.gridColumns === 3,
+//     'grid-4': props.gridColumns === 4,
+//     'grid-5': props.gridColumns === 5
+//   }
+// })
 const gridClass = computed(() => {
-  return {
-    'grid-1': props.gridColumns === 1,
-    'grid-2': props.gridColumns === 2,
-    'grid-3': props.gridColumns === 3,
-    'grid-4': props.gridColumns === 4,
-    'grid-5': props.gridColumns === 5
-  }
+return `grid-3`; // Always return grid-5 for 5 columns
 })
 
 // Methods
-const openProfile = (user: UsersModel.ProfileDetailsResponseModel) => {
-  emit('openProfile', user)
+const openProfile = async (user: UsersModel.ProfileDetailsResponseModel) => {
+ await navigateTo(`/user-profile/${user.user_id}`)
 }
 
-const openChat = (user: UsersModel.ProfileDetailsResponseModel) => {
-  emit('openChat', user)
+const openChat = async (user: UsersModel.ProfileDetailsResponseModel) => {
+ await navigateTo(`/chat/${user.user_id}`)
 }
 
 const showCodeAlert = (userId: number, isVideo: boolean) => {
-  emit('showCodeAlert', userId, isVideo)
+  Swal.fire({
+    title: 'Please enter code',
+    input: 'text', // Specifies a text input field
+    inputPlaceholder: 'Type code here', // Placeholder text for the input
+    showCancelButton: true, // Displays a cancel button
+    inputValidator: (value: string) => { // Optional: input validation
+      if (!value) {
+        return 'Please enter code';
+      }
+    }
+  }).then((result) => {
+    if (result.isConfirmed) {
+      validateCall(userId,result.value ?? '', isVideo)
+    }
+  });
 }
+
+async function validateCall(to_id:number,code: string, is_video: boolean) {
+  const api_url = getUrl(RequestURL.validateCall);
+  await $fetch<SuccessError<CallsModel.ValidateCallResponseModel>>(api_url, {
+    cache: "no-cache",
+    method: "post",
+    body: {
+      "from_id": login_store.getUserDetails?.user_id ?? 0,
+      "from_socket_id": id_store.getDeviceId,
+      "to_id": to_id,
+      "call_code": code,
+      "is_video": is_video
+    },
+    headers: {
+      "content-type": "application/json"
+    },
+    onResponse: async ({ response }) => {
+
+      var response_model = response._data as SuccessError<CallsModel.ValidateCallResponseModel>
+      if (response_model.success) {
+        showToastSuccess(response_model.message)
+      }
+      else {
+        showToastError(response_model.message)
+      }
+    }
+  });
+}
+function checkuseronline() {
+  if (isWSConnected.value) {
+      
+    let user_ids = users.value.map(it => it.user_id ?? 0)
+    
+    if (user_ids.length > 0) {
+      let groupmodel = new GroupEventSocketModel()
+      groupmodel.admin_id = id_store.getDeviceId
+      groupmodel.event_name = "add_user_to_group"
+      groupmodel.user_ids = user_ids ?? []
+      groupmodel.socket_id = id_store.getDeviceId
+      sendmsgtoworker(groupmodel, true)
+ 
+    }
+  }
+}
+onMounted(() => {
+ isWSConnected.value = isSocketConnected()
+ checkuseronline()
+  eventBus.on('socketConnection', (is_connected) => {
+    isWSConnected.value = is_connected
+    checkuseronline()
+  })
+  eventBus.on('onlineUserIds', (group) => {
+    onlineUsers.value = group.user_ids ?? []
+    lastSeens.value = group.last_seens ?? []
+    
+  })
+
+  eventBus.on('callDeclineAlert', (eventModel) => {
+    showToastError('Call declined')
+  })
+  eventBus.on('callAcceptAlert', async (eventModel) => {
+    if (eventModel.is_video) {
+      await navigateTo(`/video-call/${eventModel.token}`)
+    }
+    else {
+      await navigateTo(`/voice-call/${eventModel.token}`)
+    }
+  })
+})
+
+onBeforeUnmount(() => {
+  eventBus.off('socketConnection')
+  eventBus.off('onlineUserIds')
+   eventBus.off('callDeclineAlert')
+  eventBus.off('callAcceptAlert')
+})
 </script>
 
 <style scoped>

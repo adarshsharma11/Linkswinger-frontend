@@ -293,7 +293,7 @@ async function handleworkerevent(event: MessageEvent<any>) {
     let json = event.data as GroupEventSocketModel
  
     emitter.emit('onlineUserIds', json)
-    console.log("User updated to group event received in worker", json)
+   
   }
   else if (json.event_name === "chat_update_status") {
     let json = event.data as ChatEventSocketModel

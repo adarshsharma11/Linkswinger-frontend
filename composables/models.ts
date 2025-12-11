@@ -387,6 +387,7 @@ export namespace UsersModel {
     post_code?: string
     post_latitude?: number;
     post_longitude?: number;
+    viewed_at? : string;
   }
 
   export class FetchMembershipRequestModel {
@@ -723,7 +724,7 @@ export namespace ProfileViewsModel {
     post_code?: string;
     post_latitude?: number;
     post_longitude?: number;
-    updated_at?: string;
+    viewed_at?: string;
   }
 }
 

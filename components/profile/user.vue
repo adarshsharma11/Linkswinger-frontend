@@ -305,11 +305,11 @@
                 <img src="/images/badges/animated/50X50px/crush-list.gif" alt="Video Call" class="badge-icon" />
                 <small>Crush List</small>
               </div>
-              <div class="d-flex flex-column align-items-center" v-if="isMine()">
+              <div class="d-flex flex-column align-items-center" v-if="isMine()" @click="openUserList('views')">
                 <img src="/images/badges/animated/50X50px/views.gif" alt="Like" class="badge-icon" />
                 <small>Views</small>
               </div>
-              <div class="d-flex flex-column align-items-center" v-if="isMine()">
+              <div class="d-flex flex-column align-items-center" v-if="isMine()" @click="openUserList('nearby')">
                 <img src="/images/badges/animated/50X50px/location.gif" alt="VIP" class="badge-icon" />
                 <small>Nearby</small>
               </div>
@@ -970,6 +970,11 @@ async function openChat() {
     await navigateTo('/chat/' + String(props.user_id ?? 0))
   }
 }
+
+async function openUserList(type: string) {
+   await navigateTo('/user-listing?type=' + type)
+}
+
 
 function isMine(): boolean {
   let user_id = Number(props.user_id ?? 0)

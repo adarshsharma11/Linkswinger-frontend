@@ -94,7 +94,6 @@ const login_store = useLoginStore();
 var verifyModalSub: any = null
 onMounted(() => {
   verifyModalSub = new ($bootstrap as any).Modal(document.getElementById('photoVerificationModal'));
-  console.log("verifyModalSub", verifyModalSub)
 })
 function triggerFileInput() {
   fileInput.value?.click();
