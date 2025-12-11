@@ -1,6 +1,6 @@
 <template>
   <section class="profile-page bg-dark text-white min-vh-100 py-4">
-  
+
     <div class="container">
       <!-- Header -->
       <div class="profile-header container-fluid px-3 px-md-4 mt-4">
@@ -9,7 +9,7 @@
           <!-- Mobile Settings Menu -->
           <div class="col-12 mb-2 d-md-none">
             <div class="dropdown d-flex justify-content-end">
-            <button v-if="isMine()" id="settingsMenuMobile"
+              <button v-if="isMine()" id="settingsMenuMobile"
                 class="btn p-0 border-0 bg-transparent d-flex flex-column align-items-center text-white mr-2 position-relative"
                 data-bs-toggle="dropdown" aria-expanded="false">
 
@@ -27,10 +27,11 @@
               <ul class="dropdown-menu dropdown-menu-end bg-dark text-white setting-dropdown-menu"
                 aria-labelledby="settingsMenuMobile">
                 <li>
-                  <button class="dropdown-item text-white d-flex align-items-center position-relative" @click="navigateTo('/membership')">
-                     <span class="text-danger menu-item-span">
-                        !
-                      </span>
+                  <button class="dropdown-item text-white d-flex align-items-center position-relative"
+                    @click="navigateTo('/membership')">
+                    <span class="text-danger menu-item-span">
+                      !
+                    </span>
                     <img src="/images/badges/animated/50X50px/elite.gif" alt="Verify" class="rounded-circle me-2"
                       style="width: 30px; height: 30px; object-fit: cover" />
                     <span class="text-white">Membership</span>
@@ -64,8 +65,8 @@
                   <button class="dropdown-item text-white d-flex align-items-center position-relative"
                     @click="navigateTo(`/meet-verification`)">
                     <span class="text-danger menu-item-span">
-                        !
-                      </span>
+                      !
+                    </span>
                     <img src="/images/badges/animated/50X50px/profile-settings.gif" alt="Verify"
                       class="rounded-circle me-2" style="width: 30px; height: 30px; object-fit: cover" />
                     <span class="text-white">Meet Verifications</span>
@@ -88,10 +89,9 @@
                   </button>
                 </li>
                 <li>
-                  <button class="dropdown-item text-white d-flex align-items-center"
-                    @click="navigateTo(`/help`)">
-                    <img src="/images/badges/animated/50X50px/ls-help.gif" alt="Verify"
-                      class="rounded-circle me-2" style="width: 30px; height: 30px; object-fit: cover" />
+                  <button class="dropdown-item text-white d-flex align-items-center" @click="navigateTo(`/help`)">
+                    <img src="/images/badges/animated/50X50px/ls-help.gif" alt="Verify" class="rounded-circle me-2"
+                      style="width: 30px; height: 30px; object-fit: cover" />
                     <span class="text-white">LS Help</span>
                   </button>
                 </li>
@@ -134,14 +134,16 @@
                   @click="triggerFileInput">
                   <i class="fa fa-camera text-white"></i>
                 </button> -->
-                 <button v-if="!is_photo_uploading && isMine()" type="button" class="btn btn-transparent rounded-circle position-absolute profile-edit-btn"
-                 @click="navigateTo('/profile-picture')">
+                <button v-if="!is_photo_uploading && isMine()" type="button"
+                  class="btn btn-transparent rounded-circle position-absolute profile-edit-btn"
+                  @click="navigateTo('/profile-picture')">
                   <i class="fa fa-photo text-white"></i>
                 </button>
                 <!-- Remove button - bottom right -->
-                <button @click="removeProfilePhoto()" v-if="!is_photo_uploading && isMine() && (getUser()?.profile_image ?? '').length !== 0"
-                  type="button" class="btn btn-transparent rounded-circle position-absolute profile-remove-btn">
-                 <i class="fa fa-trash text-white"></i>
+                <button @click="removeProfilePhoto()"
+                  v-if="!is_photo_uploading && isMine() && (getUser()?.profile_image ?? '').length !== 0" type="button"
+                  class="btn btn-transparent rounded-circle position-absolute profile-remove-btn">
+                  <i class="fa fa-trash text-white"></i>
                 </button>
               </div>
               <input type="file" v-if="!is_photo_uploading && isMine()" accept="image/png,image/jpeg" class="d-none"
@@ -172,24 +174,25 @@
                 class="btn p-0 border-0 bg-transparent d-flex flex-column align-items-center text-white position-relative"
                 data-bs-toggle="dropdown" aria-expanded="false">
 
-            <!-- Red ! badge -->
-            <span class="position-absolute top-0 start-100 translate-middle 
+                <!-- Red ! badge -->
+                <span class="position-absolute top-0 start-100 translate-middle 
               text-danger"
-              style="font-size: 25px; width: 16px; height: 16px; display:flex; align-items:center; justify-content:center;">
-              !
-            </span>
+                  style="font-size: 25px; width: 16px; height: 16px; display:flex; align-items:center; justify-content:center;">
+                  !
+                </span>
 
-            <img src="/images/badges/animated/50X50px/settings.gif" alt="Settings" class="rounded-circle"
-              style="width: 50px; height: 50px; object-fit: cover" />
-            <small>Settings</small>
-          </button>
+                <img src="/images/badges/animated/50X50px/settings.gif" alt="Settings" class="rounded-circle"
+                  style="width: 50px; height: 50px; object-fit: cover" />
+                <small>Settings</small>
+              </button>
               <ul class="dropdown-menu dropdown-menu-end bg-dark text-white setting-dropdown-menu"
                 aria-labelledby="settingsMenu">
                 <li>
-                  <button class="dropdown-item text-white d-flex align-items-center position-relative" @click="navigateTo('/membership')">
+                  <button class="dropdown-item text-white d-flex align-items-center position-relative"
+                    @click="navigateTo('/membership')">
                     <span class="text-danger menu-item-span">
-                        !
-                      </span>
+                      !
+                    </span>
                     <img src="/images/badges/animated/50X50px/elite.gif" alt="Verify" class="rounded-circle me-2"
                       style="width: 30px; height: 30px; object-fit: cover" />
                     <span class="text-white">Membership</span>
@@ -223,8 +226,8 @@
                   <button class="dropdown-item text-white d-flex align-items-center position-relative"
                     @click="navigateTo(`/meet-verification`)">
                     <span class="text-danger menu-item-span">
-                        !
-                      </span>
+                      !
+                    </span>
                     <img src="/images/badges/animated/50X50px/meet-verification.gif" alt="Verify"
                       class="rounded-circle me-2" style="width: 30px; height: 30px; object-fit: cover" />
                     <span class="text-white">Meet Verifications</span>
@@ -238,7 +241,7 @@
                     <span class="text-white">Profile Settings</span>
                   </button>
                 </li>
-                 <li>
+                <li>
                   <button class="dropdown-item text-white d-flex align-items-center"
                     @click="navigateTo(`/media-settings`)" v-if="isMine()">
                     <img src="/images/badges/animated/50X50px/media-settings.gif" alt="Verify"
@@ -247,10 +250,10 @@
                   </button>
                 </li>
                 <li>
-                  <button class="dropdown-item text-white d-flex align-items-center"
-                    @click="navigateTo(`/help`)" v-if="isMine()">
-                    <img src="/images/badges/animated/50X50px/ls-help.gif" alt="Verify"
-                      class="rounded-circle me-2" style="width: 30px; height: 30px; object-fit: cover" />
+                  <button class="dropdown-item text-white d-flex align-items-center" @click="navigateTo(`/help`)"
+                    v-if="isMine()">
+                    <img src="/images/badges/animated/50X50px/ls-help.gif" alt="Verify" class="rounded-circle me-2"
+                      style="width: 30px; height: 30px; object-fit: cover" />
                     <span class="text-white">LS Help</span>
                   </button>
                 </li>
@@ -282,19 +285,17 @@
           <!-- Center: Action icons -->
           <div class="col-12 col-md-6">
             <div class="d-flex gap-3 gap-md-4 flex-wrap justify-content-center">
-             <div class="d-flex flex-column align-items-center position-relative" @click="openChat()">
+              <div class="d-flex flex-column align-items-center position-relative" @click="openChat()">
 
-                  <!-- Square red glowing badge behind the icon -->
-                  <div class="position-absolute chat-count-badge">
-                    <span v-if="unread_user_count > 0" style="font-size:12px; font-weight:bold;" class="text-danger">
-                      {{ unread_user_count }}
-                    </span>
-                  </div>
-                  <img src="/images/badges/animated/50X50px/chat.gif"
-                      alt="Chat"
-                      class="badge-icon" />
-                  <small>Chat</small>
+                <!-- Square red glowing badge behind the icon -->
+                <div class="position-absolute chat-count-badge">
+                  <span v-if="unread_user_count > 0" style="font-size:12px; font-weight:bold;" class="text-danger">
+                    {{ unread_user_count }}
+                  </span>
                 </div>
+                <img src="/images/badges/animated/50X50px/chat.gif" alt="Chat" class="badge-icon" />
+                <small>Chat</small>
+              </div>
 
               <div class="d-flex flex-column align-items-center">
                 <img src="/images/badges/animated/50X50px/my-friends.gif" alt="Call" class="badge-icon" />
@@ -335,39 +336,39 @@
             <ul class="list-unstyled photo-list mb-0">
               <li
                 @click="navigateTo('/feeds/' + getUser()?.user_id + '?' + 'media_type=image' + '&' + 'feed_type=public')">
-                 <span class="badge bg-theme-color ms-2">{{ getFeedCount('public', 'image') }}</span>
+                <span class="badge bg-theme-color ms-2">{{ getFeedCount('public', 'image') }}</span>
                 <img src="/images/badges/public-photos.png" class="icon" /> Public Photos
-               
+
               </li>
               <li
                 @click="navigateTo('/feeds/' + getUser()?.user_id + '?' + 'media_type=video' + '&' + 'feed_type=public')">
-                 <span class="badge bg-theme-color ms-2">{{ getFeedCount('public', 'video') }}</span>
+                <span class="badge bg-theme-color ms-2">{{ getFeedCount('public', 'video') }}</span>
                 <img src="/images/badges/public-photos.png" class="icon" /> Public Videos
-               
+
               </li>
               <li
                 @click="navigateTo('/feeds/' + getUser()?.user_id + '?' + 'media_type=image' + '&' + 'feed_type=friends')">
-                  <span class="badge bg-theme-color ms-2">{{ getFeedCount('friends', 'image') }}</span>
+                <span class="badge bg-theme-color ms-2">{{ getFeedCount('friends', 'image') }}</span>
                 <img src="/images/badges/friends-only-photos.png" class="icon" /> Friends-Only Photos
-              
+
               </li>
               <li
                 @click="navigateTo('/feeds/' + getUser()?.user_id + '?' + 'media_type=video' + '&' + 'feed_type=friends')">
-                 <span class="badge bg-theme-color ms-2">{{ getFeedCount('friends', 'video') }}</span>
+                <span class="badge bg-theme-color ms-2">{{ getFeedCount('friends', 'video') }}</span>
                 <img src="/images/badges/friends-only-photos.png" class="icon" /> Friends-Only Videos
-               
+
               </li>
               <li
                 @click="navigateTo('/feeds/' + getUser()?.user_id + '?' + 'media_type=image' + '&' + 'feed_type=private')">
-                  <span class="badge bg-theme-color ms-2">{{ getFeedCount('private', 'image') }}</span>
+                <span class="badge bg-theme-color ms-2">{{ getFeedCount('private', 'image') }}</span>
                 <img src="/images/badges/private-photos.png" class="icon" /> Private Photos
-              
+
               </li>
               <li
                 @click="navigateTo('/feeds/' + getUser()?.user_id + '?' + 'media_type=video' + '&' + 'feed_type=private')">
-                  <span class="badge bg-theme-color ms-2">{{ getFeedCount('private', 'video') }}</span>
+                <span class="badge bg-theme-color ms-2">{{ getFeedCount('private', 'video') }}</span>
                 <img src="/images/badges/private-photos.png" class="icon" /> Private Videos
-              
+
               </li>
             </ul>
           </div>
@@ -429,10 +430,13 @@
             <div class="card-body">
               <h5 class="text-white mb-3">Meet Verification</h5>
               <p v-for="verification in verifications">
-                <div v-if="verification.visibility === 'public'"><strong>{{ verification.nick_name }}:</strong>{{verification.review }}</div>
-                <div v-if="verification.visibility === 'friends'"><strong>Verified by {{ verification.profile_type }}</strong></div>
-                <div v-if="verification.visibility === 'private'"><strong>Verified by {{ verification.profile_type }}</strong></div>
-                </p>
+              <div v-if="verification.visibility === 'public'"><strong>{{ verification.nick_name
+              }}:</strong>{{ verification.review }}</div>
+              <div v-if="verification.visibility === 'friends'"><strong>Verified by {{ verification.profile_type
+              }}</strong></div>
+              <div v-if="verification.visibility === 'private'"><strong>Verified by {{ verification.profile_type
+              }}</strong></div>
+              </p>
               <button v-if="isMine() === false && is_verified === false && is_verify_loading === false"
                 class="btn btn-sm btn-outline-light mt-2" @click="showVerificationAlert()">Verify</button>
               <span class="btn-loader" v-if="is_verify_loading"></span>
@@ -497,6 +501,24 @@ if (isMine() === false) {
     }
   };
   fetchUserDetails();
+
+  const addUserViews = async () => {
+    const api_url = getUrl(RequestURL.addProfileViews);
+    const { data: response, error: option_error } = await useFetch<SuccessError<UsersModel.ProfileDetailsResponseModel>>(
+      api_url,
+      {
+        method: "POST",
+        body: {
+          viewer_id: user_store.getLoginId,
+          user_id: Number(props.user_id ?? 0)
+        },
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+  };
+  addUserViews();
 }
 if (isMine() === true) {
   const fetchReadCount = async () => {
@@ -514,7 +536,7 @@ if (isMine() === true) {
       }
     );
     if (response.value?.success) {
-     unread_user_count.value = response.value?.response?.unread_user_count ?? 0
+      unread_user_count.value = response.value?.response?.unread_user_count ?? 0
     }
   };
   fetchReadCount();
@@ -972,10 +994,10 @@ async function removeProfilePhoto() {
   );
   is_photo_uploading.value = false;
   if (response.success) {
-     reloadNuxtApp({
-        path: "/profile",
-        ttl: 1000
-      })
+    reloadNuxtApp({
+      path: "/profile",
+      ttl: 1000
+    })
   }
   else {
     showToastError("Failed to remove photo. Please try again.");

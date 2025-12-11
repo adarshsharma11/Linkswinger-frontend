@@ -61,7 +61,9 @@ export enum RequestURL {
   updateLikeStatus = "/updateLikeStatus",
   updateFeedType = "/updateFeedType",
   deleteFeed = "/deleteFeed",
-  getChatReadCount = "/getChatReadCount"
+  getChatReadCount = "/getChatReadCount",
+  addProfileViews = "/addProfileViews",
+  fetchProfileViews = "/fetchProfileViews"
 }
 
 
@@ -493,7 +495,7 @@ export namespace FeedsModel {
   }
 
   export class FeedsRequestModel {
-    login_id? : number
+    login_id?: number
     user_id?: number;
     media_type?: string;
     feed_type?: string;
@@ -506,7 +508,7 @@ export namespace FeedsModel {
     nick_name?: string;
     profile_image?: string
     hd_profile_image?: string
-    profile_type?:string
+    profile_type?: string
     feed_thumbnail?: string
     lq_feed_image?: string
     hd_feed_image?: string
@@ -518,57 +520,57 @@ export namespace FeedsModel {
     is_liked?: boolean
     is_loading?: boolean
     comment_count?: number
-    can_comment?:boolean
-    can_like?:boolean
-    approval_status?:string
-    classification?:string
+    can_comment?: boolean
+    can_like?: boolean
+    approval_status?: string
+    classification?: string
 
   }
 
 
   export class FeedLikeDisLikeRequestModel {
-         user_id?: number
-         feed_id?: number
-    }
-    
-    export class FeedLikeDisLikeResponseModel {
-         user_id?: number
-         feed_id?: number
-         state? : string
-    }
-    
-    export class AddFeedCommentRequestModel {
-         user_id?: number
-         feed_id?: number
-         comment?: string
-         comment_type?: string
-    }
-    
-    export class AddFeedCommentResponseModel {
-         feed_comment_id? : number
-         user_id?: number
-         feed_id?: number
-         comment?: string
-         comment_type?: string
-    }
-    
-    export class FetchFeedCommentRequestModel {
-         feed_id?: number
-    }
-    
-    export class FetchFeedCommentResponseModel {
-         feed_comment_id? : number
-         user_id?: number
-         feed_id?: number
-         comment?: string
-         comment_type?: string
-         nick_name? : string
-         profile_type? : string
-         profile_image? : string
-         hd_profile_image? : string
-         media_path? : string
-    }
-    
+    user_id?: number
+    feed_id?: number
+  }
+
+  export class FeedLikeDisLikeResponseModel {
+    user_id?: number
+    feed_id?: number
+    state?: string
+  }
+
+  export class AddFeedCommentRequestModel {
+    user_id?: number
+    feed_id?: number
+    comment?: string
+    comment_type?: string
+  }
+
+  export class AddFeedCommentResponseModel {
+    feed_comment_id?: number
+    user_id?: number
+    feed_id?: number
+    comment?: string
+    comment_type?: string
+  }
+
+  export class FetchFeedCommentRequestModel {
+    feed_id?: number
+  }
+
+  export class FetchFeedCommentResponseModel {
+    feed_comment_id?: number
+    user_id?: number
+    feed_id?: number
+    comment?: string
+    comment_type?: string
+    nick_name?: string
+    profile_type?: string
+    profile_image?: string
+    hd_profile_image?: string
+    media_path?: string
+  }
+
 
 
 }
@@ -605,7 +607,7 @@ export namespace ChatsModel {
 
     url?: string;
     key?: string;
-    unread_user_count?:number
+    unread_user_count?: number
 
   }
 
@@ -627,25 +629,25 @@ export namespace MeetVerificationsModel {
   }
 
   export class FetchVerifyResponseModel {
-    meet_verification_id? : number
+    meet_verification_id?: number
     from_id?: number
     to_id?: number
     nick_name?: string
-    visibility?:string
+    visibility?: string
     review?: string
     is_public?: boolean
     is_verified?: boolean
 
-    profile_type? : string
-    gender? : string
-    partner_gender? : string
-    media_path? : string
-    profile_image? : string
-    created_at? : string
-    given_count? : number
-    received_count? : number
+    profile_type?: string
+    gender?: string
+    partner_gender?: string
+    media_path?: string
+    profile_image?: string
+    created_at?: string
+    given_count?: number
+    received_count?: number
 
-    is_verify_loading? : boolean
+    is_verify_loading?: boolean
 
   }
 }
@@ -658,25 +660,91 @@ export namespace EmojisModel {
     media_path?: string
   }
 }
+export namespace ProfileViewsModel {
+  export class AddViewRequestModel {
+    viewer_id?: number;
+    user_id?: number;
+  }
 
-export class RouletteWorkerModel 
-{
-     event_name? : string
-     user_id? : number
-     socket_id? : string
-     profile_type? : string
-     latitude? : number
-     longitude? : number
-    
-     radius? : number
-     looking_for? : string[]
-    
-     matched_id? : number
-     matched_socket_id? : string
-     socket_status? : string
-    
-     is_from? : boolean
-     timeStamp? : number
+  export class AddViewResponseModel {
+    viewer_id?: number;
+    user_id?: number;
+  }
+
+  export class FetchProfileViewRequestModel {
+    user_id?: number;
+  }
+
+  export class FetchProfileViewResponseModel {
+    user_id?: number;
+    user_udid?: string;
+    nick_name?: string;
+    email?: string;
+    profile_image?: string;
+    sd_profile_image?: string;
+    hd_profile_image?: string;
+    profile_type?: string;
+    user_type?: string;
+    is_email_confirmed?: boolean;
+    dob?: string;
+    is_dob_changed?: boolean;
+    orientation?: string;
+    partner_nick_name?: string;
+    partner_profile_image?: string;
+    partner_orientation?: string;
+    partner_dob?: string;
+    is_partner_dob_changed?: boolean;
+    height_unit?: string;
+    height?: string;
+    partner_height?: string;
+    looking_for?: string[];
+    town_id?: number;
+    ethnicity?: string;
+    partner_ethnicity?: string;
+    body_type?: string;
+    partner_body_type?: string;
+    gender?: string;
+    partner_gender?: string;
+    town?: string;
+    tier_id?: number;
+    tier_name?: string;
+    price?: number;
+    is_photo_verified?: boolean;
+    is_meet_verified?: boolean;
+    about_me?: string;
+    verified_photo?: string;
+    assets_path?: string;
+    media_path?: string;
+    profile_status?: string;
+    latitude?: number;
+    longitude?: number;
+    call_code?: string;
+    post_code_id?: number;
+    post_code?: string;
+    post_latitude?: number;
+    post_longitude?: number;
+    updated_at?: string;
+  }
+}
+
+
+export class RouletteWorkerModel {
+  event_name?: string
+  user_id?: number
+  socket_id?: string
+  profile_type?: string
+  latitude?: number
+  longitude?: number
+
+  radius?: number
+  looking_for?: string[]
+
+  matched_id?: number
+  matched_socket_id?: string
+  socket_status?: string
+
+  is_from?: boolean
+  timeStamp?: number
 }
 
 
