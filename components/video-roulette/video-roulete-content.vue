@@ -17,7 +17,7 @@
           <video id="local-video-track" class="w-100 h-100 object-cover bg-black" autoplay playsinline muted></video>
         </div>
 
-        <div class="video-card">
+        <div class="video-card self-video-card">
           <!-- <span class="corner-tag">Partner {{ connectStatus }}</span> -->
           <!-- <video id="remote-video-track"  class="placeholder"  style="display:grid;place-items:center;color:#9aa3af;">
             <div style="text-align:center;">

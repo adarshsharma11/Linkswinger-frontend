@@ -205,5 +205,16 @@
 
 section.ads-section {
     grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+}
+.self-video-card {
+    width: 150px;
+    height: 200px;
+    position: absolute;
+    right: 15px;
+    bottom: 15px;
+}
+
+.video-stage {
+    position: relative;
 }  
     }
