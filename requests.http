@@ -80,3 +80,13 @@ Content-Type: application/json
 {
   "user_id" : 1
 }
+
+###
+
+POST http://0.0.0.0:8080/api/fetchNearByUsers
+Content-Type: application/json
+
+{
+  "user_id" : 1
+}
+

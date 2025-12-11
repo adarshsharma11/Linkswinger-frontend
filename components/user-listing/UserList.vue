@@ -43,10 +43,26 @@ const isWSConnected = ref(false)
 type.value = route.query.type as string || 'all'
 
 if (type.value === 'nearby') {
-
+ const userList = async () => {
+    const api_url = getUrl(RequestURL.fetchNearByUsers);
+    const { data: response, error: option_error } = await useFetch<SuccessError<UsersModel.ProfileDetailsResponseModel>>(
+      api_url,
+      {
+        method: "POST",
+        body: {
+          user_id: user_store.getLoginId,
+        },
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return response.value?.result || []
+  };
+  users.value = await userList() ;
 } else if (type.value === 'views')
  {
- const addUserViews = async () => {
+ const userList = async () => {
     const api_url = getUrl(RequestURL.fetchProfileViews);
     const { data: response, error: option_error } = await useFetch<SuccessError<UsersModel.ProfileDetailsResponseModel>>(
       api_url,
@@ -62,7 +78,7 @@ if (type.value === 'nearby') {
     );
     return response.value?.result || []
   };
-  users.value = await addUserViews() ;
+  users.value = await userList() ;
   
 } 
 

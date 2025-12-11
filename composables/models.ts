@@ -63,7 +63,8 @@ export enum RequestURL {
   deleteFeed = "/deleteFeed",
   getChatReadCount = "/getChatReadCount",
   addProfileViews = "/addProfileViews",
-  fetchProfileViews = "/fetchProfileViews"
+  fetchProfileViews = "/fetchProfileViews",
+  fetchNearByUsers = "/fetchNearByUsers"
 }
 
 
