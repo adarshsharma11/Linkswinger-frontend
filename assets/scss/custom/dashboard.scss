@@ -32,7 +32,6 @@ a{color:inherit;text-decoration:none}
 h2{font-size:16px;margin:4px 0 12px}
 .dashboard-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
 .media{aspect-ratio:16/10;background:radial-gradient(80% 60% at 50% 40%, #1d1d1d, #0c0c0c);border-radius:12px;border:1px solid #1f1f1f;position:relative;overflow:hidden}
-.media::after{content:"Media";position:absolute;inset:auto 10px 10px auto;padding:4px 8px;border:1px solid #2b2b2b;border-radius:999px;background:#151515;color:#9a9a9a;font-size:12px}
 .dash-row{display:flex;gap:10px;align-items:center;justify-content:space-between}
 .muted{color:var(--muted)}
 /* RIGHT COLUMN */
