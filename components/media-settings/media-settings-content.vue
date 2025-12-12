@@ -202,12 +202,10 @@
   <div class="modal fade" id="videoModal" tabindex="-1" aria-labelledby="videoModal" aria-hidden="true">
     <div class="modal-dialog modal-xl">
       <div class="modal-content bg-black">
-         <div class="modal-body p-0 h-100">
-<Feeds :key="selectedFeeds.length > 0 ? selectedFeeds[0].feed_id : 0" :all-feeds="selectedFeeds"
+        <div class="modal-body p-0 h-100">
+          <Feeds :key="selectedFeeds.length > 0 ? selectedFeeds[0].feed_id : 0" :all-feeds="selectedFeeds"
             :from-feeds="false" :media-type="selectedFeeds[0]?.media_type" v-if="selectedFeeds.length > 0" />
-         </div>
-         
-
+        </div>
       </div>
     </div>
   </div>
@@ -366,16 +364,16 @@ function openPreview(feed: FeedsModel.FeedLikeDisLikeResponseModel) {
 
   selectedFeeds.value = [feed]
 
-    videoModalSub.show();
+  videoModalSub.show();
 
 }
 
 onMounted(async () => {
   videoModalSub = new ($bootstrap as any).Modal(document.getElementById('videoModal'));
 
-videoModalSub._element.addEventListener('hidden.bs.modal', () => {
-  selectedFeeds.value = []
-})
+  videoModalSub._element.addEventListener('hidden.bs.modal', () => {
+    selectedFeeds.value = []
+  })
 
 
 
