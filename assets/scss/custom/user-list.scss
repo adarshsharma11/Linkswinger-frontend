@@ -172,6 +172,22 @@ ease, filter 0.2s
 ease;
     font-size: 13.3px;
 }
+.user-grid .accept-decline .action {
+    flex: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: #0c1113;
+    padding: 10px 10px;
+    color: #dfeae5;
+    font-weight: 400;
+    cursor: pointer;
+    transition: transform 0.12s ease, box-shadow 0.2s ease, filter 0.2s ease;
+    font-size: 13.3px;
+}
 .user-grid .actions .action.primary {
     background: linear-gradient(90deg, #ff3b3b, #ff6b6b);
     color: #08110f;

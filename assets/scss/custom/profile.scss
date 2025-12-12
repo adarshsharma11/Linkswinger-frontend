@@ -176,8 +176,7 @@ button#settingsMenuMobile {
 }
 
 .profile-edit-btn,
-.profile-remove-btn,
-.profile-picture-btn {
+.profile-remove-btn {
   position: absolute;
   width: 32px;
   height: 32px;
@@ -203,46 +202,21 @@ button#settingsMenuMobile {
   right: -12px;
 }
 
-.profile-picture-btn {
-  top: 5px;
-  left: -12px;
-}
-
 .profile-edit-btn:hover,
-.profile-remove-btn:hover,
-.profile-picture-btn:hover {
+.profile-remove-btn:hover {
   transform: scale(1.1);
   background: rgba(0, 0, 0, 0.6) !important;
   backdrop-filter: blur(2px);
 }
 
 .profile-edit-btn i,
-.profile-remove-btn i,
-.profile-picture-btn i {
+.profile-remove-btn i {
   font-size: 18px;
   font-weight: normal;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7);
   transition: all 0.3s ease;
 }
-.chat-count-badge {
-  top: -20px;
-  width: 28px;
-  height: 28px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-
-.menu-item-span {
-  position: absolute;
-  left: 2px;    
-  top: 50%;
-  transform: translateY(-50%);
-  color: #ff2b2b;
-  font-size: 15px;
-  font-weight: bold;
-  width: 14px;
-  text-align: center;
-  pointer-events: none;
+.cursor-pointer {
+  cursor: pointer;
 }
 
