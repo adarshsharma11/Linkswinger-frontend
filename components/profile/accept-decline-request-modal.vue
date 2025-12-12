@@ -5,68 +5,33 @@
 
       <!-- HEADER -->
       <div class="msgf-header">
-        <div class="msgf-title">Friend Request</div>
+
 
         <!-- Close button -->
-        <button
-          type="button"
-          class="msgf-pill"
-          aria-label="Close"
-          @click="closeAll"
-        >
+        <button type="button" class="msgf-pill" aria-label="Close" @click="closeAll">
           ✕
         </button>
       </div>
 
       <!-- STATUS -->
-      <div class="msgf-status">
-        <div class="label">You have a new friend request</div>
 
-        <div class="msgf-chips">
-          <span class="msgf-chip">{{ user.username }}</span>
-        </div>
-      </div>
 
       <!-- MAIN BODY -->
       <div class="msgf-ghost-list">
         <div class="msgf-ghost-item">
           <div class="msgf-row">
             <span class="text-white">
-              {{ user.username }} wants to add you as a friend.
+              Send Friend Request
             </span>
           </div>
         </div>
 
-        <!-- FOOTER BUTTONS -->
-        <div class="msgf-footer">
-
-          <!-- Decline -->
-          <button
-            type="button"
-            class="msgf-footer-btn"
-            @click="declineRequest"
-          >
-            Decline
-          </button>
-
-          <!-- Accept -->
-          <button
-            type="button"
-            class="msgf-footer-btn secondary"
-            @click="acceptRequest"
-          >
-            Accept
-          </button>
-
-          <!-- NEW: View Friends List -->
-          <button
-            type="button"
-            class="msgf-footer-btn secondary"
-            @click="openFriendsList"
-          >
-            Friends List
-          </button>
-
+        <div class="msgf-ghost-item" @click="openFriendsList()">
+          <div class="msgf-row">
+            <span class="text-white">
+              Friend List
+            </span>
+          </div>
         </div>
       </div>
 
@@ -82,30 +47,10 @@
  *  - decline
  *  - friends
  */
-const emit = defineEmits(["close", "accept", "decline", "friends"])
+const emit = defineEmits(["close", "friendsList"])
 
-/** Static mock user */
-const user = reactive({
-  id: 101,
-  username: "Jonathan_92",
-  avatar: null
-})
-
-/** Accept request */
-function acceptRequest() {
-  emit("accept", user)
-  closeAll()
-}
-
-/** Decline request */
-function declineRequest() {
-  emit("decline", user)
-  closeAll()
-}
-
-/** Open friends list */
 function openFriendsList() {
-  emit("friends")
+  emit("friendsList")
   closeAll()
 }
 

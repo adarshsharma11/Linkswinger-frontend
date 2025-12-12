@@ -297,7 +297,7 @@
                 <small>Chat</small>
               </div>
 
-              <div class="d-flex flex-column align-items-center cursor-pointer" @click="toggleRequestModal = true">
+              <div class="d-flex flex-column align-items-center cursor-pointer" @click="friendListTapped()">
                 <img src="/images/badges/animated/50X50px/my-friends.gif" alt="Call" class="badge-icon" />
                 <small>Friends List</small>
               </div>
@@ -1015,6 +1015,15 @@ async function openChat() {
   }
   else {
     await navigateTo('/chat/' + String(props.user_id ?? 0))
+  }
+}
+async function friendListTapped() {
+ if (isMine()) {
+    await navigateTo('/user-listing?type=' + 'friends')
+  }
+  else
+  {
+     toggleRequestModal.value = !toggleRequestModal.value
   }
 }
 

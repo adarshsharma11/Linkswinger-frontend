@@ -103,6 +103,28 @@ else if (type.value === 'crushes')
   
 } 
 
+else if (type.value === 'friends')
+ {
+ const userList = async () => {
+    const api_url = getUrl(RequestURL.fetchFriends);
+    const { data: response, error: option_error } = await useFetch<SuccessError<UsersModel.ProfileDetailsResponseModel>>(
+      api_url,
+      {
+        method: "POST",
+        body: {
+          user_id: user_store.getLoginId,
+        },
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return response.value?.result || []
+  };
+  users.value = await userList() ;
+  
+} 
+
 
 
 // Computed properties
