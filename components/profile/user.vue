@@ -302,10 +302,8 @@
                 <small>Friends List</small>
               </div>
               <div class="d-flex flex-column align-items-center cursor-pointer">
-              <span class="btn-loader" v-if="is_like_loading"></span>
-              <div class="d-flex flex-column align-items-center" @click="crushListTapped()" v-if="!is_like_loading">
                 <img src="/images/badges/animated/50X50px/crush-list.gif" alt="Video Call" class="badge-icon" />
-                <small>{{ isMine() ? 'Crush List' : is_liked ? 'DisLike' : 'Like' }}</small>
+                <small>Crush List</small>
               </div>
               <div class="d-flex flex-column align-items-center cursor-pointer" v-if="isMine()" @click="openUserList('views')">
                 <img src="/images/badges/animated/50X50px/views.gif" alt="Like" class="badge-icon" />
@@ -433,11 +431,11 @@
               <h5 class="text-white mb-3">Meet Verification</h5>
               <p v-for="verification in verifications">
               <div v-if="verification.visibility === 'public'"><strong>{{ verification.nick_name
-                  }}:</strong>{{ verification.review }}</div>
+              }}:</strong>{{ verification.review }}</div>
               <div v-if="verification.visibility === 'friends'"><strong>Verified by {{ verification.profile_type
-                  }}</strong></div>
+              }}</strong></div>
               <div v-if="verification.visibility === 'private'"><strong>Verified by {{ verification.profile_type
-                  }}</strong></div>
+              }}</strong></div>
               </p>
               <button v-if="isMine() === false && is_verified === false && is_verify_loading === false"
                 class="btn btn-sm btn-outline-light mt-2" @click="showVerificationAlert()">Verify</button>
@@ -486,11 +484,6 @@ const previewUrlFile = ref<Blob | null>(null);
 const fileInput = ref<HTMLInputElement | null>(null);
 const previewUrl = ref<string | null>(null);
 const unread_user_count = ref(0);
-const is_liked = ref(false);
-const is_like_loading = ref(false);
-
-const friend_status = ref('');
-const is_friend_loading = ref(false);
 
 if (isMine() === false) {
   const fetchUserDetails = async () => {
@@ -530,44 +523,6 @@ if (isMine() === false) {
     );
   };
   addUserViews();
-
-   const crushStatus = async () => {
-    const api_url = getUrl(RequestURL.crushStatus);
-    const { data: response, error: option_error } = await useFetch<SuccessError<UsersModel.ProfileDetailsResponseModel>>(
-      api_url,
-      {
-        method: "POST",
-        body: {
-          liker_id: user_store.getLoginId,
-          user_id: Number(props.user_id ?? 0)
-        },
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
-    is_liked.value = response.value?.success && response.value?.response?.is_liked === true ? true : false
-  };
-  crushStatus();
-
-   const friendStatus = async () => {
-    const api_url = getUrl(RequestURL.friendStatus);
-    const { data: response, error: option_error } = await useFetch<SuccessError<UsersModel.ProfileDetailsResponseModel>>(
-      api_url,
-      {
-        method: "POST",
-        body: {
-          from_id: user_store.getLoginId,
-          to_id: Number(props.user_id ?? 0)
-        },
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
-    friend_status.value = response.value?.response?.friend_status ?? '' 
-  };
-  friendStatus();
 }
 if (isMine() === true) {
   const fetchReadCount = async () => {
@@ -1020,41 +975,8 @@ async function openChat() {
   }
 }
 
-async function crushListTapped() {
-  if (isMine()) {
-    await navigateTo('/user-listing?type=' + 'crushes')
-  }
-  else {
-    if (is_like_loading.value) {
-      return; 
-    }
-      is_like_loading.value = true;
-      const api_url = getUrl(RequestURL.addCrush);
-      const response = await $fetch<SuccessError<UsersModel.ProfileDetailsResponseModel>>(
-        api_url,
-        {
-          method: "POST",
-          body: {
-            liker_id: user_store.getLoginId,
-            user_id: Number(props.user_id ?? 0)
-          },
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-        is_like_loading.value = false;
-      if (response.success) {
-        is_liked.value = response.response?.is_liked ?? false
-      }
-      else {
-        showToastError(response.message);
-      }
-  }
-}
-
 async function openUserList(type: string) {
-  await navigateTo('/user-listing?type=' + type)
+   await navigateTo('/user-listing?type=' + type)
 }
 
 
