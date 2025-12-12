@@ -82,7 +82,6 @@ Content-Type: application/json
 }
 
 ###
-
 POST http://0.0.0.0:8080/api/fetchNearByUsers
 Content-Type: application/json
 
@@ -90,3 +89,10 @@ Content-Type: application/json
   "user_id" : 1
 }
 
+###
+POST http://0.0.0.0:8080/api/fetchCrushList
+Content-Type: application/json
+
+{
+  "user_id" : 1
+}

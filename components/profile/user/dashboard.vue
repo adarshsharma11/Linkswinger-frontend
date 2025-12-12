@@ -753,6 +753,12 @@ async function setActiveNav(nav: string) {
     window.location.hash = nav
     fetchNearByUserList()
   }
+if (nav === 'crush') {
+    activeNav.value = nav
+    window.location.hash = nav
+    fetchCrushList()
+  }
+  
   
   else if (nav === 'profile') {
     await navigateTo(`/profile`)
@@ -870,6 +876,29 @@ async function fetchUsersList(fromAdvance = false) {
     users.value = response.result as UsersModel.ProfileDetailsResponseModel[];
     checkuseronline()
     
+  }
+  else {
+    users.value = []
+    showToastError(response.message ?? "Something went wrong");
+  }
+}
+
+async function fetchCrushList() {
+  const api_url = getUrl(RequestURL.fetchCrushList);
+     users.value = []
+  let response = await $fetch<SuccessError<UsersModel.LoginRequestModel>>(api_url, {
+    method: 'POST',
+    body: {
+      user_id: login_store.getUserDetails?.user_id ?? 0,
+    },
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  });
+
+  if (response.success) {
+    users.value = response.result as UsersModel.ProfileDetailsResponseModel[];
+    checkuseronline()
   }
   else {
     users.value = []
@@ -1171,7 +1200,9 @@ onMounted(() => {
 else if (hash === '#nearby') {
   fetchNearByUserList()
 }
-
+else if (hash === '#crush') {
+  fetchCrushList()
+}
 
 
   // Set initial state based on hash

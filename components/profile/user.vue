@@ -301,9 +301,9 @@
                 <img src="/images/badges/animated/50X50px/my-friends.gif" alt="Call" class="badge-icon" />
                 <small>Friends List</small>
               </div>
-              <div class="d-flex flex-column align-items-center">
+              <div class="d-flex flex-column align-items-center" @click="crushListTapped()">
                 <img src="/images/badges/animated/50X50px/crush-list.gif" alt="Video Call" class="badge-icon" />
-                <small>Crush List</small>
+                <small>{{ isMine() ? 'Crush List' : 'Like' }}</small>
               </div>
               <div class="d-flex flex-column align-items-center" v-if="isMine()" @click="openUserList('views')">
                 <img src="/images/badges/animated/50X50px/views.gif" alt="Like" class="badge-icon" />
@@ -431,11 +431,11 @@
               <h5 class="text-white mb-3">Meet Verification</h5>
               <p v-for="verification in verifications">
               <div v-if="verification.visibility === 'public'"><strong>{{ verification.nick_name
-              }}:</strong>{{ verification.review }}</div>
+                  }}:</strong>{{ verification.review }}</div>
               <div v-if="verification.visibility === 'friends'"><strong>Verified by {{ verification.profile_type
-              }}</strong></div>
+                  }}</strong></div>
               <div v-if="verification.visibility === 'private'"><strong>Verified by {{ verification.profile_type
-              }}</strong></div>
+                  }}</strong></div>
               </p>
               <button v-if="isMine() === false && is_verified === false && is_verify_loading === false"
                 class="btn btn-sm btn-outline-light mt-2" @click="showVerificationAlert()">Verify</button>
@@ -971,8 +971,17 @@ async function openChat() {
   }
 }
 
+async function crushListTapped() {
+  if (isMine()) {
+    await navigateTo('/user-listing?type=' + 'crushes')
+  }
+  else {
+
+  }
+}
+
 async function openUserList(type: string) {
-   await navigateTo('/user-listing?type=' + type)
+  await navigateTo('/user-listing?type=' + type)
 }
 
 

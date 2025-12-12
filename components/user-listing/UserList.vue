@@ -81,6 +81,27 @@ if (type.value === 'nearby') {
   users.value = await userList() ;
   
 } 
+else if (type.value === 'crushes')
+ {
+ const userList = async () => {
+    const api_url = getUrl(RequestURL.fetchCrushList);
+    const { data: response, error: option_error } = await useFetch<SuccessError<UsersModel.ProfileDetailsResponseModel>>(
+      api_url,
+      {
+        method: "POST",
+        body: {
+          user_id: user_store.getLoginId,
+        },
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return response.value?.result || []
+  };
+  users.value = await userList() ;
+  
+} 
 
 
 
