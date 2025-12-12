@@ -302,15 +302,18 @@
                 <small>Friends List</small>
               </div>
               <span class="btn-loader" v-if="is_like_loading"></span>
-              <div class="d-flex flex-column align-items-center cursor-pointer" @click="crushListTapped()" v-if="!is_like_loading">
+              <div class="d-flex flex-column align-items-center cursor-pointer" @click="crushListTapped()"
+                v-if="!is_like_loading">
                 <img src="/images/badges/animated/50X50px/crush-list.gif" alt="Video Call" class="badge-icon" />
                 <small>{{ isMine() ? 'Crush List' : is_liked ? 'DisLike' : 'Like' }}</small>
               </div>
-              <div class="d-flex flex-column align-items-center cursor-pointer" v-if="isMine()" @click="openUserList('views')">
+              <div class="d-flex flex-column align-items-center cursor-pointer" v-if="isMine()"
+                @click="openUserList('views')">
                 <img src="/images/badges/animated/50X50px/views.gif" alt="Like" class="badge-icon" />
                 <small>Views</small>
               </div>
-              <div class="d-flex flex-column align-items-center cursor-pointer" v-if="isMine()" @click="openUserList('nearby')">
+              <div class="d-flex flex-column align-items-center cursor-pointer" v-if="isMine()"
+                @click="openUserList('nearby')">
                 <img src="/images/badges/animated/50X50px/location.gif" alt="VIP" class="badge-icon" />
                 <small>Nearby</small>
               </div>
@@ -432,11 +435,11 @@
               <h5 class="text-white mb-3">Meet Verification</h5>
               <p v-for="verification in verifications">
               <div v-if="verification.visibility === 'public'"><strong>{{ verification.nick_name
-                  }}:</strong>{{ verification.review }}</div>
+              }}:</strong>{{ verification.review }}</div>
               <div v-if="verification.visibility === 'friends'"><strong>Verified by {{ verification.profile_type
-                  }}</strong></div>
+              }}</strong></div>
               <div v-if="verification.visibility === 'private'"><strong>Verified by {{ verification.profile_type
-                  }}</strong></div>
+              }}</strong></div>
               </p>
               <button v-if="isMine() === false && is_verified === false && is_verify_loading === false"
                 class="btn btn-sm btn-outline-light mt-2" @click="showVerificationAlert()">Verify</button>
@@ -452,7 +455,8 @@
       <EmojiPicker ref="emojiPickerRef" v-on:selected-emoji="selectedEmoji" />
     </div>
   </Teleport>
-  <AcceptDeclineRequestModel ref="acceptDeclineRequestModalRef" v-if="toggleRequestModal" @close="toggleRequestModal = false" @friends-list="openUsersFriendsList()"/>
+  <AcceptDeclineRequestModel ref="acceptDeclineRequestModalRef" v-if="toggleRequestModal"
+    @close="toggleRequestModal = false" @friends-list="openUsersFriendsList()" @send-request="sendFriendRequest()" />
 
 </template>
 <script setup lang="ts">
@@ -529,7 +533,7 @@ if (isMine() === false) {
   };
   addUserViews();
 
-   const crushStatus = async () => {
+  const crushStatus = async () => {
     const api_url = getUrl(RequestURL.crushStatus);
     const { data: response, error: option_error } = await useFetch<SuccessError<UsersModel.ProfileDetailsResponseModel>>(
       api_url,
@@ -548,7 +552,7 @@ if (isMine() === false) {
   };
   crushStatus();
 
-   const friendStatus = async () => {
+  const friendStatus = async () => {
     const api_url = getUrl(RequestURL.friendStatus);
     const { data: response, error: option_error } = await useFetch<SuccessError<UsersModel.ProfileDetailsResponseModel>>(
       api_url,
@@ -563,7 +567,7 @@ if (isMine() === false) {
         },
       }
     );
-    friend_status.value = response.value?.response?.friend_status ?? '' 
+    friend_status.value = response.value?.response?.friend_status ?? ''
   };
   friendStatus();
 }
@@ -1018,19 +1022,49 @@ async function openChat() {
   }
 }
 async function friendListTapped() {
- if (isMine()) {
+  if (isMine()) {
     let udid = login_store.getUserDetails?.user_udid ?? ''
     await navigateTo(`/user-listing?user_id=${udid}&type=friends`);
   }
-  else
-  {
-     toggleRequestModal.value = !toggleRequestModal.value
+  else {
+    toggleRequestModal.value = !toggleRequestModal.value
   }
 }
+async function sendFriendRequest() {
+  if (is_friend_loading.value) {
+    return;
+  }
 
+   if (friend_status.value === 'approved' || friend_status.value === 'pending') {
+    return;
+  }
+  
+  is_friend_loading.value = true;
+  const api_url = getUrl(RequestURL.sendFriendReq);
+  const response = await $fetch<SuccessError<UsersModel.ProfileDetailsResponseModel>>(
+    api_url,
+    {
+      method: "POST",
+      body: {
+        from_id: user_store.getLoginId,
+        to_id: Number(props.user_id ?? 0)
+      },
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+  is_friend_loading.value = false;
+  if (response.success) {
+    friend_status.value = response.response?.friend_status ?? ''
+  }
+  else {
+    showToastError(response.message);
+  }
+}
 async function openUsersFriendsList() {
-    let udid = userDetails.value?.user_udid ?? ''
-    await navigateTo(`/user-listing?user_id=${udid}&type=friends`);
+  let udid = userDetails.value?.user_udid ?? ''
+  await navigateTo(`/user-listing?user_id=${udid}&type=friends`);
 }
 
 async function crushListTapped() {
@@ -1039,30 +1073,30 @@ async function crushListTapped() {
   }
   else {
     if (is_like_loading.value) {
-      return; 
+      return;
     }
-      is_like_loading.value = true;
-      const api_url = getUrl(RequestURL.addCrush);
-      const response = await $fetch<SuccessError<UsersModel.ProfileDetailsResponseModel>>(
-        api_url,
-        {
-          method: "POST",
-          body: {
-            liker_id: user_store.getLoginId,
-            user_id: Number(props.user_id ?? 0)
-          },
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-        is_like_loading.value = false;
-      if (response.success) {
-        is_liked.value = response.response?.is_liked ?? false
+    is_like_loading.value = true;
+    const api_url = getUrl(RequestURL.addCrush);
+    const response = await $fetch<SuccessError<UsersModel.ProfileDetailsResponseModel>>(
+      api_url,
+      {
+        method: "POST",
+        body: {
+          liker_id: user_store.getLoginId,
+          user_id: Number(props.user_id ?? 0)
+        },
+        headers: {
+          "Content-Type": "application/json",
+        },
       }
-      else {
-        showToastError(response.message);
-      }
+    );
+    is_like_loading.value = false;
+    if (response.success) {
+      is_liked.value = response.response?.is_liked ?? false
+    }
+    else {
+      showToastError(response.message);
+    }
   }
 }
 

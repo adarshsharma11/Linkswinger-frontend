@@ -18,7 +18,7 @@
 
       <!-- MAIN BODY -->
       <div class="msgf-ghost-list">
-        <div class="msgf-ghost-item">
+        <div class="msgf-ghost-item" @click="sendRequest()">
           <div class="msgf-row">
             <span class="text-white">
               Send Friend Request
@@ -40,14 +40,13 @@
 </template>
 
 <script setup>
-/**
- * Events emitted:
- *  - close
- *  - accept
- *  - decline
- *  - friends
- */
-const emit = defineEmits(["close", "friendsList"])
+
+const emit = defineEmits(["close",'sendRequest', "friendsList"])
+
+function sendRequest() {
+  emit("sendRequest")
+  closeAll()
+}
 
 function openFriendsList() {
   emit("friendsList")
