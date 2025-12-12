@@ -66,6 +66,8 @@ export enum RequestURL {
   fetchProfileViews = "/fetchProfileViews",
   fetchNearByUsers = "/fetchNearByUsers",
   fetchCrushList = "/fetchCrushList",
+  addCrush = "/addCrush",
+  crushStatus = "/crushStatus",
 }
 
 
@@ -390,6 +392,7 @@ export namespace UsersModel {
     post_latitude?: number;
     post_longitude?: number;
     viewed_at? : string;
+    is_liked?: boolean;
   }
 
   export class FetchMembershipRequestModel {

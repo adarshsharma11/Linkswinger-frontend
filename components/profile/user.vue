@@ -301,9 +301,10 @@
                 <img src="/images/badges/animated/50X50px/my-friends.gif" alt="Call" class="badge-icon" />
                 <small>Friends List</small>
               </div>
-              <div class="d-flex flex-column align-items-center" @click="crushListTapped()">
+              <span class="btn-loader" v-if="is_like_loading"></span>
+              <div class="d-flex flex-column align-items-center" @click="crushListTapped()" v-if="!is_like_loading">
                 <img src="/images/badges/animated/50X50px/crush-list.gif" alt="Video Call" class="badge-icon" />
-                <small>{{ isMine() ? 'Crush List' : 'Like' }}</small>
+                <small>{{ isMine() ? 'Crush List' : is_liked ? 'DisLike' : 'Like' }}</small>
               </div>
               <div class="d-flex flex-column align-items-center" v-if="isMine()" @click="openUserList('views')">
                 <img src="/images/badges/animated/50X50px/views.gif" alt="Like" class="badge-icon" />
@@ -480,6 +481,8 @@ const previewUrlFile = ref<Blob | null>(null);
 const fileInput = ref<HTMLInputElement | null>(null);
 const previewUrl = ref<string | null>(null);
 const unread_user_count = ref(0);
+const is_liked = ref(false);
+const is_like_loading = ref(false);
 
 if (isMine() === false) {
   const fetchUserDetails = async () => {
@@ -519,6 +522,25 @@ if (isMine() === false) {
     );
   };
   addUserViews();
+
+   const crushStatus = async () => {
+    const api_url = getUrl(RequestURL.crushStatus);
+    const { data: response, error: option_error } = await useFetch<SuccessError<UsersModel.ProfileDetailsResponseModel>>(
+      api_url,
+      {
+        method: "POST",
+        body: {
+          liker_id: user_store.getLoginId,
+          user_id: Number(props.user_id ?? 0)
+        },
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    is_liked.value = response.value?.success && response.value?.response?.is_liked === true ? true : false
+  };
+  crushStatus();
 }
 if (isMine() === true) {
   const fetchReadCount = async () => {
@@ -976,7 +998,31 @@ async function crushListTapped() {
     await navigateTo('/user-listing?type=' + 'crushes')
   }
   else {
-
+    if (is_like_loading.value) {
+      return; 
+    }
+      is_like_loading.value = true;
+      const api_url = getUrl(RequestURL.addCrush);
+      const response = await $fetch<SuccessError<UsersModel.ProfileDetailsResponseModel>>(
+        api_url,
+        {
+          method: "POST",
+          body: {
+            liker_id: user_store.getLoginId,
+            user_id: Number(props.user_id ?? 0)
+          },
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+        is_like_loading.value = false;
+      if (response.success) {
+        is_liked.value = response.response?.is_liked ?? false
+      }
+      else {
+        showToastError(response.message);
+      }
   }
 }
 
