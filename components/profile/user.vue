@@ -45,7 +45,7 @@
                     <span class="text-white">Edit Profile</span>
                   </button>
                 </li>
-                <li v-if="(getUser()?.is_photo_verified ?? false) === false">
+                <li>
                   <button class="dropdown-item text-white d-flex align-items-center" data-bs-toggle="modal"
                     data-bs-target="#photoVerificationModal">
                     <img src="/images/badges/animated/50X50px/verified.gif" alt="Verify" class="rounded-circle me-2"
@@ -206,7 +206,7 @@
                     <span class="text-white">Edit Profile</span>
                   </button>
                 </li>
-                <li v-if="(getUser()?.is_photo_verified ?? false) === false">
+                <li>
                   <button class="dropdown-item text-white d-flex align-items-center" data-bs-toggle="modal"
                     data-bs-target="#photoVerificationModal">
                     <img src="/images/badges/animated/50X50px/verified.gif" alt="Verify" class="rounded-circle me-2"
@@ -297,7 +297,9 @@
                 <small>Chat</small>
               </div>
 
-              <div class="d-flex flex-column align-items-center cursor-pointer" @click="friendListTapped()">
+              <span class="btn-loader" v-if="is_friend_loading"></span>
+              <div class="d-flex flex-column align-items-center cursor-pointer" @click="friendListTapped()"
+                v-if="!is_friend_loading">
                 <img src="/images/badges/animated/50X50px/my-friends.gif" alt="Call" class="badge-icon" />
                 <small>Friends List</small>
               </div>
@@ -435,11 +437,11 @@
               <h5 class="text-white mb-3">Meet Verification</h5>
               <p v-for="verification in verifications">
               <div v-if="verification.visibility === 'public'"><strong>{{ verification.nick_name
-              }}:</strong>{{ verification.review }}</div>
+                  }}:</strong>{{ verification.review }}</div>
               <div v-if="verification.visibility === 'friends'"><strong>Verified by {{ verification.profile_type
-              }}</strong></div>
+                  }}</strong></div>
               <div v-if="verification.visibility === 'private'"><strong>Verified by {{ verification.profile_type
-              }}</strong></div>
+                  }}</strong></div>
               </p>
               <button v-if="isMine() === false && is_verified === false && is_verify_loading === false"
                 class="btn btn-sm btn-outline-light mt-2" @click="showVerificationAlert()">Verify</button>
@@ -1035,10 +1037,10 @@ async function sendFriendRequest() {
     return;
   }
 
-   if (friend_status.value === 'approved' || friend_status.value === 'pending') {
+  if (friend_status.value === 'approved' || friend_status.value === 'pending') {
     return;
   }
-  
+
   is_friend_loading.value = true;
   const api_url = getUrl(RequestURL.sendFriendReq);
   const response = await $fetch<SuccessError<UsersModel.ProfileDetailsResponseModel>>(
