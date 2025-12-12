@@ -11,7 +11,6 @@
         <button
           type="button"
           class="msgf-pill"
-          @click.stop="toggleMenu"
           :aria-expanded="isMenuOpen ? 'true' : 'false'"
         >
           <span class="text-white">Filters</span>
@@ -23,48 +22,6 @@
             />
           </svg>
         </button>
-
-        <!-- DROPDOWN -->
-        <div
-          class="msgf-dropdown"
-          v-if="isMenuOpen"
-          role="menu"
-          aria-label="Message filters"
-          @click.stop
-        >
-          <label class="msgf-row">
-            <input type="checkbox" v-model="filters.unread" />
-            <span class="text-white">Unread</span>
-          </label>
-
-          <label class="msgf-row">
-            <input type="checkbox" v-model="filters.friends" />
-            <span class="text-white">Friends only</span>
-          </label>
-
-          <label class="msgf-row">
-            <input type="checkbox" v-model="filters.attachments" />
-            <span class="text-white">With attachments</span>
-          </label>
-
-          <label class="msgf-row">
-            <input type="checkbox" v-model="filters.photoVerified" />
-            <span class="text-white">Photo verified</span>
-          </label>
-
-          <div class="msgf-footer">
-            <button type="button" class="msgf-footer-btn" @click="clearFilters">
-              Clear
-            </button>
-            <button
-              type="button"
-              class="msgf-footer-btn secondary"
-              @click="closeMenu"
-            >
-              Cancel
-            </button>
-          </div>
-        </div>
       </div>
 
       <!-- ACTIVE FILTERS STATUS (chips) -->
@@ -86,10 +43,42 @@
 
       <!-- Ghost list blocks like screenshot -->
       <div class="msgf-ghost-list">
-        <div class="msgf-ghost-item"></div>
-        <div class="msgf-ghost-item"></div>
-        <div class="msgf-ghost-item"></div>
-        <div class="msgf-ghost-item"></div>
+        <div class="msgf-ghost-item">
+          <label class="msgf-row">
+            <input type="checkbox" v-model="filters.unread" />
+            <span class="text-white">Unread</span>
+          </label>
+        </div>
+        <div class="msgf-ghost-item">
+          <label class="msgf-row">
+            <input type="checkbox" v-model="filters.friends" />
+            <span class="text-white">Friends only</span>
+          </label>
+        </div>
+        <div class="msgf-ghost-item">
+          <label class="msgf-row">
+            <input type="checkbox" v-model="filters.attachments" />
+            <span class="text-white">With attachments</span>
+          </label>
+        </div>
+        <div class="msgf-ghost-item">
+          <label class="msgf-row">
+            <input type="checkbox" v-model="filters.photoVerified" />
+            <span class="text-white">Photo verified</span>
+          </label>
+        </div>
+        <div class="msgf-footer">
+            <button type="button" class="msgf-footer-btn" @click="clearFilters">
+              Clear
+            </button>
+            <button
+              type="button"
+              class="msgf-footer-btn secondary"
+              @click="closeAll"
+            >
+              Cancel
+            </button>
+          </div>
       </div>
     </div>
   </div>

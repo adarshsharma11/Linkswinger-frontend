@@ -31,6 +31,21 @@
       <div class="chips">
         <span style="color: white;">{{ user.profile_status }}</span>
       </div>
+       <div class="d-flex justify-content-start accept-decline gap-2">
+        <button class="action" data-action="message" aria-label="Message">
+          <span class="act-icon">
+            <img src="/images/badges/animated/50X50px/chat.gif" alt="Message" class="rounded-circle" style="width: 25px; height: 25px; object-fit: cover" />
+          </span>
+          Accept
+        </button>
+        
+        <button class="action" data-action="call" aria-label="Voice call">
+          <span class="act-icon">
+            <img src="/images/badges/animated/50X50px/call.gif" alt="Call" class="rounded-circle" style="width: 25px; height: 25px; object-fit: cover" />
+          </span>
+          Decline
+        </button>
+      </div>
       
       <div class="actions">
         <button class="action" data-action="message" aria-label="Message" @click="openChat">
