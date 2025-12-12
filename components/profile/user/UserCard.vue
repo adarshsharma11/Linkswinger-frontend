@@ -31,7 +31,7 @@
       <div class="chips">
         <span style="color: white;">{{ user.profile_status }}</span>
       </div>
-       <div class="d-flex justify-content-start accept-decline gap-2">
+       <div class="d-flex justify-content-start accept-decline gap-2" v-if="(user.friend_status?.length ?? 0) > 0">
         <button class="action" data-action="message" aria-label="Message">
           <span class="act-icon">
             <img src="/images/badges/animated/50X50px/chat.gif" alt="Message" class="rounded-circle" style="width: 25px; height: 25px; object-fit: cover" />

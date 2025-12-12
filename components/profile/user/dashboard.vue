@@ -748,16 +748,22 @@ async function setActiveNav(nav: string) {
     window.location.hash = nav
     fetchUsersList()
   }
-  if (nav === 'nearby') {
+  else if (nav === 'nearby') {
     activeNav.value = nav
     window.location.hash = nav
     fetchNearByUserList()
   }
-if (nav === 'crush') {
+else if (nav === 'crush') {
     activeNav.value = nav
     window.location.hash = nav
     fetchCrushList()
   }
+  else if (nav === 'friends') {
+    activeNav.value = nav
+    window.location.hash = nav
+    fetchFriends()
+  }
+  
   
   
   else if (nav === 'profile') {
@@ -876,6 +882,28 @@ async function fetchUsersList(fromAdvance = false) {
     users.value = response.result as UsersModel.ProfileDetailsResponseModel[];
     checkuseronline()
     
+  }
+  else {
+    users.value = []
+    showToastError(response.message ?? "Something went wrong");
+  }
+}
+async function fetchFriends() {
+  const api_url = getUrl(RequestURL.fetchFriends);
+     users.value = []
+  let response = await $fetch<SuccessError<UsersModel.LoginRequestModel>>(api_url, {
+    method: 'POST',
+    body: {
+      user_id: login_store.getUserDetails?.user_id ?? 0,
+    },
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  });
+
+  if (response.success) {
+    users.value = response.result as UsersModel.ProfileDetailsResponseModel[];
+    checkuseronline()
   }
   else {
     users.value = []
@@ -1202,6 +1230,9 @@ else if (hash === '#nearby') {
 }
 else if (hash === '#crush') {
   fetchCrushList()
+}
+else if (hash === '#friends') {
+  fetchFriends()
 }
 
 
