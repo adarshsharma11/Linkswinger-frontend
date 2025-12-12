@@ -894,7 +894,7 @@ async function fetchFriends() {
   let response = await $fetch<SuccessError<UsersModel.LoginRequestModel>>(api_url, {
     method: 'POST',
     body: {
-      user_id: login_store.getUserDetails?.user_id ?? 0,
+      user_udid: login_store.getUserDetails?.user_udid ?? '',
     },
     headers: {
       'Content-Type': 'application/json'

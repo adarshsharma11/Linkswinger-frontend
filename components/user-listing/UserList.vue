@@ -28,6 +28,7 @@ import UserCard from '~/components/profile/user/UserCard.vue'
 import type { CallsModel } from '~/composables/websocketModels'
 const route = useRoute()
 const type = ref('')
+const user_id = ref('')
 const user_store = userStore()
 const login_store = useLoginStore();
 const users = ref<UsersModel.ProfileDetailsResponseModel[]>([])
@@ -39,7 +40,7 @@ const isWSConnected = ref(false)
 // Event emitters
 
 
-
+user_id.value = route.query.user_id as string || 'all'
 type.value = route.query.type as string || 'all'
 
 if (type.value === 'nearby') {
@@ -90,7 +91,7 @@ else if (type.value === 'crushes')
       {
         method: "POST",
         body: {
-          user_id: user_store.getLoginId,
+          user_udid: user_id.value,
         },
         headers: {
           "Content-Type": "application/json",
@@ -112,7 +113,7 @@ else if (type.value === 'friends')
       {
         method: "POST",
         body: {
-          user_id: user_store.getLoginId,
+          user_id: user_id.value,
         },
         headers: {
           "Content-Type": "application/json",

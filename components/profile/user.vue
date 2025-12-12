@@ -452,7 +452,7 @@
       <EmojiPicker ref="emojiPickerRef" v-on:selected-emoji="selectedEmoji" />
     </div>
   </Teleport>
-  <AcceptDeclineRequestModel ref="acceptDeclineRequestModalRef" v-if="toggleRequestModal" @close="toggleRequestModal = false" />
+  <AcceptDeclineRequestModel ref="acceptDeclineRequestModalRef" v-if="toggleRequestModal" @close="toggleRequestModal = false" @friends-list="openUsersFriendsList()"/>
 
 </template>
 <script setup lang="ts">
@@ -1019,12 +1019,18 @@ async function openChat() {
 }
 async function friendListTapped() {
  if (isMine()) {
-    await navigateTo('/user-listing?type=' + 'friends')
+    let udid = login_store.getUserDetails?.user_udid ?? ''
+    await navigateTo(`/user-listing?user_id=${udid}&type=friends`);
   }
   else
   {
      toggleRequestModal.value = !toggleRequestModal.value
   }
+}
+
+async function openUsersFriendsList() {
+    let udid = userDetails.value?.user_udid ?? ''
+    await navigateTo(`/user-listing?user_id=${udid}&type=friends`);
 }
 
 async function crushListTapped() {
