@@ -297,13 +297,12 @@
                 <small>Chat</small>
               </div>
 
-              <div class="d-flex flex-column align-items-center cursor-pointer" @click="toggleRequestModal=true">
+              <div class="d-flex flex-column align-items-center cursor-pointer" @click="toggleRequestModal = true">
                 <img src="/images/badges/animated/50X50px/my-friends.gif" alt="Call" class="badge-icon" />
                 <small>Friends List</small>
               </div>
-              <div class="d-flex flex-column align-items-center cursor-pointer">
               <span class="btn-loader" v-if="is_like_loading"></span>
-              <div class="d-flex flex-column align-items-center" @click="crushListTapped()" v-if="!is_like_loading">
+              <div class="d-flex flex-column align-items-center cursor-pointer" @click="crushListTapped()" v-if="!is_like_loading">
                 <img src="/images/badges/animated/50X50px/crush-list.gif" alt="Video Call" class="badge-icon" />
                 <small>{{ isMine() ? 'Crush List' : is_liked ? 'DisLike' : 'Like' }}</small>
               </div>
@@ -453,13 +452,12 @@
       <EmojiPicker ref="emojiPickerRef" v-on:selected-emoji="selectedEmoji" />
     </div>
   </Teleport>
-  <AcceptDeclineRequestModal @close="toggleRequestModal = false" v-if="toggleRequestModal" />
+  <AcceptDeclineRequestModel ref="acceptDeclineRequestModalRef" v-if="toggleRequestModal" @close="toggleRequestModal = false" />
 
 </template>
 <script setup lang="ts">
 import { ChatsModel, MeetVerificationsModel, type UsersModel } from '~/composables/models';
-import AcceptDeclineRequestModal from './accept-decline-request-modal.vue'
-
+import AcceptDeclineRequestModel from './accept-decline-request-modal.vue';
 import Swal from 'sweetalert2'
 import { EmojiPicker } from '#components';
 import { Teleport } from 'vue';
@@ -472,7 +470,6 @@ const emojiPickerRef = ref(null)
 const user_store = userStore()
 const login_store = useLoginStore();
 const is_logout_loading = ref(false);
-const toggleRequestModal = ref(false);
 const is_verify_loading = ref(false);
 const is_status_loading = ref(false);
 const verifications = ref([] as MeetVerificationsModel.FetchVerifyResponseModel[])
@@ -488,6 +485,7 @@ const previewUrl = ref<string | null>(null);
 const unread_user_count = ref(0);
 const is_liked = ref(false);
 const is_like_loading = ref(false);
+const toggleRequestModal = ref(false);
 
 const friend_status = ref('');
 const is_friend_loading = ref(false);
@@ -791,7 +789,7 @@ function editStatus() {
     box-shadow: none !important;
     border-radius: 10px !important;
   ">
-    😊
+    ðŸ˜Š
   </button>
 </div>
   `,
