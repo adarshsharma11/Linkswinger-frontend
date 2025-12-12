@@ -219,4 +219,77 @@ button#settingsMenuMobile {
 .cursor-pointer {
   cursor: pointer;
 }
+ .options-row {
+      display: flex;
+      gap: 16px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+      font-size: 12px;
+    }
+
+    .option-block {
+      flex: 1 1 160px;
+    }
+
+    .option-label {
+      font-size: 12px;
+      font-weight: 500;
+      margin-bottom: 4px;
+      color: #e5e7eb;
+    }
+
+    .option-select {
+      width: 100%;
+      border-radius: 999px;
+      border: 1px solid #374151;
+      background: #050509;
+      color: #e5e7eb;
+      padding: 5px 10px;
+      font-size: 12px;
+      outline: none;
+    }
+
+    .explicit-block {
+      margin-top: 14px;
+      padding: 10px 10px;
+      border-radius: 6px;
+      border: 1px solid #4b5563;
+      background: #15151f;
+      font-size: 12px;
+    }
+
+    .explicit-title {
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .explicit-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .explicit-option {
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
+      max-width: 320px;
+    }
+
+    .explicit-option input {
+      margin-top: 2px;
+    }
+
+    .explicit-text-strong {
+      font-weight: 500;
+      color: #e5e7eb;
+    }
+
+    .explicit-text-muted {
+      color: #9ca3af;
+      font-size: 11px;
+      display: block;
+      margin-top: 1px;
+    }
+
 

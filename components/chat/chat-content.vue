@@ -49,10 +49,10 @@
                 <div class="chat-item-right">
                   <div class="d-flex align-items-center gap-2">
                     <strong>{{ historymodel.nick_name }}</strong>
-                    <button class="text-white"
+                    <div
                       @click.stop="deleteWholeChat(historymodel)" v-if="(historymodel.is_deleting ?? false) === false">
                       <img src="/images/badges/animated/50X50px/delete.gif" alt="Delete" style="width: 20px; height: 20px;">
-                    </button>
+                    </div>
                     <span class="btn-loader" v-if="historymodel.is_deleting"></span>
                   </div>
                   <small class="text-secondary" v-if="(historymodel.is_typing ?? false) === true">Typing...</small>

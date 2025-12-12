@@ -58,6 +58,50 @@
                             <img :src="previewUrl" alt="Preview" class="img-fluid rounded shadow uploaded-photo" />
                         </div>
                     </div>
+
+        <div class="options-row">
+          <div class="option-block">
+            <div class="option-label">Comments</div>
+            <select class="option-select">
+              <option selected>On</option>
+              <option>Off</option>
+            </select>
+          </div>
+
+          <div class="option-block">
+            <div class="option-label">Likes</div>
+            <select class="option-select">
+              <option selected>On</option>
+              <option>Off</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- NEW: Explicit / Non-explicit classification -->
+        <div class="explicit-block">
+          <div class="explicit-title">Is this media explicit?</div>
+          <div class="explicit-options">
+            <label class="explicit-option">
+              <input type="radio" name="explicit" value="nonexplicit" checked />
+              <div class="cursor-pointer">
+                <span class="explicit-text-strong">Non-explicit</span>
+                <span class="explicit-text-muted">
+                  Face / body shown but decent clothing, no nudity, no sexual acts.
+                </span>
+              </div>
+            </label>
+
+            <label class="explicit-option">
+              <input type="radio" name="explicit" value="explicit" />
+              <div class="cursor-pointer">
+                <span class="explicit-text-strong">Explicit</span>
+                <span class="explicit-text-muted">
+                  Nudity, underwear focused content or clear sexual content/acts.
+                </span>
+              </div>
+            </label>
+          </div>
+        </div>
                 </div>
 
                 <!-- Footer -->
