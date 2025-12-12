@@ -62,17 +62,17 @@
         <div class="options-row">
           <div class="option-block">
             <div class="option-label">Comments</div>
-            <select class="option-select">
-              <option selected>On</option>
-              <option>Off</option>
+            <select class="option-select" v-model="canComment">
+              <option selected :value=true>On</option>
+              <option :value=false>Off</option>
             </select>
           </div>
 
           <div class="option-block">
             <div class="option-label">Likes</div>
-            <select class="option-select">
-              <option selected>On</option>
-              <option>Off</option>
+            <select class="option-select" v-model="canLike">
+              <option selected :value=true>On</option>
+              <option :value=false>Off</option>
             </select>
           </div>
         </div>
@@ -82,7 +82,7 @@
           <div class="explicit-title">Is this media explicit?</div>
           <div class="explicit-options">
             <label class="explicit-option">
-              <input type="radio" name="explicit" value="nonexplicit" checked />
+              <input v-model="classification" type="radio" name="explicit"   value="nonexplicit"  />
               <div class="cursor-pointer">
                 <span class="explicit-text-strong">Non-explicit</span>
                 <span class="explicit-text-muted">
@@ -92,7 +92,7 @@
             </label>
 
             <label class="explicit-option">
-              <input type="radio" name="explicit" value="explicit" />
+              <input v-model="classification" type="radio" name="explicit"  value="explicit" />
               <div class="cursor-pointer">
                 <span class="explicit-text-strong">Explicit</span>
                 <span class="explicit-text-muted">
@@ -142,6 +142,9 @@ const uploadProgress = ref(0);
 const feedType = ref('Public');
 const feedDesc = ref('');
 const contentType = ref('');
+const canComment = ref(true);
+const canLike = ref(true);
+const classification = ref('nonexplicit');
 
 
 var mediaUploadModalSub: any = null
@@ -272,7 +275,10 @@ async function uploadMedia() {
             "user_id": login_store.getUserDetails?.user_id,
             "contentType": contentType.value,
             "feed_type": feedType.value,
-            "feed_desc": feedDesc.value
+            "feed_desc": feedDesc.value,
+            can_comment: canComment.value,
+            can_like: canLike.value,
+            classification: classification.value,
         },
         headers: {
             'Content-Type': 'application/json',

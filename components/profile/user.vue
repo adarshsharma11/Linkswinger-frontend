@@ -53,7 +53,7 @@
                     <span class="text-white">Verify Photo</span>
                   </button>
                 </li>
-                <li v-if="(getUser()?.is_photo_verified ?? false) === true">
+                <li v-if="(getUser()?.is_photo_verified ?? false) === true && isMine()">
                   <button class="dropdown-item text-white d-flex align-items-center" data-bs-toggle="modal"
                     data-bs-target="#mediaUploadModal">
                     <img src="/images/badges/animated/50X50px/upload-media.gif" alt="Verify" class="rounded-circle me-2"
