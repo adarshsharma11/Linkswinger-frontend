@@ -125,7 +125,7 @@
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
-    margin: 10px 0 12px;
+    margin: 10px 0 50px;
 }
 .user-grid .chip {
     border: 1px solid rgba(255, 255, 255, .08);
@@ -375,6 +375,12 @@ ul.nm-icons {
     right: 12px;
     bottom: 10px;
 }
+.user-grid .accept-decline{
+    position: absolute;
+    left: 12px;
+    right: 12px;
+    bottom: 120px;
+}
 }
 @media only screen and (min-width: 980px) and (max-width:1650px) {
 .user-grid .content {
@@ -385,6 +391,12 @@ ul.nm-icons {
     left: 12px;
     right: 12px;
     bottom: 10px;
+}
+.user-grid .accept-decline{
+    position: absolute;
+    left: 12px;
+    right: 12px;
+    bottom: 120px;
 }
 }
 @media only screen and (max-width:1440px){
@@ -442,6 +454,9 @@ ul.nm-icons {
 .user-grid .content {
     width: calc(100% - 84px) !important;
     padding: 0 0 0 10px;
+}
+.user-grid .accept-decline {
+    margin-bottom: 10px;
 }
 
 .user-grid .media::after {
