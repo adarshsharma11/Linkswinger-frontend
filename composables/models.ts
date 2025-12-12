@@ -68,6 +68,10 @@ export enum RequestURL {
   fetchCrushList = "/fetchCrushList",
   addCrush = "/addCrush",
   crushStatus = "/crushStatus",
+  sendFriendReq = "/sendFriendReq",
+  friendStatus  = "/friendStatus",
+  fetchFriends  = "/fetchFriends",
+
 }
 
 
@@ -393,6 +397,7 @@ export namespace UsersModel {
     post_longitude?: number;
     viewed_at? : string;
     is_liked?: boolean;
+    friend_status? : string;
   }
 
   export class FetchMembershipRequestModel {

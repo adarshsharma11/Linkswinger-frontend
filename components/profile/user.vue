@@ -484,6 +484,9 @@ const unread_user_count = ref(0);
 const is_liked = ref(false);
 const is_like_loading = ref(false);
 
+const friend_status = ref('');
+const is_friend_loading = ref(false);
+
 if (isMine() === false) {
   const fetchUserDetails = async () => {
     const api_url = getUrl(RequestURL.getProfileDetails);
@@ -541,6 +544,25 @@ if (isMine() === false) {
     is_liked.value = response.value?.success && response.value?.response?.is_liked === true ? true : false
   };
   crushStatus();
+
+   const friendStatus = async () => {
+    const api_url = getUrl(RequestURL.friendStatus);
+    const { data: response, error: option_error } = await useFetch<SuccessError<UsersModel.ProfileDetailsResponseModel>>(
+      api_url,
+      {
+        method: "POST",
+        body: {
+          from_id: user_store.getLoginId,
+          to_id: Number(props.user_id ?? 0)
+        },
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    friend_status.value = response.value?.response?.friend_status ?? '' 
+  };
+  friendStatus();
 }
 if (isMine() === true) {
   const fetchReadCount = async () => {
