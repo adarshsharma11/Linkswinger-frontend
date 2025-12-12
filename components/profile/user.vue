@@ -67,7 +67,7 @@
                     <span class="text-danger menu-item-span">
                       !
                     </span>
-                    <img src="/images/badges/animated/50X50px/profile-settings.gif" alt="Verify"
+                    <img src="/images/badges/animated/50X50px/meet-verification.gif" alt="Verify"
                       class="rounded-circle me-2" style="width: 30px; height: 30px; object-fit: cover" />
                     <span class="text-white">Meet Verifications</span>
                   </button>

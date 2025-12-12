@@ -39,12 +39,9 @@
         <a href="#search" data-route="search" @click.prevent="setActiveNav('search')"
           :class="{ active: activeNav === 'search' }" class="text-white"><span class="icon"><!--🔍--> <img
               class="sidebar-ic" :src="`/images/badges/animated/50X50px/search.gif`" /></span>Search</a>
-        <a href="#new-photos" data-route="new-photos" @click.prevent="setActiveNav('new-photos')"
-          :class="{ active: activeNav === 'new-photos' }" class="text-white"><span class="icon"><!--🖼--> <img
-              class="sidebar-ic" :src="`/images/badges/animated/50X50px/public-photos.gif`" /></span>New Photos</a>
-        <a href="#new-video" data-route="new-video" @click.prevent="setActiveNav('new-video')"
-          :class="{ active: activeNav === 'new-video' }" class="text-white"><span class="icon"><!--🎞--> <img
-              class="sidebar-ic" :src="`/images/badges/animated/50X50px/video-call.gif`" /></span>New Videos</a>
+        <a href="#new-media" data-route="new-media" @click.prevent="setActiveNav('new-media')"
+          :class="{ active: activeNav === 'new-media' }" class="text-white"><span class="icon"><!--🖼--> <img
+              class="sidebar-ic" :src="`/images/badges/animated/50X50px/public-photos.gif`" /></span>New Media</a>
         <a href="#meet-events" data-route="meet-events" @click.prevent="setActiveNav('meet-events')"
           :class="{ active: activeNav === 'meet-events' }" class="text-white"><span class="icon"><!--📅--> <img
               class="sidebar-ic"
@@ -777,6 +774,9 @@ else if (nav === 'crush') {
   }
    else if (nav === 'video-roullet') {
     await navigateTo(`/video-roulette`)
+  }
+  else if (nav === 'new-media') {
+     await navigateTo(`/new-media`)
   }
   else {
     activeNav.value = nav
