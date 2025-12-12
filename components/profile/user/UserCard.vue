@@ -5,7 +5,7 @@
       <span class="online-dot" title="Online now" v-if="isOnline"></span>
       <span class="badge-elite"><img :src="membershipIcon"></span>
     </div>
-    
+
     <div class="content">
       <div class="row1">
         <div>
@@ -14,57 +14,66 @@
             <ul class="nm-icons">
               <li><img :src="membershipIcon" alt="Membership" class="rounded-circle" /></li>
               <li v-if="user.is_meet_verified">
-                <img src="/images/badges/animated/150X150px/MEET-VERIFYED.gif" alt="Meet Verified" class="rounded-circle" />
+                <img src="/images/badges/animated/150X150px/MEET-VERIFYED.gif" alt="Meet Verified"
+                  class="rounded-circle" />
               </li>
               <li v-if="user.is_photo_verified">
-                <img src="/images/badges/animated/150X150px/FLAG-ANIMATION.gif" alt="Photo Verified" class="rounded-circle" />
+                <img src="/images/badges/animated/150X150px/FLAG-ANIMATION.gif" alt="Photo Verified"
+                  class="rounded-circle" />
               </li>
             </ul>
           </div>
           <div class="meta">{{ user.town }} • {{ distance }} miles</div>
-          <div class="meta" v-if="(user.viewed_at ?? '').length > 0">Last viewed: {{ viewedAt(user)}}</div>
+          <div class="meta" v-if="(user.viewed_at ?? '').length > 0">Last viewed: {{ viewedAt(user) }}</div>
           <div class="meta" v-if="!isOnline && lastDate().length > 0">Last seen: {{ lastDate() }}</div>
-          
+
         </div>
       </div>
-      
+
       <div class="chips">
         <span style="color: white;">{{ user.profile_status }}</span>
       </div>
-       <div class="d-flex justify-content-start accept-decline gap-2" v-if="(user.friend_status?.length ?? 0) > 0">
-        <button class="action" data-action="message" aria-label="Message">
+      <span class="btn-loader" v-if="(user.isFriendDecisionLoading ?? false) === true"></span>
+      <div class="d-flex justify-content-start accept-decline gap-2"
+        v-if="(user.friend_status?.length ?? 0) > 0 && props.isMine && ((user.friend_status ?? '') === 'pending') && (user.isFriendDecisionLoading ?? false) === false">
+        <button class="action" data-action="message" aria-label="Message" @click="acceptDeclineFriendRequest(user,true)">
           <span class="act-icon">
-            <img src="/images/badges/animated/50X50px/chat.gif" alt="Message" class="rounded-circle" style="width: 25px; height: 25px; object-fit: cover" />
+            <img src="/images/badges/animated/50X50px/chat.gif" alt="Message" class="rounded-circle"
+              style="width: 25px; height: 25px; object-fit: cover" />
           </span>
           Accept
         </button>
-        
-        <button class="action" data-action="call" aria-label="Voice call">
+
+        <button class="action" data-action="call" aria-label="Voice call" @click="acceptDeclineFriendRequest(user,false)">
           <span class="act-icon">
-            <img src="/images/badges/animated/50X50px/call.gif" alt="Call" class="rounded-circle" style="width: 25px; height: 25px; object-fit: cover" />
+            <img src="/images/badges/animated/50X50px/call.gif" alt="Call" class="rounded-circle"
+              style="width: 25px; height: 25px; object-fit: cover" />
           </span>
           Decline
         </button>
       </div>
-      
+
       <div class="actions">
         <button class="action" data-action="message" aria-label="Message" @click="openChat">
           <span class="act-icon">
-            <img src="/images/badges/animated/50X50px/chat.gif" alt="Message" class="rounded-circle" style="width: 25px; height: 25px; object-fit: cover" />
+            <img src="/images/badges/animated/50X50px/chat.gif" alt="Message" class="rounded-circle"
+              style="width: 25px; height: 25px; object-fit: cover" />
           </span>
           Message
         </button>
-        
+
         <button @click="showCodeAlert(false)" class="action" data-action="call" aria-label="Voice call">
           <span class="act-icon">
-            <img src="/images/badges/animated/50X50px/call.gif" alt="Call" class="rounded-circle" style="width: 25px; height: 25px; object-fit: cover" />
+            <img src="/images/badges/animated/50X50px/call.gif" alt="Call" class="rounded-circle"
+              style="width: 25px; height: 25px; object-fit: cover" />
           </span>
           Call
         </button>
-        
+
         <button @click="showCodeAlert(true)" class="action" data-action="video" aria-label="Video call">
           <span class="act-icon">
-            <img src="/images/badges/animated/50X50px/video-call.gif" alt="Video Call" class="rounded-circle" style="width: 25px; height: 25px; object-fit: cover" />
+            <img src="/images/badges/animated/50X50px/video-call.gif" alt="Video Call" class="rounded-circle"
+              style="width: 25px; height: 25px; object-fit: cover" />
           </span>
           Video
         </button>
@@ -80,14 +89,16 @@ import type { UsersModel } from '~/composables/models'
 interface Props {
   user: UsersModel.ProfileDetailsResponseModel
   onlineUsers: number[],
-  lastSeens : LastSeenModel[]
+  lastSeens: LastSeenModel[],
+  isMine: Boolean,
 }
 
 const props = withDefaults(defineProps<Props>(), {
   user: () => ({} as UsersModel.ProfileDetailsResponseModel),
   onlineUsers: () => [],
   lastSeens: () => [],
-  type: ''   // 👈 your default string
+  type: '',
+  isMine: () => false
 })
 
 const login_store = useLoginStore();
@@ -100,18 +111,18 @@ const isOnline = computed(() => {
 
 function lastDate(): string {
 
-if (props.lastSeens.length > 0) {
- 
-  const lastSeen = props.lastSeens.filter(ls => ls.user_id === props.user.user_id)
-  if (lastSeen.length > 0) {
-    return  formatRelativeDate(lastSeen[0].last_active ?? '') ?? ''
+  if (props.lastSeens.length > 0) {
+
+    const lastSeen = props.lastSeens.filter(ls => ls.user_id === props.user.user_id)
+    if (lastSeen.length > 0) {
+      return formatRelativeDate(lastSeen[0].last_active ?? '') ?? ''
+    }
   }
-}
   return ''
 }
 
-function viewedAt(user:UsersModel.ProfileDetailsResponseModel): string {
-return  formatRelativeDate(user.viewed_at ?? '') ?? ''
+function viewedAt(user: UsersModel.ProfileDetailsResponseModel): string {
+  return formatRelativeDate(user.viewed_at ?? '') ?? ''
 }
 
 const imagePath = computed(() => {
@@ -131,6 +142,7 @@ const emit = defineEmits<{
   openProfile: [user: UsersModel.ProfileDetailsResponseModel]
   openChat: [user: UsersModel.ProfileDetailsResponseModel]
   showCodeAlert: [userId: number, isVideo: boolean]
+  declineUser: [userId: number]
 }>()
 
 // Methods
@@ -183,6 +195,38 @@ function getDistance(user: UsersModel.ProfileDetailsResponseModel): string {
     lat,
     lon)
   return distance.toFixed(2) as string
+}
+
+async function acceptDeclineFriendRequest(user: UsersModel.ProfileDetailsResponseModel, accept: boolean) {
+    let postData = {
+        "to_id": login_store.getUserDetails?.user_id ?? 0,
+        "from_id": user.user_id ?? 0,
+        "action": accept ? "accepted" : "declined"
+    };
+    user.isFriendDecisionLoading = true;
+     let api_url = getUrl(RequestURL.acceptDeclineFriend);
+    let response = await $fetch<SuccessError<UsersModel.ProfileDetailsResponseModel>>(api_url, {
+        method: 'POST',
+        body: postData,
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+       user.isFriendDecisionLoading = false;
+    if (response.success) {
+      if (accept)
+      {
+         user.friend_status = 'accepted'
+      }
+      else
+      {
+           emit('declineUser', user.user_id ?? 0)
+      }
+     
+    }
+    else {
+        showToastError(response.message)
+    }
 }
 
 </script>

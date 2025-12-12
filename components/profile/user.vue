@@ -457,7 +457,7 @@
       <EmojiPicker ref="emojiPickerRef" v-on:selected-emoji="selectedEmoji" />
     </div>
   </Teleport>
-  <AcceptDeclineRequestModel ref="acceptDeclineRequestModalRef" v-if="toggleRequestModal"
+  <AcceptDeclineRequestModel :friend_status="friend_status" ref="acceptDeclineRequestModalRef" v-if="toggleRequestModal"
     @close="toggleRequestModal = false" @friends-list="openUsersFriendsList()" @send-request="sendFriendRequest()" />
 
 </template>
@@ -1037,7 +1037,7 @@ async function sendFriendRequest() {
     return;
   }
 
-  if (friend_status.value === 'approved' || friend_status.value === 'pending') {
+  if (friend_status.value === 'accepted' || friend_status.value === 'pending') {
     return;
   }
 

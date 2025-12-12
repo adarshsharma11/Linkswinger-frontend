@@ -71,7 +71,7 @@ export enum RequestURL {
   sendFriendReq = "/sendFriendReq",
   friendStatus  = "/friendStatus",
   fetchFriends  = "/fetchFriends",
-
+  acceptDeclineFriend = "/acceptDeclineFriend",
 }
 
 
@@ -398,6 +398,7 @@ export namespace UsersModel {
     viewed_at? : string;
     is_liked?: boolean;
     friend_status? : string;
+    isFriendDecisionLoading? : boolean;
   }
 
   export class FetchMembershipRequestModel {

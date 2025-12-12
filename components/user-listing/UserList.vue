@@ -1,19 +1,12 @@
 <template>
   <div class="user-list-container">
-   
+
     <div class="user-grid" :class="gridClass">
-      <UserCard 
-        v-for="(user, index) in users" 
-        :key="user.user_id"
-        :user="user"
-        :online-users="onlineUsers"
-        :last-seens="lastSeens"
-        @open-profile="openProfile"
-        @open-chat="openChat"
-        @show-code-alert="showCodeAlert"
-      />
+      <UserCard v-for="(user, index) in users" :key="user.user_id" :user="user" :is-mine=isMine 
+        :online-users="onlineUsers" :last-seens="lastSeens" @open-profile="openProfile" @open-chat="openChat"
+        @show-code-alert="showCodeAlert" @decline-user="declineUser" />
     </div>
-    
+
     <div v-if="users.length === 0" class="no-users">
       <p>No users found</p>
     </div>
@@ -21,16 +14,18 @@
 </template>
 
 <script setup lang="ts">
-  import Swal from 'sweetalert2'
+import Swal from 'sweetalert2'
 import { ref, computed } from 'vue'
 import type { UsersModel } from '~/composables/models'
 import UserCard from '~/components/profile/user/UserCard.vue'
 import type { CallsModel } from '~/composables/websocketModels'
 const route = useRoute()
-const type = ref('')
-const user_id = ref('')
 const user_store = userStore()
 const login_store = useLoginStore();
+const type = ref('')
+const user_id = ref('')
+
+
 const users = ref<UsersModel.ProfileDetailsResponseModel[]>([])
 const eventBus = useMittEmitter()
 const id_store = idStore()
@@ -38,13 +33,12 @@ const onlineUsers = ref([] as number[])
 const lastSeens = ref([] as LastSeenModel[])
 const isWSConnected = ref(false)
 // Event emitters
-
-
 user_id.value = route.query.user_id as string || 'all'
 type.value = route.query.type as string || 'all'
 
+const isMine = ref(user_id.value === (login_store.getUserDetails?.user_udid ?? ''))
 if (type.value === 'nearby') {
- const userList = async () => {
+  const userList = async () => {
     const api_url = getUrl(RequestURL.fetchNearByUsers);
     const { data: response, error: option_error } = await useFetch<SuccessError<UsersModel.ProfileDetailsResponseModel>>(
       api_url,
@@ -60,10 +54,9 @@ if (type.value === 'nearby') {
     );
     return response.value?.result || []
   };
-  users.value = await userList() ;
-} else if (type.value === 'views')
- {
- const userList = async () => {
+  users.value = await userList();
+} else if (type.value === 'views') {
+  const userList = async () => {
     const api_url = getUrl(RequestURL.fetchProfileViews);
     const { data: response, error: option_error } = await useFetch<SuccessError<UsersModel.ProfileDetailsResponseModel>>(
       api_url,
@@ -79,12 +72,11 @@ if (type.value === 'nearby') {
     );
     return response.value?.result || []
   };
-  users.value = await userList() ;
-  
-} 
-else if (type.value === 'crushes')
- {
- const userList = async () => {
+  users.value = await userList();
+
+}
+else if (type.value === 'crushes') {
+  const userList = async () => {
     const api_url = getUrl(RequestURL.fetchCrushList);
     const { data: response, error: option_error } = await useFetch<SuccessError<UsersModel.ProfileDetailsResponseModel>>(
       api_url,
@@ -100,20 +92,20 @@ else if (type.value === 'crushes')
     );
     return response.value?.result || []
   };
-  users.value = await userList() ;
-  
-} 
+  users.value = await userList();
 
-else if (type.value === 'friends')
- {
- const userList = async () => {
+}
+
+else if (type.value === 'friends') {
+  const userList = async () => {
     const api_url = getUrl(RequestURL.fetchFriends);
     const { data: response, error: option_error } = await useFetch<SuccessError<UsersModel.ProfileDetailsResponseModel>>(
       api_url,
       {
         method: "POST",
         body: {
-          user_id: user_id.value,
+          user_udid: user_id.value,
+          user_id: user_store.getLoginId,
         },
         headers: {
           "Content-Type": "application/json",
@@ -122,9 +114,9 @@ else if (type.value === 'friends')
     );
     return response.value?.result || []
   };
-  users.value = await userList() ;
-  
-} 
+  users.value = await userList();
+
+}
 
 
 
@@ -139,16 +131,16 @@ else if (type.value === 'friends')
 //   }
 // })
 const gridClass = computed(() => {
-return `grid-3`; // Always return grid-5 for 5 columns
+  return `grid-3`; // Always return grid-5 for 5 columns
 })
 
 // Methods
 const openProfile = async (user: UsersModel.ProfileDetailsResponseModel) => {
- await navigateTo(`/user-profile/${user.user_id}`)
+  await navigateTo(`/user-profile/${user.user_id}`)
 }
 
 const openChat = async (user: UsersModel.ProfileDetailsResponseModel) => {
- await navigateTo(`/chat/${user.user_id}`)
+  await navigateTo(`/chat/${user.user_id}`)
 }
 
 const showCodeAlert = (userId: number, isVideo: boolean) => {
@@ -164,12 +156,16 @@ const showCodeAlert = (userId: number, isVideo: boolean) => {
     }
   }).then((result) => {
     if (result.isConfirmed) {
-      validateCall(userId,result.value ?? '', isVideo)
+      validateCall(userId, result.value ?? '', isVideo)
     }
   });
 }
+const declineUser = (userId: number) => {
+     users.value.splice(users.value.findIndex(u => u.user_id === userId), 1);
+}
 
-async function validateCall(to_id:number,code: string, is_video: boolean) {
+
+async function validateCall(to_id: number, code: string, is_video: boolean) {
   const api_url = getUrl(RequestURL.validateCall);
   await $fetch<SuccessError<CallsModel.ValidateCallResponseModel>>(api_url, {
     cache: "no-cache",
@@ -198,9 +194,9 @@ async function validateCall(to_id:number,code: string, is_video: boolean) {
 }
 function checkuseronline() {
   if (isWSConnected.value) {
-      
+
     let user_ids = users.value.map(it => it.user_id ?? 0)
-    
+
     if (user_ids.length > 0) {
       let groupmodel = new GroupEventSocketModel()
       groupmodel.admin_id = id_store.getDeviceId
@@ -208,13 +204,13 @@ function checkuseronline() {
       groupmodel.user_ids = user_ids ?? []
       groupmodel.socket_id = id_store.getDeviceId
       sendmsgtoworker(groupmodel, true)
- 
+
     }
   }
 }
 onMounted(() => {
- isWSConnected.value = isSocketConnected()
- checkuseronline()
+  isWSConnected.value = isSocketConnected()
+  checkuseronline()
   eventBus.on('socketConnection', (is_connected) => {
     isWSConnected.value = is_connected
     checkuseronline()
@@ -222,7 +218,7 @@ onMounted(() => {
   eventBus.on('onlineUserIds', (group) => {
     onlineUsers.value = group.user_ids ?? []
     lastSeens.value = group.last_seens ?? []
-    
+
   })
 
   eventBus.on('callDeclineAlert', (eventModel) => {
@@ -241,7 +237,7 @@ onMounted(() => {
 onBeforeUnmount(() => {
   eventBus.off('socketConnection')
   eventBus.off('onlineUserIds')
-   eventBus.off('callDeclineAlert')
+  eventBus.off('callDeclineAlert')
   eventBus.off('callAcceptAlert')
 })
 </script>
@@ -311,6 +307,7 @@ onBeforeUnmount(() => {
 }
 
 @media (max-width: 992px) {
+
   .grid-4,
   .grid-5 {
     grid-template-columns: repeat(3, 1fr);
@@ -318,18 +315,20 @@ onBeforeUnmount(() => {
 }
 
 @media (max-width: 768px) {
+
   .grid-3,
   .grid-4,
   .grid-5 {
     grid-template-columns: repeat(2, 1fr);
   }
-  
+
   .user-list-container {
     padding: 0.5rem;
   }
 }
 
 @media (max-width: 480px) {
+
   .grid-1,
   .grid-2,
   .grid-3,
@@ -337,7 +336,7 @@ onBeforeUnmount(() => {
   .grid-5 {
     grid-template-columns: 1fr;
   }
-  
+
   .user-list-header h2 {
     font-size: 1.5rem;
   }

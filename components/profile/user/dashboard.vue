@@ -142,6 +142,7 @@
               v-for="user in users" 
               :key="user.user_id"
               :user="user"
+              :is-mine=false
               :online-users="onlineUsers"
               :last-seens="lastSeens"
               @open-profile="openProfile"
@@ -248,6 +249,7 @@
               v-for="user in users" 
               :key="user.user_id"
               :user="user"
+              :is-mine=false
               :online-users="onlineUsers"
               :last-seens="lastSeens"
               @open-profile="openProfile"
@@ -264,6 +266,7 @@
               v-for="user in users" 
               :key="user.user_id"
               :user="user"
+              :is-mine=false
               :online-users="onlineUsers"
               :last-seens="lastSeens"
               @open-profile="openProfile"
@@ -278,12 +281,14 @@
           <UserCard 
               v-for="user in users" 
               :key="user.user_id"
+              :is-mine=true
               :user="user"
               :online-users="onlineUsers"
               :last-seens="lastSeens"
               @open-profile="openProfile"
               @open-chat="openChat"
               @show-code-alert="showCodeAlert"
+              @decline-user="declineUser"
             />
           </div>
         </section>
@@ -895,6 +900,7 @@ async function fetchFriends() {
     method: 'POST',
     body: {
       user_udid: login_store.getUserDetails?.user_udid ?? '',
+       user_id: login_store.getUserDetails?.user_id ?? 0,
     },
     headers: {
       'Content-Type': 'application/json'
@@ -1345,6 +1351,9 @@ function showCodeAlert(to_id:number,is_video: boolean) {
       validateCall(to_id,result.value ?? '', is_video)
     }
   });
+}
+const declineUser = (userId: number) => {
+     users.value.splice(users.value.findIndex(u => u.user_id === userId), 1);
 }
 
 async function validateCall(to_id:number,code: string, is_video: boolean) {

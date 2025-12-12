@@ -21,7 +21,7 @@
         <div class="msgf-ghost-item" @click="sendRequest()">
           <div class="msgf-row">
             <span class="text-white">
-              Send Friend Request
+            {{ friend_status === '' ? 'Send Friend Request' : friend_status === 'pending' ? 'Request Sent' : 'Request Accepted' }}
             </span>
           </div>
         </div>
@@ -43,6 +43,9 @@
 
 const emit = defineEmits(["close",'sendRequest', "friendsList"])
 
+let props = defineProps({
+      friend_status: { type: String, default: () => 'image' }
+})
 function sendRequest() {
   emit("sendRequest")
   closeAll()
