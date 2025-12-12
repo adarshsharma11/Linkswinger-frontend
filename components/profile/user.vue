@@ -288,7 +288,7 @@
               <div class="d-flex flex-column align-items-center position-relative" @click="openChat()">
 
                 <!-- Square red glowing badge behind the icon -->
-                <div class="position-absolute chat-count-badge">
+                <div class="position-absolute chat-count-badge cursor-pointer">
                   <span v-if="unread_user_count > 0" style="font-size:12px; font-weight:bold;" class="text-danger">
                     {{ unread_user_count }}
                   </span>
@@ -297,19 +297,19 @@
                 <small>Chat</small>
               </div>
 
-              <div class="d-flex flex-column align-items-center">
+              <div class="d-flex flex-column align-items-center cursor-pointer" @click="toggleRequestModal=true">
                 <img src="/images/badges/animated/50X50px/my-friends.gif" alt="Call" class="badge-icon" />
                 <small>Friends List</small>
               </div>
-              <div class="d-flex flex-column align-items-center">
+              <div class="d-flex flex-column align-items-center cursor-pointer">
                 <img src="/images/badges/animated/50X50px/crush-list.gif" alt="Video Call" class="badge-icon" />
                 <small>Crush List</small>
               </div>
-              <div class="d-flex flex-column align-items-center" v-if="isMine()" @click="openUserList('views')">
+              <div class="d-flex flex-column align-items-center cursor-pointer" v-if="isMine()" @click="openUserList('views')">
                 <img src="/images/badges/animated/50X50px/views.gif" alt="Like" class="badge-icon" />
                 <small>Views</small>
               </div>
-              <div class="d-flex flex-column align-items-center" v-if="isMine()" @click="openUserList('nearby')">
+              <div class="d-flex flex-column align-items-center cursor-pointer" v-if="isMine()" @click="openUserList('nearby')">
                 <img src="/images/badges/animated/50X50px/location.gif" alt="VIP" class="badge-icon" />
                 <small>Nearby</small>
               </div>
@@ -451,10 +451,13 @@
       <EmojiPicker ref="emojiPickerRef" v-on:selected-emoji="selectedEmoji" />
     </div>
   </Teleport>
+  <AcceptDeclineRequestModal @close="toggleRequestModal = false" v-if="toggleRequestModal" />
 
 </template>
 <script setup lang="ts">
 import { ChatsModel, MeetVerificationsModel, type UsersModel } from '~/composables/models';
+import AcceptDeclineRequestModal from './accept-decline-request-modal.vue'
+
 import Swal from 'sweetalert2'
 import { EmojiPicker } from '#components';
 import { Teleport } from 'vue';
@@ -467,6 +470,7 @@ const emojiPickerRef = ref(null)
 const user_store = userStore()
 const login_store = useLoginStore();
 const is_logout_loading = ref(false);
+const toggleRequestModal = ref(false);
 const is_verify_loading = ref(false);
 const is_status_loading = ref(false);
 const verifications = ref([] as MeetVerificationsModel.FetchVerifyResponseModel[])
