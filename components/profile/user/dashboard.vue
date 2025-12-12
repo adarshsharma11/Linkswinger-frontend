@@ -748,6 +748,18 @@ async function setActiveNav(nav: string) {
     window.location.hash = nav
     fetchUsersList()
   }
+  if (nav === 'nearby') {
+    activeNav.value = nav
+    window.location.hash = nav
+    fetchNearByUserList()
+  }
+if (nav === 'crush') {
+    activeNav.value = nav
+    window.location.hash = nav
+    fetchCrushList()
+  }
+  
+  
   else if (nav === 'profile') {
     await navigateTo(`/profile`)
   }
@@ -851,6 +863,7 @@ async function fetchUsersList(fromAdvance = false) {
     }
   }
   advanceModelSub.hide()
+      users.value = []
   let response = await $fetch<SuccessError<UsersModel.LoginRequestModel>>(api_url, {
     method: 'POST',
     body: body,
@@ -870,6 +883,50 @@ async function fetchUsersList(fromAdvance = false) {
   }
 }
 
+async function fetchCrushList() {
+  const api_url = getUrl(RequestURL.fetchCrushList);
+     users.value = []
+  let response = await $fetch<SuccessError<UsersModel.LoginRequestModel>>(api_url, {
+    method: 'POST',
+    body: {
+      user_id: login_store.getUserDetails?.user_id ?? 0,
+    },
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  });
+
+  if (response.success) {
+    users.value = response.result as UsersModel.ProfileDetailsResponseModel[];
+    checkuseronline()
+  }
+  else {
+    users.value = []
+    showToastError(response.message ?? "Something went wrong");
+  }
+}
+async function fetchNearByUserList() {
+  const api_url = getUrl(RequestURL.fetchNearByUsers);
+     users.value = []
+  let response = await $fetch<SuccessError<UsersModel.LoginRequestModel>>(api_url, {
+    method: 'POST',
+    body: {
+      user_id: login_store.getUserDetails?.user_id ?? 0,
+    },
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  });
+
+  if (response.success) {
+    users.value = response.result as UsersModel.ProfileDetailsResponseModel[];
+    checkuseronline()
+  }
+  else {
+    users.value = []
+    showToastError(response.message ?? "Something went wrong");
+  }
+}
 function fetchTownsPostCodes(query: string) {
   if (query.length === 0 || is_town_loading.value) {
     allTowns.value = []
@@ -1138,11 +1195,15 @@ onMounted(() => {
   window.location.hash = activeNav.value
 
   if (hash === '#userlist') {
-  console.log('Fetching all users for user list view...')
   fetchUsersList()
 }
+else if (hash === '#nearby') {
+  fetchNearByUserList()
+}
+else if (hash === '#crush') {
+  fetchCrushList()
+}
 
-  console.log(`Initial navigation to ${activeNav.value}`)
 
   // Set initial state based on hash
   //handleHashChange()

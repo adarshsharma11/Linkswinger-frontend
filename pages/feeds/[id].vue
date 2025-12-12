@@ -21,7 +21,8 @@ const fetchFeeds = async () => {
             login_id: login_store.getUserDetails?.user_id ?? 0,
             user_id: Number(route.params.id),
             media_type: route.query.media_type,
-            feed_type: route.query.feed_type
+            feed_type: route.query.feed_type,
+            approval_status: 'approved',
         },
         headers: {
             "content-type": "application/json"

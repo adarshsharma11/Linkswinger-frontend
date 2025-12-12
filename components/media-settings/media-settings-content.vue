@@ -35,13 +35,14 @@
         <div class="st-filters d-flex flex-wrap">
           <select v-model="feedTypeFilter">
             <option value="">Show: All media</option>
-            <!-- <option>Photos only</option>
-          <option>Videos only</option> -->
+            <option value="pending">Pending</option>
+            <option value="approved">Approved</option>
+            <option value="rejected">Rejected</option>
             <option value="public">Public only</option>
             <option value="friends">Friends only</option>
             <option value="private">Private only</option>
           </select>
-          <span>Example: {{ getImages().length }} photos · {{ getVideos().length }} videos</span>
+          <span>{{ getImages().length }} photos · {{ getVideos().length }} videos</span>
         </div>
       </div>
     </div>
@@ -255,7 +256,7 @@ function getImages(): FeedsModel.FeedsResponseModel[] {
   }
 
   return allFeeds.value.filter((el) => {
-    return el.media_type === 'image' && el.feed_type === feedTypeFilter.value
+    return el.media_type === 'image' && (el.feed_type === feedTypeFilter.value || el.approval_status === feedTypeFilter.value)
   })
 }
 
@@ -266,7 +267,7 @@ function getVideos(): FeedsModel.FeedsResponseModel[] {
     })
   }
   return allFeeds.value.filter((el) => {
-    return el.media_type === 'video' && el.feed_type === feedTypeFilter.value
+    return el.media_type === 'video' && (el.feed_type === feedTypeFilter.value || el.approval_status === feedTypeFilter.value)
   })
 }
 
