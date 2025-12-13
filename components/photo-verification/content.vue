@@ -51,6 +51,7 @@
                   <span class="lsv-check-icon">✓</span>
                 </div>
               </div>
+         
 
             </div>
           </div>
@@ -60,7 +61,9 @@
             <h3>Status : {{ selectedMedia.verification_status?.toUpperCase()  }}</h3>
             <div class="lsv-preview-content">
               <img :src="(selectedMedia.assets_path ?? '') + selectedMedia.verified_photo" />
+              <div v-if="(selectedMedia.reason ?? '').length > 0">{{'Rejected Reason : '.toUpperCase() + (selectedMedia.reason ?? '') }}</div>
             </div>
+            
           </div>
 
           <!-- Footer -->
