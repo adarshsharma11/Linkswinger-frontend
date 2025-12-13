@@ -235,6 +235,16 @@
   <div class="modal fade" id="videoModal" tabindex="-1" aria-labelledby="videoModal" aria-hidden="true">
     <div class="modal-dialog modal-xl">
       <div class="modal-content bg-black">
+          <!-- Modal Header -->
+      <div class="modal-header">
+        <button
+          type="button"
+          class="msgf-pill"
+          data-bs-dismiss="modal"
+          aria-label="Close">
+             ✕
+        </button>
+      </div>
         <div class="modal-body p-0 h-100">
           <Feeds :key="selectedFeeds.length > 0 ? selectedFeeds[0].feed_id : 0" :all-feeds="selectedFeeds"
             :from-feeds="false" :media-type="selectedFeeds[0]?.media_type" v-if="selectedFeeds.length > 0" />
@@ -402,3 +412,39 @@ onMounted(() => {
   })
 });
 </script>
+<style scoped>
+  .msgf-pill {
+  font-size: 14px;
+  line-height: 1;
+  height: 20px;
+  width: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+   margin-left: auto; 
+     border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  background: transparent; /* optional */
+}
+
+.modal-header {
+  min-height: 0 !important;
+  max-height: 20px;
+  border-bottom: none !important;
+}
+
+.modal-dialog {
+  height: 100vh;
+  max-height: 100vh;
+  margin: 0 auto;
+}
+
+.modal-content {
+  height: auto;
+  max-height: 100vh;
+  overflow: hidden; /* disables internal scroll */
+}
+
+
+  </style>
