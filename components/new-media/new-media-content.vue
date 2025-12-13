@@ -70,12 +70,12 @@
             All
           </label>
           <label class="nm-chk">
-            <input type="checkbox" :checked="selectedMediaType === 'images'"
-              @change="onMediaTypeChange($event, 'images')" /> Photos only
+            <input type="checkbox" :checked="selectedMediaType === 'image'"
+              @change="onMediaTypeChange($event, 'image')" /> Photos only
           </label>
           <label class="nm-chk">
-            <input type="checkbox" :checked="selectedMediaType === 'videos'"
-              @change="onMediaTypeChange($event, 'videos')" /> Videos only
+            <input type="checkbox" :checked="selectedMediaType === 'video'"
+              @change="onMediaTypeChange($event, 'video')" /> Videos only
           </label>
         </div>
 
@@ -446,14 +446,48 @@ async function applyFilters() {
   }
 }
 
-function clearFilters() {
+async function clearFilters() {
   radius.value = 3000;
   selectedProfileTypes.value = ['Man', 'Woman', 'Couple MM', 'Couple FF', 'Couple MF']
+  selectedMediaType.value = 'all';
   sourceFilter.value = '';
   explicitMode.value = 'both';
   ageMin.value = 18;
   ageMax.value = 99;
   nameSearch.value = '';
+
+  if (is_new_media_loading.value) {
+    return;
+  }
+  allFeeds.value = []
+  is_new_media_loading.value = true;
+  let api_url = getUrl(RequestURL.fetchNewFeeds);
+  let postData = {
+    // REQUIRED
+    login_id: login_store.getUserDetails?.user_id ?? 0,
+
+    // BASIC
+    user_id: 0,
+    feed_type: "",
+
+    // MEDIA TYPE
+    // 'image' | 'video' | '' (all)
+    media_type: ''    
+  };
+  let response = await $fetch<SuccessError<FeedsModel.FeedsResponseModel>>(api_url, {
+    method: 'POST',
+    body: postData,
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  });
+  is_new_media_loading.value = false;
+  if (response.success) {
+    allFeeds.value = response.result ?? []
+  }
+  else {
+    showToastError(response.message ?? "Something went wrong");
+  }
 }
 
 function openViewer(feed: FeedsModel.FeedsResponseModel) {
