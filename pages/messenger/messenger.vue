@@ -1,7 +1,7 @@
 <template>
-  <client-only>
+  <!-- <client-only>
    <MessengerPage/>
-  </client-only>
+  </client-only> -->
 </template>
 
 <script setup>
