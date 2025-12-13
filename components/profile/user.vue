@@ -46,8 +46,13 @@
                   </button>
                 </li>
                 <li>
-                  <button class="dropdown-item text-white d-flex align-items-center" data-bs-toggle="modal"
-                    data-bs-target="#photoVerificationModal">
+                  <!-- <button class="dropdown-item text-white d-flex align-items-center" data-bs-toggle="modal"
+                    data-bs-target="#photoVerificationModal"  @click="navigateTo(`/photo-verification`)" >
+                    <img src="/images/badges/animated/50X50px/verified.gif" alt="Verify" class="rounded-circle me-2"
+                      style="width: 30px; height: 30px; object-fit: cover" />
+                    <span class="text-white">Verify Photo</span>
+                  </button> -->
+                  <button class="dropdown-item text-white d-flex align-items-center" @click="navigateTo(`/photo-verification`)" >
                     <img src="/images/badges/animated/50X50px/verified.gif" alt="Verify" class="rounded-circle me-2"
                       style="width: 30px; height: 30px; object-fit: cover" />
                     <span class="text-white">Verify Photo</span>
@@ -207,8 +212,7 @@
                   </button>
                 </li>
                 <li>
-                  <button class="dropdown-item text-white d-flex align-items-center" data-bs-toggle="modal"
-                    data-bs-target="#photoVerificationModal">
+                  <button class="dropdown-item text-white d-flex align-items-center" @click="navigateTo(`/photo-verification`)">
                     <img src="/images/badges/animated/50X50px/verified.gif" alt="Verify" class="rounded-circle me-2"
                       style="width: 30px; height: 30px; object-fit: cover" />
                     <span class="text-white">Verify Photo</span>

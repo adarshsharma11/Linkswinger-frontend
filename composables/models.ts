@@ -73,6 +73,7 @@ export enum RequestURL {
   friendStatus  = "/friendStatus",
   fetchFriends  = "/fetchFriends",
   acceptDeclineFriend = "/acceptDeclineFriend",
+  fetchPhotoVerifications = "/fetchPhotoVerifications",
 }
 
 
@@ -400,6 +401,10 @@ export namespace UsersModel {
     is_liked?: boolean;
     friend_status? : string;
     isFriendDecisionLoading? : boolean;
+
+    photo_verification_id? : number
+    verification_status? : string
+    reason? : string
   }
 
   export class FetchMembershipRequestModel {

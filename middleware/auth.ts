@@ -22,6 +22,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
                         "content-type": "application/json"
                     }
                 });
+            
                 if (response.success) {
                     login_store.setUserDetails(response.response)
                 }

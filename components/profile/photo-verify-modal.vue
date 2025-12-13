@@ -92,6 +92,7 @@ const is_uploading = ref(false)
 const user_store = userStore();
 const login_store = useLoginStore();
 var verifyModalSub: any = null
+const emit = defineEmits(['reload'])
 onMounted(() => {
   verifyModalSub = new ($bootstrap as any).Modal(document.getElementById('photoVerificationModal'));
 })
@@ -209,6 +210,7 @@ async function submitVerification() {
     previewUrlFile.value = null
     showToastSuccess(response_model.message)
     verifyModalSub.hide()
+    emit('reload')
   }
   else {
     showToastError(response_model.message)
