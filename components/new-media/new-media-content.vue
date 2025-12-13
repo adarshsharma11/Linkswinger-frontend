@@ -125,7 +125,7 @@
             <input type="radio" name="explicitMode" value="both" v-model="explicitMode" /> Both
           </label>
           <label class="nm-chk">
-            <input type="radio" name="explicitMode" value="non" v-model="explicitMode" /> Non-explicit only
+            <input type="radio" name="explicitMode" value="nonexplicit" v-model="explicitMode" /> Non-explicit only
           </label>
           <label class="nm-chk">
             <input type="radio" name="explicitMode" value="explicit" v-model="explicitMode" /> Explicit only
