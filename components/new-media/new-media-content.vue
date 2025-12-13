@@ -266,7 +266,7 @@ var videoModalSub: any = null
 var selectedFeeds = ref([] as FeedsModel.FeedsResponseModel[])
 const allFeeds = ref([] as FeedsModel.FeedsResponseModel[])
 const fetchFeeds = async () => {
-  const api_url = getUrl(RequestURL.fetchFeeds);
+  const api_url = getUrl(RequestURL.fetchNewFeeds);
   const { data: feed_response, error: option_error } = await useFetch<SuccessError<FeedsModel.FeedsResponseModel>>(api_url, {
     cache: "no-cache",
     method: "post",

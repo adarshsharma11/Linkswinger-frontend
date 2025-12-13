@@ -30,6 +30,7 @@ export enum RequestURL {
   addEarlyAccess = "/addEarlyAccess",
   getFeedMediaURL = "/getFeedMediaURL",
   fetchFeeds = "/fetchFeeds",
+  fetchNewFeeds = "/fetchNewFeeds",
   fetchallusers = "/fetchallusers",
   chatHistory = "/chatHistory",
   fetchChat = "/fetchChat",
