@@ -10,16 +10,14 @@
             <div class="nm-brand-sub">Recently added uploads across the site</div>
           </div>
         </div>
-        <div class="nm-top-actions">
+        <!-- <div class="nm-top-actions">
           <button class="nm-pill" :class="{ active: activePill === 'recent' }" @click="setActivePill('recent')">Recently
             Added</button>
           <button class="nm-pill" :class="{ active: activePill === 'friends' }"
             @click="setActivePill('friends')">Friends Focus</button>
           <button class="nm-pill" :class="{ active: activePill === 'nearby' }" @click="setActivePill('nearby')">Local
             Focus</button>
-
-
-        </div>
+        </div> -->
       </div>
     </div>
 
@@ -54,30 +52,32 @@
             <span>Location radius</span>
             <span class="nm-range-value">{{ radius }} miles</span>
           </div>
-          <label class="nm-chk">
+          <!-- <label class="nm-chk">
             <input type="checkbox" v-model="radiusAll" />
             All distances
-          </label>
-          <input class="nm-range" type="range" min="5" max="3000" step="5" v-model.number="radius"
-            :disabled="radiusAll" />
+          </label> -->
+          <input class="nm-range" type="range" min="5" max="3000" step="5" v-model.number="radius" />
           <div class="nm-hint">Used for Nearby/Local filtering. Max shown is 3000 miles.</div>
         </div>
-        <!-- Media types -->
-        <!-- <div class="nm-group">
+
+
+        <div class="nm-group">
           <div class="nm-group-title">
             <span>Media type</span>
-            <span class="nm-range-value">{{ selectedMediaTypes.length }}/3</span>
           </div>
           <label class="nm-chk">
-            <input type="checkbox" value="All" v-model="selectedMediaTypes" /> All
+            <input type="checkbox" :checked="selectedMediaType === 'all'" @change="onMediaTypeChange($event, 'all')" />
+            All
           </label>
           <label class="nm-chk">
-            <input type="checkbox" value="photo" v-model="selectedMediaTypes" /> Photo
+            <input type="checkbox" :checked="selectedMediaType === 'images'"
+              @change="onMediaTypeChange($event, 'images')" /> Photos only
           </label>
           <label class="nm-chk">
-            <input type="checkbox" value="video" v-model="selectedMediaTypes" /> Video
+            <input type="checkbox" :checked="selectedMediaType === 'videos'"
+              @change="onMediaTypeChange($event, 'videos')" /> Videos only
           </label>
-        </div> -->
+        </div>
 
         <!-- Profile types -->
         <div class="nm-group">
@@ -86,19 +86,19 @@
             <span class="nm-range-value">{{ selectedProfileTypes.length }}/5</span>
           </div>
           <label class="nm-chk">
-            <input type="checkbox" value="man" v-model="selectedProfileTypes" /> Man
+            <input type="checkbox" value="Man" v-model="selectedProfileTypes" /> Man
           </label>
           <label class="nm-chk">
-            <input type="checkbox" value="women" v-model="selectedProfileTypes" /> Women
+            <input type="checkbox" value="Woman" v-model="selectedProfileTypes" /> Women
           </label>
           <label class="nm-chk">
-            <input type="checkbox" value="couple_mm" v-model="selectedProfileTypes" /> Couple M/M
+            <input type="checkbox" value="Couple MM" v-model="selectedProfileTypes" /> Couple M/M
           </label>
           <label class="nm-chk">
-            <input type="checkbox" value="couple_ff" v-model="selectedProfileTypes" /> Couple F/F
+            <input type="checkbox" value="Couple FF" v-model="selectedProfileTypes" /> Couple F/F
           </label>
           <label class="nm-chk">
-            <input type="checkbox" value="couple_mf" v-model="selectedProfileTypes" /> Couple M/F
+            <input type="checkbox" value="Couple MF" v-model="selectedProfileTypes" /> Couple M/F
           </label>
         </div>
 
@@ -107,11 +107,13 @@
         <div class="nm-group">
           <div class="nm-group-title"><span>Source</span></div>
           <label class="nm-chk">
-            <input type="checkbox" v-model="friendsOnly" />
+            <input type="checkbox" :checked="sourceFilter === 'friends'"
+              @change="onSourceFilterChange($event, 'friends')" />
             Friends photos only
           </label>
           <label class="nm-chk">
-            <input type="checkbox" v-model="localOnly" />
+            <input type="checkbox" :checked="sourceFilter === 'local'"
+              @change="onSourceFilterChange($event, 'local')" />
             Local profiles only
           </label>
         </div>
@@ -187,7 +189,7 @@
                 <input type="text" v-model="nameSearch" placeholder="Filter by profile name" />
               </div>
             </div>
-            <div class="nm-filter-row">
+            <!-- <div class="nm-filter-row">
               <div class="nm-sort">
                 <select v-model="sortBy">
                   <option value="recent">Sort: Recently added</option>
@@ -196,7 +198,7 @@
                   <option value="name">Sort: Profile name A–Z</option>
                 </select>
               </div>
-            </div>
+            </div> -->
           </div>
         </div>
 
@@ -235,16 +237,12 @@
   <div class="modal fade" id="videoModal" tabindex="-1" aria-labelledby="videoModal" aria-hidden="true">
     <div class="modal-dialog modal-xl">
       <div class="modal-content bg-black">
-          <!-- Modal Header -->
-      <div class="modal-header">
-        <button
-          type="button"
-          class="msgf-pill"
-          data-bs-dismiss="modal"
-          aria-label="Close">
-             ✕
-        </button>
-      </div>
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <button type="button" class="msgf-pill" data-bs-dismiss="modal" aria-label="Close">
+            ✕
+          </button>
+        </div>
         <div class="modal-body p-0 h-100">
           <Feeds :key="selectedFeeds.length > 0 ? selectedFeeds[0].feed_id : 0" :all-feeds="selectedFeeds"
             :from-feeds="false" :media-type="selectedFeeds[0]?.media_type" v-if="selectedFeeds.length > 0" />
@@ -271,7 +269,7 @@ const fetchFeeds = async () => {
     cache: "no-cache",
     method: "post",
     body: {
-      login_id: 0,
+      login_id: login_store.getUserDetails?.user_id ?? 0,
       user_id: 0,
       media_type: '',
       feed_type: ''
@@ -285,17 +283,17 @@ const fetchFeeds = async () => {
 allFeeds.value = await fetchFeeds() as FeedsModel.FeedsResponseModel[]
 
 // FILTER STATE
-const selectedProfileTypes = ref<string[]>(['man', 'women', 'couple_mm', 'couple_ff', 'couple_mf']);
-const radius = ref(50);
-const radiusAll = ref(false);
-const friendsOnly = ref(false);
-const localOnly = ref(false);
-const explicitMode = ref<'both' | 'non' | 'explicit'>('both');
+const selectedMediaType = ref<string>('all');
+const selectedProfileTypes = ref<string[]>(['Man', 'Woman', 'Couple MM', 'Couple FF', 'Couple MF']);
+const radius = ref(3000);
+
+const sourceFilter = ref<string>('');
+
+const explicitMode = ref<'both' | 'nonexplicit' | 'explicit'>('both');
 const ageMin = ref(18);
 const ageMax = ref(99);
 const nameSearch = ref('');
-const sortBy = ref<'recent' | 'distance' | 'age' | 'name'>('recent');
-const activePill = ref<'recent' | 'friends' | 'nearby'>('recent');
+const is_new_media_loading = ref(false);
 
 // MOBILE FILTERS
 const mobileFiltersOpen = ref(false);
@@ -322,6 +320,33 @@ const resultsSubtitle = computed(() => {
 // -----------------------------
 // METHODS
 // -----------------------------
+
+function onMediaTypeChange(event: Event, value: string) {
+  if (event.target instanceof HTMLInputElement) {
+    if (event.target.checked) {
+      selectedMediaType.value = value;
+    } else {
+      if (selectedMediaType.value === 'all') {
+        (event.target as HTMLInputElement).checked = true;
+      }
+      else {
+        selectedMediaType.value = 'all';
+      }
+
+      console.log("Media type changed to:", selectedMediaType.value);
+    }
+  }
+}
+function onSourceFilterChange(event: Event, value: string) {
+  if (event.target instanceof HTMLInputElement) {
+    if (event.target.checked) {
+      sourceFilter.value = value;
+    } else {
+      sourceFilter.value = '';
+    }
+  }
+}
+
 function openMobileFilters() {
   mobileFiltersOpen.value = true;
   document.body.classList.add('mobile-filters-open');
@@ -340,64 +365,99 @@ function closeMobileFilters() {
   if (triggerBtn) triggerBtn.focus();
 }
 
-function setActivePill(pill: 'recent' | 'friends' | 'nearby') {
-  activePill.value = pill;
 
-  switch (pill) {
-    case 'friends':
-      friendsOnly.value = true;
-      localOnly.value = false;
-      break;
-
-    case 'nearby':
-      friendsOnly.value = false;
-      localOnly.value = true;
-      radius.value = 100;
-      radiusAll.value = false;
-      break;
-
-    default: // recent
-      friendsOnly.value = false;
-      localOnly.value = false;
-      break;
-  }
-}
 
 function toggleFilters() {
   filtersCollapsed.value = !filtersCollapsed.value;
 }
 
-function applyFilters() {
+async function applyFilters() {
   console.log("Filters applied:", {
     radius: radius.value,
-    radiusAll: radiusAll.value,
     profileTypes: selectedProfileTypes.value,
-    friendsOnly: friendsOnly.value,
-    localOnly: localOnly.value,
+    source: sourceFilter.value,
     explicitMode: explicitMode.value,
     ageRange: [ageMin.value, ageMax.value],
-    nameSearch: nameSearch.value,
-    sortBy: sortBy.value
   });
+  if (is_new_media_loading.value) {
+    return;
+  }
+  allFeeds.value = []
+  is_new_media_loading.value = true;
+  let api_url = getUrl(RequestURL.fetchNewFeeds);
+  let postData = {
+    // REQUIRED
+    login_id: login_store.getUserDetails?.user_id ?? 0,
+
+    // BASIC
+    user_id: 0,
+    feed_type: "",
+
+    // MEDIA TYPE
+    // 'image' | 'video' | '' (all)
+    media_type: selectedMediaType.value === "all"
+      ? ""
+      : selectedMediaType.value,
+
+    // APPROVAL (OPTIONAL)
+    approval_status: "",
+
+    // DISTANCE (MILES)
+    distance: radius.value || null,
+
+    // SOURCE FILTER
+    // 'friends' | 'local' | null
+    source: sourceFilter.value || null,
+
+    // CONTENT TYPE
+    // 'explicit' | 'nonexplicit' | null
+    content_type:
+      explicitMode.value === "explicit"
+        ? "explicit"
+        : explicitMode.value === "nonexplicit"
+          ? "nonexplicit"
+          : null,
+
+    // PROFILE TYPES (ARRAY)
+    profileTypes: selectedProfileTypes.value.length
+      ? selectedProfileTypes.value
+      : null,
+
+    // AGE RANGE
+    age_min: ageMin.value || null,
+    age_max: ageMax.value || null,
+  };
+
+    console.log("Filters applied:", postData);
+
+  let response = await $fetch<SuccessError<FeedsModel.FeedsResponseModel>>(api_url, {
+    method: 'POST',
+    body: postData,
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  });
+  is_new_media_loading.value = false;
+  if (response.success) {
+    allFeeds.value = response.result ?? []
+  }
+  else {
+    showToastError(response.message ?? "Something went wrong");
+  }
 }
 
 function clearFilters() {
-  radius.value = 50;
-  radiusAll.value = false;
-  selectedProfileTypes.value = ['man', 'women', 'couple_mm', 'couple_ff', 'couple_mf'];
-  friendsOnly.value = false;
-  localOnly.value = false;
+  radius.value = 3000;
+  selectedProfileTypes.value = ['Man', 'Woman', 'Couple MM', 'Couple FF', 'Couple MF']
+  sourceFilter.value = '';
   explicitMode.value = 'both';
   ageMin.value = 18;
   ageMax.value = 99;
   nameSearch.value = '';
-  sortBy.value = 'recent';
-  activePill.value = 'recent';
 }
 
 function openViewer(feed: FeedsModel.FeedsResponseModel) {
- selectedFeeds.value = [feed]
-
+  selectedFeeds.value = [feed]
   videoModalSub.show();
 }
 
@@ -413,7 +473,7 @@ onMounted(() => {
 });
 </script>
 <style scoped>
-  .msgf-pill {
+.msgf-pill {
   font-size: 14px;
   line-height: 1;
   height: 20px;
@@ -421,11 +481,12 @@ onMounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-   margin-left: auto; 
-     border: none !important;
+  margin-left: auto;
+  border: none !important;
   outline: none !important;
   box-shadow: none !important;
-  background: transparent; /* optional */
+  background: transparent;
+  /* optional */
 }
 
 .modal-header {
@@ -443,8 +504,7 @@ onMounted(() => {
 .modal-content {
   height: auto;
   max-height: 100vh;
-  overflow: hidden; /* disables internal scroll */
+  overflow: hidden;
+  /* disables internal scroll */
 }
-
-
-  </style>
+</style>
