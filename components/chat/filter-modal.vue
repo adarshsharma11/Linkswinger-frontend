@@ -74,9 +74,9 @@
             <button
               type="button"
               class="msgf-footer-btn secondary"
-              @click="closeAll"
+              @click="applyFilters()"
             >
-              Cancel
+              Apply
             </button>
           </div>
       </div>
@@ -84,15 +84,24 @@
   </div>
 </template>
 
-<script setup>
-const emit = defineEmits(['close'])
+<script setup lang="ts">
+const emit = defineEmits(['close','applyFilters','clearFilters'])
+interface Props {
+  showUnread?: boolean,
+  friendsOnly?: boolean,
+  withAttachments?: boolean,
+  photoVerifiedOnly?: boolean
+}
+const props = defineProps<Props>()
 
 const filters = reactive({
-  unread: false,
-  friends: false,
-  attachments: false,
-  photoVerified: false
+  unread: props.showUnread ?? false,
+  friends: props.friendsOnly ?? false,
+  attachments: props.withAttachments ?? false,
+  photoVerified: props.photoVerifiedOnly ?? false
 })
+
+
 
 const isMenuOpen = ref(false)
 
@@ -105,24 +114,27 @@ const activeLabels = computed(() => {
   return active
 })
 
+function applyFilters() {
+  
+  emit('applyFilters', {
+    unread: filters.unread,
+    friends: filters.friends,
+    attachments: filters.attachments,
+    photoVerified: filters.photoVerified
+  })
+  closeAll()
+}
+
 function clearFilters() {
   filters.unread = false
   filters.friends = false
   filters.attachments = false
   filters.photoVerified = false
+  emit('clearFilters')
+  closeAll()
 }
 
-function openMenu() {
-  isMenuOpen.value = true
-}
 
-function closeMenu() {
-  isMenuOpen.value = false
-}
-
-function toggleMenu() {
-  isMenuOpen.value ? closeMenu() : openMenu()
-}
 
 function closeAll() {
   isMenuOpen.value = false
@@ -130,11 +142,8 @@ function closeAll() {
 }
 
 // Close dropdown / modal with ESC
-function handleKey(e) {
-  if (e.key === 'Escape') {
-    if (isMenuOpen.value) closeMenu()
-    else closeAll()
-  }
+function handleKey(e:any) {
+ 
 }
 
 onMounted(() => {

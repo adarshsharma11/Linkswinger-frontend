@@ -296,7 +296,7 @@
     <a v-for="item in galleryItems" :key="item.id" :data-src="item.isVideo ? null : item.src"
       :data-video="item.isVideo ? item.video : null" :data-lg-size="item.isVideo ? item.size : null"></a>
   </component>
-  <FilterModal v-if="showFilters" @close="showFilters = false" />
+  <FilterModal  :friends-only="friendsOnly" :photo-verified-only="photoVerifiedOnly" :show-unread="showUnread" :with-attachments="withAttachments" v-if="showFilters" @close="showFilters = false" @apply-filters="applyFilters" @clear-filters="clearFilters()"/>
 </template>
 
 <script setup lang="ts">
@@ -351,8 +351,13 @@ const lgRef = ref<any>(null);
 let lgInstance: any = null;
 const galleryItems = ref<any[]>([]);
 
-const fileWidth = ref(0);
+const fileWidth  = ref(0);
 const fileHeight = ref(0);
+
+const showUnread        = ref(false)
+const friendsOnly       = ref(false)
+const withAttachments   = ref(false)
+const photoVerifiedOnly = ref(false)
 
 function onGalleryInit(detail: any) {
   lgInstance = detail.instance;
@@ -415,7 +420,25 @@ function openPreview(chat: any) {
   });
 }
 
-
+function applyFilters(filters?: { unread: boolean; friends: boolean; attachments: boolean; photoVerified: boolean }) 
+{
+  if (filters) 
+  {
+    showUnread.value = filters.unread
+    friendsOnly.value = filters.friends
+    withAttachments.value = filters.attachments
+    photoVerifiedOnly.value = filters.photoVerified
+     fetchHistoryWithFilter()
+  }
+}
+function clearFilters() 
+{
+  showUnread.value = false
+  friendsOnly.value = false
+  withAttachments.value = false
+  photoVerifiedOnly.value = false
+   fetchHistoryWithFilter()
+}
 // Other UI helpers (unchanged)
 function toggleSelectMode() {
   selectMode.value = !selectMode.value;
@@ -466,6 +489,7 @@ const fetchHistory = async () => {
       "content-type": "application/json"
     }
   });
+  console.log('Fetched chat history:', fetch_response.value);
   return fetch_response.value?.result
 }
 
@@ -515,6 +539,34 @@ if (to_id !== 0) {
     }
   };
   fetchUserDetails();
+}
+
+async function fetchHistoryWithFilter()
+{
+  chatHistoryModels.value = []
+  const api_url = getUrl(RequestURL.chatHistory);
+  const response = await $fetch<SuccessError<ChatsModel.ChatResponseModel>>(api_url, {
+    cache: "no-cache",
+    method: "post",
+    body: {
+      "from_id": user_store.getLoginId,
+      showUnread : showUnread.value,
+      friendsOnly : friendsOnly.value,
+      withAttachments : withAttachments.value,
+      photoVerifiedOnly : photoVerifiedOnly.value
+    },
+    headers: {
+      "content-type": "application/json"
+    }
+  });
+  if (response.success)
+  {
+    chatHistoryModels.value = response.result ?? []
+  }
+  else
+  {
+    showToastError(response.message)
+  }
 }
 
 // navigation helpers
