@@ -35,8 +35,10 @@
       </div>
       <span class="btn-loader" v-if="(user.isFriendDecisionLoading ?? false) === true"></span>
       <div class="d-flex justify-content-start accept-decline gap-2"
-        v-if="(user.friend_status?.length ?? 0) > 0 && props.isMine && ((user.friend_status ?? '') === 'pending') && (user.isFriendDecisionLoading ?? false) === false">
-        <button class="action" data-action="message" aria-label="Message" @click="acceptDeclineFriendRequest(user,true)">
+        v-if="(user.friend_status?.length ?? 0) > 0 && props.isMine && (user.isFriendDecisionLoading ?? false) === false">
+        <button
+          v-if="((user.friend_status ?? '') === 'pending') && (user.from_id !== login_store.getUserDetails?.user_id)"
+          class="action" data-action="message" aria-label="Message" @click="acceptDeclineFriendRequest(user, true)">
           <span class="act-icon">
             <img src="/images/badges/animated/50X50px/chat.gif" alt="Message" class="rounded-circle"
               style="width: 25px; height: 25px; object-fit: cover" />
@@ -44,12 +46,44 @@
           Accept
         </button>
 
-        <button class="action" data-action="call" aria-label="Voice call" @click="acceptDeclineFriendRequest(user,false)">
+        <button
+          v-if="((user.friend_status ?? '') === 'pending') && (user.from_id !== login_store.getUserDetails?.user_id)"
+          class="action" data-action="call" aria-label="Voice call" @click="acceptDeclineFriendRequest(user, false)">
           <span class="act-icon">
             <img src="/images/badges/animated/50X50px/call.gif" alt="Call" class="rounded-circle"
               style="width: 25px; height: 25px; object-fit: cover" />
           </span>
           Decline
+        </button>
+
+        <button v-if="((user.friend_status ?? '') === 'pending') && (user.from_id === login_store.getUserDetails?.user_id)" class="action" data-action="call"
+          aria-label="Voice call" @click="removeCancelFriendRequest(user, true)">
+          <span class="act-icon">
+            <img src="/images/badges/animated/50X50px/call.gif" alt="Call" class="rounded-circle"
+              style="width: 25px; height: 25px; object-fit: cover" />
+          </span>
+          Cancel Friend
+        </button>
+
+        <button v-if="((user.friend_status ?? '') === 'accepted')" class="action" data-action="call"
+          aria-label="Voice call" @click="removeCancelFriendRequest(user, false)">
+          <span class="act-icon">
+            <img src="/images/badges/animated/50X50px/call.gif" alt="Call" class="rounded-circle"
+              style="width: 25px; height: 25px; object-fit: cover" />
+          </span>
+          Remove Friend
+        </button>
+
+      </div>
+
+      <div class="d-flex justify-content-start accept-decline gap-2"
+        v-if="props.isMine && isCrushList() && (user.isFriendDecisionLoading ?? false) === false">
+        <button class="action" data-action="message" aria-label="Message" @click="removeLikeUser(user)">
+          <span class="act-icon">
+            <img src="/images/badges/animated/50X50px/crush-list.gif" alt="Message" class="rounded-circle"
+              style="width: 25px; height: 25px; object-fit: cover" />
+          </span>
+          Remove from crush list
         </button>
       </div>
 
@@ -85,7 +119,7 @@
 <script setup lang="ts">
 
 import type { UsersModel } from '~/composables/models'
-
+const route = useRoute()
 interface Props {
   user: UsersModel.ProfileDetailsResponseModel
   onlineUsers: number[],
@@ -143,6 +177,7 @@ const emit = defineEmits<{
   openChat: [user: UsersModel.ProfileDetailsResponseModel]
   showCodeAlert: [userId: number, isVideo: boolean]
   declineUser: [userId: number]
+  removeLikeUser: [userId: number]
 }>()
 
 // Methods
@@ -156,6 +191,18 @@ const openChat = () => {
 
 const showCodeAlert = (isVideo: boolean) => {
   emit('showCodeAlert', props.user.user_id ?? 0, isVideo)
+}
+
+function isCrushList() {
+  let type = route.hash.replace('#', '')
+  if (type === 'crush') {
+    return true
+  }
+  if (route.query.type === 'crushes') {
+    return true
+  }
+
+  return false
 }
 
 // Utility functions (same as in dashboard)
@@ -197,36 +244,83 @@ function getDistance(user: UsersModel.ProfileDetailsResponseModel): string {
   return distance.toFixed(2) as string
 }
 
+
+
+async function removeLikeUser(user: UsersModel.ProfileDetailsResponseModel) {
+  let postData = {
+    liker_id: login_store.getUserDetails?.user_id ?? 0,
+    user_id: user.user_id ?? 0
+  };
+  user.isFriendDecisionLoading = true;
+  let api_url = getUrl(RequestURL.addCrush);
+  let response = await $fetch<SuccessError<UsersModel.ProfileDetailsResponseModel>>(api_url, {
+    method: 'POST',
+    body: postData,
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  });
+  user.isFriendDecisionLoading = false;
+  if (response.success) {
+    emit('removeLikeUser', user.user_id ?? 0)
+  }
+  else {
+    showToastError(response.message)
+  }
+}
+
+async function removeCancelFriendRequest(user: UsersModel.ProfileDetailsResponseModel, cancel: boolean) {
+  let postData = {
+    "from_id": login_store.getUserDetails?.user_id ?? 0,
+    "to_id": user.user_id ?? 0,
+    "action": cancel ? "cancel" : "remove"
+  };
+  user.isFriendDecisionLoading = true;
+  let api_url = getUrl(RequestURL.removeFriend);
+  let response = await $fetch<SuccessError<UsersModel.ProfileDetailsResponseModel>>(api_url, {
+    method: 'POST',
+    body: postData,
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  });
+  user.isFriendDecisionLoading = false;
+  if (response.success) {
+      emit('declineUser', user.user_id ?? 0)
+  }
+  else {
+    showToastError(response.message)
+  }
+}
+
 async function acceptDeclineFriendRequest(user: UsersModel.ProfileDetailsResponseModel, accept: boolean) {
-    let postData = {
-        "to_id": login_store.getUserDetails?.user_id ?? 0,
-        "from_id": user.user_id ?? 0,
-        "action": accept ? "accepted" : "declined"
-    };
-    user.isFriendDecisionLoading = true;
-     let api_url = getUrl(RequestURL.acceptDeclineFriend);
-    let response = await $fetch<SuccessError<UsersModel.ProfileDetailsResponseModel>>(api_url, {
-        method: 'POST',
-        body: postData,
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    });
-       user.isFriendDecisionLoading = false;
-    if (response.success) {
-      if (accept)
-      {
-         user.friend_status = 'accepted'
-      }
-      else
-      {
-           emit('declineUser', user.user_id ?? 0)
-      }
-     
+  let postData = {
+    "to_id": login_store.getUserDetails?.user_id ?? 0,
+    "from_id": user.user_id ?? 0,
+    "action": accept ? "accepted" : "declined"
+  };
+  user.isFriendDecisionLoading = true;
+  let api_url = getUrl(RequestURL.acceptDeclineFriend);
+  let response = await $fetch<SuccessError<UsersModel.ProfileDetailsResponseModel>>(api_url, {
+    method: 'POST',
+    body: postData,
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  });
+  user.isFriendDecisionLoading = false;
+  if (response.success) {
+    if (accept) {
+      user.friend_status = 'accepted'
     }
     else {
-        showToastError(response.message)
+      emit('declineUser', user.user_id ?? 0)
     }
+
+  }
+  else {
+    showToastError(response.message)
+  }
 }
 
 </script>

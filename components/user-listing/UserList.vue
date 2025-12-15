@@ -4,7 +4,7 @@
     <div class="user-grid" :class="gridClass">
       <UserCard v-for="(user, index) in users" :key="user.user_id" :user="user" :is-mine=isMine 
         :online-users="onlineUsers" :last-seens="lastSeens" @open-profile="openProfile" @open-chat="openChat"
-        @show-code-alert="showCodeAlert" @decline-user="declineUser" />
+        @show-code-alert="showCodeAlert" @decline-user="declineUser" @remove-like-user="removeLikeUser"/>
     </div>
 
     <div v-if="users.length === 0" class="no-users">
@@ -76,6 +76,7 @@ if (type.value === 'nearby') {
 
 }
 else if (type.value === 'crushes') {
+  isMine.value = true
   const userList = async () => {
     const api_url = getUrl(RequestURL.fetchCrushList);
     const { data: response, error: option_error } = await useFetch<SuccessError<UsersModel.ProfileDetailsResponseModel>>(
@@ -83,7 +84,7 @@ else if (type.value === 'crushes') {
       {
         method: "POST",
         body: {
-          user_udid: user_id.value,
+          user_id: user_store.getLoginId,
         },
         headers: {
           "Content-Type": "application/json",
@@ -164,6 +165,9 @@ const declineUser = (userId: number) => {
      users.value.splice(users.value.findIndex(u => u.user_id === userId), 1);
 }
 
+const removeLikeUser = (userId: number) => {
+     users.value.splice(users.value.findIndex(u => u.user_id === userId), 1);
+}
 
 async function validateCall(to_id: number, code: string, is_video: boolean) {
   const api_url = getUrl(RequestURL.validateCall);

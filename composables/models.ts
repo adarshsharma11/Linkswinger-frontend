@@ -74,6 +74,7 @@ export enum RequestURL {
   fetchFriends  = "/fetchFriends",
   acceptDeclineFriend = "/acceptDeclineFriend",
   fetchPhotoVerifications = "/fetchPhotoVerifications",
+  removeFriend = "/removeFriend"
 }
 
 
@@ -405,6 +406,9 @@ export namespace UsersModel {
     photo_verification_id? : number
     verification_status? : string
     reason? : string
+
+    from_id? : number
+    to_id? : number
   }
 
   export class FetchMembershipRequestModel {
