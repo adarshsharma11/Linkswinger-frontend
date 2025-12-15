@@ -36,9 +36,9 @@
         <a href="#crush" data-route="crush" @click.prevent="setActiveNav('crush')"
           :class="{ active: activeNav === 'crush' }" class="text-white"><span class="icon"><!--⭐--> <img
               class="sidebar-ic" :src="`/images/badges/animated/50X50px/crush-list.gif`" /></span>Crush List</a>
-        <a href="#search" data-route="search" @click.prevent="setActiveNav('search')"
-          :class="{ active: activeNav === 'search' }" class="text-white"><span class="icon"><!--🔍--> <img
-              class="sidebar-ic" :src="`/images/badges/animated/50X50px/search.gif`" /></span>Search</a>
+        <!-- <a href="#search" data-route="search" @click.prevent="setActiveNav('search')"
+          :class="{ active: activeNav === 'search' }" class="text-white"><span class="icon"> <img
+              class="sidebar-ic" :src="`/images/badges/animated/50X50px/search.gif`" /></span>Search</a> -->
         <a href="#new-media" data-route="new-media" @click.prevent="setActiveNav('new-media')"
           :class="{ active: activeNav === 'new-media' }" class="text-white"><span class="icon"><!--🖼--> <img
               class="sidebar-ic" :src="`/images/badges/animated/50X50px/public-photos.gif`" /></span>New Media</a>
@@ -64,7 +64,7 @@
               :src="`/images/badges/animated/150X150px/19.gif`" /></span>Logout <span class="btn-loader" v-if="is_logout_loading"></span></a>
       </nav>
       <div class="spacer" />
-      <button class="dash-button primary" id="dash-buttonUpload" @click="fakeUpload">＋ Upload/Post</button>
+      <!-- <button class="dash-button primary" id="dash-buttonUpload" @click="fakeUpload">＋ Upload/Post</button> -->
     </aside>
 
     <!-- MAIN COLUMN -->

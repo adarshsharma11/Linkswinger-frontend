@@ -5,7 +5,8 @@
             @reachEnd="onReachEnd">
             <SwiperSlide v-for="(item, index) in allFeeds" :key="item.feed_id" class="short-slide">
                 <div class="short-container" :key="item.feed_id">
-                    <div class="short-frame" :key="item.feed_id" @click="onFrameTap(index)" @touchstart="onFrameTap(index)">
+                    <div class="short-frame" :key="item.feed_id" @click="onFrameTap(index)"
+                        @touchstart="onFrameTap(index)">
                         <img :key="item.feed_id" :src="`${item.media_path}${item.hd_feed_image}`" class="short-image"
                             loading="lazy" v-if="item.media_type === 'image'" />
                         <img :key="item.feed_id" :src="`${item.media_path}${item.feed_thumbnail}`" class="short-image"
@@ -61,20 +62,19 @@
                                     </div>
                                 </div>
                                 <div class="overlay-right">
-                                    <span class="btn-loader" v-if="is_like_loading[index]"></span>
+                                    <!-- <span class="btn-loader" v-if="is_like_loading[index]"></span> -->
                                     <button>
                                         <img src="/public/images/icons-folder/Report-150x150px.png"
                                             class="Report-icon" />
                                     </button>
                                     <button :style="{ backgroundColor: item.is_liked ? 'green' : 'white' }"
-                                        v-if="!is_like_loading[index] && item.can_like === true"
+                                        v-if=" item.can_like === true"
                                         @click.stop="addLikeDisLike(item.feed_id ?? 0, index)">
-                                        <img src="/public/images/icons-folder/Like-150x150px.png" class="like-icon" />
+                                        <img :src="likeImage" class="like-icon" />
                                     </button>
                                     <button v-if="item.can_comment === true" aria-label="Go to Comment"
                                         @click.stop="openComments(item.feed_id ?? 0, index)">
-                                        <img src="/public/images/icons-folder/Comments-150x150px.png"
-                                            class="comment-icon" />
+                                        <img :src="commentImage" class="comment-icon" />
                                     </button>
                                     <!--<button aria-label="Fullscreen" @click.stop="toggleFullscreen(item.feed_id ?? 0, index)" class="fullscreen-btn">
                                         <svg v-if="!isFullscreen[index]" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" focusable="false" aria-hidden="true"
@@ -89,9 +89,7 @@
                                     <button aria-label="Fullscreen"
                                         @click.stop="toggleFullscreen(item.feed_id ?? 0, index)" class="fullscreen-btn">
                                         <!-- Fullscreen Icon -->
-                                        <img v-if="!isFullscreen[index]"
-                                            src="/public/images/icons-folder/Full screen-150x150px.png"
-                                            class="fullscreen-icon">
+                                        <img v-if="!isFullscreen[index]" :src="fullscreenImage" class="fullscreen-icon">
 
                                         <!-- Restore Screen Icon -->
                                         <img v-else src="/public/images/icons-folder/restore fullscreen-150x150px.png"
@@ -217,6 +215,12 @@ const isFullscreen = ref([]) // track fullscreen state per video
 const allFeeds = ref(props.allFeeds as FeedsModel.FeedsResponseModel[])
 // Initialize per-video loading states
 is_like_loading.value = new Array(allFeeds.value.length).fill(false);
+
+const likeImage = ref('/images/icons-folder/Like-150x150px.png')
+const commentImage = ref('/images/icons-folder/Comments-150x150px.png')
+const reportImage = ref('/images/icons-folder/Report-150x150px.png')
+const fullscreenImage = ref('/images/icons-folder/Full screen-150x150px.png')
+
 onMounted(async () => {
     if (props.fromFeeds) {
         commentModal = new ($bootstrap as any).Modal(document.getElementById('commentmodal'));
@@ -301,7 +305,7 @@ onMounted(async () => {
         document.querySelectorAll('.short-slide').forEach(el => observer.observe(el))
 
         onBeforeUnmount(() => {
-           console.log('disposed')
+            console.log('disposed')
             observer.disconnect()
             players.value.forEach(p => p.dispose())
         })
@@ -395,10 +399,17 @@ const onReachEnd = () => {
 
 
 function openComments(feed_id: number) {
-    commentTxt.value = ''
-    selectedFeedId.value = feed_id
-    commentModal.show();
-    fetchComments(feed_id)
+
+    commentImage.value = '/images/icons-folder/comments-50x50px.gif'
+    setTimeout(() => {
+        commentImage.value = '/images/icons-folder/Comments-150x150px.png'
+        commentTxt.value = ''
+        selectedFeedId.value = feed_id
+        commentModal.show();
+        fetchComments(feed_id)
+    }, 300);
+
+
 }
 function getFileExtension(filename: string): string {
     const lastDotIndex = filename.lastIndexOf('.');
@@ -466,36 +477,42 @@ async function addLikeDisLike(feed_id: number, index: number) {
     if (is_like_loading.value[index]) {
         return;
     }
+    likeImage.value = '/images/icons-folder/like-50x50px.gif'
+
+   
     comments.value = []
-    is_like_loading.value[index] = true;
-    let api_url = getUrl(RequestURL.feedLikeDisLike);
-    let postData = {
-        feed_id: feed_id,
-        user_id: login_store.getUserDetails?.user_id
-    }
-    let response = await $fetch<SuccessError<FeedsModel.FeedLikeDisLikeResponseModel>>(api_url, {
-        method: 'POST',
-        body: postData,
-        headers: {
-            'Content-Type': 'application/json'
+        is_like_loading.value[index] = true;
+        let api_url = getUrl(RequestURL.feedLikeDisLike);
+        let postData = {
+            feed_id: feed_id,
+            user_id: login_store.getUserDetails?.user_id
         }
-    });
-    is_like_loading.value[index] = false;
-    if (response.success) {
-        let state = response.response?.state ?? ''
-        let feed = allFeeds.value.filter((history: FeedsModel.FeedsResponseModel) => history.feed_id === feed_id)
-        if (feed.length > 0) {
-            if (state === 'liked') {
-                feed[0].is_liked = true
+        let response = await $fetch<SuccessError<FeedsModel.FeedLikeDisLikeResponseModel>>(api_url, {
+            method: 'POST',
+            body: postData,
+            headers: {
+                'Content-Type': 'application/json'
             }
-            else {
-                feed[0].is_liked = false
+        });
+       is_like_loading.value[index] = false;
+         likeImage.value = '/images/icons-folder/Like-150x150px.png'
+        if (response.success) {
+            let state = response.response?.state ?? ''
+            let feed = allFeeds.value.filter((history: FeedsModel.FeedsResponseModel) => history.feed_id === feed_id)
+            if (feed.length > 0) {
+                if (state === 'liked') {
+                    feed[0].is_liked = true
+                }
+                else {
+                    feed[0].is_liked = false
+                }
             }
         }
-    }
-    else {
-        showToastError(response.message)
-    }
+        else {
+            showToastError(response.message)
+        }
+
+
 }
 
 async function addComment() {
@@ -620,32 +637,39 @@ function updateSeekbar(index: number) {
 function toggleFullscreen(feed_id: number, index: number) {
     const player = players.value[index];
     if (!player) return;
-
-    try {
-        if (player.isFullscreen()) {
-            player.exitFullscreen();
-            isFullscreen.value[index] = false;
-        } else {
-            player.requestFullscreen();
-            isFullscreen.value[index] = true;
-        }
-    } catch (error) {
-        // Fallback to native fullscreen API
-        const videoElement = videoRefs.value[index];
-        if (videoElement) {
-            if (!document.fullscreenElement) {
-                videoElement.requestFullscreen().then(() => {
-                    isFullscreen.value[index] = true;
-                }).catch(err => {
-                    console.log('Fullscreen failed:', err);
-                });
+    fullscreenImage.value = '/images/icons-folder/full_screen-50x50px.gif'
+    setTimeout(() => {
+        fullscreenImage.value = '/images/icons-folder/Full screen-150x150px.png'
+        try {
+            if (player.isFullscreen()) {
+                player.exitFullscreen();
+                isFullscreen.value[index] = false;
             } else {
-                document.exitFullscreen().then(() => {
-                    isFullscreen.value[index] = false;
-                });
+                player.requestFullscreen();
+                isFullscreen.value[index] = true;
+            }
+        } catch (error) {
+            // Fallback to native fullscreen API
+            const videoElement = videoRefs.value[index];
+            if (videoElement) {
+                if (!document.fullscreenElement) {
+                    videoElement.requestFullscreen().then(() => {
+                        isFullscreen.value[index] = true;
+                    }).catch(err => {
+                        console.log('Fullscreen failed:', err);
+                    });
+                } else {
+                    document.exitFullscreen().then(() => {
+                        isFullscreen.value[index] = false;
+                    });
+                }
             }
         }
-    }
+
+
+    }, 700);
+
+
 }
 
 </script>
