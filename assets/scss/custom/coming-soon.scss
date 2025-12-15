@@ -1,0 +1,165 @@
+.coming-soon-page {
+    margin: 0;
+    color: #eef1f7;
+    background: radial-gradient(1200px 600px at 80% -10%, rgba(255, 60, 60, 0.10), transparent 60%), radial-gradient(900px 500px at 10% 10%, rgba(255, 60, 60, 0.08), transparent 60%), linear-gradient(180deg, #07080b, #0b0d12 40%, #07080b 100%);
+    overflow-x: hidden;
+}
+.coming-container{
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 28px 18px 70px;
+    min-height: 100vh;
+    display:flex;
+    flex-direction:column;
+    gap: 22px;
+}
+
+/* Top brand */
+.coming-brand{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:14px;
+    margin-top: 8px;
+}
+.coming-logo{
+    width: 180px;
+    max-width: 70vw;
+    height: auto;
+    filter: drop-shadow(0 6px 18px rgba(0,0,0,0.55));
+}
+
+    /* Coming soon hero card */
+.coming-hero {
+    position: relative;
+    background: linear-gradient(135deg, rgba(255, 45, 45, 0.10), rgba(255, 45, 45, 0.02) 45%, rgba(255, 255, 255, 0.02)), #0e1118;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 18px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+    padding: 34px 28px 30px;
+    overflow: hidden;
+}
+.coming-hero::after{
+    content:"";
+    position:absolute;
+    right:-120px;
+    top:-120px;
+    width: 320px;
+    height: 320px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 40% 40%, rgba(255,45,45,0.18), transparent 60%);
+    filter: blur(8px);
+    pointer-events:none;
+}
+
+.coming-kicker{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: rgba(255,45,45,0.10);
+    border:1px solid rgba(255,45,45,0.35);
+    font-size: 11px;
+    color: #ffd6d6;
+    letter-spacing: 0.3px;
+}
+
+.coming-shine {
+    font-size: clamp(22px, 3vw, 32px);
+    margin: 14px 0 10px;
+    letter-spacing: 0.4px;
+}
+
+.coming-subtitle{
+    color: #9aa3b2;
+    font-size: 13.5px;
+    line-height: 1.45;
+    max-width: 62ch;
+}
+
+.coming-divider{
+    height:1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+    margin: 22px 0 18px;
+}
+
+/* Feature preview tiles */
+.coming-grid{
+    display:grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+}
+@media (min-width: 780px){
+    .coming-grid{
+    grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+.coming-tile{
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.0));
+    border:1px solid rgba(255,255,255,0.06);
+    border-radius: 12px;
+    padding: 14px 14px 16px;
+    box-shadow: 0 0 0 1px rgba(255,255,255,0.06), 0 12px 30px rgba(0,0,0,0.35);
+    min-height: 120px;
+}
+.coming-tile .coming-label{
+    display:flex;
+    align-items:center;
+    gap: 8px;
+    font-size: 12.5px;
+    margin-bottom: 8px;
+}
+.coming-dot{
+    width:8px;height:8px;border-radius:50%;
+    display:inline-block;
+    background: #ff3b3b;
+    box-shadow: 0 0 10px rgb(255 45 45 / 22%);
+}
+.coming-tile p{
+    margin: 0;
+    color: #9aa3b2;
+    font-size: 11.8px;
+    line-height: 1.45;
+}
+
+/* Callout */
+.coming-callout{
+    margin-top: 6px;
+    background: linear-gradient(90deg, rgba(255, 45, 45, 0.10), transparent 50%), linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent), #10131b;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 18px;
+    padding: 16px 16px 14px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+.coming-callout .coming-title{
+    font-size: 12.8px;
+    margin: 0 0 6px;
+}
+.coming-callout .coming-text{
+    margin: 0;
+    color: #9aa3b2;
+    font-size: 11.7px;
+    line-height: 1.45;
+}
+
+.coming-shine {
+    position: relative;
+    display: inline-block;
+    color: #fff;
+}
+.coming-shine::after{
+    content:"";
+    position:absolute;
+    top:0; left:-120%;
+    width: 120%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+    animation: sweep 3.2s ease-in-out infinite;
+    pointer-events:none;
+}
+@keyframes sweep{
+    0%, 55%{ left:-120%; }
+    100%{ left:120%; }
+}
