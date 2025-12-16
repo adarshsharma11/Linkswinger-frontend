@@ -252,6 +252,104 @@
   margin-top: 6px;
 }
 
+/* CONTACT FORM */
+.ls-help-contact-form {
+  margin-top: 20px;
+  max-width: 600px;
+}
+
+.ls-help-form-container {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.ls-help-form-group {
+  margin-bottom: 16px;
+}
+
+.ls-help-form-label {
+  display: block;
+  font-size: 13px;
+  color: #bbbbbb;
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+
+.ls-help-form-input,
+.ls-help-form-textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.3);
+  color: #ffffff;
+  font-size: 14px;
+  font-family: inherit;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  
+  &:focus {
+    outline: none;
+    border-color: rgba(0, 255, 120, 0.5);
+    box-shadow: 0 0 0 2px rgba(0, 255, 120, 0.1);
+  }
+  
+  &::placeholder {
+    color: #777777;
+  }
+}
+
+.ls-help-form-textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.ls-help-submit-btn {
+  width: 100%;
+  margin-top: 8px;
+  
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.ls-help-success-message {
+  background: rgba(0, 255, 120, 0.08);
+  border: 1px solid rgba(0, 255, 120, 0.3);
+  border-radius: 12px;
+  padding: 24px;
+  text-align: center;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.ls-help-success-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(0, 255, 120, 0.2);
+  color: #00ff78;
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
+  font-weight: bold;
+}
+
+.ls-help-success-message h3 {
+  color: #00ff78;
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+
+.ls-help-success-message p {
+  color: #cccccc;
+  font-size: 14px;
+  margin: 0;
+}
+
 /* MOBILE RESPONSIVE */
 @media (max-width: 800px) {
   .ls-help-wrapper {
@@ -278,6 +376,14 @@
 
   .ls-help-content-header {
     margin-bottom: 24px;
+  }
+  
+  .ls-help-form-container {
+    padding: 16px;
+  }
+  
+  .ls-help-contact-form {
+    margin-top: 16px;
   }
 }
 
