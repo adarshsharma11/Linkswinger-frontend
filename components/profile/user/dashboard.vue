@@ -352,17 +352,7 @@
 
         <!-- NOTIFICATIONS -->
         <section id="view-notifications" :hidden="activeNav !== 'notifications'">
-          <div class="dashboard-card glow">
-            <h2 class="text-white" style="margin-bottom: 16px;">Notifications</h2>
-            <ul style="padding-left: 20px; line-height: 1.6;">
-              <li class="text-white" style="margin-bottom: 8px;">User X liked your photo.</li>
-              <li class="text-white" style="margin-bottom: 8px;">New message from User Y.</li>
-            </ul>
-            <!-- Empty state -->
-            <div v-if="false" class="empty-state">
-              <p class="text-white">No new notifications.</p>
-            </div>
-          </div>
+         <NotificationTab />
         </section>
 
         <!-- PROFILE -->
@@ -634,6 +624,7 @@ import 'vue-multiselect/dist/vue-multiselect.css';
 import type { CallsModel, LastSeenModel } from '~/composables/websocketModels';
 import Swal from 'sweetalert2'
 import UserCard from '~/components/profile/user/UserCard.vue';
+import NotificationTab from './NotificationTab.vue';
 const id_store = idStore()
 const route = useRoute()
 const router = useRouter()
