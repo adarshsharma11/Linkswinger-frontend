@@ -752,6 +752,14 @@ async function setActiveNav(nav: string) {
   else if (nav === 'new-media') {
     await navigateTo(`/new-media`)
   }
+    else if (nav === 'meet-events') {
+    await navigateTo(`/meet-events`)
+  }
+   else if (nav === 'live') {
+    await navigateTo(`/live-on-cam`)
+  }
+
+  
   else {
     activeNav.value = nav
     window.location.hash = nav

@@ -37,7 +37,7 @@
                             :multiple="false" :close-on-select="true" placeholder="Select Visibility" />
                     </div>
                     <div class="form-group" style="margin-top: 10px;">
-                        <textarea v-model="feedDesc" placeholder="Write about this feed" rows="4"
+                        <textarea v-model="feedDesc" maxlength="100" placeholder="Write about this feed" rows="4"
                             style="resize:none; width: 100%; height: 150px;"> </textarea>
                     </div>
 
