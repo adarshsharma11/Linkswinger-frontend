@@ -101,6 +101,24 @@ export function showalert(text: string,title: string = '', is_success: boolean =
   }
 }
 
+export function formatNotificationCount(count: number): string {
+  if (count < 1000) {
+    return count.toString();
+  }
+
+  if (count < 1_000_000) {
+    const value = count / 1000;
+    return value % 1 === 0
+      ? `${value}K`
+      : `${value.toFixed(1)}K`;
+  }
+
+  const value = count / 1_000_000;
+  return value % 1 === 0
+    ? `${value}M`
+    : `${value.toFixed(1)}M`;
+}
+
 export function formatRelativeDate(inputDate: string) {
   // Parse date as UTC explicitly
   const date = new Date(inputDate); // input is UTC ISO string
