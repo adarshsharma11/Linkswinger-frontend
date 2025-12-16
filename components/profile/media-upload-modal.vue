@@ -54,8 +54,9 @@
                                 ✖
                             </button>
 
-                            <p class="small text-white fw-bold">Your Uploaded Photo</p>
-                            <img :src="previewUrl" alt="Preview" class="img-fluid rounded shadow uploaded-photo" />
+                            <p  class="small text-white fw-bold">{{ contentType.startsWith('image/') ? 'Your Uploaded Photo' : 'Your Uploaded Video'}}</p>
+                            <img v-if="contentType.startsWith('image/')" :src="previewUrl" alt="Preview" class="img-fluid rounded shadow uploaded-photo" />
+                             <video controls v-if="contentType.startsWith('image/') === false" :src="previewUrl" alt="Preview" class="img-fluid rounded shadow uploaded-photo" ></video>
                         </div>
                     </div>
 
