@@ -34,7 +34,7 @@
                     </div>
                     <div class="form-group" style="margin-top: 10px;">
                         <Multiselect v-model="feedType" :options="['Public', 'Friends-Only', 'Private']"
-                            :multiple="false" :close-on-select="true" placeholder="Select Ethnicity" />
+                            :multiple="false" :close-on-select="true" placeholder="Select Visibility" />
                     </div>
                     <div class="form-group" style="margin-top: 10px;">
                         <textarea v-model="feedDesc" placeholder="Write about this feed" rows="4"
@@ -142,8 +142,8 @@ const uploadProgress = ref(0);
 const feedType = ref('Public');
 const feedDesc = ref('');
 const contentType = ref('');
-const canComment = ref(true);
-const canLike = ref(true);
+const canComment = ref(false);
+const canLike = ref(false);
 const classification = ref('nonexplicit');
 
 
