@@ -78,11 +78,11 @@ export enum RequestURL {
 }
 
 
-export function showalert(title: string, is_success: boolean = false, timer: number = 2000) {
+export function showalert(text: string,title: string = '', is_success: boolean = false, timer: number = 2000) {
   if (is_success) {
     Swal.fire({
-      title: 'Success!',
-      text: title,
+      title: title.length > 0 ? title : 'Success!',
+      text: text,
       icon: 'success',
       confirmButtonText: 'Ok',
       timer: timer,
@@ -91,8 +91,8 @@ export function showalert(title: string, is_success: boolean = false, timer: num
   }
   else {
     Swal.fire({
-      title: 'Error!',
-      text: title,
+      title: title.length > 0 ? title : 'Error!',
+      text: text,
       icon: 'error',
       confirmButtonText: 'Ok',
       timer: timer,
@@ -561,6 +561,7 @@ export namespace FeedsModel {
     can_like?: boolean
     approval_status?: string
     classification?: string
+    reason?: string
 
   }
 

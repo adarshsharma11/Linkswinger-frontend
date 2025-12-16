@@ -69,11 +69,13 @@
 
           <div class="st-media-grid">
             <!-- Photo – Public -->
-            <article class="st-media-item" v-for="image in getImages()" @click="openPreview(image)">
+            <article class="st-media-item" v-for="image in getImages()" >
               <div class="st-thumb-wrapper">
                 <img class="st-thumb-placeholder" :src="(image.media_path ?? '') + image.hd_feed_image"
-                  style="width: 100%; height: 100%; object-fit: cover;"></img>
+                  style="width: 100%; height: 100%; object-fit: cover;" @click="openPreview(image)"></img>
                 <div class="st-thumb-badge thumb-badge--photo">{{ image.feed_type?.toUpperCase() }}</div>
+                <div class="st-thumb-badge thumb-badge--photo" style="margin-left: 50px;" @click="showreason(image)">{{
+                  image.approval_status?.toUpperCase() }}</div>
               </div>
               <div class="st-media-meta">
                 <div class="st-media-meta-top">
@@ -134,12 +136,14 @@
 
           <div class="st-media-grid">
             <!-- Video – Public -->
-            <article class="st-media-item" v-for="video in getVideos()" @click="openPreview(video)">
+            <article class="st-media-item" v-for="video in getVideos()" >
               <div class="st-thumb-wrapper st-video-thumb">
                 <img class="st-thumb-placeholder" :src="(video.media_path ?? '') + video.feed_thumbnail"
-                  style="width: 100%; height: 100%; object-fit: cover;"></img>
+                  style="width: 100%; height: 100%; object-fit: cover;" @click="openPreview(video)"></img>
                 <div class="st-thumb-badge st-thumb-badge--video">{{ video.feed_type?.toUpperCase() }}</div>
-                <div class="st-video-play-pill">
+                <div class="st-thumb-badge thumb-badge--photo" style="margin-left: 60px;" @click="showreason(video)">{{
+                  video.approval_status?.toUpperCase() }}</div>
+                <div class="st-video-play-pill" @click="openPreview(video)">
                   <span>▶</span>
                   <span>Play</span>
                 </div>
@@ -336,6 +340,8 @@ async function updateLikeStatus(feed: FeedsModel.FeedsResponseModel) {
   }
 }
 
+
+
 async function updateFeedType(feed: FeedsModel.FeedsResponseModel) {
   feed.is_loading = true;
   let api_url = getUrl(RequestURL.updateFeedType);
@@ -357,6 +363,12 @@ async function updateFeedType(feed: FeedsModel.FeedsResponseModel) {
   }
   else {
     showToastError(response.message ?? "Something went wrong");
+  }
+}
+
+function showreason(feed: FeedsModel.FeedsResponseModel) {
+  if (feed.approval_status === 'rejected') {
+    showalert(feed.reason ?? '','Rejected',false,5000)
   }
 }
 
