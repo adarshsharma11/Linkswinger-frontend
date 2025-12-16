@@ -11,7 +11,7 @@
               d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4" />
           </svg></button>
       </div>
-      <nav class="nav" id="sideNav" >
+      <nav class="nav" id="sideNav">
         <a href="#profile" data-route="profile" @click.prevent="setActiveNav('profile')"
           :class="{ active: activeNav === 'profile' }" class="text-white"><span class="icon"><!--👤--> <img
               class="sidebar-ic" :src="`/images/badges/animated/50X50px/edit-profile.gif`" /></span>My Profile</a>
@@ -50,7 +50,7 @@
           :class="{ active: activeNav === 'club-events' }" class="text-white"><span class="icon"><!--🏷--> <img
               class="sidebar-ic" :src="`/images/badges/animated/150X150px/CLUB-events-150x150px.png`" /> </span>Club
           Events</a>
-          <a href="#membership" data-route="membership" @click.prevent="setActiveNav('membership')"
+        <a href="#membership" data-route="membership" @click.prevent="setActiveNav('membership')"
           :class="{ active: activeNav === 'membership' }" class="text-white"><span class="icon"><!--🏷--> <img
               class="sidebar-ic" :src="`/images/badges/animated/150X150px/elite.gif`" /> </span>Membership</a>
         <a href="#video-roullet" data-route="video-roullet" @click.prevent="setActiveNav('video-roullet')"
@@ -60,8 +60,9 @@
         <a href="#live" data-route="live" @click.prevent="setActiveNav('live')"
           :class="{ active: activeNav === 'live' }" class="text-white"><span class="icon"> <img class="sidebar-ic"
               :src="`/images/badges/animated/50X50px/live-oncam.gif`" /></span>Live / On Cam</a>
-        <a  class="text-white" @click="logout()"><span class="icon" > <img class="sidebar-ic"
-              :src="`/images/badges/animated/150X150px/19.gif`" /></span>Logout <span class="btn-loader" v-if="is_logout_loading"></span></a>
+        <a class="text-white" @click="logout()"><span class="icon"> <img class="sidebar-ic"
+              :src="`/images/badges/animated/150X150px/19.gif`" /></span>Logout <span class="btn-loader"
+            v-if="is_logout_loading"></span></a>
       </nav>
       <div class="spacer" />
       <!-- <button class="dash-button primary" id="dash-buttonUpload" @click="fakeUpload">＋ Upload/Post</button> -->
@@ -138,18 +139,9 @@
 
 
           <div id="grid" class="grid user-grid" aria-live="polite">
-            <UserCard 
-              v-for="user in users" 
-              :key="user.user_id"
-              :user="user"
-              :is-mine=false
-              :online-users="onlineUsers"
-              :last-seens="lastSeens"
-              @open-profile="openProfile"
-              @open-chat="openChat"
-              @show-code-alert="showCodeAlert"
-              @remove-like-user="removeLikeUser"
-            />
+            <UserCard v-for="user in users" :key="user.user_id" :user="user" :is-mine=false :online-users="onlineUsers"
+              :last-seens="lastSeens" @open-profile="openProfile" @open-chat="openChat" @show-code-alert="showCodeAlert"
+              @remove-like-user="removeLikeUser" />
           </div>
 
         </section>
@@ -245,55 +237,27 @@
 
         <!-- SHORTLIST -->
         <section id="view-crush" :hidden="activeNav !== 'crush'">
-             <div id="grid" class="grid user-grid" aria-live="polite">
-          <UserCard 
-              v-for="user in users" 
-              :key="user.user_id"
-              :user="user"
-              :is-mine=true
-              :online-users="onlineUsers"
-              :last-seens="lastSeens"
-              @open-profile="openProfile"
-              @open-chat="openChat"
-              @show-code-alert="showCodeAlert"
-              @remove-like-user="removeLikeUser"
-            />
+          <div id="grid" class="grid user-grid" aria-live="polite">
+            <UserCard v-for="user in users" :key="user.user_id" :user="user" :is-mine=true :online-users="onlineUsers"
+              :last-seens="lastSeens" @open-profile="openProfile" @open-chat="openChat" @show-code-alert="showCodeAlert"
+              @remove-like-user="removeLikeUser" />
           </div>
         </section>
 
         <!-- SUBPAGES (no sidebar entry) -->
         <section id="view-nearby" :hidden="activeNav !== 'nearby'">
-           <div id="grid" class="grid user-grid" aria-live="polite">
-          <UserCard 
-              v-for="user in users" 
-              :key="user.user_id"
-              :user="user"
-              :is-mine=false
-              :online-users="onlineUsers"
-              :last-seens="lastSeens"
-              @open-profile="openProfile"
-              @open-chat="openChat"
-              @show-code-alert="showCodeAlert"
-              @remove-like-user="removeLikeUser"
-            />
+          <div id="grid" class="grid user-grid" aria-live="polite">
+            <UserCard v-for="user in users" :key="user.user_id" :user="user" :is-mine=false :online-users="onlineUsers"
+              :last-seens="lastSeens" @open-profile="openProfile" @open-chat="openChat" @show-code-alert="showCodeAlert"
+              @remove-like-user="removeLikeUser" />
           </div>
         </section>
 
         <section id="view-friends" :hidden="activeNav !== 'friends'">
           <div id="grid" class="grid user-grid" aria-live="polite">
-          <UserCard 
-              v-for="user in users" 
-              :key="user.user_id"
-              :is-mine=true
-              :user="user"
-              :online-users="onlineUsers"
-              :last-seens="lastSeens"
-              @open-profile="openProfile"
-              @open-chat="openChat"
-              @show-code-alert="showCodeAlert"
-              @decline-user="declineUser"
-              @remove-like-user="removeLikeUser"
-            />
+            <UserCard v-for="user in users" :key="user.user_id" :is-mine=true :user="user" :online-users="onlineUsers"
+              :last-seens="lastSeens" @open-profile="openProfile" @open-chat="openChat" @show-code-alert="showCodeAlert"
+              @decline-user="declineUser" @remove-like-user="removeLikeUser" />
           </div>
         </section>
 
@@ -576,7 +540,9 @@
             <div class="group-fd">
               <div class="label">Near town / postcode</div>
               <div class="inline-check"><label class="toggle"><input type="checkbox" id="use_my_location"
-                    name="use_my_location" v-model="current_loc"> <img src="/images/badges/animated/50X50px/location.gif" alt="Location" class="me-2" width="20" height="20"> Use my location</label></div>
+                    name="use_my_location" v-model="current_loc"> <img
+                    src="/images/badges/animated/50X50px/location.gif" alt="Location" class="me-2" width="20"
+                    height="20"> Use my location</label></div>
               <div class="row">
                 <div class="col-md-6 pb-2">
                   <!-- <input class="input" type="text" name="near" placeholder="Enter town or postcode" /> -->
@@ -744,9 +710,8 @@ function setActive(r: string) {
 
 async function setActiveNav(nav: string) {
 
-  if(isSidebarOpen.value)
-  {
-     isSidebarOpen.value = false
+  if (isSidebarOpen.value) {
+    isSidebarOpen.value = false
   }
 
   if (nav === 'userlist') {
@@ -759,7 +724,7 @@ async function setActiveNav(nav: string) {
     window.location.hash = nav
     fetchNearByUserList()
   }
-else if (nav === 'crush') {
+  else if (nav === 'crush') {
     activeNav.value = nav
     window.location.hash = nav
     fetchCrushList()
@@ -769,9 +734,6 @@ else if (nav === 'crush') {
     window.location.hash = nav
     fetchFriends()
   }
-  
-  
-  
   else if (nav === 'profile') {
     await navigateTo(`/profile`)
   }
@@ -781,11 +743,14 @@ else if (nav === 'crush') {
   else if (nav === 'membership') {
     await navigateTo(`/membership`)
   }
-   else if (nav === 'video-roullet') {
+  else if (nav === 'video-roullet') {
     await navigateTo(`/video-roulette`)
   }
+  else if (nav === 'club-events') {
+    await navigateTo(`/coming-soon`)
+  }
   else if (nav === 'new-media') {
-     await navigateTo(`/new-media`)
+    await navigateTo(`/new-media`)
   }
   else {
     activeNav.value = nav
@@ -823,7 +788,7 @@ function checkMobile() {
 //       page: 0,
 //       search: searchTxt.value,
 //       user_id: login_store.getUserDetails?.user_id ?? 0,
-     
+
 //     },
 //     headers: {
 //       "content-type": "application/json"
@@ -841,7 +806,7 @@ function checkMobile() {
 
 async function fetchUsersList(fromAdvance = false) {
   const api_url = getUrl(RequestURL.fetchallusers);
-  let latitude_r =  selectedTown.value?.latitude ?? latitude.value ?? 0
+  let latitude_r = selectedTown.value?.latitude ?? latitude.value ?? 0
   let longitude_r = selectedTown.value?.longitude ?? longitude.value ?? 0
   let radius_value = radiusMiles.value ?? 0
 
@@ -849,20 +814,19 @@ async function fetchUsersList(fromAdvance = false) {
     radius_value = 0
   }
   var body = {
-     page: 0,
-      search: searchTxt.value,
-      user_id: login_store.getUserDetails?.user_id ?? 0,
+    page: 0,
+    search: searchTxt.value,
+    user_id: login_store.getUserDetails?.user_id ?? 0,
   }
-  if (fromAdvance)
-  {
-     body =  {
+  if (fromAdvance) {
+    body = {
       page: 0,
       search: searchTxt.value,
       user_id: login_store.getUserDetails?.user_id ?? 0,
       looking_for: lookingFor.value,
       who_wants_to_meet: whoMeets.value,
       age_min: ageMin.value ?? MIN_AGE,
-      age_max: ageMax.value ?? MAX_AGE, 
+      age_max: ageMax.value ?? MAX_AGE,
       latitude: latitude_r,
       longitude: longitude_r,
       radius: radius_value,
@@ -878,7 +842,7 @@ async function fetchUsersList(fromAdvance = false) {
     }
   }
   advanceModelSub.hide()
-      users.value = []
+  users.value = []
   let response = await $fetch<SuccessError<UsersModel.LoginRequestModel>>(api_url, {
     method: 'POST',
     body: body,
@@ -890,7 +854,7 @@ async function fetchUsersList(fromAdvance = false) {
   if (response.success) {
     users.value = response.result as UsersModel.ProfileDetailsResponseModel[];
     checkuseronline()
-    
+
   }
   else {
     users.value = []
@@ -899,12 +863,12 @@ async function fetchUsersList(fromAdvance = false) {
 }
 async function fetchFriends() {
   const api_url = getUrl(RequestURL.fetchFriends);
-     users.value = []
+  users.value = []
   let response = await $fetch<SuccessError<UsersModel.LoginRequestModel>>(api_url, {
     method: 'POST',
     body: {
       user_udid: login_store.getUserDetails?.user_udid ?? '',
-       user_id: login_store.getUserDetails?.user_id ?? 0,
+      user_id: login_store.getUserDetails?.user_id ?? 0,
     },
     headers: {
       'Content-Type': 'application/json'
@@ -923,7 +887,7 @@ async function fetchFriends() {
 
 async function fetchCrushList() {
   const api_url = getUrl(RequestURL.fetchCrushList);
-     users.value = []
+  users.value = []
   let response = await $fetch<SuccessError<UsersModel.LoginRequestModel>>(api_url, {
     method: 'POST',
     body: {
@@ -945,7 +909,7 @@ async function fetchCrushList() {
 }
 async function fetchNearByUserList() {
   const api_url = getUrl(RequestURL.fetchNearByUsers);
-     users.value = []
+  users.value = []
   let response = await $fetch<SuccessError<UsersModel.LoginRequestModel>>(api_url, {
     method: 'POST',
     body: {
@@ -980,7 +944,7 @@ function fetchTownsPostCodes(query: string) {
       'Content-Type': 'application/json',
     },
   }).then((response) => {
- is_town_loading.value = false;
+    is_town_loading.value = false;
     if (response.success) {
       allTowns.value = (response.result ?? []) as UsersModel.FetchTownPostCodesResponseModel[]
     }
@@ -1005,16 +969,16 @@ watch(current_loc, () => {
   if (current_loc.value) {
     selectedTown.value = null
     navigator.geolocation.getCurrentPosition(
-    (position) => {
-      latitude.value = position.coords.latitude
-      longitude.value = position.coords.longitude
-    },
-    (err) => {
-      current_loc.value = false
-      latitude.value = null
-      longitude.value = null
-    }
-  )
+      (position) => {
+        latitude.value = position.coords.latitude
+        longitude.value = position.coords.longitude
+      },
+      (err) => {
+        current_loc.value = false
+        latitude.value = null
+        longitude.value = null
+      }
+    )
   }
 
 });
@@ -1023,8 +987,8 @@ watch(selectedTown, () => {
   if (selectedTown.value !== null) {
     current_loc.value = false
     latitude.value = null
-     longitude.value = null
-    
+    longitude.value = null
+
   }
 
 });
@@ -1204,7 +1168,7 @@ onMounted(() => {
   // Handle hash-based navigation
 
   advanceModelSub = new ($bootstrap as any).Modal(document.getElementById('advancesearchmodal'));
-  
+
   isWSConnected.value = isSocketConnected()
   eventBus.on('socketConnection', (is_connected) => {
     isWSConnected.value = is_connected
@@ -1233,17 +1197,17 @@ onMounted(() => {
   window.location.hash = activeNav.value
 
   if (hash === '#userlist') {
-  fetchUsersList()
-}
-else if (hash === '#nearby') {
-  fetchNearByUserList()
-}
-else if (hash === '#crush') {
-  fetchCrushList()
-}
-else if (hash === '#friends') {
-  fetchFriends()
-}
+    fetchUsersList()
+  }
+  else if (hash === '#nearby') {
+    fetchNearByUserList()
+  }
+  else if (hash === '#crush') {
+    fetchCrushList()
+  }
+  else if (hash === '#friends') {
+    fetchFriends()
+  }
 
 
   // Set initial state based on hash
@@ -1274,7 +1238,7 @@ else if (hash === '#friends') {
       ageMin.value = data.age_min ?? MIN_AGE
       ageMax.value = data.age_max ?? MAX_AGE
 
-       current_loc.value = false
+      current_loc.value = false
       if (data.townPostCode) {
         selectedTown.value = data.townPostCode
       }
@@ -1308,7 +1272,7 @@ onBeforeUnmount(() => {
   window.removeEventListener('resize', checkMobile)
   eventBus.off('socketConnection')
   eventBus.off('onlineUserIds')
-   eventBus.off('callDeclineAlert')
+  eventBus.off('callDeclineAlert')
   eventBus.off('callAcceptAlert')
 })
 
@@ -1339,7 +1303,7 @@ function handleBodyClick() {
   if (isSidebarOpen.value) closeSidebar();
 }
 
-function showCodeAlert(to_id:number,is_video: boolean) {
+function showCodeAlert(to_id: number, is_video: boolean) {
   Swal.fire({
     title: 'Please enter code',
     input: 'text', // Specifies a text input field
@@ -1352,19 +1316,19 @@ function showCodeAlert(to_id:number,is_video: boolean) {
     }
   }).then((result) => {
     if (result.isConfirmed) {
-      validateCall(to_id,result.value ?? '', is_video)
+      validateCall(to_id, result.value ?? '', is_video)
     }
   });
 }
 const declineUser = (userId: number) => {
-     users.value.splice(users.value.findIndex(u => u.user_id === userId), 1);
+  users.value.splice(users.value.findIndex(u => u.user_id === userId), 1);
 }
 const removeLikeUser = (userId: number) => {
-     users.value.splice(users.value.findIndex(u => u.user_id === userId), 1);
+  users.value.splice(users.value.findIndex(u => u.user_id === userId), 1);
 }
 
 
-async function validateCall(to_id:number,code: string, is_video: boolean) {
+async function validateCall(to_id: number, code: string, is_video: boolean) {
   const api_url = getUrl(RequestURL.validateCall);
   await $fetch<SuccessError<CallsModel.ValidateCallResponseModel>>(api_url, {
     cache: "no-cache",
