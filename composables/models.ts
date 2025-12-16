@@ -308,6 +308,12 @@ export namespace UsersModel {
     ethnicity?: string[];
     heightUnits?: string[];
     genders?: string[];
+    
+    smoking?: string[];
+    tattoos? : string[]
+    piercings? : string[]
+
+    
   }
 
   export class ActivateUserRequestModel {
@@ -409,6 +415,15 @@ export namespace UsersModel {
 
     from_id? : number
     to_id? : number
+
+    smoking? : string
+    tattoos? : string
+    piercings? : string
+
+    partner_smoking? : string
+    partner_tattoos? : string
+    partner_piercings? : string
+
   }
 
   export class FetchMembershipRequestModel {

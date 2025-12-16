@@ -7,14 +7,14 @@
                     <div class="row">
                         <div class="form-group">
                             <div class="d-flex flex-column align-items-center justify-content-center position-relative">
-                              
+
                                 <div class="position-relative d-inline-block" style="width: 120px; height: 120px;">
-                                
+
                                     <img :src="getProfileImage()" alt="Profile" class="rounded-circle"
                                         style="width: 120px; height: 120px; object-fit: cover; display: block; margin: 0 auto;" />
                                     <span class="btn-loader" v-if="is_photo_uploading"></span>
 
-                                  
+
                                     <!-- <button v-if="!is_photo_uploading" type="button"
                                         class="btn btn-theme-color rounded-circle position-absolute"
                                         style="top: -12px; right: -8px; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;"
@@ -23,7 +23,7 @@
                                     </button> -->
                                 </div>
 
-                              
+
                                 <!-- <input type="file" accept="image/png,image/jpeg" class="d-none" ref="fileInput"
                                     @change="handleFileUpload" /> -->
                             </div>
@@ -36,7 +36,7 @@
                             <textarea v-model="about_me" class="form-control" id="exampleFormControlTextarea1"
                                 placeholder="Write about yourself" rows="4" style="resize:none;"></textarea>
                         </div>
-                       
+
                         <div class="form-group col-12 col-md-6">
                             <label for="inputdob">Date of Birth
                                 <i class="fa fa-info-circle text-info ms-1"
@@ -70,7 +70,7 @@
                     <div class="form-group ">
                         <label>Country</label>
                         <input class="form-control disabled-input" id="country" type="text" placeholder="Country"
-                                   value="United Kingdom" disabled />
+                            value="United Kingdom" disabled />
                     </div>
 
                     <div class="form-group ">
@@ -88,7 +88,7 @@
 
                     <div class="form-group ">
                         <label>Height Unit</label>
-                        <Multiselect v-model="height_unit" :options="allOptions.heightUnits" :multiple="false"
+                        <Multiselect v-model="height_unit" :options="allOptions.heightUnits ?? []" :multiple="false"
                             :close-on-select="true" placeholder="Select Height Unit" />
                     </div>
 
@@ -113,15 +113,16 @@
 
                     <div class="form-group">
                         <label>Sexual Interest</label>
-                        <Multiselect v-model="sexualInterest" :options="allOptions.interests" track-by="interest_id"
-                            label="interest_name" :multiple="true" class="custom-multiselect" :close-on-select="false"
-                            placeholder="Select Sexual Interest" :reduce="(opt: any) => opt.interest_id" />
+                        <Multiselect v-model="sexualInterest" :options="allOptions.interests ?? []"
+                            track-by="interest_id" label="interest_name" :multiple="true" class="custom-multiselect"
+                            :close-on-select="false" placeholder="Select Sexual Interest"
+                            :reduce="(opt: any) => opt.interest_id" />
                     </div>
 
                     <!-- Meet Preference (Checkboxes) -->
                     <div class="form-group">
                         <label>Meet Preference</label>
-                        <Multiselect v-model="meetPreference" :options="allOptions.meetPerferences"
+                        <Multiselect v-model="meetPreference" :options="allOptions.meetPerferences ?? []"
                             track-by="meet_preference_id" label="preference_name" :multiple="true"
                             :close-on-select="false" placeholder="Select Meet Preference"
                             :reduce="(opt: any) => opt.meet_preference_id" />
@@ -130,19 +131,37 @@
                     <!-- Meet Preference (Checkboxes) -->
                     <div class="form-group">
                         <label>Looking For</label>
-                        <Multiselect v-model="lookingFor" :options="allOptions.lookingFor" :multiple="true"
+                        <Multiselect v-model="lookingFor" :options="allOptions.lookingFor ?? []" :multiple="true"
                             :close-on-select="false" placeholder="Select Looking For" />
                     </div>
 
                     <div class="form-group">
                         <label>Ethnicity</label>
-                        <Multiselect v-model="ethnicity" :options="allOptions.ethnicity" :multiple="false"
+                        <Multiselect v-model="ethnicity" :options="allOptions.ethnicity ?? []" :multiple="false"
                             :close-on-select="true" placeholder="Select Ethnicity" />
                     </div>
                     <div class="form-group">
                         <label>Body Type</label>
                         <Multiselect v-model="body_type" :options="getBodyType()" :multiple="false"
-                            :close-on-select="true" placeholder="Select Partner Body Type" />
+                            :close-on-select="true" placeholder="Select Body Type" />
+                    </div>
+
+                    <div class="form-group">
+                        <label>Smoking</label>
+                        <Multiselect v-model="smoking" :options="allOptions.smoking ?? []" :multiple="false"
+                            :close-on-select="true" placeholder="Select Smoking" />
+                    </div>
+
+                    <div class="form-group">
+                        <label>Tattoos</label>
+                        <Multiselect v-model="tattoos" :options="allOptions.tattoos ?? []" :multiple="false"
+                            :close-on-select="true" placeholder="Select Tattoos" />
+                    </div>
+
+                    <div class="form-group">
+                        <label>Piercings</label>
+                        <Multiselect v-model="piercings" :options="allOptions.piercings ?? []" :multiple="false"
+                            :close-on-select="true" placeholder="Select Piercings" />
                     </div>
 
 
@@ -183,13 +202,31 @@
                         </div>
                         <div class="form-group">
                             <label>Partner Ethnicity</label>
-                            <Multiselect v-model="partner_ethnicity" :options="allOptions.ethnicity" :multiple="false"
-                                :close-on-select="true" placeholder="Select Partner Ethnicity" />
+                            <Multiselect v-model="partner_ethnicity" :options="allOptions.ethnicity ?? []"
+                                :multiple="false" :close-on-select="true" placeholder="Select Partner Ethnicity" />
                         </div>
                         <div class="form-group">
                             <label>Partner Body Type</label>
                             <Multiselect v-model="partner_body_type" :options="getBodyType()" :multiple="false"
                                 :close-on-select="true" placeholder="Select Partner Body Type" />
+                        </div>
+
+                        <div class="form-group">
+                            <label>Partner Smoking</label>
+                            <Multiselect v-model="partner_smoking" :options="allOptions.smoking ?? []" :multiple="false"
+                                :close-on-select="true" placeholder="Select Partner Smoking" />
+                        </div>
+
+                        <div class="form-group">
+                            <label>Partner Tattoos</label>
+                            <Multiselect v-model="partner_tattoos" :options="allOptions.tattoos ?? []" :multiple="false"
+                                :close-on-select="true" placeholder="Select Partner Tattoos" />
+                        </div>
+
+                        <div class="form-group">
+                            <label>Partner Piercings</label>
+                            <Multiselect v-model="partner_piercings" :options="allOptions.piercings ?? []"
+                                :multiple="false" :close-on-select="true" placeholder="Select Partner Piercings" />
                         </div>
 
 
@@ -251,6 +288,14 @@ const ethnicity = ref(login_store.getUserDetails?.ethnicity ?? '');
 const partner_ethnicity = ref(login_store.getUserDetails?.partner_ethnicity ?? '');
 const body_type = ref(login_store.getUserDetails?.body_type ?? '');
 const partner_body_type = ref(login_store.getUserDetails?.partner_body_type ?? '');
+
+const smoking = ref(login_store.getUserDetails?.smoking ?? '');
+const tattoos = ref(login_store.getUserDetails?.tattoos ?? '');
+const piercings = ref(login_store.getUserDetails?.piercings ?? '');
+
+const partner_smoking = ref(login_store.getUserDetails?.partner_smoking ?? '');
+const partner_tattoos = ref(login_store.getUserDetails?.partner_tattoos ?? '');
+const partner_piercings = ref(login_store.getUserDetails?.partner_piercings ?? '');
 
 const nickName = ref('');
 const email = ref('');
@@ -474,11 +519,20 @@ function usersignup() {
         height: height,
         partner_height: partner_height,
         town_id: town_id,
-        post_code_id : post_code_id,
+        post_code_id: post_code_id,
         device_id: "",
         gender: gender.value,
         partner_gender: partner_gender.value,
         about_me: about_me.value,
+
+        smoking: smoking.value,
+        tattoos: tattoos.value,
+        piercings: piercings.value,
+
+        partner_smoking: partner_smoking.value,
+        partner_tattoos: partner_tattoos.value,
+        partner_piercings: partner_piercings.value,
+
     } as UsersModel.SignUpRequestModel
 
     let api_url = getUrl(RequestURL.updateUserProfile);
@@ -559,7 +613,7 @@ function usersignup() {
 //     xhr.open('PUT', worker_model.url ?? '')
 //     xhr.setRequestHeader('Content-Type', contentType)
 //     // add headers if needed: xhr.setRequestHeader('Authorization', 'Bearer ...')
-   
+
 //     xhr.send(previewUrlFile.value)
 // }
 
@@ -641,7 +695,7 @@ function checkValidation(): boolean {
         showalert('Please select town');
         return false;
     }
-     else if (post_code_id === 0) {
+    else if (post_code_id === 0) {
         showalert('Please select post code');
         return false;
     }
@@ -725,18 +779,17 @@ function checkValidation(): boolean {
     }
     return true;
 }
-function getProfileImage() : string
-{
-//   let url = previewUrl.value ?? ''
-//     if (url.length > 0) return url
+function getProfileImage(): string {
+    //   let url = previewUrl.value ?? ''
+    //     if (url.length > 0) return url
 
-//   let media_path = login_store.getUserDetails?.media_path ?? ''
-//   let profile_image = login_store.getUserDetails?.profile_image ?? ''
-//   if (media_path.length > 0 && profile_image.length > 0)
-//   {
-//     return media_path + profile_image
-//   }
-  return "/images/badges/animated/150X150px/edit-profile.gif"
+    //   let media_path = login_store.getUserDetails?.media_path ?? ''
+    //   let profile_image = login_store.getUserDetails?.profile_image ?? ''
+    //   if (media_path.length > 0 && profile_image.length > 0)
+    //   {
+    //     return media_path + profile_image
+    //   }
+    return "/images/badges/animated/150X150px/edit-profile.gif"
 }
 </script>
 

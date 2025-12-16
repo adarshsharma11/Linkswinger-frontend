@@ -73,11 +73,11 @@
               track_by="town_id" />
           </div>
           <div class="form-group ">
-                        <label>Post Code</label>
-                        <Multiselect v-model="selectedPostCode" :options="allPostCodes" :multiple="false"
-                            :close-on-select="true" placeholder="Select Post Code" :loading="is_post_code_loading"
-                            @search-change="fetchPostCodes" label="post_code" track_by="post_code_id" />
-                    </div>
+            <label>Post Code</label>
+            <Multiselect v-model="selectedPostCode" :options="allPostCodes" :multiple="false" :close-on-select="true"
+              placeholder="Select Post Code" :loading="is_post_code_loading" @search-change="fetchPostCodes"
+              label="post_code" track_by="post_code_id" />
+          </div>
 
           <div class="form-group ">
             <label>Height Unit</label>
@@ -136,6 +136,23 @@
             <Multiselect v-model="body_type" :options="getBodyType()" :multiple="false" :close-on-select="true"
               placeholder="Select Partner Body Type" />
           </div>
+          <div class="form-group">
+            <label>Smoking</label>
+            <Multiselect v-model="smoking" :options="allOptions.smoking ?? []" :multiple="false" :close-on-select="true"
+              placeholder="Select Smoking" />
+          </div>
+
+          <div class="form-group">
+            <label>Tattoos</label>
+            <Multiselect v-model="tattoos" :options="allOptions.tattoos ?? []" :multiple="false" :close-on-select="true"
+              placeholder="Select Tattoos" />
+          </div>
+
+          <div class="form-group">
+            <label>Piercings</label>
+            <Multiselect v-model="piercings" :options="allOptions.piercings ?? []" :multiple="false"
+              :close-on-select="true" placeholder="Select Piercings" />
+          </div>
           <div class="form-group ">
             <label>About Me</label>
             <textarea v-model="about_me" class="form-control" id="exampleFormControlTextarea1"
@@ -179,6 +196,24 @@
               <label>Partner Body Type</label>
               <Multiselect v-model="partner_body_type" :options="getBodyType()" :multiple="false"
                 :close-on-select="true" placeholder="Select Partner Body Type" />
+            </div>
+
+            <div class="form-group">
+              <label>Partner Smoking</label>
+              <Multiselect v-model="partner_smoking" :options="allOptions.smoking ?? []" :multiple="false"
+                :close-on-select="true" placeholder="Select Partner Smoking" />
+            </div>
+
+            <div class="form-group">
+              <label>Partner Tattoos</label>
+              <Multiselect v-model="partner_tattoos" :options="allOptions.tattoos ?? []" :multiple="false"
+                :close-on-select="true" placeholder="Select Partner Tattoos" />
+            </div>
+
+            <div class="form-group">
+              <label>Partner Piercings</label>
+              <Multiselect v-model="partner_piercings" :options="allOptions.piercings ?? []" :multiple="false"
+                :close-on-select="true" placeholder="Select Partner Piercings" />
             </div>
 
 
@@ -289,7 +324,13 @@ const partner_feet_height = ref('');
 const partner_inch_height = ref('0');
 const about_me = ref('');
 
+const smoking = ref('');
+const tattoos = ref('');
+const piercings = ref('');
 
+const partner_smoking = ref('');
+const partner_tattoos = ref('');
+const partner_piercings = ref('');
 
 const height_unit = ref('cm');
 const sexualInterest = ref<UsersModel.InterestsModel[]>([]);
@@ -406,28 +447,28 @@ function fetchTowns(query: string) {
   });
 }
 function fetchPostCodes(query: string) {
-    if (query.length === 0) {
-        allPostCodes.value = []
-        return;
-    }
-    let api_url = getUrl(RequestURL.fetchPostCodes);
-    is_post_code_loading.value = true;
+  if (query.length === 0) {
     allPostCodes.value = []
-    $fetch<SuccessError<UsersModel.FetchPostCodeResponseModel>>(api_url, {
-        method: 'POST',
-        body: { "search": query },
-        headers: {
-            'Content-Type': 'application/json',
-        },
-    }).then((response) => {
+    return;
+  }
+  let api_url = getUrl(RequestURL.fetchPostCodes);
+  is_post_code_loading.value = true;
+  allPostCodes.value = []
+  $fetch<SuccessError<UsersModel.FetchPostCodeResponseModel>>(api_url, {
+    method: 'POST',
+    body: { "search": query },
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  }).then((response) => {
 
-        if (response.success) {
-            allPostCodes.value = (response.result ?? []) as UsersModel.FetchPostCodeResponseModel[]
-        }
-        is_post_code_loading.value = false;
-    }).catch((error) => {
-        is_post_code_loading.value = false;
-    });
+    if (response.success) {
+      allPostCodes.value = (response.result ?? []) as UsersModel.FetchPostCodeResponseModel[]
+    }
+    is_post_code_loading.value = false;
+  }).catch((error) => {
+    is_post_code_loading.value = false;
+  });
 }
 
 function usersignup() {
@@ -481,11 +522,18 @@ function usersignup() {
     height: height,
     partner_height: partner_height,
     town_id: town_id,
-    post_code_id : post_code_id,
+    post_code_id: post_code_id,
     device_id: "",
     gender: gender.value,
     partner_gender: partner_gender.value,
-    about_me: about_me.value
+    about_me: about_me.value,
+    smoking: smoking.value,
+    tattoos: tattoos.value,
+    piercings: piercings.value,
+
+    partner_smoking: partner_smoking.value,
+    partner_tattoos: partner_tattoos.value,
+    partner_piercings: partner_piercings.value,
   } as UsersModel.SignUpRequestModel
 
   let api_url = getUrl(RequestURL.signup);
@@ -601,10 +649,10 @@ function checkValidation(): boolean {
     showalert('Please select town');
     return false;
   }
-    else if (post_code_id === 0) {
-        showalert('Please select post code');
-        return false;
-    }
+  else if (post_code_id === 0) {
+    showalert('Please select post code');
+    return false;
+  }
 
 
   else if (unit.length === 0) {
