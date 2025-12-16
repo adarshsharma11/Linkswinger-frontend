@@ -58,7 +58,7 @@
               :key="m.id"
               class="media-card"
             >
-              <span class="media-action">{{ m.type }}</span>
+              <span class="media-action text-white">{{ m.type }}</span>
               <div class="media-thumb">{{ m.highlight }}</div>
 
               <div class="media-body">
