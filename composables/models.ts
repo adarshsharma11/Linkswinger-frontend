@@ -101,7 +101,7 @@ export function showalert(text: string,title: string = '', is_success: boolean =
   }
 }
 
-export function formatNotificationCount(count: number): string {
+export function formatNumber(count: number): string {
   if (count < 1000) {
     return count.toString();
   }
