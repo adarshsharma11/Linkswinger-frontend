@@ -463,18 +463,13 @@
   </Teleport>
   <AcceptDeclineRequestModel :friend_status="friend_status" ref="acceptDeclineRequestModalRef" v-if="toggleRequestModal"
     @close="toggleRequestModal = false" @friends-list="openUsersFriendsList()" @send-request="sendFriendRequest()" />
-  <PhotoAlertModal
-  v-if="togglePhotoAlert"
-  title="Media uploaded — under review"
-  message="Your media has been <b>successfully uploaded</b> and is now under review."
-  @close="togglePhotoAlert = false"
-  />  
+  
 
 </template>
 <script setup lang="ts">
 import { ChatsModel, MeetVerificationsModel, type UsersModel } from '~/composables/models';
 import AcceptDeclineRequestModel from './accept-decline-request-modal.vue';
-import PhotoAlertModal from './photo-alert-modal.vue';
+
 import Swal from 'sweetalert2'
 import { EmojiPicker } from '#components';
 import { Teleport } from 'vue';
@@ -489,7 +484,7 @@ const login_store = useLoginStore();
 const is_logout_loading = ref(false);
 const is_verify_loading = ref(false);
 const is_status_loading = ref(false);
-const togglePhotoAlert = ref(false);
+
 const verifications = ref([] as MeetVerificationsModel.FetchVerifyResponseModel[])
 const userDetails = ref<UsersModel.ProfileDetailsResponseModel | null | undefined>(null);
 const feedCounts = ref([] as UsersModel.FeedCountResponseModel[])

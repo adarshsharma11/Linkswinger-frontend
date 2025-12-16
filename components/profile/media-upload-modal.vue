@@ -120,10 +120,17 @@
             </div>
         </div>
     </div>
+    <PhotoAlertModal
+  v-if="togglePhotoAlert"
+  title="Media uploaded — under review"
+  message="Your media has been <b>successfully uploaded</b> and is now under review."
+  @close="togglePhotoAlert = false"
+  />  
 </template>
 
 <script setup lang="ts">
 import { ref } from "vue";
+import PhotoAlertModal from './photo-alert-modal.vue';
 import type { FeedsModel, UsersModel } from "~/composables/models";
 import Multiselect from 'vue-multiselect';
 import 'vue-multiselect/dist/vue-multiselect.css';
@@ -132,6 +139,7 @@ const fileInput = ref<HTMLInputElement | null>(null);
 const uploadArea = ref<HTMLElement | null>(null);
 const previewUrlFile = ref<Blob | null>(null);
 const { $bootstrap } = useNuxtApp();
+const togglePhotoAlert = ref(false);
 const dragOver = ref(false);
 const showRipple = ref(false);
 const rippleX = ref(0);
@@ -261,6 +269,7 @@ function removePhoto() {
 
 
 async function uploadMedia() {
+
     if (previewUrl.value === null) {
         showToastError('Please select media to upload.');
         return;
@@ -320,7 +329,9 @@ function upload(worker_model: WorkerModel, contentType: string = 'image/jpeg') {
             uploadProgress.value = 100;
             mediaUploadModalSub.hide();
             removePhoto();
-            showalert('Photo uploaded successfully and is under processing. You feed will be updated once processed.', true)
+
+            togglePhotoAlert.value = true;
+           // showalert('Photo uploaded successfully and is under processing. You feed will be updated once processed.', true)
         }
     }
 
