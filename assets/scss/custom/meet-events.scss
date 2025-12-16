@@ -357,9 +357,46 @@ transition: border 0.15s ease, box-shadow 0.15s ease, transform 0.08s ease;
       text-align:right;
       max-width: 60%;
     }
+    .meet-panel h2 {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .meet-panel h2 button.nm-close-btn {
+        padding: 2px;
+        display: none;
+    }
     @media (max-width: 767px){
       .meet-head-right{ max-width: 100%; }
       .meet-inline > *{ flex: 1 100%; }
+      .meet-panel h2 button.nm-close-btn {
+        display: inline-block;
+    }
+    .meet-list-head button.nm-btn.nm-btn-ghost.filters-btn {
+    margin-bottom: 10px;
+}
+      .meet-sidefilter {
+      width: 100%;
+      left: -100%;
+      position: fixed;
+      top: 70px;
+      left: -320px;
+      width: 100%;
+      height: 100vh;
+      background: linear-gradient(180deg, #0b0e18 0%, #05060b 100%);
+      border-right: 1px solid rgba(255, 255, 255, 0.08);
+      z-index: 999;
+      transition: left 0.3s ease;
+      overflow-y: auto;
+      padding: 15px 15px 0;
+      margin: 0;
+      max-width: 320px;
+  }
+
+  .meet-sidefilter.mobile-open {
+      left: 0;
+  }  
     }
 
     .meet-profile-link{

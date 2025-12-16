@@ -14,9 +14,15 @@
       </div>
   </div>
   <div class="meet-grid">
+    <div class="nm-mobile-filter-overlay" :class="{ active: mobileFiltersOpen }" @click="closeMobileFilters"></div>
       <!-- Left: Filters -->
-      <div class="meet-panel">
-        <h2>Filters</h2>
+      <div class="meet-panel meet-sidefilter" :class="{ 'mobile-open': mobileFiltersOpen }" >
+        <h2>Filters <button class="nm-close-btn" @click="closeMobileFilters">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
+            </svg>
+          </button></h2>
         <p class="meet-hint">Location, today/date filters, looking for, friends/crush, and age range.</p>
 
         <div class="meet-filter-block">
@@ -99,6 +105,12 @@
       <div class="meet-panel">
         <div class="meet-list-head">
           <div>
+            <button class="nm-btn nm-btn-ghost filters-btn" @click="openMobileFilters" v-show="!mobileFiltersOpen">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M3 4h18v2H3V4zm0 7h18v2H3v-2zm0 7h18v2H3v-2z" />
+                </svg>
+                Filters
+              </button>
             <h2 style="margin-bottom:2px;">Active Meet Events</h2>
             <div class="meet-hint" style="margin:0;">Click a card to open event info.</div>
           </div>
@@ -432,6 +444,30 @@
 </template>
 
 
-<script setup>
+<script setup lang="ts">
+// MOBILE FILTERS
+const mobileFiltersOpen = ref(false);
+const filtersCollapsed = ref(false);
+
+function openMobileFilters() {
+  mobileFiltersOpen.value = true;
+  document.body.classList.add('mobile-filters-open');
+
+  nextTick(() => {
+    const closeBtn = document.querySelector('.nm-close-btn') as HTMLButtonElement | null;
+    if (closeBtn) closeBtn.focus();
+  });
+}
+
+function closeMobileFilters() {
+  mobileFiltersOpen.value = false;
+  document.body.classList.remove('mobile-filters-open');
+
+  const triggerBtn = document.querySelector('.filters-btn') as HTMLButtonElement | null;
+  if (triggerBtn) triggerBtn.focus();
+}  
+function toggleFilters() {
+  filtersCollapsed.value = !filtersCollapsed.value;
+}
     
 </script>
