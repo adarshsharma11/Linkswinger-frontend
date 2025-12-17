@@ -427,7 +427,7 @@
               <div class="d-flex gap-2 flex-wrap">
                 <span v-for="interest in getSexualInterest()" class="badge bg-secondary">{{
                   interest.interest_name }}</span>
-                <button v-if="(getUser()?.interests?.length ?? 0) > 3" @click="openInterest()">More</button>
+                <button class="ls-help-btn-secondary ls-help-submit-btn" v-if="(getUser()?.interests?.length ?? 0) > 3" @click="openInterest()">More</button>
               </div>
             </div>
           </div>
@@ -441,8 +441,8 @@
             <div class="card-body">
               <h5 class="text-white mb-3">Meet Verification</h5>
               <p v-for="verification in verifications">
-              <div v-if="verification.visibility === 'public'"><strong>{{ verification.nick_name
-                  }}:</strong>{{ verification.review }}</div>
+              <div v-if="verification.visibility === 'public'"><button>{{ verification.nick_name
+                  }}:</button>{{ verification.review }}</div>
               <div v-if="verification.visibility === 'friends'"><strong>Verified by {{ verification.profile_type
                   }}</strong></div>
               <div v-if="verification.visibility === 'private'"><strong>Verified by {{ verification.profile_type
