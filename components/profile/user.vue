@@ -425,8 +425,9 @@
             <div class="card-body">
               <h5 class="text-white mb-3">Sexual Interest</h5>
               <div class="d-flex gap-2 flex-wrap">
-                <span v-for="interest in getUser()?.interests" class="badge bg-secondary">{{
+                <span v-for="interest in getSexualInterest()" class="badge bg-secondary">{{
                   interest.interest_name }}</span>
+                <button v-if="(getUser()?.interests?.length ?? 0) > 3" @click="openInterest()">More</button>
               </div>
             </div>
           </div>
@@ -463,7 +464,29 @@
   </Teleport>
   <AcceptDeclineRequestModel :friend_status="friend_status" ref="acceptDeclineRequestModalRef" v-if="toggleRequestModal"
     @close="toggleRequestModal = false" @friends-list="openUsersFriendsList()" @send-request="sendFriendRequest()" />
-  
+
+    <div class="modal fade" id="interestModal" tabindex="-1" aria-labelledby="interestModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-l">
+      <div class="modal-content bg-black">
+        <!-- Modal Header -->
+        <!-- <div class="modal-header">
+          <button type="button" class="msgf-pill" data-bs-dismiss="modal" aria-label="Close">
+            ✕
+          </button>
+        </div> -->
+        <div class="modal-body p-0 h-100">
+           <div class="card bg-black text-white">
+            <div class="card-body">
+              <div class="d-flex gap-2 flex-wrap">
+                <span v-for="interest in getallSexualInterest()" class="badge bg-secondary">{{
+                  interest.interest_name }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
 </template>
 <script setup lang="ts">
@@ -474,6 +497,7 @@ import Swal from 'sweetalert2'
 import { EmojiPicker } from '#components';
 import { Teleport } from 'vue';
 import type { CallsModel } from '~/composables/websocketModels';
+var interestModalSub: any = null
 interface Props {
   user_id: number
 }
@@ -499,7 +523,7 @@ const unread_user_count = ref(0);
 const is_liked = ref(false);
 const is_like_loading = ref(false);
 const toggleRequestModal = ref(false);
-
+const { $bootstrap } = useNuxtApp();
 const friend_status = ref('');
 const is_friend_loading = ref(false);
 
@@ -652,9 +676,15 @@ const fetchfeedCounts = async () => {
 verifications.value = await fetchMeetVerifications() as MeetVerificationsModel.FetchVerifyResponseModel[]
 feedCounts.value = await fetchfeedCounts() as UsersModel.FeedCountResponseModel[]
 
+function openInterest()
+{
+   interestModalSub.show()
+}
 
 onMounted(() => {
 
+
+    interestModalSub = new ($bootstrap as any).Modal(document.getElementById('interestModal'));
   eventBus.on('callDeclineAlert', (eventModel) => {
     showToastError('Call declined')
   })
@@ -701,6 +731,26 @@ function getHeight(): string {
     return feet_inch.feet + 'ft ' + feet_inch.inches + 'in'
   }
 }
+
+function getSexualInterest() : InterestsModel[]
+{
+   if (((getUser()?.interests ?? []).length ?? 0) > 3)
+   {
+return (getUser()?.interests ?? []).slice(0, 3)
+   }
+   return (getUser()?.interests ?? [])
+}
+
+function getallSexualInterest() : InterestsModel[]
+{
+   if (((getUser()?.interests ?? []).length ?? 0) > 3)
+   {
+return (getUser()?.interests ?? []).slice(3, ((getUser()?.interests ?? []).length ?? 0)  )
+   }
+return (getUser()?.interests ?? []).slice(0, 3)
+}
+
+
 function getPartnerHeight(): string {
   let height = getUser()?.partner_height ?? ''
   let height_unit = getUser()?.height_unit ?? 'cm'
