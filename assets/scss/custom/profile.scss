@@ -291,6 +291,54 @@ button#settingsMenuMobile {
       display: block;
       margin-top: 1px;
     }
+.chat-count-badge span {
+    background-color: red;
+    color: #fff !important;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 4px 8px;
+    border-radius: 50px;
+    border: 1px solid rgba(0, 255, 120, 0.9);
+    box-shadow: 0 0 6px rgb(255, 0, 0), 0 0 16px rgb(255, 0, 0);
+    animation: pulse 1.7s infinite;
+    position: absolute;
+    top: -18px;
+    line-height: normal;
+}
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+} 
+
+.block-btn {
+    background-color: transparent;
+    border: none;
+    padding: 0;
+    text-align: center;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+}
+
+.block-btn span {
+    color: #fff;
+    display: block;
+}
+
+.block-btn img {
+    width: 50px;
+    display: block;
+    margin: 0 auto 3px;
+}
+
+.block-user {
+    position: relative;
+    padding-bottom: 80px;
+}    
 .pfr-hm-mn {
     margin: 0 auto;
     width: auto;
@@ -319,7 +367,7 @@ button#settingsMenuMobile {
 }
 .prf-verf-badge {
     justify-content: flex-start !important;
-    margin-bottom: 6px;
+    margin-bottom: 18px;
 }
 .prf-status span.badge {
     order: 1;

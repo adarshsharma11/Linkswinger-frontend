@@ -293,7 +293,7 @@
 
                 <!-- Square red glowing badge behind the icon -->
                 <div class="position-absolute chat-count-badge cursor-pointer">
-                  <span v-if="unread_user_count > 0" style="font-size:12px; font-weight:bold;" class="text-danger">
+                  <span v-if="unread_user_count > 0">
                     {{ unread_user_count }}
                   </span>
                 </div>
@@ -302,8 +302,11 @@
               </div>
 
               <span class="btn-loader" v-if="is_friend_loading"></span>
-              <div class="d-flex flex-column align-items-center cursor-pointer action-itm" @click="friendListTapped()"
+              <div class="d-flex flex-column align-items-center cursor-pointer position-relative action-itm" @click="friendListTapped()"
                 v-if="!is_friend_loading">
+                <div class="position-absolute chat-count-badge cursor-pointer">
+                  <span>1k</span>
+                </div>
                 <img src="/images/badges/animated/50X50px/my-friends.gif" alt="Call" class="badge-icon" />
                 <small>Friends List</small>
               </div>
@@ -313,8 +316,11 @@
                 <img src="/images/badges/animated/50X50px/crush-list.gif" alt="Video Call" class="badge-icon" />
                 <small>{{ isMine() ? 'Crush List' : is_liked ? 'DisLike' : 'Like' }}</small>
               </div>
-              <div class="d-flex flex-column align-items-center cursor-pointer action-itm" v-if="isMine()"
+              <div class="d-flex flex-column align-items-center cursor-pointer position-relative action-itm" v-if="isMine()"
                 @click="openUserList('views')">
+                <div class="position-absolute chat-count-badge cursor-pointer">
+                  <span>10</span>
+                </div>
                 <img src="/images/badges/animated/50X50px/views.gif" alt="Like" class="badge-icon" />
                 <small>Views</small>
               </div>
@@ -456,6 +462,9 @@
             </div>
           </div>
         </div>
+      </div>
+      <div class="block-user">
+        <button class="block-btn action-itm"><img src="/images/badges/animated/150X150px/13.gif"><span>Block User</span></button>
       </div>
     </div>
   </section>
