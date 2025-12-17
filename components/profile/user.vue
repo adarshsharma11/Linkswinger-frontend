@@ -10,7 +10,7 @@
           <div class="col-12 mb-2 d-md-none">
             <div class="dropdown d-flex justify-content-end">
               <button v-if="isMine()" id="settingsMenuMobile"
-                class="btn p-0 border-0 bg-transparent d-flex flex-column align-items-center text-white mr-2 position-relative"
+                class="btn p-0 border-0 bg-transparent d-flex flex-column align-items-center text-white mr-2 position-relative action-itm"
                 data-bs-toggle="dropdown" aria-expanded="false">
 
                 <!-- Red ! badge -->
@@ -111,7 +111,7 @@
                 </li>
               </ul>
               <div class="ml-2">
-                <nuxt-link to="/dashboard" class="d-flex flex-column align-items-center text-white">
+                <nuxt-link to="/dashboard" class="d-flex flex-column align-items-center text-white action-itm">
                   <img src="/images/badges/animated/50X50px/home.gif" alt="Home" class="badge-icon" />
                   <small>Home</small>
                 </nuxt-link>
@@ -124,7 +124,7 @@
         <div class="row align-items-center">
 
           <!-- Left: Avatar + Badge -->
-          <div class="col-12 col-md-3 d-flex justify-content-center justify-content-md-start">
+          <div class="col-3 col-md-3 d-flex flex-wrap justify-content-center justify-content-md-start prf-avtar">
             <div class="d-flex flex-column align-items-center position-relative">
               <div class="position-relative profile-avatar-container">
                 <img :src="getProfilePlaceholder()" alt="Profile" class="rounded-circle mb-2"
@@ -161,12 +161,12 @@
           </div>
 
           <!-- Center: User Info -->
-          <div class="col-12 col-md-6 text-center mt-2">
+          <div class="col-9 col-md-6 text-center mt-2 prf-status">
             <h3 class="mb-2 text-white fs-5 fs-md-4">{{ getUser()?.nick_name }},
               {{ getGender() }} {{ getAge(getUser()?.dob ?? '') }} from
               {{ getUser()?.town ?? '' }}</h3>
             <span class="badge bg-success fs-6">Active</span>
-            <p class="mb-0 mt-2 text-white">{{ getUser()?.profile_status }} <i v-if="isMine() && !is_status_loading"
+            <p class="mb-0 mt-2 text-white text-break">{{ getUser()?.profile_status }} <i v-if="isMine() && !is_status_loading"
                 class="fa fa-pencil text-white fa-lg" @click="editStatus()"></i><span class="btn-loader"
                 v-if="is_status_loading"></span></p>
 
@@ -176,7 +176,7 @@
           <div class="col-md-3 d-none d-md-flex justify-content-center">
             <div class="dropdown">
               <button v-if="isMine()" id="settingsMenu"
-                class="btn p-0 border-0 bg-transparent d-flex flex-column align-items-center text-white position-relative"
+                class="btn p-0 border-0 bg-transparent d-flex flex-column align-items-center text-white position-relative action-itm"
                 data-bs-toggle="dropdown" aria-expanded="false">
 
                 <!-- Red ! badge -->
@@ -278,18 +278,18 @@
         <!-- Second Row: Membership + Actions -->
         <div class="row align-items-center mb-2 mt-2">
           <!-- Left: Membership badges -->
-          <div class="col-12 col-md-3 d-flex justify-content-center justify-content-md-start">
-            <div class="d-flex gap-2 flex-wrap justify-content-center">
-              <img :src="getmembershipIcon()" alt="Elite" class="badge-icon" />
-              <img src="/images/badges/photo-verified.gif" v-if="(getUser()?.is_photo_verified ?? false) === true"
-                alt="Silver" class="badge-icon" />
-            </div>
+            <div class="col-12 col-md-3 d-flex justify-content-center justify-content-md-start prf-verf-badge">
+              <div class="d-flex gap-2 flex-wrap justify-content-center">
+                <img :src="getmembershipIcon()" alt="Elite" class="badge-icon" />
+                <img src="/images/badges/photo-verified.gif" v-if="(getUser()?.is_photo_verified ?? false) === true"
+                  alt="Silver" class="badge-icon" />
+              </div>
           </div>
 
           <!-- Center: Action icons -->
           <div class="col-12 col-md-6">
             <div class="d-flex gap-3 gap-md-4 flex-wrap justify-content-center">
-              <div class="d-flex flex-column align-items-center position-relative" @click="openChat()">
+              <div class="d-flex flex-column align-items-center position-relative action-itm" @click="openChat()">
 
                 <!-- Square red glowing badge behind the icon -->
                 <div class="position-absolute chat-count-badge cursor-pointer">
@@ -297,28 +297,28 @@
                     {{ unread_user_count }}
                   </span>
                 </div>
-                <img src="/images/badges/animated/50X50px/chat.gif" alt="Chat" class="badge-icon" />
+                <img src="/images/badges/animated/50X50px/chat.gif" alt="Chat" class="badge-icon cursor-pointer" />
                 <small>Chat</small>
               </div>
 
               <span class="btn-loader" v-if="is_friend_loading"></span>
-              <div class="d-flex flex-column align-items-center cursor-pointer" @click="friendListTapped()"
+              <div class="d-flex flex-column align-items-center cursor-pointer action-itm" @click="friendListTapped()"
                 v-if="!is_friend_loading">
                 <img src="/images/badges/animated/50X50px/my-friends.gif" alt="Call" class="badge-icon" />
                 <small>Friends List</small>
               </div>
               <span class="btn-loader" v-if="is_like_loading"></span>
-              <div class="d-flex flex-column align-items-center cursor-pointer" @click="crushListTapped()"
+              <div class="d-flex flex-column align-items-center cursor-pointer action-itm" @click="crushListTapped()"
                 v-if="!is_like_loading">
                 <img src="/images/badges/animated/50X50px/crush-list.gif" alt="Video Call" class="badge-icon" />
                 <small>{{ isMine() ? 'Crush List' : is_liked ? 'DisLike' : 'Like' }}</small>
               </div>
-              <div class="d-flex flex-column align-items-center cursor-pointer" v-if="isMine()"
+              <div class="d-flex flex-column align-items-center cursor-pointer action-itm" v-if="isMine()"
                 @click="openUserList('views')">
                 <img src="/images/badges/animated/50X50px/views.gif" alt="Like" class="badge-icon" />
                 <small>Views</small>
               </div>
-              <div class="d-flex flex-column align-items-center cursor-pointer" v-if="isMine()"
+              <div class="d-flex flex-column align-items-center cursor-pointer action-itm" v-if="isMine()"
                 @click="openUserList('nearby')">
                 <img src="/images/badges/animated/50X50px/location.gif" alt="VIP" class="badge-icon" />
                 <small>Nearby</small>
@@ -327,11 +327,13 @@
           </div>
 
           <!-- Right: Empty spacer (desktop only) -->
-          <div class="col-md-3 d-md-block d-none">
-            <nuxt-link to="/dashboard" class="d-flex flex-column align-items-center text-white">
+          <div class="col-md-3 d-md-block text-center d-none">
+            <div class="pfr-hm-mn">
+            <nuxt-link to="/dashboard" class="d-flex flex-column align-items-center text-white action-itm">
               <img src="/images/badges/animated/50X50px/home.gif" alt="Home" class="badge-icon" />
               <small>Home</small>
             </nuxt-link>
+            </div>
           </div>
         </div>
       </div>
@@ -441,8 +443,8 @@
             <div class="card-body">
               <h5 class="text-white mb-3">Meet Verification</h5>
               <p v-for="verification in verifications">
-              <div v-if="verification.visibility === 'public'"><button>{{ verification.nick_name
-                  }}:</button>{{ verification.review }}</div>
+              <div v-if="verification.visibility === 'public'"><strong>{{ verification.nick_name
+                  }}:</strong>{{ verification.review }}</div>
               <div v-if="verification.visibility === 'friends'"><strong>Verified by {{ verification.profile_type
                   }}</strong></div>
               <div v-if="verification.visibility === 'private'"><strong>Verified by {{ verification.profile_type

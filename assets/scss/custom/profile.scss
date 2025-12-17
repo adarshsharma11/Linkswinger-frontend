@@ -291,5 +291,66 @@ button#settingsMenuMobile {
       display: block;
       margin-top: 1px;
     }
+.pfr-hm-mn {
+    margin: 0 auto;
+    width: auto;
+    display: inline-block;
+}    
+.action-itm {
+    border: 1px solid transparent !important;
+    border-radius: 5px;
+    padding: 2px !important;
+}    
+.action-itm:hover {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border-color: #e83c59 !important;
+}
+@media (max-width:767px){
+ .prf-status h3 {text-align: left;font-size: 16px !important;order: 2;width: 100%;}
+
+.prf-status {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 !important;
+}
+.prf-verf-badge .badge-icon {
+    width: 22px;
+    height: 22px;
+}
+.prf-verf-badge {
+    justify-content: flex-start !important;
+    margin-bottom: 6px;
+}
+.prf-status span.badge {
+    order: 1;
+    margin-bottom: 10px;
+    font-size: 14px !important;
+}
+
+.prf-status p {
+    order: 3;
+    margin: 0 0 5px !important;
+}
+
+.prf-avtar span.badge {
+    display: none;
+}
+
+.prf-avtar .profile-avatar-container img {
+    width: 70px !important;
+    height: 70px !important;
+}
+.profile-edit-btn i, .profile-remove-btn i {
+    font-size: 16px;
+}
+
+.profile-edit-btn {
+    right: -8px;
+}
+
+.profile-remove-btn {
+    right: -8px;
+} 
+}    
 
 
