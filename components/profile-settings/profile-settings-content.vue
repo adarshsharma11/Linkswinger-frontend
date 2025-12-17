@@ -12,6 +12,7 @@
             <a href="#account" data-route="account" class="text-white" @click.prevent="setActiveNav('account')" :class="{ active: activeNav === 'account' }">Account</a>
             <a href="#visibility" data-route="visibility" @click.prevent="setActiveNav('visibility')" :class="{ active: activeNav === 'visibility' }" class="text-white">Visibility</a>
             <a href="#privacy-safety" data-route="privacy-safety" @click.prevent="setActiveNav('privacy-safety')" :class="{ active: activeNav === 'privacy-safety' }" class="text-white">Privacy & Safety</a>
+            <a href="#block-list" data-route="block-list" @click.prevent="setActiveNav('block-list')" :class="{ active: activeNav === 'block-list' }" class="text-white">Block List</a>
             <a href="#messaging" data-route="messaging" @click.prevent="setActiveNav('messaging')" :class="{ active: activeNav === 'messaging' }" class="text-white">Messaging</a>
             <a href="#notifications" data-route="notifications" @click.prevent="setActiveNav('notifications')" :class="{ active: activeNav === 'notifications' }" class="text-white">Notifications</a>
             <a href="#verification" data-route="verification" @click.prevent="setActiveNav('verification')" :class="{ active: activeNav === 'verification' }" class="text-white">Verification</a>
@@ -143,6 +144,35 @@
                   </div>
                 </div>
 
+                <div class="py-3">
+                  <label class="font-medium">Verification status</label>
+                  <div class="mt-2 d-flex align-items-center gap-2">
+                    <span class="green-tag px-2 py-1">Unverified</span>
+                    <button class="btn btn-primary glow-green">Start verification</button>
+                  </div>
+                </div>
+                
+              </div>
+          </section>
+          <section id="view-block-list" class="pro-tab" :hidden="activeNav !== 'block-list'">
+              <div class="tab-pannel">
+              <h2 class="text-xl font-semibold mb-4"><button class="back-btn btn" v-if="isMobile" @click="handleBack">← Back</button> Block List</h2>
+                <div class="py-3 border-b border-white/5">
+                  <label class="font-medium">Who can comment on my posts/media</label>
+                  <select class="mt-2 w-full px-3 py-2">
+                    <option>Everyone</option>
+                    <option>Friends</option>
+                    <option>Nobody</option>
+                  </select>
+                </div>
+                <div class="d-flex align-items-center justify-content-between py-3 border-b">
+                  <div class="vs-left">
+                    <div class="font-medium">Hide me from “Looked at me” lists</div>
+                  </div>
+                  <div class="vs-toggle">
+                    <input type="checkbox" class="switch">
+                  </div>
+                </div>
                 <div class="py-3">
                   <label class="font-medium">Verification status</label>
                   <div class="mt-2 d-flex align-items-center gap-2">
