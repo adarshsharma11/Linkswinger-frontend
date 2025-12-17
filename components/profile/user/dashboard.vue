@@ -84,38 +84,7 @@
       <main class="dashboard-content">
         <!-- FEED / HOME -->
         <section id="view-home" :hidden="activeNav !== 'home'">
-          <div class="dashboard-card glow">
-            <h2 class="text-white">Recently Uploaded</h2>
-            <div class="grid">
-              <div class="media" />
-              <div class="media" />
-              <div class="media" />
-            </div>
-          </div>
-
-          <div class="dashboard-card mt-4">
-            <div class="dash-row" style="margin-bottom: 12px;">
-              <h2 class="text-white">Suggested Profiles</h2>
-              <a href="#search" class="muted text-white" @click.prevent="setActiveNav('search')">See all →</a>
-            </div>
-            <div class="list">
-              <div class="item">
-                <div class="avatar" />
-                <div style="flex:1; font-size: 13px;" class="text-white">Alex & Sam • 2 km • Verified ✅</div>
-                <button class="dash-button" style="font-size: 12px; padding: 6px 10px;">Message</button>
-              </div>
-              <div class="item">
-                <div class="avatar" />
-                <div style="flex:1; font-size: 13px;" class="text-white">Jess • 5 km • Online 🟢</div>
-                <button class="dash-button" style="font-size: 12px; padding: 6px 10px;">Call</button>
-              </div>
-              <div class="item">
-                <div class="avatar" />
-                <div style="flex:1; font-size: 13px;" class="text-white">D & M • 12 km • New ✨</div>
-                <button class="dash-button" style="font-size: 12px; padding: 6px 10px;">Message</button>
-              </div>
-            </div>
-          </div>
+          <HomeTab />
         </section>
 
         <section id="view-list" :hidden="activeNav !== 'userlist'">
@@ -352,17 +321,7 @@
 
         <!-- NOTIFICATIONS -->
         <section id="view-notifications" :hidden="activeNav !== 'notifications'">
-          <div class="dashboard-card glow">
-            <h2 class="text-white" style="margin-bottom: 16px;">Notifications</h2>
-            <ul style="padding-left: 20px; line-height: 1.6;">
-              <li class="text-white" style="margin-bottom: 8px;">User X liked your photo.</li>
-              <li class="text-white" style="margin-bottom: 8px;">New message from User Y.</li>
-            </ul>
-            <!-- Empty state -->
-            <div v-if="false" class="empty-state">
-              <p class="text-white">No new notifications.</p>
-            </div>
-          </div>
+         <NotificationTab />
         </section>
 
         <!-- PROFILE -->
@@ -634,6 +593,8 @@ import 'vue-multiselect/dist/vue-multiselect.css';
 import type { CallsModel, LastSeenModel } from '~/composables/websocketModels';
 import Swal from 'sweetalert2'
 import UserCard from '~/components/profile/user/UserCard.vue';
+import NotificationTab from './NotificationTab.vue';
+import HomeTab from './HomeTab.vue';
 const id_store = idStore()
 const route = useRoute()
 const router = useRouter()

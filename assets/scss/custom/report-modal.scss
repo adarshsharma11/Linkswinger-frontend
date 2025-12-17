@@ -1,0 +1,160 @@
+/* Overlay */
+.rm-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+   top: 50px;
+}
+
+/* Modal */
+.rm-modal {
+  width: 520px;
+  max-width: 95vw;
+  background: #111827;
+  border-radius: 12px;
+  border: 1px solid #1f2937;
+  color: #e5e7eb;
+  box-shadow: 0 20px 50px rgba(0,0,0,.7);
+  overflow: hidden;
+}
+
+/* Header */
+.rm-header {
+  padding: 14px 18px;
+  background: linear-gradient(to right, #3b0711, #5a0b15);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.rm-header h2 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.rm-close {
+  background: transparent;
+  border: none;
+  color: #f9fafb;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+/* Body */
+.rm-body {
+  padding: 18px;
+}
+
+.rm-subtitle {
+  margin: 0 0 10px;
+  font-size: .85rem;
+  color: #9ca3af;
+}
+
+.rm-warning {
+  margin-bottom: 16px;
+  padding: 10px 12px;
+  font-size: .8rem;
+  border-radius: 8px;
+  background: rgba(220,38,38,.08);
+  border: 1px solid rgba(220,38,38,.3);
+  color: #fecaca;
+}
+
+.rm-group {
+  margin-bottom: 16px;
+}
+
+.rm-label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: .85rem;
+  color: #d1d5db;
+}
+
+/* Reasons */
+.rm-reasons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px 18px;
+}
+
+.rm-option {
+  font-size: .8rem;
+  display: flex;
+  gap: 6px;
+  align-items: flex-start;
+  cursor: pointer;
+}
+
+/* Textarea */
+.rm-textarea {
+  width: 100%;
+  border-radius: 8px;
+  border: 1px solid #374151;
+  background: #020617;
+  color: #e5e7eb;
+  padding: 8px 10px;
+  font-size: .85rem;
+  resize: vertical;
+  min-height: 90px;
+}
+
+.rm-textarea:focus {
+  outline: none;
+  border-color: #f97316;
+}
+
+.rm-helper {
+  margin-top: 6px;
+  font-size: .75rem;
+  color: #9ca3af;
+}
+
+/* Footer */
+.rm-footer {
+  padding: 12px 18px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  background: #020617;
+}
+
+.rm-btn {
+  border-radius: 8px;
+  padding: 7px 16px;
+  font-size: .85rem;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.rm-secondary {
+  background: #4b5563;
+  color: #e5e7eb;
+}
+
+.rm-secondary:hover {
+  background: #6b7280;
+}
+
+.rm-danger {
+  background: #ef4444;
+  color: #f9fafb;
+}
+
+.rm-danger:hover {
+  background: #f97373;
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  .rm-reasons {
+    grid-template-columns: 1fr;
+  }
+}

@@ -60,7 +60,52 @@
             <div v-else-if="block.type === 'coming'" class="ls-help-coming-soon" v-html="block.text"></div>
           </div>
 
-          <button v-if="s.cta" class="ls-help-btn-secondary" type="button">{{ s.cta }}</button>
+          <button v-if="s.cta && !s.showForm" class="ls-help-btn-secondary" type="button">{{ s.cta }}</button>
+          
+          <!-- Contact Form for Support Section -->
+          <div v-if="s.showForm" class="ls-help-contact-form">
+            <div v-if="!formSubmitted" class="ls-help-form-container">
+              <div class="ls-help-form-group">
+                <label for="subject" class="ls-help-form-label">Subject</label>
+                <input 
+                  id="subject"
+                  v-model="formData.subject" 
+                  type="text" 
+                  class="ls-help-form-input"
+                  placeholder="Enter your subject"
+                  required
+                >
+              </div>
+              
+              <div class="ls-help-form-group">
+                <label for="message" class="ls-help-form-label">Message</label>
+                <textarea 
+                  id="message"
+                  v-model="formData.message" 
+                  class="ls-help-form-textarea"
+                  placeholder="Type your message here..."
+                  rows="5"
+                  required
+                ></textarea>
+              </div>
+              
+              <button 
+                @click="handleSubmit" 
+                :disabled="isSubmitting || !formData.subject.trim() || !formData.message.trim()"
+                class="ls-help-btn-secondary ls-help-submit-btn"
+                type="button"
+              >
+                {{ isSubmitting ? 'Sending...' : 'Send Message' }}
+              </button>
+            </div>
+            
+            <div v-if="formSubmitted" class="ls-help-success-message">
+              <div class="ls-help-success-icon">✓</div>
+              <h3>Message Sent!</h3>
+              <p>Your message has been sent to the admin team. They will get back to you soon.</p>
+            </div>
+          </div>
+          
           <div v-if="s.hint" class="ls-help-hint" v-html="s.hint"></div>
         </section>
       </main>
@@ -261,13 +306,20 @@ const sections = [
       ] }
     ],
     cta: 'Message admin',
-    hint: 'When you click <strong>Message admin</strong>, a pop-up window will appear where you can choose a subject and type your message to the admin team.'
+    hint: 'When you click <strong>Message admin</strong>, a pop-up window will appear where you can choose a subject and type your message to the admin team.',
+    showForm: true
   }
 ]
 
 const activeSection = ref('section1')
 const showContent = ref(false)
 const isMobile = ref(false)
+const formData = ref({
+  subject: '',
+  message: ''
+})
+const formSubmitted = ref(false)
+const isSubmitting = ref(false)
 
 function openSection(id) {
   activeSection.value = id
@@ -276,6 +328,27 @@ function openSection(id) {
 
 function closeContent() {
   showContent.value = false
+}
+
+function handleSubmit() {
+  if (!formData.value.subject.trim() || !formData.value.message.trim()) {
+    return
+  }
+  
+  isSubmitting.value = true
+  
+  // Simulate form submission
+  setTimeout(() => {
+    formSubmitted.value = true
+    isSubmitting.value = false
+    
+    // Reset form after 3 seconds
+    setTimeout(() => {
+      formData.value.subject = ''
+      formData.value.message = ''
+      formSubmitted.value = false
+    }, 3000)
+  }, 1000)
 }
 
 // responsive detection
