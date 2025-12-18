@@ -456,8 +456,11 @@
                 <button @click="openUserProfile(verification)">
                   {{ verification.nick_name }}:
                 </button>
-                <span>
+                <span v-if="(verification.review?.length ?? 0) > 70">
                   {{ verification.isExpanded ? verification.review : (verification.review ?? '').slice(0, 70) + '...' }}
+                </span>
+                <span v-if="(verification.review?.length ?? 0) <= 70">
+                  {{ verification.review}}
                 </span>
                 <button v-if="(verification.review ?? '').length > 70" @click="verification.isExpanded = !verification.isExpanded" class="more-less-btn">
                   {{ verification.isExpanded ? 'Less' : 'More' }}
