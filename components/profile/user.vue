@@ -460,16 +460,17 @@
                   {{ verification.isExpanded ? verification.review : (verification.review ?? '').slice(0, 70) + '...' }}
                 </span>
                 <span v-if="(verification.review?.length ?? 0) <= 70">
-                  {{ verification.review}}
+                  {{ verification.review }}
                 </span>
-                <button v-if="(verification.review ?? '').length > 70" @click="verification.isExpanded = !verification.isExpanded" class="more-less-btn">
+                <button v-if="(verification.review ?? '').length > 70"
+                  @click="verification.isExpanded = !verification.isExpanded" class="more-less-btn">
                   {{ verification.isExpanded ? 'Less' : 'More' }}
                 </button>
               </div>
               <div v-if="verification.visibility === 'friends'"><strong>Verified by {{ verification.profile_type
-                  }}</strong></div>
+              }}</strong></div>
               <div v-if="verification.visibility === 'private'"><strong>Verified by {{ verification.profile_type
-                  }}</strong></div>
+              }}</strong></div>
               </p>
               <button class="ls-help-btn-secondary ls-help-submit-btn" v-if="verifications.length > 3"
                 @click="openVerifications()">More</button>
@@ -481,8 +482,9 @@
         </div>
       </div>
       <div class="block-user" v-if="!isMine()">
-        <button class="block-btn action-itm"><img src="/images/badges/animated/150X150px/13.gif"><span>Block
-            User</span></button>
+        <button class="block-btn action-itm" @click="blockUser()" v-if="!is_block_loading"><img
+            src="/images/badges/animated/150X150px/13.gif"><span>{{is_blocked ? 'UnBlock User' : 'Block User'}}</span></button>
+        <span class="btn-loader" v-if="is_block_loading"></span>
       </div>
     </div>
   </section>
@@ -526,11 +528,11 @@
             <p v-for="verification in getallVerifications()">
             <div v-if="verification.visibility === 'public'"><button @click="openUserProfile(verification)">{{
               verification.nick_name
-                }}:</button>{{ verification.review }}</div>
+            }}:</button>{{ verification.review }}</div>
             <div v-if="verification.visibility === 'friends'"><strong>Verified by {{ verification.profile_type
-            }}</strong></div>
+                }}</strong></div>
             <div v-if="verification.visibility === 'private'"><strong>Verified by {{ verification.profile_type
-            }}</strong></div>
+                }}</strong></div>
             </p>
           </div>
         </div>
@@ -577,8 +579,18 @@ const toggleRequestModal = ref(false);
 const { $bootstrap } = useNuxtApp();
 const friend_status = ref('');
 const is_friend_loading = ref(false);
+const is_block_loading = ref(false);
+const is_blocked = ref(false);
 
 if (isMine() === false) {
+  const goBackOrRedirect = async () => {
+  if (import.meta.client && window.history.length > 1) {
+    window.history.back()
+  } else {
+    await navigateTo('/profile')
+  }
+}
+
   const fetchUserDetails = async () => {
     const api_url = getUrl(RequestURL.getProfileDetails);
     const { data: response, error: option_error } = await useFetch<SuccessError<UsersModel.ProfileDetailsResponseModel>>(
@@ -586,6 +598,7 @@ if (isMine() === false) {
       {
         method: "POST",
         body: {
+          login_id: login_store.getUserDetails?.user_id ?? 0,
           user_id: Number(props.user_id ?? 0),
         },
         headers: {
@@ -596,6 +609,10 @@ if (isMine() === false) {
     if (response.value?.success) {
       userDetails.value = response.value.response;
     }
+     else {
+    // ✅ Safe navigation
+    await goBackOrRedirect() // or any route
+  }
   };
   fetchUserDetails();
 
@@ -654,6 +671,25 @@ if (isMine() === false) {
     friend_status.value = response.value?.response?.friend_status ?? ''
   };
   friendStatus();
+
+  const checkBlockStatus = async () => {
+    const api_url = getUrl(RequestURL.checkBlockStatus);
+    const { data: response, error: option_error } = await useFetch<SuccessError<UsersModel.ProfileDetailsResponseModel>>(
+      api_url,
+      {
+        method: "POST",
+        body: {
+          login_id: user_store.getLoginId,
+          user_id: Number(props.user_id ?? 0)
+        },
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    is_blocked.value = response.value?.response?.is_blocked ?? false
+  };
+  checkBlockStatus();
 }
 if (isMine() === true) {
   const fetchReadCount = async () => {
@@ -740,6 +776,64 @@ function openInterest() {
 function openVerifications() {
   verificationModalSub.show()
 }
+
+async function blockUser() {
+  if (is_blocked.value) {
+    is_block_loading.value = true
+    const api_url = getUrl(RequestURL.userUnblock);
+    let response = await $fetch<SuccessError<ChatsModel.ChatResponseModel>>(
+      api_url,
+      {
+        method: "POST",
+        body: {
+          blocker_id: login_store.getUserDetails?.user_id ?? 0,
+          blocked_id: Number(props.user_id ?? 0),
+        },
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    is_block_loading.value = false
+
+    if (response.success) {
+       is_blocked.value = false
+      showToastSuccess(response.message)
+    }
+    else {
+      showToastError(response.message)
+    }
+  }
+  else {
+    is_block_loading.value = true
+    const api_url = getUrl(RequestURL.userBlock);
+    let response = await $fetch<SuccessError<ChatsModel.ChatResponseModel>>(
+      api_url,
+      {
+        method: "POST",
+        body: {
+          blocker_id: login_store.getUserDetails?.user_id ?? 0,
+          blocked_id: Number(props.user_id ?? 0),
+        },
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    is_block_loading.value = false
+
+    if (response.success) {
+      is_blocked.value = true
+      showToastSuccess(response.message)
+    }
+    else {
+      showToastError(response.message)
+    }
+  }
+
+
+}
+
 
 onMounted(() => {
 
@@ -904,6 +998,7 @@ async function validateCall(code: string, is_video: boolean) {
     }
   });
 }
+
 
 function editStatus() {
   Swal.fire({

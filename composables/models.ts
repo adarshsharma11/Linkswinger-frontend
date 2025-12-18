@@ -74,7 +74,11 @@ export enum RequestURL {
   fetchFriends  = "/fetchFriends",
   acceptDeclineFriend = "/acceptDeclineFriend",
   fetchPhotoVerifications = "/fetchPhotoVerifications",
-  removeFriend = "/removeFriend"
+  removeFriend = "/removeFriend",
+  userBlock = "/userBlock",
+  userUnblock = "/userUnblock",
+  checkBlockStatus = "/checkBlockStatus"
+  
 }
 
 
@@ -441,6 +445,8 @@ export namespace UsersModel {
     partner_smoking? : string
     partner_tattoos? : string
     partner_piercings? : string
+
+    is_blocked?:boolean
 
   }
 
