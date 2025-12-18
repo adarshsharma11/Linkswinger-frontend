@@ -52,7 +52,8 @@
                       style="width: 30px; height: 30px; object-fit: cover" />
                     <span class="text-white">Verify Photo</span>
                   </button> -->
-                  <button class="dropdown-item text-white d-flex align-items-center" @click="navigateTo(`/photo-verification`)" >
+                  <button class="dropdown-item text-white d-flex align-items-center"
+                    @click="navigateTo(`/photo-verification`)">
                     <img src="/images/badges/animated/50X50px/verified.gif" alt="Verify" class="rounded-circle me-2"
                       style="width: 30px; height: 30px; object-fit: cover" />
                     <span class="text-white">Verify Photo</span>
@@ -166,9 +167,9 @@
               {{ getGender() }} {{ getAge(getUser()?.dob ?? '') }} from
               {{ getUser()?.town ?? '' }}</h3>
             <span class="badge bg-success fs-6">Active</span>
-            <p class="mb-0 mt-2 text-white text-break">{{ getUser()?.profile_status }} <i v-if="isMine() && !is_status_loading"
-                class="fa fa-pencil text-white fa-lg" @click="editStatus()"></i><span class="btn-loader"
-                v-if="is_status_loading"></span></p>
+            <p class="mb-0 mt-2 text-white text-break">{{ getUser()?.profile_status }} <i
+                v-if="isMine() && !is_status_loading" class="fa fa-pencil text-white fa-lg"
+                @click="editStatus()"></i><span class="btn-loader" v-if="is_status_loading"></span></p>
 
           </div>
 
@@ -212,7 +213,8 @@
                   </button>
                 </li>
                 <li>
-                  <button class="dropdown-item text-white d-flex align-items-center" @click="navigateTo(`/photo-verification`)">
+                  <button class="dropdown-item text-white d-flex align-items-center"
+                    @click="navigateTo(`/photo-verification`)">
                     <img src="/images/badges/animated/50X50px/verified.gif" alt="Verify" class="rounded-circle me-2"
                       style="width: 30px; height: 30px; object-fit: cover" />
                     <span class="text-white">Verify Photo</span>
@@ -278,12 +280,12 @@
         <!-- Second Row: Membership + Actions -->
         <div class="row align-items-center mb-2 mt-2">
           <!-- Left: Membership badges -->
-            <div class="col-12 col-md-3 d-flex justify-content-center justify-content-md-start prf-verf-badge">
-              <div class="d-flex gap-2 flex-wrap justify-content-center">
-                <img :src="getmembershipIcon()" alt="Elite" class="badge-icon" />
-                <img src="/images/badges/photo-verified.gif" v-if="(getUser()?.is_photo_verified ?? false) === true"
-                  alt="Silver" class="badge-icon" />
-              </div>
+          <div class="col-12 col-md-3 d-flex justify-content-center justify-content-md-start prf-verf-badge">
+            <div class="d-flex gap-2 flex-wrap justify-content-center">
+              <img :src="getmembershipIcon()" alt="Elite" class="badge-icon" />
+              <img src="/images/badges/photo-verified.gif" v-if="(getUser()?.is_photo_verified ?? false) === true"
+                alt="Silver" class="badge-icon" />
+            </div>
           </div>
 
           <!-- Center: Action icons -->
@@ -302,8 +304,8 @@
               </div>
 
               <span class="btn-loader" v-if="is_friend_loading"></span>
-              <div class="d-flex flex-column align-items-center cursor-pointer position-relative action-itm" @click="friendListTapped()"
-                v-if="!is_friend_loading">
+              <div class="d-flex flex-column align-items-center cursor-pointer position-relative action-itm"
+                @click="friendListTapped()" v-if="!is_friend_loading">
                 <div class="position-absolute chat-count-badge cursor-pointer">
                   <span>1k</span>
                 </div>
@@ -316,8 +318,8 @@
                 <img src="/images/badges/animated/50X50px/crush-list.gif" alt="Video Call" class="badge-icon" />
                 <small>{{ isMine() ? 'Crush List' : is_liked ? 'DisLike' : 'Like' }}</small>
               </div>
-              <div class="d-flex flex-column align-items-center cursor-pointer position-relative action-itm" v-if="isMine()"
-                @click="openUserList('views')">
+              <div class="d-flex flex-column align-items-center cursor-pointer position-relative action-itm"
+                v-if="isMine()" @click="openUserList('views')">
                 <div class="position-absolute chat-count-badge cursor-pointer">
                   <span>10</span>
                 </div>
@@ -335,10 +337,10 @@
           <!-- Right: Empty spacer (desktop only) -->
           <div class="col-md-3 d-md-block text-center d-none">
             <div class="pfr-hm-mn">
-            <nuxt-link to="/dashboard" class="d-flex flex-column align-items-center text-white action-itm">
-              <img src="/images/badges/animated/50X50px/home.gif" alt="Home" class="badge-icon" />
-              <small>Home</small>
-            </nuxt-link>
+              <nuxt-link to="/dashboard" class="d-flex flex-column align-items-center text-white action-itm">
+                <img src="/images/badges/animated/50X50px/home.gif" alt="Home" class="badge-icon" />
+                <small>Home</small>
+              </nuxt-link>
             </div>
           </div>
         </div>
@@ -435,7 +437,8 @@
               <div class="d-flex gap-2 flex-wrap">
                 <span v-for="interest in getSexualInterest()" class="badge bg-secondary">{{
                   interest.interest_name }}</span>
-                <button class="ls-help-btn-secondary ls-help-submit-btn" v-if="(getUser()?.interests?.length ?? 0) > 3" @click="openInterest()">More</button>
+                <button class="ls-help-btn-secondary ls-help-submit-btn" v-if="(getUser()?.interests?.length ?? 0) > 3"
+                  @click="openInterest()">More</button>
               </div>
             </div>
           </div>
@@ -448,14 +451,25 @@
           <div class="card bg-black text-white">
             <div class="card-body">
               <h5 class="text-white mb-3">Meet Verification</h5>
-              <p v-for="verification in verifications">
-              <div v-if="verification.visibility === 'public'"><strong>{{ verification.nick_name
-                  }}:</strong>{{ verification.review }}</div>
+              <p v-for="verification in getVerifications()">
+              <div v-if="verification.visibility === 'public'">
+                <button @click="openUserProfile(verification)">
+                  {{ verification.nick_name }}:
+                </button>
+                <span>
+                  {{ verification.isExpanded ? verification.review : (verification.review ?? '').slice(0, 70) + '...' }}
+                </span>
+                <button v-if="(verification.review ?? '').length > 70" @click="verification.isExpanded = !verification.isExpanded" class="more-less-btn">
+                  {{ verification.isExpanded ? 'Less' : 'More' }}
+                </button>
+              </div>
               <div v-if="verification.visibility === 'friends'"><strong>Verified by {{ verification.profile_type
                   }}</strong></div>
               <div v-if="verification.visibility === 'private'"><strong>Verified by {{ verification.profile_type
                   }}</strong></div>
               </p>
+              <button class="ls-help-btn-secondary ls-help-submit-btn" v-if="verifications.length > 3"
+                @click="openVerifications()">More</button>
               <button v-if="isMine() === false && is_verified === false && is_verify_loading === false"
                 class="btn btn-sm btn-outline-light mt-2" @click="showVerificationAlert()">Verify</button>
               <span class="btn-loader" v-if="is_verify_loading"></span>
@@ -464,7 +478,8 @@
         </div>
       </div>
       <div class="block-user">
-        <button class="block-btn action-itm"><img src="/images/badges/animated/150X150px/13.gif"><span>Block User</span></button>
+        <button class="block-btn action-itm"><img src="/images/badges/animated/150X150px/13.gif"><span>Block
+            User</span></button>
       </div>
     </div>
   </section>
@@ -476,7 +491,7 @@
   <AcceptDeclineRequestModel :friend_status="friend_status" ref="acceptDeclineRequestModalRef" v-if="toggleRequestModal"
     @close="toggleRequestModal = false" @friends-list="openUsersFriendsList()" @send-request="sendFriendRequest()" />
 
-    <div class="modal fade" id="interestModal" tabindex="-1" aria-labelledby="interestModal" aria-hidden="true">
+  <div class="modal fade" id="interestModal" tabindex="-1" aria-labelledby="interestModal" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-l">
       <div class="modal-content bg-black">
         <!-- Modal Header -->
@@ -486,13 +501,34 @@
           </button>
         </div> -->
         <div class="modal-body p-0 h-100">
-           <div class="card bg-black text-white">
+          <div class="card bg-black text-white">
             <div class="card-body">
               <div class="d-flex gap-2 flex-wrap">
                 <span v-for="interest in getallSexualInterest()" class="badge bg-secondary">{{
                   interest.interest_name }}</span>
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="verificationModal" tabindex="-1" aria-labelledby="verificationModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-l">
+      <div class="modal-content bg-black">
+        <div class="card bg-black text-white">
+          <div class="card-body">
+            <h5 class="text-white mb-3">Meet Verification</h5>
+            <p v-for="verification in getallVerifications()">
+            <div v-if="verification.visibility === 'public'"><button @click="openUserProfile(verification)">{{
+              verification.nick_name
+                }}:</button>{{ verification.review }}</div>
+            <div v-if="verification.visibility === 'friends'"><strong>Verified by {{ verification.profile_type
+            }}</strong></div>
+            <div v-if="verification.visibility === 'private'"><strong>Verified by {{ verification.profile_type
+            }}</strong></div>
+            </p>
           </div>
         </div>
       </div>
@@ -509,6 +545,7 @@ import { EmojiPicker } from '#components';
 import { Teleport } from 'vue';
 import type { CallsModel } from '~/composables/websocketModels';
 var interestModalSub: any = null
+var verificationModalSub: any = null
 interface Props {
   user_id: number
 }
@@ -687,15 +724,27 @@ const fetchfeedCounts = async () => {
 verifications.value = await fetchMeetVerifications() as MeetVerificationsModel.FetchVerifyResponseModel[]
 feedCounts.value = await fetchfeedCounts() as UsersModel.FeedCountResponseModel[]
 
-function openInterest()
-{
-   interestModalSub.show()
+
+async function openUserProfile(verify: MeetVerificationsModel.FetchVerifyResponseModel) {
+  verificationModalSub.hide()
+  await navigateTo(`/user-profile/${verify.from_id ?? 0}`)
+}
+
+function openInterest() {
+  interestModalSub.show()
+}
+
+function openVerifications() {
+  verificationModalSub.show()
 }
 
 onMounted(() => {
 
 
-    interestModalSub = new ($bootstrap as any).Modal(document.getElementById('interestModal'));
+  interestModalSub = new ($bootstrap as any).Modal(document.getElementById('interestModal'));
+  verificationModalSub = new ($bootstrap as any).Modal(document.getElementById('verificationModal'));
+
+
   eventBus.on('callDeclineAlert', (eventModel) => {
     showToastError('Call declined')
   })
@@ -743,22 +792,31 @@ function getHeight(): string {
   }
 }
 
-function getSexualInterest() : InterestsModel[]
-{
-   if (((getUser()?.interests ?? []).length ?? 0) > 3)
-   {
-return (getUser()?.interests ?? []).slice(0, 3)
-   }
-   return (getUser()?.interests ?? [])
+function getVerifications(): MeetVerificationsModel.FetchVerifyResponseModel[] {
+  if ((verifications.value.length ?? 0) > 3) {
+    return verifications.value.slice(0, 3)
+  }
+  return verifications.value
+}
+function getallVerifications(): MeetVerificationsModel.FetchVerifyResponseModel[] {
+  if ((verifications.value.length ?? 0) > 3) {
+    return verifications.value.slice(3, (verifications.value.length ?? 0))
+  }
+  return verifications.value.slice(0, 3)
 }
 
-function getallSexualInterest() : InterestsModel[]
-{
-   if (((getUser()?.interests ?? []).length ?? 0) > 3)
-   {
-return (getUser()?.interests ?? []).slice(3, ((getUser()?.interests ?? []).length ?? 0)  )
-   }
-return (getUser()?.interests ?? []).slice(0, 3)
+function getSexualInterest(): InterestsModel[] {
+  if (((getUser()?.interests ?? []).length ?? 0) > 3) {
+    return (getUser()?.interests ?? []).slice(0, 3)
+  }
+  return (getUser()?.interests ?? [])
+}
+
+function getallSexualInterest(): InterestsModel[] {
+  if (((getUser()?.interests ?? []).length ?? 0) > 3) {
+    return (getUser()?.interests ?? []).slice(3, ((getUser()?.interests ?? []).length ?? 0))
+  }
+  return (getUser()?.interests ?? []).slice(0, 3)
 }
 
 

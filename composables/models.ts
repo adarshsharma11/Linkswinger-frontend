@@ -704,6 +704,7 @@ export namespace MeetVerificationsModel {
     received_count?: number
 
     is_verify_loading?: boolean
+    isExpanded?:boolean
 
   }
 }
