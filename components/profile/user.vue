@@ -480,7 +480,7 @@
           </div>
         </div>
       </div>
-      <div class="block-user">
+      <div class="block-user" v-if="!isMine()">
         <button class="block-btn action-itm"><img src="/images/badges/animated/150X150px/13.gif"><span>Block
             User</span></button>
       </div>
