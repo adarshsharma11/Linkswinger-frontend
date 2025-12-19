@@ -781,7 +781,7 @@ async function createMeetEvent() {
     })
     is_event_loading.value = false
 
-    console.log(response)
+ 
     // success UX
     if (response.success) {
       resetMeetEvent()
