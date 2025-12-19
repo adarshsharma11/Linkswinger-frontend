@@ -400,11 +400,11 @@
             <div class="meet-inline">
               <div>
                 <span class="meet-label">Min</span>
-                <input type="number" id="createMinAge" min="18" max="99" value="18" v-model.number="minAge">
+                <input type="number" id="createMinAge" min="18" max="99"  v-model.number="minAge">
               </div>
               <div>
                 <span class="meet-label">Max</span>
-                <input type="number" id="createMaxAge" min="18" max="99" value="99" v-model.number="maxAge">
+                <input type="number" id="createMaxAge" min="18" max="99"  v-model.number="maxAge">
               </div>
             </div>
           </div>
