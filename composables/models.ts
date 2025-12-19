@@ -789,6 +789,119 @@ export namespace ProfileViewsModel {
     viewed_at?: string;
   }
 }
+export namespace MeetEventsModel {
+
+  // =========================
+  // Create Meet Event
+  // =========================
+
+  export class CreateRequestModel {
+    user_id?: number
+
+    meet_date?: string        // ISO-8601 (UTC preferred)
+    meet_type?: string
+    description?: string
+    meet_photo?: string
+
+    looking_for?: string[]
+    min_age?: number
+    max_age?: number
+
+    town_id?: number
+    radius?: number           // max 40
+
+    can_comment?: boolean
+    can_like?: boolean
+  }
+
+  export class CreateResponseModel {
+    // intentionally empty
+  }
+
+  // =========================
+  // Fetch Meet Events List
+  // =========================
+
+  export class ListRequestModel {
+    user_id?: number          // viewer id
+    page?: number
+
+    latitude?: number         // optional
+    longitude?: number        // optional
+
+    looking_for?: string[]
+    min_age?: number
+    max_age?: number
+
+    friends_only?: boolean
+    crush_only?: boolean
+  }
+
+  export class ListResponseModel {
+    meet_event_id?: number
+    user_id?: number
+
+    meet_date?: string
+    meet_type?: string
+    description?: string
+    meet_photo?: string
+
+    looking_for?: string[]
+    min_age?: number
+    max_age?: number
+
+    town_id?: number
+    radius?: number
+
+    can_comment?: boolean
+    can_like?: boolean
+
+    created_at?: string
+
+    // event owner info
+    nick_name?: string
+    profile_image?: string
+    profile_type?: string
+  }
+
+  // =========================
+  // Meet Event Detail
+  // =========================
+
+  export class DetailRequestModel {
+    meet_event_id?: number
+    user_id?: number          // viewer id
+  }
+
+  export class DetailResponseModel {
+    meet_event_id?: number
+    user_id?: number
+
+    meet_date?: string
+    meet_type?: string
+    description?: string
+    meet_photo?: string
+
+    looking_for?: string[]
+    min_age?: number
+    max_age?: number
+
+    town_id?: number
+    radius?: number
+
+    can_comment?: boolean
+    can_like?: boolean
+
+    created_at?: string
+
+    // owner info
+    nick_name?: string
+    profile_image?: string
+    profile_type?: string
+    is_owner?: boolean
+  }
+}
+
 
 
 export class RouletteWorkerModel {
