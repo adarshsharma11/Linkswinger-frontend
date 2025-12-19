@@ -453,13 +453,13 @@
               <h5 class="text-white mb-3">Meet Verification</h5>
               <p v-for="verification in getVerifications()">
               <div v-if="verification.visibility === 'public'">
-                <button @click="openUserProfile(verification)">
+                <button class="ls-help-btn-secondary" @click="openUserProfile(verification)">
                   {{ verification.nick_name }}:
                 </button>
-                <span v-if="(verification.review?.length ?? 0) > 70">
+                <span class="ms-2" v-if="(verification.review?.length ?? 0) > 70">
                   {{ verification.isExpanded ? verification.review : (verification.review ?? '').slice(0, 70) + '...' }}
                 </span>
-                <span v-if="(verification.review?.length ?? 0) <= 70">
+                <span class="ms-2" v-if="(verification.review?.length ?? 0) <= 70">
                   {{ verification.review }}
                 </span>
                 <button v-if="(verification.review ?? '').length > 70"
