@@ -93,7 +93,7 @@
                 </div>
                 <div class="emj-body">
                     <div class="emj-wm">
-                        <img src="/images/badges/animated/150X150px/ls-watermark.gif" alt="">
+                        <img src="/public/images/badges/animated/150X150px/ls-watermark.gif" alt="">
                     </div>
                     <div class="emj-sectionbar" v-if="activeTab === 'emoji'">
                         <div class="label" id="sectionTitle">Smiles &amp; People</div>

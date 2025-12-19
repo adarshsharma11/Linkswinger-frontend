@@ -16,7 +16,7 @@
         </div>
 
         <div class="ur-corner ur-corner-right" title="LinkSwingers">
-          <img src="/images/badges/animated/50X50px/ls-watermark.gif" alt="LinkSwingers watermark" />
+          <img src="/public/images/badges/animated/50X50px/ls-watermark.gif" alt="LinkSwingers watermark" />
         </div>
 
         <!-- Content -->
