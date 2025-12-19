@@ -522,7 +522,7 @@
             </div>
             <div class="cmt-text">
               <input ref="commentRef" v-model="commentTxt" type="text" placeholder="Add a comment" />
-              <button class="btn btn-link text-light fs-5">😊</button>
+              <button class="btn btn-link text-light fs-5" @click="handleToggle()">😊</button>
               <div class="comt-buttons">
                 <button class="cmt-cancel-btn">Cancel</button>
                 <button v-if="!is_add_comment_loading" class="cmt-send-btn" @click="addComment()">Comment</button>
@@ -535,6 +535,8 @@
       </div>
     </div>
   </div>
+      <EmojiPicker ref="emojiPickerRef" v-on:selected-emoji="selectedEmoji"
+        v-on:select-custom-emoji="selectCustomEmoji" />
 </template>
 
 
@@ -542,6 +544,7 @@
 import { RequestURL, type FeedsModel, type MeetEventsModel, type SuccessError, type UsersModel } from '~/composables/models';
 import Multiselect from 'vue-multiselect';
 import 'vue-multiselect/dist/vue-multiselect.css';
+
 // MOBILE FILTERS
 const mobileFiltersOpen = ref(false);
 const filtersCollapsed = ref(false);
@@ -554,7 +557,7 @@ const selectedPostTown = ref<UsersModel.FetchTownPostCodesResponseModel>({});
 const selectedMedia = ref<FeedsModel.FeedsResponseModel | null>(null)
 const selectedEvent = ref<MeetEventsModel.ListResponseModel | null>(null)
 const radius = ref(40) // miles (max 40)
-
+const commentRef = ref<HTMLInputElement | null>(null);
 const selectedMeetType = ref('Outdoor')
 const selectedLookingFor = ref<string[]>([])
 
@@ -592,7 +595,7 @@ const comments = ref([] as FeedsModel.FetchFeedCommentResponseModel[])
 const is_comment_loading = ref(false);
 const is_like_loading = ref(false);
 const is_add_comment_loading = ref(false);
-
+const emojiPickerRef = ref<EmojiPicker|null>(null)
 var addEventSub: any = null
 var commentModal: any = null
 const { $bootstrap } = useNuxtApp();
@@ -964,10 +967,33 @@ async function fetchMeetEventWithFilter(isFilter: boolean = true) {
   }
 }
 
+function selectedEmoji(emoji: string) {
+    const statusInput = commentRef.value;
+    if (statusInput) {
+        const start = statusInput.selectionStart;
+        const end = statusInput.selectionEnd;
+        const value = statusInput.value;
+
+        statusInput.value = value.substring(0, start) + emoji + value.substring(end);
+
+        // Move cursor after the emoji
+        const newPos = start + emoji.length;
+        statusInput.setSelectionRange(newPos, newPos);
+
+        // Ensure input stays focused
+        statusInput.focus();
+    }
+}
+
 function openComments() {
   commentTxt.value = ''
   commentModal.show();
   fetchComments(selectedEvent.value?.meet_event_id ?? 0)
+}
+function handleToggle() {
+    if (emojiPickerRef.value) {
+        emojiPickerRef.value.toggleEmojiPicker()
+    }
 }
 
 async function addLikeDisLike() {
@@ -1005,6 +1031,36 @@ async function addLikeDisLike() {
   }
 
 
+}
+
+async function selectCustomEmoji(emoji: string) {
+
+    if (is_add_comment_loading.value) {
+        return;
+    }
+    is_add_comment_loading.value = true;
+    let postData = {
+     meet_event_id: selectedEvent.value?.meet_event_id,
+        user_id: login_store.getUserDetails?.user_id,
+        comment: emoji,
+        comment_type: 'emoji'
+    }
+
+    let api_url = getUrl(RequestURL.addMeetComment);
+    let response = await $fetch<SuccessError<FeedsModel.FetchFeedCommentResponseModel>>(api_url, {
+        method: 'POST',
+        body: postData,
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+    is_add_comment_loading.value = false;
+    if (response.success) {
+        comments.value.push(response.response ?? {})
+    }
+    else {
+        showToastError(response.message)
+    }
 }
 
 async function addComment() {
