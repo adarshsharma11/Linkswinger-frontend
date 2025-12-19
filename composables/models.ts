@@ -79,8 +79,12 @@ export enum RequestURL {
   userUnblock = "/userUnblock",
   checkBlockStatus = "/checkBlockStatus",
   createMeetEvent = "/meet/create",
-  fetchMeetEvents = "/meet/list"
+  fetchMeetEvents = "/meet/list",
+  meetLikeDisLike = "/meet/likeDisLike",
+  addMeetComment = "/meet/addComment",
+  fetchMeetComments = "/meet/fetchComment",
   
+
 }
 
 
