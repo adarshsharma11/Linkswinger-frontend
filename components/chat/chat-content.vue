@@ -211,8 +211,11 @@
 
                 <div v-if="chat.message_type === 'emoji'">
                   <Lottie renderer="svg" v-if="getFileExtension(chat.message ?? '') === '.json'"
-                    :link="(chat.media_path ?? '') + (chat.message ?? '')" style="max-width: 80px; max-height: 80px;">
-                  </Lottie><img v-if="getFileExtension(chat.message ?? '') !== '.json'"
+                    :link="(chat.media_path ?? '') + (chat.message ?? '')" style="max-width: 80px; max-height: 80px;"></Lottie>
+                    <video loop autoplay playsinline v-else-if="getFileExtension(chat.message ?? '') === '.webm'"
+                      :src="(chat.media_path ?? '') + (chat.message ?? '')"
+                      style="max-width: 40px; max-height: 40px;"></video>
+                  <img v-else-if="getFileExtension(chat.message ?? '') !== '.json'"
                     :src="(chat.media_path ?? '') + (chat.message ?? '')" style="max-width: 80px; max-height: 80px;" />
                 </div>
               </div>
@@ -250,7 +253,7 @@
           <div class="border-top border-secondary p-3 chat-ftr">
             <div class="d-flex align-items-center message-input chat-ftr-left">
               <!--<button class="btn btn-link text-light fs-5" @click="handleToggle">😊</button>-->
-              <button class="btn btn-link text-light fs-5" aria-label="Go to emoji icon" 
+              <button class="btn btn-link text-light fs-5" aria-label="Go to emoji icon"
                 @click="handleToggle">😊</button>
               <textarea v-model="messageTxt" id="composer" ref="messageRef" rows="1"
                 class="form-control bg-transparent border-0 text-light"
@@ -307,9 +310,8 @@
     :with-attachments="withAttachments" v-if="showFilters" @close="showFilters = false" @apply-filters="applyFilters"
     @clear-filters="clearFilters()" />
 
-        <EmojiPicker  ref="emojiPickerRef" v-on:selected-emoji="selectedEmoji"
-                v-on:select-custom-emoji="selectCustomEmoji" />
-  
+  <EmojiPicker ref="emojiPickerRef" v-on:selected-emoji="selectedEmoji" v-on:select-custom-emoji="selectCustomEmoji" />
+
 </template>
 
 <script setup lang="ts">

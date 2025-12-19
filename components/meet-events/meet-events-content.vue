@@ -264,9 +264,13 @@
               <div class="meet-section">
 
                 <div class="meet-inline">
-                  <span class="btn-loader" v-if="is_like_loading" style="width: 20px; height: 20px; max-width: 20px; max-height: 40px;"></span>
-                  <button class="meet-btn meet-small" v-if="(selectedEvent?.can_like ?? false) && is_like_loading === false" @click="addLikeDisLike()">{{ selectedEvent?.is_liked ? 'Unlike' : 'Like' }}</button>
-                  <button class="meet-btn meet-small" v-if="selectedEvent?.can_comment ?? false" @click="openComments()">Comment</button>
+                  <span class="btn-loader" v-if="is_like_loading"
+                    style="width: 20px; height: 20px; max-width: 20px; max-height: 40px;"></span>
+                  <button class="meet-btn meet-small"
+                    v-if="(selectedEvent?.can_like ?? false) && is_like_loading === false" @click="addLikeDisLike()">{{
+                      selectedEvent?.is_liked ? 'Unlike' : 'Like' }}</button>
+                  <button class="meet-btn meet-small" v-if="selectedEvent?.can_comment ?? false"
+                    @click="openComments()">Comment</button>
                   <button class="meet-btn meet-small meet-ghost"
                     v-if="selectedEvent?.user_id !== user_store.getLoginId">Message</button>
                 </div>
@@ -498,7 +502,11 @@
                   <Lottie renderer="svg" v-if="getFileExtension(comment.comment ?? '') === '.json'"
                     :link="(comment.media_path ?? '') + (comment.comment ?? '')"
                     style="max-width: 80px; max-height: 80px;">
-                  </Lottie><img v-if="getFileExtension(comment.comment ?? '') !== '.json'"
+                  </Lottie>
+                  <video loop autoplay playsinline v-else-if="getFileExtension(comment.comment ?? '') === '.webm'"
+                    :src="(comment.media_path ?? '') + (comment.comment ?? '')"
+                    style="max-width: 40px; max-height: 40px;"></video>
+                  <img v-else-if="getFileExtension(comment.comment ?? '') !== '.json'"
                     :src="(comment.media_path ?? '') + (comment.comment ?? '')"
                     style="max-width: 80px; max-height: 80px;" />
                 </div>
@@ -514,7 +522,7 @@
             </div>
             <div class="cmt-text">
               <input ref="commentRef" v-model="commentTxt" type="text" placeholder="Add a comment" />
-              <button class="btn btn-link text-light fs-5" >😊</button>
+              <button class="btn btn-link text-light fs-5">😊</button>
               <div class="comt-buttons">
                 <button class="cmt-cancel-btn">Cancel</button>
                 <button v-if="!is_add_comment_loading" class="cmt-send-btn" @click="addComment()">Comment</button>
@@ -630,7 +638,7 @@ allMeetEvents.value = await fetchMeetEvents() as MeetEventsModel.ListResponseMod
 
 onMounted(() => {
   addEventSub = new ($bootstrap as any).Modal(document.getElementById('addMeetBtn'));
-   commentModal = new ($bootstrap as any).Modal(document.getElementById('commentmodal'));
+  commentModal = new ($bootstrap as any).Modal(document.getElementById('commentmodal'));
 })
 function fetchTowns(query: string) {
   if (query.length === 0) {
@@ -865,22 +873,22 @@ function toggleFilters() {
   filtersCollapsed.value = !filtersCollapsed.value;
 }
 function getFileExtension(filename: string): string {
-    const lastDotIndex = filename.lastIndexOf('.');
-    if (lastDotIndex === -1) {
-        return ''; // No extension found
-    }
-    return filename.slice(lastDotIndex);
+  const lastDotIndex = filename.lastIndexOf('.');
+  if (lastDotIndex === -1) {
+    return ''; // No extension found
+  }
+  return filename.slice(lastDotIndex);
 }
 
 function getProfilePlaceholder(media_path: string, profile_image: string, profile_type: string): string {
-    if (media_path.length > 0 && profile_image.length > 0) {
-        return media_path + profile_image
-    }
-    if (profile_type === 'Couple') return "/images/profile-placeholders/MF-COUPLE.png";
-    if (profile_type === 'Others') return "/images/profile-placeholders/TRANS.png";
-    if (profile_type === 'Woman') return "/images/profile-placeholders/WOMEN.png";
-    if (profile_type === 'Man') return "/images/profile-placeholders/man.png";
-    return "/images/profile-placeholders/man.png"
+  if (media_path.length > 0 && profile_image.length > 0) {
+    return media_path + profile_image
+  }
+  if (profile_type === 'Couple') return "/images/profile-placeholders/MF-COUPLE.png";
+  if (profile_type === 'Others') return "/images/profile-placeholders/TRANS.png";
+  if (profile_type === 'Woman') return "/images/profile-placeholders/WOMEN.png";
+  if (profile_type === 'Man') return "/images/profile-placeholders/man.png";
+  return "/images/profile-placeholders/man.png"
 }
 
 function buildMeetDateISO(): string | null {
@@ -957,9 +965,9 @@ async function fetchMeetEventWithFilter(isFilter: boolean = true) {
 }
 
 function openComments() {
-commentTxt.value = ''
-commentModal.show();
-fetchComments(selectedEvent.value?.meet_event_id ?? 0)
+  commentTxt.value = ''
+  commentModal.show();
+  fetchComments(selectedEvent.value?.meet_event_id ?? 0)
 }
 
 async function addLikeDisLike() {

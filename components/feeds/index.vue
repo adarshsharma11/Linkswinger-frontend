@@ -68,7 +68,7 @@
                                             class="Report-icon" />
                                     </button>
                                     <button :style="{ backgroundColor: item.is_liked ? 'green' : 'white' }"
-                                        v-if=" item.can_like === true"
+                                        v-if="item.can_like === true"
                                         @click.stop="addLikeDisLike(item.feed_id ?? 0, index)">
                                         <img :src="likeImage" class="like-icon" />
                                     </button>
@@ -137,7 +137,12 @@
                                     <Lottie renderer="svg" v-if="getFileExtension(comment.comment ?? '') === '.json'"
                                         :link="(comment.media_path ?? '') + (comment.comment ?? '')"
                                         style="max-width: 80px; max-height: 80px;">
-                                    </Lottie><img v-if="getFileExtension(comment.comment ?? '') !== '.json'"
+                                    </Lottie>
+                                    <video loop autoplay playsinline
+                                        v-else-if="getFileExtension(comment.comment ?? '') === '.webm'"
+                                        :src="(comment.media_path ?? '') + (comment.comment ?? '')"
+                                        style="max-width: 40px; max-height: 40px;"></video>
+                                    <img v-else-if="getFileExtension(comment.comment ?? '') !== '.json'"
                                         :src="(comment.media_path ?? '') + (comment.comment ?? '')"
                                         style="max-width: 80px; max-height: 80px;" />
                                 </div>
@@ -174,8 +179,8 @@
                 v-on:select-custom-emoji="selectCustomEmoji" />
         </div>
     </Teleport> -->
-        <EmojiPicker  ref="emojiPickerRef" v-on:selected-emoji="selectedEmoji"
-                v-on:select-custom-emoji="selectCustomEmoji" />
+    <EmojiPicker ref="emojiPickerRef" v-on:selected-emoji="selectedEmoji"
+        v-on:select-custom-emoji="selectCustomEmoji" />
 </template>
 
 <script setup lang="ts">
@@ -481,38 +486,38 @@ async function addLikeDisLike(feed_id: number, index: number) {
     }
     likeImage.value = '/images/icons-folder/like-50x50px.gif'
 
-   
+
     comments.value = []
-        is_like_loading.value[index] = true;
-        let api_url = getUrl(RequestURL.feedLikeDisLike);
-        let postData = {
-            feed_id: feed_id,
-            user_id: login_store.getUserDetails?.user_id
+    is_like_loading.value[index] = true;
+    let api_url = getUrl(RequestURL.feedLikeDisLike);
+    let postData = {
+        feed_id: feed_id,
+        user_id: login_store.getUserDetails?.user_id
+    }
+    let response = await $fetch<SuccessError<FeedsModel.FeedLikeDisLikeResponseModel>>(api_url, {
+        method: 'POST',
+        body: postData,
+        headers: {
+            'Content-Type': 'application/json'
         }
-        let response = await $fetch<SuccessError<FeedsModel.FeedLikeDisLikeResponseModel>>(api_url, {
-            method: 'POST',
-            body: postData,
-            headers: {
-                'Content-Type': 'application/json'
+    });
+    is_like_loading.value[index] = false;
+    likeImage.value = '/images/icons-folder/Like-150x150px.png'
+    if (response.success) {
+        let state = response.response?.state ?? ''
+        let feed = allFeeds.value.filter((history: FeedsModel.FeedsResponseModel) => history.feed_id === feed_id)
+        if (feed.length > 0) {
+            if (state === 'liked') {
+                feed[0].is_liked = true
             }
-        });
-       is_like_loading.value[index] = false;
-         likeImage.value = '/images/icons-folder/Like-150x150px.png'
-        if (response.success) {
-            let state = response.response?.state ?? ''
-            let feed = allFeeds.value.filter((history: FeedsModel.FeedsResponseModel) => history.feed_id === feed_id)
-            if (feed.length > 0) {
-                if (state === 'liked') {
-                    feed[0].is_liked = true
-                }
-                else {
-                    feed[0].is_liked = false
-                }
+            else {
+                feed[0].is_liked = false
             }
         }
-        else {
-            showToastError(response.message)
-        }
+    }
+    else {
+        showToastError(response.message)
+    }
 
 
 }
