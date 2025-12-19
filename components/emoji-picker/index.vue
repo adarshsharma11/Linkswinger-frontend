@@ -53,6 +53,7 @@
         </transition>
     </div> -->
 
+    
     <div class="modal fade emoji-modal" id="emojiPickerRef" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable" role="document">
             <div class="modal-content text-white modal-inner emoji-small">
@@ -75,12 +76,14 @@
                 </div>
                 <!-- Body -->
                 <div class="emj-tabs" role="tablist" aria-label="Tabs">
-                    <button class="emj-tab active" id="tabEmoji" role="tab" aria-selected="true">😄
+                    <button class="emj-tab" :class="{ 'active': activeTab === 'emoji' }" @click="activeTab = 'emoji'"
+                        id="tabEmoji" role="tab" aria-selected="true">😄
                         Emoji</button>
-                    <button class="emj-tab"  id="tabStickers" role="tab" aria-selected="false">✨
+                    <button class="emj-tab" :class="{ 'active': activeTab !== 'emoji' }" @click="activeTab = 'stickers'"
+                        id="tabStickers" role="tab" aria-selected="false">✨
                         Stickers</button>
                 </div>
-                <div class="emj-search">
+                <div class="emj-search" v-if="activeTab === 'emoji'">
                     <div class="emj-searchbox">
                         <span>⌕</span>
                         <input id="search" v-model="searchQuery" type="text"
@@ -92,7 +95,7 @@
                     <div class="emj-wm">
                         <img src="/images/badges/animated/150X150px/ls-watermark.gif" alt="">
                     </div>
-                    <div class="emj-sectionbar">
+                    <div class="emj-sectionbar" v-if="activeTab === 'emoji'">
                         <div class="label" id="sectionTitle">Smiles &amp; People</div>
                         <div class="emj-hint">
                             <span id="countLabel">{{ filteredEmojis.length }} items</span>
@@ -100,25 +103,46 @@
                             <span>Click to pick</span>
                         </div>
                     </div>
-                    <div class="emj-grid" id="grid">
+                    <div class="emj-grid" id="grid" v-if="activeTab === 'emoji'">
                         <button v-for="(emoji, i) in filteredEmojis" :key="i" class="emj-item" type="button"
-                            :title="emoji.title">
+                            :title="emoji.title" :class="{ active: selectedEmoji?.char === emoji.char }"
+                            @click="pickEmoji(emoji)">
                             <span class="emj-emoji">
                                 {{ emoji.char }}
                             </span>
                         </button>
                     </div>
-                    <div class="emj-footer">
+                    <div class="emj-grid" id="grid" v-if="activeTab === 'stickers'">
+                        <div class="emj-item" v-for="sticker in stickers">
+                            <Lottie renderer="svg" v-if="getFileExtension(sticker.emoji ?? '') === '.json'"
+                                :link="(sticker.media_path ?? '') + sticker.emoji" :key="sticker.emoji_id"
+                                @click="onSelectCustomEmoji(sticker.emoji ?? '')"></Lottie>
+                            <video   loop autoplay playsinline v-else-if="getFileExtension(sticker.emoji ?? '') === '.webm'"
+                                :src="(sticker.media_path ?? '') + (sticker.emoji ?? '')" style="max-width: 40px; max-height: 40px;"
+                             ></video>
+                            <img v-else-if="getFileExtension(sticker.emoji ?? '') !== '.json'"
+                                :src="(sticker.media_path ?? '') + (sticker.emoji ?? '')" style="max-width: 40px; max-height: 40px;"
+                                 />
+                        </div>
+
+                    </div>
+                    <div class="emj-footer" v-if="activeTab === 'emoji'">
                         <div class="emj-picked">
-                            <div class="emj-bubble" id="pickedBubble">🙂</div>
+                            <div class="emj-bubble" id="pickedBubble">
+                                {{ selectedEmoji?.char || '🙂' }}
+                            </div>
                             <div class="emj-meta">
-                                <b id="pickedTitle">Nothing selected</b>
-                                <span id="pickedSub">Pick an emoji or a sticker</span>
+                                <b id="pickedTitle">
+                                    {{ selectedEmoji?.title || 'Nothing selected' }}
+                                </b>
+                                <span id="pickedSub">
+                                    {{ selectedEmoji?.names?.[0] || 'Pick an emoji or a sticker' }}
+                                </span>
                             </div>
                         </div>
                         <div class="emj-actions">
-                            <button class="emj-btn secondary" id="clearBtn">Clear</button>
-                            <button class="emj-btn" id="useBtn">Use</button>
+                            <button class="emj-btn secondary" id="clearBtn" @click="clearEmoji()">Clear</button>
+                            <button class="emj-btn" id="useBtn" @click="useEmoji()">Use</button>
                         </div>
                     </div>
 
@@ -174,15 +198,15 @@ const emojis = computed(() =>
     }))
 )
 const filteredEmojis = computed(() => {
-  const q = searchQuery.value.trim().toLowerCase()
-  if (!q) return emojis.value
+    const q = searchQuery.value.trim().toLowerCase()
+    if (!q) return emojis.value
 
-  console.log('searching',searchQuery)
-  return emojis.value.filter(e =>
-    e.names.some(name =>
-      name.toLowerCase().includes(q.replace(/\s+/g, '_'))
+    console.log('searching', searchQuery)
+    return emojis.value.filter(e =>
+        e.names.some(name =>
+            name.toLowerCase().includes(q.replace(/\s+/g, '_'))
+        )
     )
-  )
 })
 
 const activeTab = ref('emoji');
@@ -199,15 +223,18 @@ const stickers = ref([] as EmojisModel.FetchEmojiResponseModel[])
 const emit = defineEmits(['selectedEmoji', 'selectCustomEmoji'])
 const { $bootstrap } = useNuxtApp();
 var pickerModel: any = null
+const selectedEmoji = ref<null | {
+    char: string
+    title: string
+    names: string[]
+}>(null)
 const toggleEmojiPicker = () => {
     showEmojiPicker.value = !showEmojiPicker.value
-
-    
     pickerModel.show();
 }
 const closeEmojiPicker = () => {
     showEmojiPicker.value = false
-        pickerModel.hide();
+    pickerModel.hide();
 }
 
 
@@ -244,6 +271,35 @@ const stopDrag = () => {
     document.removeEventListener('mousemove', onDrag)
     document.removeEventListener('mouseup', stopDrag)
 }
+/**
+ * 👉 Pick emoji
+ */
+function pickEmoji(emoji: { char: string; title: string; names: string[] }) {
+    selectedEmoji.value = emoji
+
+}
+
+function useEmoji() {
+    if (!selectedEmoji.value) return
+
+    emit('selectedEmoji', selectedEmoji.value.char)
+
+}
+
+function getFileExtension(filename: string): string {
+    const lastDotIndex = filename.lastIndexOf('.');
+    if (lastDotIndex === -1) {
+        return '';
+    }
+    return filename.slice(lastDotIndex);
+}
+
+/**
+ * ❌ Clear selection
+ */
+function clearEmoji() {
+    selectedEmoji.value = null
+}
 onMounted(() => {
 
 
@@ -276,6 +332,7 @@ onMounted(async () => {
         return response_model.result ?? []
     }
     stickers.value = await fetchEmojis() as EmojisModel.FetchEmojiResponseModel[]
+    console.log(stickers.value)
 });
 
 

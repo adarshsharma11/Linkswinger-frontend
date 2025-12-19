@@ -68,7 +68,11 @@
                       <Lottie renderer="svg" v-if="getFileExtension(historymodel.message ?? '') === '.json'"
                         :link="(historymodel.media_path ?? '') + (historymodel.message ?? '')"
                         style="max-width: 40px; max-height: 40px;">
-                      </Lottie><img v-if="getFileExtension(historymodel.message ?? '') !== '.json'"
+                      </Lottie>
+                      <video v-else-if="getFileExtension(historymodel.message ?? '') === '.webm'"
+                        :src="(historymodel.media_path ?? '') + (historymodel.message ?? '')"
+                        style="max-width: 40px; max-height: 40px;" loop autoplay></video>
+                      <img v-else-if="getFileExtension(historymodel.message ?? '') !== '.json'"
                         :src="(historymodel.media_path ?? '') + (historymodel.message ?? '')"
                         style="max-width: 40px; max-height: 40px;" />
                     </div>
