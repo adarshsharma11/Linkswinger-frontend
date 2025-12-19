@@ -50,9 +50,11 @@
 
         <div class="meet-filter-block">
           <span class="meet-label">Meeting on a specific date</span>
-          <input type="date" id="filterSpecificDate" v-model="filterMeetDate" :min="new Date().toISOString().split('T')[0]"/>
+          <input type="date" id="filterSpecificDate" v-model="filterMeetDate"
+            :min="new Date().toISOString().split('T')[0]" />
           <div class="meet-filter-actions">
-            <button class="meet-btn meet-small meet-ghost" id="clearSpecificDateBtn" type="button" @click="clearDate()">Clear date</button>
+            <button class="meet-btn meet-small meet-ghost" id="clearSpecificDateBtn" type="button"
+              @click="clearDate()">Clear date</button>
           </div>
         </div>
 
@@ -185,7 +187,7 @@
               <span class="meet-head-pill" id="detailsLookingPill">{{ selectedEvent?.looking_for?.join(',') }}</span>
               <span class="meet-head-pill" id="detailsLocationPill">{{ selectedEvent?.town }}</span>
               <span class="meet-head-pill live" id="detailsWhenPill">{{ formatLocal(selectedEvent?.meet_date ?? '')
-                }}</span>
+              }}</span>
               <button class="meet-btn meet-small meet-ghost" data-bs-dismiss="modal" aria-label="Close">Close</button>
             </div>
           </div>
@@ -262,8 +264,9 @@
               <div class="meet-section">
 
                 <div class="meet-inline">
-                  <button class="meet-btn meet-small" v-if="selectedEvent?.can_like ?? false">Like</button>
-                  <button class="meet-btn meet-small" v-if="selectedEvent?.can_comment ?? false">Comment</button>
+                  <span class="btn-loader" v-if="is_like_loading" style="width: 20px; height: 20px; max-width: 20px; max-height: 40px;"></span>
+                  <button class="meet-btn meet-small" v-if="(selectedEvent?.can_like ?? false) && is_like_loading === false" @click="addLikeDisLike()">{{ selectedEvent?.is_liked ? 'Unlike' : 'Like' }}</button>
+                  <button class="meet-btn meet-small" v-if="selectedEvent?.can_comment ?? false" @click="openComments()">Comment</button>
                   <button class="meet-btn meet-small meet-ghost"
                     v-if="selectedEvent?.user_id !== user_store.getLoginId">Message</button>
                 </div>
@@ -463,6 +466,67 @@
       </div>
     </div>
   </section>
+
+  <div class="modal fade comment-modal" id="commentmodal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable" role="document">
+      <div class="modal-content bg-dark text-white">
+        <!-- Header -->
+
+        <div class="modal-header ad-sc-header border-0">
+          <h2 class="modal-title text-white">Comments</h2>
+          <button class="close text-danger fs-3 fw-bold" type="button" data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+        <!-- Body -->
+        <div class="modal-body comment-body">
+          <div class="comment-list">
+            <span class="btn-loader" v-if="is_comment_loading"></span>
+            <div v-if="!is_comment_loading" class="comment-items" v-for="comment in comments"
+              :key="comment.feed_comment_id">
+              <div class="cmt-img">
+                <img
+                  :src="getProfilePlaceholder(comment.media_path ?? '', comment.profile_image ?? '', comment.profile_type ?? '')" />
+              </div>
+              <div class="cmt-content">
+                <h3> {{ comment.nick_name }} </h3>
+                <div v-if="comment.comment_type !== 'emoji'">
+                  <p>{{ comment.comment }}</p>
+                </div>
+                <div v-if="comment.comment_type === 'emoji'">
+                  <Lottie renderer="svg" v-if="getFileExtension(comment.comment ?? '') === '.json'"
+                    :link="(comment.media_path ?? '') + (comment.comment ?? '')"
+                    style="max-width: 80px; max-height: 80px;">
+                  </Lottie><img v-if="getFileExtension(comment.comment ?? '') !== '.json'"
+                    :src="(comment.media_path ?? '') + (comment.comment ?? '')"
+                    style="max-width: 80px; max-height: 80px;" />
+                </div>
+
+
+              </div>
+            </div>
+          </div>
+          <div class="comment-footer">
+            <div class="cmt-ath">
+              <img
+                :src="getProfilePlaceholder(login_store.getUserDetails?.media_path ?? '', login_store.getUserDetails?.profile_image ?? '', login_store.getUserDetails?.profile_type ?? '')" />
+            </div>
+            <div class="cmt-text">
+              <input ref="commentRef" v-model="commentTxt" type="text" placeholder="Add a comment" />
+              <button class="btn btn-link text-light fs-5" >😊</button>
+              <div class="comt-buttons">
+                <button class="cmt-cancel-btn">Cancel</button>
+                <button v-if="!is_add_comment_loading" class="cmt-send-btn" @click="addComment()">Comment</button>
+                <span class="btn-loader" v-if="is_add_comment_loading"></span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 
@@ -502,6 +566,7 @@ const crush_only = ref(false)
 const isFilterTodayMode = ref<boolean>(false)
 const filterRelationship = ref('all')
 const filterMeetDate = ref<string | null>('')
+const commentTxt = ref('')
 
 // date & time
 const isTodayMode = ref(true)
@@ -515,8 +580,13 @@ const allMeetEvents = ref([] as MeetEventsModel.ListResponseModel[])
 const is_event_loading = ref(false)
 const is_town_loading = ref(false)
 const is_town_post_loading = ref(false)
+const comments = ref([] as FeedsModel.FetchFeedCommentResponseModel[])
+const is_comment_loading = ref(false);
+const is_like_loading = ref(false);
+const is_add_comment_loading = ref(false);
 
 var addEventSub: any = null
+var commentModal: any = null
 const { $bootstrap } = useNuxtApp();
 
 
@@ -560,6 +630,7 @@ allMeetEvents.value = await fetchMeetEvents() as MeetEventsModel.ListResponseMod
 
 onMounted(() => {
   addEventSub = new ($bootstrap as any).Modal(document.getElementById('addMeetBtn'));
+   commentModal = new ($bootstrap as any).Modal(document.getElementById('commentmodal'));
 })
 function fetchTowns(query: string) {
   if (query.length === 0) {
@@ -740,18 +811,16 @@ watch(isTodayMode, () => {
   selectedTimeISO.value = null
 })
 watch(isFilterTodayMode, () => {
-  if (isFilterTodayMode.value)
-  {
-  filterMeetDate.value = null
+  if (isFilterTodayMode.value) {
+    filterMeetDate.value = null
   }
- 
+
 })
 watch(filterMeetDate, () => {
-  if (filterMeetDate.value !== null)
-  {
-isFilterTodayMode.value = false
+  if (filterMeetDate.value !== null) {
+    isFilterTodayMode.value = false
   }
-  
+
 })
 
 
@@ -795,6 +864,24 @@ function closeMobileFilters() {
 function toggleFilters() {
   filtersCollapsed.value = !filtersCollapsed.value;
 }
+function getFileExtension(filename: string): string {
+    const lastDotIndex = filename.lastIndexOf('.');
+    if (lastDotIndex === -1) {
+        return ''; // No extension found
+    }
+    return filename.slice(lastDotIndex);
+}
+
+function getProfilePlaceholder(media_path: string, profile_image: string, profile_type: string): string {
+    if (media_path.length > 0 && profile_image.length > 0) {
+        return media_path + profile_image
+    }
+    if (profile_type === 'Couple') return "/images/profile-placeholders/MF-COUPLE.png";
+    if (profile_type === 'Others') return "/images/profile-placeholders/TRANS.png";
+    if (profile_type === 'Woman') return "/images/profile-placeholders/WOMEN.png";
+    if (profile_type === 'Man') return "/images/profile-placeholders/man.png";
+    return "/images/profile-placeholders/man.png"
+}
 
 function buildMeetDateISO(): string | null {
   if (isTodayMode.value) {
@@ -826,21 +913,21 @@ function clearFilter() {
   filterMinAge.value = 18
   filterMaxAge.value = 99
   selectedFilterLookingFor.value = []
-   isFilterTodayMode.value = false
+  isFilterTodayMode.value = false
   filterMeetDate.value = null
   fetchMeetEventWithFilter(false)
- 
+
 }
-async function fetchMeetEventWithFilter(isFilter:boolean = true) {
+async function fetchMeetEventWithFilter(isFilter: boolean = true) {
   let par_meet_date: string | null = null
 
-if (isFilterTodayMode.value) {
-  par_meet_date = new Date().toISOString().split('T')[0] // YYYY-MM-DD
-}
+  if (isFilterTodayMode.value) {
+    par_meet_date = new Date().toISOString().split('T')[0] // YYYY-MM-DD
+  }
 
-if (filterMeetDate.value !== null) {
-  par_meet_date = filterMeetDate.value // already YYYY-MM-DD
-}
+  if (filterMeetDate.value !== null) {
+    par_meet_date = filterMeetDate.value // already YYYY-MM-DD
+  }
   const payload: MeetEventsModel.ListRequestModel = {
     is_filter: isFilter,
     user_id: login_store.getUserDetails?.user_id ?? 0,
@@ -853,7 +940,7 @@ if (filterMeetDate.value !== null) {
     crush_only: crush_only.value,
     meet_date: par_meet_date
   }
- 
+
   allMeetEvents.value = []
   const api_url = getUrl(RequestURL.fetchMeetEvents);
   let response = await $fetch<SuccessError<MeetEventsModel.CreateResponseModel>>(api_url, {
@@ -867,6 +954,101 @@ if (filterMeetDate.value !== null) {
   else {
     showToastError(response.message)
   }
+}
+
+function openComments() {
+commentTxt.value = ''
+commentModal.show();
+fetchComments(selectedEvent.value?.meet_event_id ?? 0)
+}
+
+async function addLikeDisLike() {
+
+  let meet_event_id = selectedEvent.value?.meet_event_id
+  is_like_loading.value = true;
+  let api_url = getUrl(RequestURL.meetLikeDisLike);
+  let postData = {
+    meet_event_id: meet_event_id,
+    user_id: login_store.getUserDetails?.user_id
+  }
+  let response = await $fetch<SuccessError<FeedsModel.FeedLikeDisLikeResponseModel>>(api_url, {
+    method: 'POST',
+    body: postData,
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  });
+  is_like_loading.value = false;
+
+  if (response.success) {
+    let state = response.response?.state ?? ''
+    let feed = allMeetEvents.value.filter((history: MeetEventsModel.ListResponseModel) => history.meet_event_id === meet_event_id)
+    if (feed.length > 0) {
+      if (state === 'liked') {
+        feed[0].is_liked = true
+      }
+      else {
+        feed[0].is_liked = false
+      }
+    }
+  }
+  else {
+    showToastError(response.message)
+  }
+
+
+}
+
+async function addComment() {
+  let trim = commentTxt.value.trim() ?? ''
+  if (is_add_comment_loading.value || trim.length === 0) {
+    return;
+  }
+  is_add_comment_loading.value = true;
+  let postData = {
+    meet_event_id: selectedEvent.value?.meet_event_id,
+    user_id: login_store.getUserDetails?.user_id,
+    comment: trim,
+    comment_type: 'text'
+  }
+
+  let api_url = getUrl(RequestURL.addMeetComment);
+  let response = await $fetch<SuccessError<FeedsModel.FetchFeedCommentResponseModel>>(api_url, {
+    method: 'POST',
+    body: postData,
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  });
+  is_add_comment_loading.value = false;
+  if (response.success) {
+    comments.value.push(response.response ?? {})
+    commentTxt.value = ''
+  }
+  else {
+    showToastError(response.message)
+  }
+
+}
+async function fetchComments(feed_id: number) {
+  if (is_comment_loading.value) {
+    return;
+  }
+  comments.value = []
+  is_comment_loading.value = true;
+  let api_url = getUrl(RequestURL.fetchMeetComments);
+  let postData = {
+    meet_event_id: feed_id
+  }
+  let response = await $fetch<SuccessError<FeedsModel.FetchFeedCommentResponseModel>>(api_url, {
+    method: 'POST',
+    body: postData,
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  });
+  is_comment_loading.value = false;
+  comments.value = response.result ?? []
 }
 
 async function createMeetEvent() {

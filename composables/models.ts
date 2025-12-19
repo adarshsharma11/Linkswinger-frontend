@@ -880,6 +880,7 @@ export namespace MeetEventsModel {
     can_like?: boolean
 
     created_at?: string
+    is_liked?:boolean
 
     // event owner info
     nick_name?: string
