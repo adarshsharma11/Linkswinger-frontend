@@ -503,10 +503,10 @@
                     :link="(comment.media_path ?? '') + (comment.comment ?? '')"
                     style="max-width: 80px; max-height: 80px;">
                   </Lottie>
-                  <video loop autoplay playsinline v-else-if="getFileExtension(comment.comment ?? '') === '.webm'"
+                  <video lazy loop autoplay playsinline v-else-if="getFileExtension(comment.comment ?? '') === '.webm'"
                     :src="(comment.media_path ?? '') + (comment.comment ?? '')"
                     style="max-width: 40px; max-height: 40px;"></video>
-                  <img v-else-if="getFileExtension(comment.comment ?? '') !== '.json'"
+                  <img  lazy v-else-if="getFileExtension(comment.comment ?? '') !== '.json'"
                     :src="(comment.media_path ?? '') + (comment.comment ?? '')"
                     style="max-width: 80px; max-height: 80px;" />
                 </div>

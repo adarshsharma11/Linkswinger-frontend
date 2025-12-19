@@ -113,14 +113,14 @@
                         </button>
                     </div>
                     <div class="emj-grid" id="grid" v-if="activeTab === 'stickers'">
-                        <div class="emj-item" v-for="sticker in stickers">
+                        <div class="emj-item" v-for="sticker in stickers" @click="onSelectCustomEmoji(sticker.emoji ?? '')">
                             <Lottie renderer="svg" v-if="getFileExtension(sticker.emoji ?? '') === '.json'"
                                 :link="(sticker.media_path ?? '') + sticker.emoji" :key="sticker.emoji_id"
-                                @click="onSelectCustomEmoji(sticker.emoji ?? '')"></Lottie>
+                                ></Lottie>
                             <video   loop autoplay playsinline v-else-if="getFileExtension(sticker.emoji ?? '') === '.webm'"
                                 :src="(sticker.media_path ?? '') + (sticker.emoji ?? '')" style="max-width: 40px; max-height: 40px;"
                              ></video>
-                            <img v-else-if="getFileExtension(sticker.emoji ?? '') !== '.json'"
+                            <img  lazy v-else-if="getFileExtension(sticker.emoji ?? '') !== '.json'"
                                 :src="(sticker.media_path ?? '') + (sticker.emoji ?? '')" style="max-width: 40px; max-height: 40px;"
                                  />
                         </div>
