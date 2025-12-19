@@ -79,11 +79,11 @@
           <div class="meet-inline">
             <div>
               <span class="meet-label">Min</span>
-              <input type="number" id="filterMinAge" min="18" max="99" step="1" value="18" />
+              <input type="number" id="filterMinAge" min="18" max="99" step="1"  />
             </div>
             <div>
               <span class="meet-label">Max</span>
-              <input type="number" id="filterMaxAge" min="18" max="99" step="1" value="99" />
+              <input type="number" id="filterMaxAge" min="18" max="99" step="1" />
             </div>
           </div>
           <div class="meet-filter-actions">
