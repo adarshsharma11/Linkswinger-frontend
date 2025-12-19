@@ -845,12 +845,14 @@ export namespace MeetEventsModel {
     latitude?: number         // optional
     longitude?: number        // optional
 
+    meet_date?:string | null
     looking_for?: string[]
     min_age?: number
     max_age?: number
 
     friends_only?: boolean
     crush_only?: boolean
+    is_filter?:boolean
   }
 
   export class ListResponseModel {

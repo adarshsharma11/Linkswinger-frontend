@@ -31,7 +31,10 @@
             <img src="/images/badges/animated/50X50px/location.gif" class="meet-loc-icon" alt="">
             <span class="meet-label">Location (town/postcode)</span>
           </div>
-          <input type="text" id="filterLocation" placeholder="e.g., Walsall / WS1 / Birmingham" />
+          <!-- <input type="text" id="filterLocation" placeholder="e.g., Walsall / WS1 / Birmingham" /> -->
+          <Multiselect class="input" v-model="selectedPostTown" :options="allTownsPostCode" :multiple="false"
+            :close-on-select="true" placeholder="Enter town or postcode" :loading="is_town_post_loading"
+            @search-change="fetchTownsPostCodes" label="name" track_by="id" :internal-search="false" />
         </div>
 
         <!-- ✅ Replaced Mode with Today + Specific Date filters -->
@@ -39,7 +42,7 @@
           <span class="meet-label">Meeting time filters</span>
           <div class="meet-chips">
             <label class="meet-chip">
-              <input type="checkbox" id="filterTodayOnly">
+              <input type="checkbox" id="filterTodayOnly" v-model="isFilterTodayMode">
               <span>Meeting today</span>
             </label>
           </div>
@@ -47,27 +50,33 @@
 
         <div class="meet-filter-block">
           <span class="meet-label">Meeting on a specific date</span>
-          <input type="date" id="filterSpecificDate" />
+          <input type="date" id="filterSpecificDate" v-model="filterMeetDate" :min="new Date().toISOString().split('T')[0]"/>
           <div class="meet-filter-actions">
-            <button class="meet-btn meet-small meet-ghost" id="clearSpecificDateBtn" type="button">Clear date</button>
+            <button class="meet-btn meet-small meet-ghost" id="clearSpecificDateBtn" type="button" @click="clearDate()">Clear date</button>
           </div>
         </div>
 
         <div class="meet-filter-block">
           <span class="meet-label">Looking for (multi-select)</span>
           <div class="meet-chips" id="filterLookingFor">
-            <label class="meet-chip"><input type="checkbox" value="Man"><span>Man</span></label>
-            <label class="meet-chip"><input type="checkbox" value="Woman"><span>Woman</span></label>
-            <label class="meet-chip"><input type="checkbox" value="Couple MF"><span>Couple M/F</span></label>
-            <label class="meet-chip"><input type="checkbox" value="Couple MM"><span>Couple M/M</span></label>
-            <label class="meet-chip"><input type="checkbox" value="Couple FF"><span>Couple F/F</span></label>
-            <label class="meet-chip"><input type="checkbox" value="TS"><span>TS</span></label>
+            <label class="meet-chip"><input v-model="selectedFilterLookingFor" type="checkbox"
+                value="Man"><span>Man</span></label>
+            <label class="meet-chip"><input v-model="selectedFilterLookingFor" type="checkbox"
+                value="Woman"><span>Woman</span></label>
+            <label class="meet-chip"><input v-model="selectedFilterLookingFor" type="checkbox"
+                value="Couple MF"><span>Couple M/F</span></label>
+            <label class="meet-chip"><input v-model="selectedFilterLookingFor" type="checkbox"
+                value="Couple MM"><span>Couple M/M</span></label>
+            <label class="meet-chip"><input v-model="selectedFilterLookingFor" type="checkbox"
+                value="Couple FF"><span>Couple F/F</span></label>
+            <label class="meet-chip"><input v-model="selectedFilterLookingFor" type="checkbox"
+                value="TS"><span>TS</span></label>
           </div>
         </div>
 
         <div class="meet-filter-block">
           <span class="meet-label">Show</span>
-          <select id="filterRelationship">
+          <select id="filterRelationship" v-model="filterRelationship">
             <option value="all" selected>All users</option>
             <option value="friends">Friends only</option>
             <option value="crush">Crush list</option>
@@ -79,11 +88,11 @@
           <div class="meet-inline">
             <div>
               <span class="meet-label">Min</span>
-              <input type="number" id="filterMinAge" min="18" max="99" step="1" />
+              <input type="number" id="filterMinAge" v-model.number="filterMinAge" min="18" max="99" step="1" />
             </div>
             <div>
               <span class="meet-label">Max</span>
-              <input type="number" id="filterMaxAge" min="18" max="99" step="1" />
+              <input type="number" id="filterMaxAge" v-model.number="filterMaxAge" min="18" max="99" step="1" />
             </div>
           </div>
           <div class="meet-filter-actions">
@@ -92,8 +101,8 @@
         </div>
 
         <div class="meet-filter-actions">
-          <button class="meet-btn meet-small meet-ghost" id="clearFiltersBtn">Clear</button>
-          <button class="meet-btn meet-small" id="applyFiltersBtn">Apply</button>
+          <button class="meet-btn meet-small meet-ghost" id="clearFiltersBtn" @click="clearFilter()">Clear</button>
+          <button class="meet-btn meet-small" id="applyFiltersBtn" @click="fetchMeetEventWithFilter()">Apply</button>
         </div>
 
         <div class="meet-divider"></div>
@@ -123,8 +132,10 @@
             data-bs-target="#detailsBackdrop" v-for="meet in allMeetEvents" @click="selectEvent(meet)">
             <div class="meet-event-row">
               <div class="meet-who">
-                <img v-if="(meet.meet_photo?.length ?? 0) > 0" :src="(meet.media_path ?? '') + meet.meet_photo" style="max-width: 30px; max-height: 30px; border-radius: 5px;"></img>
-                <div v-if="(meet.meet_photo?.length ?? 0) === 0" class="meet-avatar">{{ meet.nick_name?.slice(0,2).toUpperCase() }}</div>
+                <img v-if="(meet.meet_photo?.length ?? 0) > 0" :src="(meet.media_path ?? '') + meet.meet_photo"
+                  style="max-width: 30px; max-height: 30px; border-radius: 5px;"></img>
+                <div v-if="(meet.meet_photo?.length ?? 0) === 0" class="meet-avatar">{{
+                  meet.nick_name?.slice(0, 2).toUpperCase() }}</div>
                 <div>
                   <div class="meet-name">{{ meet.nick_name }}</div>
                   <div class="meet-tagline">
@@ -139,7 +150,7 @@
               <span class="meet-badge">{{ meet.meet_type }}</span>
               <span class="meet-badge">Date: {{ formatLocal(meet.meet_date ?? '') }}</span>
               <span class="meet-badge">{{ meet.town }}</span>
-              <span class="meet-badge">Age: {{meet.min_age}}-{{meet.max_age}}</span>
+              <span class="meet-badge">Age: {{ meet.min_age }}-{{ meet.max_age }}</span>
             </div>
 
             <div class="meet-event-mini" style="margin-top:6px;">
@@ -164,7 +175,7 @@
           <!-- Header -->
           <div class="modal-head">
             <div>
-              <div class="modal-title" >Meet Event</div>
+              <div class="modal-title">Meet Event</div>
               <!-- <div class="modal-sub" id="detailsSub">Created: {{ selectedEvent?.nick_name }}/div> -->
             </div>
 
@@ -173,7 +184,8 @@
               <span class="meet-head-pill" id="detailsMeetTypePill">{{ selectedEvent?.meet_type }}</span>
               <span class="meet-head-pill" id="detailsLookingPill">{{ selectedEvent?.looking_for?.join(',') }}</span>
               <span class="meet-head-pill" id="detailsLocationPill">{{ selectedEvent?.town }}</span>
-              <span class="meet-head-pill live" id="detailsWhenPill">{{ formatLocal(selectedEvent?.meet_date ?? '') }}</span>
+              <span class="meet-head-pill live" id="detailsWhenPill">{{ formatLocal(selectedEvent?.meet_date ?? '')
+                }}</span>
               <button class="meet-btn meet-small meet-ghost" data-bs-dismiss="modal" aria-label="Close">Close</button>
             </div>
           </div>
@@ -181,13 +193,14 @@
           <div class="meet-modal-grid">
             <div>
               <div class="meet-detail-photo" v-if="(selectedEvent?.meet_photo?.length ?? 0) > 0">
-                <img :src="(selectedEvent?.media_path ?? '') + selectedEvent?.meet_photo" style="max-height: 160px; object-fit: cover;"></img>
+                <img :src="(selectedEvent?.media_path ?? '') + selectedEvent?.meet_photo"
+                  style="max-height: 160px; object-fit: cover;"></img>
               </div>
 
               <div class="meet-section">
                 <span class="meet-label">Description</span>
                 <div id="detailsDesc" style="font-size:12px; line-height:1.45; color:#dfe3f7; white-space:pre-wrap;">
-                 {{ selectedEvent?.description }}</div>
+                  {{ selectedEvent?.description }}</div>
               </div>
             </div>
 
@@ -197,15 +210,18 @@
                 <div class="meet-info-stack">
                   <div class="meet-info-box">
                     <div class="meet-info-label">Profile</div>
-                    <div class="meet-info-value" id="detailsWhoText">{{ selectedEvent?.nick_name }} {{ selectedEvent?.profile_type }}</div>
+                    <div class="meet-info-value" id="detailsWhoText">{{ selectedEvent?.nick_name }} {{
+                      selectedEvent?.profile_type }}</div>
                   </div>
                   <div class="meet-info-box">
                     <div class="meet-info-label">When</div>
-                    <div class="meet-info-value" id="detailsWhenText">{{ formatLocal(selectedEvent?.meet_date ?? '') }}</div>
+                    <div class="meet-info-value" id="detailsWhenText">{{ formatLocal(selectedEvent?.meet_date ?? '') }}
+                    </div>
                   </div>
                   <div class="meet-info-box">
                     <div class="meet-info-label">Looking for</div>
-                    <div class="meet-info-value" id="detailsLookingText">{{ selectedEvent?.looking_for?.join(',') }}</div>
+                    <div class="meet-info-value" id="detailsLookingText">{{ selectedEvent?.looking_for?.join(',') }}
+                    </div>
                   </div>
                   <div class="meet-info-box">
                     <div class="meet-info-label">Location</div>
@@ -213,7 +229,8 @@
                   </div>
                   <div class="meet-info-box">
                     <div class="meet-info-label">Age target</div>
-                    <div class="meet-info-value" id="detailsAgeText">{{ selectedEvent?.min_age }}-{{ selectedEvent?.max_age }}</div>
+                    <div class="meet-info-value" id="detailsAgeText">{{ selectedEvent?.min_age }}-{{
+                      selectedEvent?.max_age }}</div>
                   </div>
                 </div>
               </div>
@@ -243,11 +260,12 @@
               </div>
 
               <div class="meet-section">
-             
+
                 <div class="meet-inline">
                   <button class="meet-btn meet-small" v-if="selectedEvent?.can_like ?? false">Like</button>
                   <button class="meet-btn meet-small" v-if="selectedEvent?.can_comment ?? false">Comment</button>
-                  <button class="meet-btn meet-small meet-ghost" v-if="selectedEvent?.user_id !== user_store.getLoginId">Message</button>
+                  <button class="meet-btn meet-small meet-ghost"
+                    v-if="selectedEvent?.user_id !== user_store.getLoginId">Message</button>
                 </div>
               </div>
             </div>
@@ -370,7 +388,8 @@
                 <span class="meet-label">Town</span>
                 <!-- <input type="text" id="createCustomLocInput" placeholder="Optional" disabled> -->
                 <Multiselect v-model="selectedTown" :options="allTowns" :multiple="false" :close-on-select="true"
-                  placeholder="Select Town" label="town" track_by="town_id" :loading="is_town_loading" @search-change="fetchTowns" :disabled="!isCustomLocation" />
+                  placeholder="Select Town" label="town" track_by="town_id" :loading="is_town_loading"
+                  @search-change="fetchTowns" :disabled="!isCustomLocation" />
               </div>
             </div>
             <div class="meet-section">
@@ -459,6 +478,7 @@ const login_store = useLoginStore()
 
 const isCustomLocation = ref(false)
 const selectedTown = ref<UsersModel.FetchTownResponseModel>({});
+const selectedPostTown = ref<UsersModel.FetchTownPostCodesResponseModel>({});
 const selectedMedia = ref<FeedsModel.FeedsResponseModel | null>(null)
 const selectedEvent = ref<MeetEventsModel.ListResponseModel | null>(null)
 const radius = ref(40) // miles (max 40)
@@ -469,10 +489,19 @@ const selectedLookingFor = ref<string[]>([])
 const minAge = ref(18)
 const maxAge = ref(99)
 
+const filterMinAge = ref(18)
+const filterMaxAge = ref(99)
+const selectedFilterLookingFor = ref<string[]>([])
+
 const description = ref('')
-const meetPhoto = ref('')
 const can_comment = ref(true)
 const can_like = ref(true)
+
+const friends_only = ref(false)
+const crush_only = ref(false)
+const isFilterTodayMode = ref<boolean>(false)
+const filterRelationship = ref('all')
+const filterMeetDate = ref<string | null>('')
 
 // date & time
 const isTodayMode = ref(true)
@@ -480,10 +509,12 @@ const selectedTimeISO = ref<string | null>(null)
 const todayDateISO = ref<string | null>(null)
 const selectedDateISO = ref<string | null>(null)
 const allTowns = ref<UsersModel.FetchTownResponseModel[]>([]);
+const allTownsPostCode = ref<UsersModel.FetchTownPostCodesResponseModel[]>([]);
 const allFeeds = ref([] as FeedsModel.FeedsResponseModel[])
 const allMeetEvents = ref([] as MeetEventsModel.ListResponseModel[])
 const is_event_loading = ref(false)
 const is_town_loading = ref(false)
+const is_town_post_loading = ref(false)
 
 var addEventSub: any = null
 const { $bootstrap } = useNuxtApp();
@@ -555,6 +586,30 @@ function fetchTowns(query: string) {
   });
 }
 
+function fetchTownsPostCodes(query: string) {
+  if (query.length === 0 || is_town_loading.value) {
+    allTownsPostCode.value = []
+    return;
+  }
+  let api_url = getUrl(RequestURL.fetchTownsPostCodes);
+  is_town_post_loading.value = true;
+  allTownsPostCode.value = []
+  $fetch<SuccessError<UsersModel.SignUpResponseModel>>(api_url, {
+    method: 'POST',
+    body: { "search": query },
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  }).then((response) => {
+    is_town_post_loading.value = false;
+    if (response.success) {
+      allTownsPostCode.value = (response.result ?? []) as UsersModel.FetchTownPostCodesResponseModel[]
+    }
+  }).catch((error) => {
+    is_town_post_loading.value = false;
+  });
+}
+
 function openMobileFilters() {
   mobileFiltersOpen.value = true;
   document.body.classList.add('mobile-filters-open');
@@ -570,8 +625,7 @@ function openMobileFilters() {
 
 tommorowDate()
 
-function formatLocal(meet_date:string) : string
-{
+function formatLocal(meet_date: string): string {
   return formatToLocal(meet_date)
 }
 
@@ -603,7 +657,7 @@ const selectMedia = (media: FeedsModel.FeedsResponseModel) => {
 }
 
 const selectEvent = (event: MeetEventsModel.ListResponseModel) => {
- selectedEvent.value =  event
+  selectedEvent.value = event
 }
 
 function showAddPicture() {
@@ -685,6 +739,36 @@ const timeOptions = computed(() => {
 watch(isTodayMode, () => {
   selectedTimeISO.value = null
 })
+watch(isFilterTodayMode, () => {
+  if (isFilterTodayMode.value)
+  {
+  filterMeetDate.value = null
+  }
+ 
+})
+watch(filterMeetDate, () => {
+  if (filterMeetDate.value !== null)
+  {
+isFilterTodayMode.value = false
+  }
+  
+})
+
+
+watch(filterRelationship, () => {
+  friends_only.value = false
+  crush_only.value = false
+
+  if (filterRelationship.value === 'friends') {
+    friends_only.value = true
+  }
+  else if (filterRelationship.value === 'crush') {
+    crush_only.value = true
+  }
+
+})
+
+
 
 function resetMeetEvent() {
   isTodayMode.value = true
@@ -731,10 +815,63 @@ function buildMeetDateISO(): string | null {
 
   return combined.toISOString()
 }
+function clearDate() {
+  filterMeetDate.value = null
+}
+function clearFilter() {
+  friends_only.value = false
+  crush_only.value = false
+  filterRelationship.value = 'all'
+  selectedPostTown.value = {}
+  filterMinAge.value = 18
+  filterMaxAge.value = 99
+  selectedFilterLookingFor.value = []
+   isFilterTodayMode.value = false
+  filterMeetDate.value = null
+  fetchMeetEventWithFilter(false)
+ 
+}
+async function fetchMeetEventWithFilter(isFilter:boolean = true) {
+  let par_meet_date: string | null = null
 
+if (isFilterTodayMode.value) {
+  par_meet_date = new Date().toISOString().split('T')[0] // YYYY-MM-DD
+}
+
+if (filterMeetDate.value !== null) {
+  par_meet_date = filterMeetDate.value // already YYYY-MM-DD
+}
+  const payload: MeetEventsModel.ListRequestModel = {
+    is_filter: isFilter,
+    user_id: login_store.getUserDetails?.user_id ?? 0,
+    latitude: selectedPostTown.value.latitude,
+    longitude: selectedPostTown.value.longitude,
+    min_age: filterMinAge.value,
+    max_age: filterMaxAge.value,
+    looking_for: selectedFilterLookingFor.value,
+    friends_only: friends_only.value,
+    crush_only: crush_only.value,
+    meet_date: par_meet_date
+  }
+ 
+  allMeetEvents.value = []
+  const api_url = getUrl(RequestURL.fetchMeetEvents);
+  let response = await $fetch<SuccessError<MeetEventsModel.CreateResponseModel>>(api_url, {
+    method: 'POST',
+    body: payload
+  })
+  console.log(response)
+  if (response.success) {
+    allMeetEvents.value = response.result ?? []
+  }
+  else {
+    showToastError(response.message)
+  }
+}
 
 async function createMeetEvent() {
   const meetDateISO = buildMeetDateISO()
+
   if (!meetDateISO) {
     showToastError('Please select date and time')
     return;
@@ -781,7 +918,7 @@ async function createMeetEvent() {
     })
     is_event_loading.value = false
 
- 
+
     // success UX
     if (response.success) {
       resetMeetEvent()
