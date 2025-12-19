@@ -535,7 +535,7 @@
       </div>
     </div>
   </div>
-      <EmojiPicker ref="emojiPickerRef" v-on:selected-emoji="selectedEmoji"
+      <EmojiPicker :key="route.fullPath" ref="emojiPickerRef" v-on:selected-emoji="selectedEmoji"
         v-on:select-custom-emoji="selectCustomEmoji" />
 </template>
 
@@ -550,7 +550,7 @@ const mobileFiltersOpen = ref(false);
 const filtersCollapsed = ref(false);
 const user_store = userStore()
 const login_store = useLoginStore()
-
+const route = useRoute();
 const isCustomLocation = ref(false)
 const selectedTown = ref<UsersModel.FetchTownResponseModel>({});
 const selectedPostTown = ref<UsersModel.FetchTownPostCodesResponseModel>({});

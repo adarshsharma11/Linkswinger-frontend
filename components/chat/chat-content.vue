@@ -292,12 +292,7 @@
     </div>
   </div>
 
-  <Teleport to="body">
-    <div style="position: fixed; z-index: 999999; left: 0; top: 0;">
-      <EmojiPicker ref="emojiPickerRef" v-on:selected-emoji="selectedEmoji"
-        v-on:select-custom-emoji="selectCustomEmoji" />
-    </div>
-  </Teleport>
+
 
   <!-- LightGallery: rendered only client-side and only after dynamic import -->
   <component v-if="LightgalleryComp && plugins.length > 0" :is="LightgalleryComp" ref="lgRef"
@@ -310,7 +305,7 @@
     :with-attachments="withAttachments" v-if="showFilters" @close="showFilters = false" @apply-filters="applyFilters"
     @clear-filters="clearFilters()" />
 
-  <EmojiPicker ref="emojiPickerRef" v-on:selected-emoji="selectedEmoji" v-on:select-custom-emoji="selectCustomEmoji" />
+  <EmojiPicker :key="route.fullPath" ref="emojiPickerRef" v-on:selected-emoji="selectedEmoji" v-on:select-custom-emoji="selectCustomEmoji" />
 
 </template>
 

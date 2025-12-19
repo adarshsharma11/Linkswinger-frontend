@@ -490,7 +490,7 @@
   </section>
   <Teleport to="body">
     <div style="position: fixed; z-index: 999999; left: 0; top: 0;">
-      <EmojiPicker ref="emojiPickerRef" v-on:selected-emoji="selectedEmoji" />
+      <EmojiPicker :key="route.fullPath" ref="emojiPickerRef" v-on:selected-emoji="selectedEmoji" />
     </div>
   </Teleport>
   <AcceptDeclineRequestModel :friend_status="friend_status" ref="acceptDeclineRequestModalRef" v-if="toggleRequestModal"
@@ -561,7 +561,7 @@ const login_store = useLoginStore();
 const is_logout_loading = ref(false);
 const is_verify_loading = ref(false);
 const is_status_loading = ref(false);
-
+const route = useRoute();
 const verifications = ref([] as MeetVerificationsModel.FetchVerifyResponseModel[])
 const userDetails = ref<UsersModel.ProfileDetailsResponseModel | null | undefined>(null);
 const feedCounts = ref([] as UsersModel.FeedCountResponseModel[])

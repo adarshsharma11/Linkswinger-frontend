@@ -173,13 +173,8 @@
         </div>
     </div>
 
-    <!-- <Teleport to="body" v-if="props.fromFeeds === true">
-        <div style="position: fixed; z-index: 999999; left: 0; top: 0;">
-            <EmojiPicker ref="emojiPickerRef" v-on:selected-emoji="selectedEmoji"
-                v-on:select-custom-emoji="selectCustomEmoji" />
-        </div>
-    </Teleport> -->
-    <EmojiPicker ref="emojiPickerRef" v-on:selected-emoji="selectedEmoji"
+
+    <EmojiPicker :key="route.fullPath" ref="emojiPickerRef" v-on:selected-emoji="selectedEmoji"
         v-on:select-custom-emoji="selectCustomEmoji" />
 </template>
 
@@ -197,6 +192,7 @@ import { Swiper, SwiperSlide } from "swiper/vue";
 import { Mousewheel, Navigation, Pagination } from 'swiper/modules'
 import "swiper/css";
 import { bool, boolean } from 'yup';
+const route = useRoute();
 let swiperInstance = null
 const videoRefs = ref([])
 const players = ref([])
