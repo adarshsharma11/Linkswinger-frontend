@@ -71,19 +71,19 @@
                         </div>
                     </div>
 
-                    <button class="emj-close" id="closeBtn" aria-label="Close">✕</button>
+                    <button class="emj-close" id="closeBtn" aria-label="Close" @click="closeEmojiPicker()">✕</button>
                 </div>
                 <!-- Body -->
                 <div class="emj-tabs" role="tablist" aria-label="Tabs">
                     <button class="emj-tab active" id="tabEmoji" role="tab" aria-selected="true">😄
                         Emoji</button>
-                    <button class="emj-tab" id="tabStickers" role="tab" aria-selected="false">✨
+                    <button class="emj-tab"  id="tabStickers" role="tab" aria-selected="false">✨
                         Stickers</button>
                 </div>
                 <div class="emj-search">
                     <div class="emj-searchbox">
                         <span>⌕</span>
-                        <input id="search" type="text"
+                        <input id="search" v-model="searchQuery" type="text"
                             placeholder="Search emoji or stickers (e.g. heart, laugh, fire)...">
                     </div>
                     <button class="emj-chip" id="skinBtn" title="Skin tone">🎨 Tone</button>
@@ -95,60 +95,18 @@
                     <div class="emj-sectionbar">
                         <div class="label" id="sectionTitle">Smiles &amp; People</div>
                         <div class="emj-hint">
-                            <span id="countLabel">36 items</span>
+                            <span id="countLabel">{{ filteredEmojis.length }} items</span>
                             <span>•</span>
                             <span>Click to pick</span>
                         </div>
                     </div>
                     <div class="emj-grid" id="grid">
-                        <button class="emj-item" type="button" title=":grin:"><span
-                                class="emj-emoji">😁</span></button><button class="emj-item" type="button"
-                            title=":smile:"><span class="emj-emoji">😄</span></button><button class="emj-item"
-                            type="button" title=":laugh:"><span class="emj-emoji">😂</span></button><button
-                            class="emj-item" type="button" title=":rofl:"><span
-                                class="emj-emoji">🤣</span></button><button class="emj-item" type="button"
-                            title=":wink:"><span class="emj-emoji">😉</span></button><button class="emj-item"
-                            type="button" title=":cool:"><span class="emj-emoji">😎</span></button><button
-                            class="emj-item" type="button" title=":heart_eyes:"><span
-                                class="emj-emoji">😍</span></button><button class="emj-item" type="button"
-                            title=":kiss:"><span class="emj-emoji">😘</span></button><button class="emj-item"
-                            type="button" title=":thinking:"><span class="emj-emoji">🤔</span></button><button
-                            class="emj-item" type="button" title=":fire:"><span
-                                class="emj-emoji">🔥</span></button><button class="emj-item" type="button"
-                            title=":100:"><span class="emj-emoji">💯</span></button><button class="emj-item"
-                            type="button" title=":party:"><span class="emj-emoji">🥳</span></button><button
-                            class="emj-item" type="button" title=":cry:"><span
-                                class="emj-emoji">😢</span></button><button class="emj-item" type="button"
-                            title=":sad:"><span class="emj-emoji">🙁</span></button><button class="emj-item"
-                            type="button" title=":angry:"><span class="emj-emoji">😠</span></button><button
-                            class="emj-item" type="button" title=":shock:"><span
-                                class="emj-emoji">😱</span></button><button class="emj-item" type="button"
-                            title=":ok:"><span class="emj-emoji">👌</span></button><button class="emj-item"
-                            type="button" title=":clap:"><span class="emj-emoji">👏</span></button><button
-                            class="emj-item" type="button" title=":thumbs_up:"><span
-                                class="emj-emoji">👍</span></button><button class="emj-item" type="button"
-                            title=":eyes:"><span class="emj-emoji">👀</span></button><button class="emj-item"
-                            type="button" title=":lips:"><span class="emj-emoji">👄</span></button><button
-                            class="emj-item" type="button" title=":love:"><span
-                                class="emj-emoji">❤️</span></button><button class="emj-item" type="button"
-                            title=":sparkles:"><span class="emj-emoji">✨</span></button><button class="emj-item"
-                            type="button" title=":star:"><span class="emj-emoji">⭐</span></button><button
-                            class="emj-item" type="button" title=":kiss_mark:"><span
-                                class="emj-emoji">💋</span></button><button class="emj-item" type="button"
-                            title=":tongue:"><span class="emj-emoji">😛</span></button><button class="emj-item"
-                            type="button" title=":smirk:"><span class="emj-emoji">😏</span></button><button
-                            class="emj-item" type="button" title=":halo:"><span
-                                class="emj-emoji">😇</span></button><button class="emj-item" type="button"
-                            title=":devil:"><span class="emj-emoji">😈</span></button><button class="emj-item"
-                            type="button" title=":ghost:"><span class="emj-emoji">👻</span></button><button
-                            class="emj-item" type="button" title=":skull:"><span
-                                class="emj-emoji">💀</span></button><button class="emj-item" type="button"
-                            title=":diamond:"><span class="emj-emoji">💎</span></button><button class="emj-item"
-                            type="button" title=":crown:"><span class="emj-emoji">👑</span></button><button
-                            class="emj-item" type="button" title=":lock:"><span
-                                class="emj-emoji">🔒</span></button><button class="emj-item" type="button"
-                            title=":pin:"><span class="emj-emoji">📍</span></button><button class="emj-item"
-                            type="button" title=":camera:"><span class="emj-emoji">📷</span></button>
+                        <button v-for="(emoji, i) in filteredEmojis" :key="i" class="emj-item" type="button"
+                            :title="emoji.title">
+                            <span class="emj-emoji">
+                                {{ emoji.char }}
+                            </span>
+                        </button>
                     </div>
                     <div class="emj-footer">
                         <div class="emj-picked">
@@ -171,7 +129,61 @@
 </template>
 <script setup lang="ts">
 import type { EmojisModel } from '~/composables/models';
+import emojisData from '@/assets/emojis.json'
+import { ref, computed } from 'vue'
 
+/**
+ * Emoji JSON item type
+ */
+interface EmojiItem {
+    n: string[]   // names / aliases
+    u: string     // unicode (hex)
+    v?: string[]  // skin tone variants
+}
+
+/**
+ * Category map type
+ */
+type EmojiMap = Record<string, EmojiItem[]>
+
+const rawEmojis = emojisData as EmojiMap
+const searchQuery = ref('')
+/**
+ * Active category (you can change later)
+ */
+const activeCategory = ref('smileys_people')
+
+/**
+ * Convert "1f600" or "1f468-200d-2695-fe0f" → 😀
+ */
+function unicodeToEmoji(code: string): string {
+    return code
+        .split('-')
+        .map(u => String.fromCodePoint(parseInt(u, 16)))
+        .join('')
+}
+
+/**
+ * Normalized emojis for rendering
+ */
+const emojis = computed(() =>
+    rawEmojis[activeCategory.value].map(e => ({
+        char: unicodeToEmoji(e.u),
+        names: e.n,
+        title: `:${e.n[0]}:`
+    }))
+)
+const filteredEmojis = computed(() => {
+  const q = searchQuery.value.trim().toLowerCase()
+  if (!q) return emojis.value
+
+  console.log('searching',searchQuery)
+  return emojis.value.filter(e =>
+    e.names.some(name =>
+      name.toLowerCase().includes(q.replace(/\s+/g, '_'))
+    )
+  )
+})
 
 const activeTab = ref('emoji');
 
@@ -183,17 +195,19 @@ const dragOffset = ref({ x: 0, y: 0 })
 const pickerPosition = ref({ x: 500, y: 200 }) // initial position
 const pickerWidth = ref(300)
 const pickerHeight = ref(410)
-const emojis = ref([] as EmojisModel.FetchEmojiResponseModel[])
+const stickers = ref([] as EmojisModel.FetchEmojiResponseModel[])
 const emit = defineEmits(['selectedEmoji', 'selectCustomEmoji'])
 const { $bootstrap } = useNuxtApp();
 var pickerModel: any = null
 const toggleEmojiPicker = () => {
     showEmojiPicker.value = !showEmojiPicker.value
 
+    
     pickerModel.show();
 }
 const closeEmojiPicker = () => {
     showEmojiPicker.value = false
+        pickerModel.hide();
 }
 
 
@@ -206,15 +220,15 @@ const onSelectCustomEmoji = (name: string) => {
 }
 
 const startDrag = (e: any) => {
-    if (!emojiPickerRef.value) return
-    isDragging.value = true
-    const rect = emojiPickerRef.value.getBoundingClientRect()
-    dragOffset.value = {
-        x: e.clientX - rect.left,
-        y: e.clientY - (rect.top - 50),
-    }
-    document.addEventListener('mousemove', onDrag)
-    document.addEventListener('mouseup', stopDrag)
+    // if (!emojiPickerRef.value) return
+    // isDragging.value = true
+    // const rect = emojiPickerRef.value.getBoundingClientRect()
+    // dragOffset.value = {
+    //     x: e.clientX - rect.left,
+    //     y: e.clientY - (rect.top - 50),
+    // }
+    // document.addEventListener('mousemove', onDrag)
+    // document.addEventListener('mouseup', stopDrag)
 }
 
 const onDrag = (e: any) => {
@@ -261,7 +275,7 @@ onMounted(async () => {
         });
         return response_model.result ?? []
     }
-    emojis.value = await fetchEmojis() as EmojisModel.FetchEmojiResponseModel[]
+    stickers.value = await fetchEmojis() as EmojisModel.FetchEmojiResponseModel[]
 });
 
 
