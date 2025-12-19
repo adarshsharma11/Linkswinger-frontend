@@ -5,9 +5,10 @@
       <aside class="col-12 col-lg-4 col-xl-3" :class="{ 'd-none': showMobileChat && isMobile }">
         <!-- Dashboard Button - Positioned above the chat card -->
         <div class="mb-3 d-flex justify-content-end">
-          <button class="btn btn-dashboard d-flex align-items-center gap-2" @click="navigateTo('/dashboard')" title="Go to Dashboard">
+          <button class="btn btn-dashboard d-flex align-items-center gap-2" @click="navigateTo('/dashboard')"
+            title="Go to Dashboard">
             <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
-              <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
+              <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z" />
             </svg>
             <span class="text-white d-lg-inline">Dashboard</span>
           </button>
@@ -19,9 +20,8 @@
               <span>Messages</span>
             </div>
             <button class="btn btn-dashboard d-flex align-items-center gap-2 msgf-filter-btn"
-              @click="showFilters = true"
-              title="Filters">
-              
+              @click="showFilters = true" title="Filters">
+
               <!-- filter icon -->
               <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
                 <path d="M3 5h18l-6.5 8v6l-5 3v-9L3 5z"></path>
@@ -49,9 +49,10 @@
                 <div class="chat-item-right">
                   <div class="d-flex align-items-center gap-2">
                     <strong>{{ historymodel.nick_name }}</strong>
-                    <div
-                      @click.stop="deleteWholeChat(historymodel)" v-if="(historymodel.is_deleting ?? false) === false">
-                      <img src="/images/badges/animated/50X50px/delete.gif" alt="Delete" style="width: 20px; height: 20px;">
+                    <div @click.stop="deleteWholeChat(historymodel)"
+                      v-if="(historymodel.is_deleting ?? false) === false">
+                      <img src="/images/badges/animated/50X50px/delete.gif" alt="Delete"
+                        style="width: 20px; height: 20px;">
                     </div>
                     <span class="btn-loader" v-if="historymodel.is_deleting"></span>
                   </div>
@@ -245,8 +246,8 @@
           <div class="border-top border-secondary p-3 chat-ftr">
             <div class="d-flex align-items-center message-input chat-ftr-left">
               <!--<button class="btn btn-link text-light fs-5" @click="handleToggle">😊</button>-->
-              <button class="btn btn-link text-light fs-5" aria-label="Go to emoji icon" data-bs-toggle="modal"
-          data-bs-target="#emojiBtn">😊</button>
+              <button class="btn btn-link text-light fs-5" aria-label="Go to emoji icon" 
+                @click="handleToggle">😊</button>
               <textarea v-model="messageTxt" id="composer" ref="messageRef" rows="1"
                 class="form-control bg-transparent border-0 text-light"
                 placeholder="Type a message… (Ctrl/⌘ + Enter to send)"></textarea>
@@ -298,107 +299,13 @@
     <a v-for="item in galleryItems" :key="item.id" :data-src="item.isVideo ? null : item.src"
       :data-video="item.isVideo ? item.video : null" :data-lg-size="item.isVideo ? item.size : null"></a>
   </component>
-  <FilterModal  :friends-only="friendsOnly" :photo-verified-only="photoVerifiedOnly" :show-unread="showUnread" :with-attachments="withAttachments" v-if="showFilters" @close="showFilters = false" @apply-filters="applyFilters" @clear-filters="clearFilters()"/>
+  <FilterModal :friends-only="friendsOnly" :photo-verified-only="photoVerifiedOnly" :show-unread="showUnread"
+    :with-attachments="withAttachments" v-if="showFilters" @close="showFilters = false" @apply-filters="applyFilters"
+    @clear-filters="clearFilters()" />
 
-<!--Symbole popup-->
-<div class="modal fade emoji-modal" id="emojiBtn" tabindex="-1" role="dialog" aria-hidden="true">
-	<div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable" role="document">
-        <div class="modal-content text-white modal-inner emoji-small">
-          <!-- Header -->
-			<div class="emj-topbar" id="dragHandle" title="Drag me" style="cursor: grab;">
-				<div class="emj-brand">
-				<!-- ✅ your logo replaces the LS icon -->
-					<div class="emj-badge">
-					  <img src="/images/badges/animated/150X150px/ls-watermark.gif" alt="LinkSwingers" class="emj-badgeLogo">
-					</div>
-					<div class="emj-titlewrap">
-					  <p class="emj-title">Emoji &amp; Stickers</p>
-					  <p class="emj-subtitle">Metallic red popup mock-up • searchable • mobile ready</p>
-					</div>
-				</div>
-
-				<button class="emj-close" id="closeBtn" aria-label="Close">✕</button>
-			</div>
-          <!-- Body -->
-			<div class="emj-tabs" role="tablist" aria-label="Tabs">
-				<button class="emj-tab active" id="tabEmoji" role="tab" aria-selected="true">😄 Emoji</button>
-				<button class="emj-tab" id="tabStickers" role="tab" aria-selected="false">✨ Stickers</button>
-			</div>
-			<div class="emj-search">
-				<div class="emj-searchbox">
-					<span>⌕</span>
-					<input id="search" type="text" placeholder="Search emoji or stickers (e.g. heart, laugh, fire)...">
-				</div>
-			  <button class="emj-chip" id="skinBtn" title="Skin tone">🎨 Tone</button>
-			</div>
-			<div class="emj-body">
-				<div class="emj-wm">
-					<img src="/images/badges/animated/150X150px/ls-watermark.gif" alt="">
-				</div>
-				<div class="emj-sectionbar">
-					<div class="label" id="sectionTitle">Smiles &amp; People</div>
-					<div class="emj-hint">
-					  <span id="countLabel">36 items</span>
-					  <span>•</span>
-					  <span>Click to pick</span>
-					</div>
-				</div>
-				<div class="emj-grid" id="grid">
-					<button class="emj-item" type="button" title=":grin:"><span class="emj-emoji">😁</span></button
-					><button class="emj-item" type="button" title=":smile:"><span class="emj-emoji">😄</span></button
-					><button class="emj-item" type="button" title=":laugh:"><span class="emj-emoji">😂</span></button
-					><button class="emj-item" type="button" title=":rofl:"><span class="emj-emoji">🤣</span></button
-					><button class="emj-item" type="button" title=":wink:"><span class="emj-emoji">😉</span></button
-					><button class="emj-item" type="button" title=":cool:"><span class="emj-emoji">😎</span></button
-					><button class="emj-item" type="button" title=":heart_eyes:"><span class="emj-emoji">😍</span></button
-					><button class="emj-item" type="button" title=":kiss:"><span class="emj-emoji">😘</span></button
-					><button class="emj-item" type="button" title=":thinking:"><span class="emj-emoji">🤔</span></button
-					><button class="emj-item" type="button" title=":fire:"><span class="emj-emoji">🔥</span></button
-					><button class="emj-item" type="button" title=":100:"><span class="emj-emoji">💯</span></button
-					><button class="emj-item" type="button" title=":party:"><span class="emj-emoji">🥳</span></button
-					><button class="emj-item" type="button" title=":cry:"><span class="emj-emoji">😢</span></button
-					><button class="emj-item" type="button" title=":sad:"><span class="emj-emoji">🙁</span></button
-					><button class="emj-item" type="button" title=":angry:"><span class="emj-emoji">😠</span></button
-					><button class="emj-item" type="button" title=":shock:"><span class="emj-emoji">😱</span></button
-					><button class="emj-item" type="button" title=":ok:"><span class="emj-emoji">👌</span></button
-					><button class="emj-item" type="button" title=":clap:"><span class="emj-emoji">👏</span></button
-					><button class="emj-item" type="button" title=":thumbs_up:"><span class="emj-emoji">👍</span></button
-					><button class="emj-item" type="button" title=":eyes:"><span class="emj-emoji">👀</span></button
-					><button class="emj-item" type="button" title=":lips:"><span class="emj-emoji">👄</span></button
-					><button class="emj-item" type="button" title=":love:"><span class="emj-emoji">❤️</span></button
-					><button class="emj-item" type="button" title=":sparkles:"><span class="emj-emoji">✨</span></button
-					><button class="emj-item" type="button" title=":star:"><span class="emj-emoji">⭐</span></button
-					><button class="emj-item" type="button" title=":kiss_mark:"><span class="emj-emoji">💋</span></button
-					><button class="emj-item" type="button" title=":tongue:"><span class="emj-emoji">😛</span></button
-					><button class="emj-item" type="button" title=":smirk:"><span class="emj-emoji">😏</span></button
-					><button class="emj-item" type="button" title=":halo:"><span class="emj-emoji">😇</span></button
-					><button class="emj-item" type="button" title=":devil:"><span class="emj-emoji">😈</span></button
-					><button class="emj-item" type="button" title=":ghost:"><span class="emj-emoji">👻</span></button
-					><button class="emj-item" type="button" title=":skull:"><span class="emj-emoji">💀</span></button
-					><button class="emj-item" type="button" title=":diamond:"><span class="emj-emoji">💎</span></button
-					><button class="emj-item" type="button" title=":crown:"><span class="emj-emoji">👑</span></button
-					><button class="emj-item" type="button" title=":lock:"><span class="emj-emoji">🔒</span></button
-					><button class="emj-item" type="button" title=":pin:"><span class="emj-emoji">📍</span></button
-					><button class="emj-item" type="button" title=":camera:"><span class="emj-emoji">📷</span></button>
-				</div>
-				<div class="emj-footer">
-					<div class="emj-picked">
-					  <div class="emj-bubble" id="pickedBubble">🙂</div>
-					  <div class="emj-meta">
-						<b id="pickedTitle">Nothing selected</b>
-						<span id="pickedSub">Pick an emoji or a sticker</span>
-					  </div>
-					</div>
-					<div class="emj-actions">
-					  <button class="emj-btn secondary" id="clearBtn">Clear</button>
-					  <button class="emj-btn" id="useBtn">Use</button>
-					</div>
-				</div>
-
-			</div>
-        </div>
-	</div>
-</div>
+        <EmojiPicker  ref="emojiPickerRef" v-on:selected-emoji="selectedEmoji"
+                v-on:select-custom-emoji="selectCustomEmoji" />
+  
 </template>
 
 <script setup lang="ts">
@@ -453,12 +360,12 @@ const lgRef = ref<any>(null);
 let lgInstance: any = null;
 const galleryItems = ref<any[]>([]);
 
-const fileWidth  = ref(0);
+const fileWidth = ref(0);
 const fileHeight = ref(0);
 
-const showUnread        = ref(false)
-const friendsOnly       = ref(false)
-const withAttachments   = ref(false)
+const showUnread = ref(false)
+const friendsOnly = ref(false)
+const withAttachments = ref(false)
 const photoVerifiedOnly = ref(false)
 
 function onGalleryInit(detail: any) {
@@ -522,24 +429,21 @@ function openPreview(chat: any) {
   });
 }
 
-function applyFilters(filters?: { unread: boolean; friends: boolean; attachments: boolean; photoVerified: boolean }) 
-{
-  if (filters) 
-  {
+function applyFilters(filters?: { unread: boolean; friends: boolean; attachments: boolean; photoVerified: boolean }) {
+  if (filters) {
     showUnread.value = filters.unread
     friendsOnly.value = filters.friends
     withAttachments.value = filters.attachments
     photoVerifiedOnly.value = filters.photoVerified
-     fetchHistoryWithFilter()
+    fetchHistoryWithFilter()
   }
 }
-function clearFilters() 
-{
+function clearFilters() {
   showUnread.value = false
   friendsOnly.value = false
   withAttachments.value = false
   photoVerifiedOnly.value = false
-   fetchHistoryWithFilter()
+  fetchHistoryWithFilter()
 }
 // Other UI helpers (unchanged)
 function toggleSelectMode() {
@@ -643,8 +547,7 @@ if (to_id !== 0) {
   fetchUserDetails();
 }
 
-async function fetchHistoryWithFilter()
-{
+async function fetchHistoryWithFilter() {
   chatHistoryModels.value = []
   const api_url = getUrl(RequestURL.chatHistory);
   const response = await $fetch<SuccessError<ChatsModel.ChatResponseModel>>(api_url, {
@@ -652,21 +555,19 @@ async function fetchHistoryWithFilter()
     method: "post",
     body: {
       "from_id": user_store.getLoginId,
-      showUnread : showUnread.value,
-      friendsOnly : friendsOnly.value,
-      withAttachments : withAttachments.value,
-      photoVerifiedOnly : photoVerifiedOnly.value
+      showUnread: showUnread.value,
+      friendsOnly: friendsOnly.value,
+      withAttachments: withAttachments.value,
+      photoVerifiedOnly: photoVerifiedOnly.value
     },
     headers: {
       "content-type": "application/json"
     }
   });
-  if (response.success)
-  {
+  if (response.success) {
     chatHistoryModels.value = response.result ?? []
   }
-  else
-  {
+  else {
     showToastError(response.message)
   }
 }
@@ -1064,36 +965,32 @@ async function deleteChat() {
     headers: { "content-type": "application/json" },
     onResponse: async ({ response }) => {
       const response_model = response._data as SuccessError<ChatsModel.ChatResponseModel>
-      if (response_model.success) 
-      {
+      if (response_model.success) {
         selectedMessages.value.forEach((el) => {
           const index = chatModels.value.findIndex(c => c.chat_id === el);
           if (index !== -1) {
-             let chat = chatModels.value[index]
-             if (chat.from_id === login_store.getUserDetails?.user_id) {
-                 chat.is_deleted = true
-             }
-             else
-             {
-                chatModels.value.splice(index, 1); 
-             }
+            let chat = chatModels.value[index]
+            if (chat.from_id === login_store.getUserDetails?.user_id) {
+              chat.is_deleted = true
+            }
+            else {
+              chatModels.value.splice(index, 1);
+            }
           }
         })
 
-        if (chatModels.value.length > 0)
-        {
-           const lastMessage = chatModels.value[chatModels.value.length - 1];
-           let user_id = lastMessage.from_id === login_store.getUserDetails?.user_id ? lastMessage.to_id : lastMessage.from_id
-           const histories = chatHistoryModels.value.filter(h => h.user_id === user_id)
-            if (histories.length > 0)
-             {
-              histories[0].from_id = lastMessage.from_id ?? 0
-              histories[0].to_id = lastMessage.to_id ?? 0
-              histories[0].chat_id = lastMessage.chat_id ?? 0
-              histories[0].message = lastMessage.message ?? ''
-              histories[0].message_type = lastMessage.message_type ?? ''
-              histories[0].is_deleted = lastMessage.is_deleted ?? false
-            }
+        if (chatModels.value.length > 0) {
+          const lastMessage = chatModels.value[chatModels.value.length - 1];
+          let user_id = lastMessage.from_id === login_store.getUserDetails?.user_id ? lastMessage.to_id : lastMessage.from_id
+          const histories = chatHistoryModels.value.filter(h => h.user_id === user_id)
+          if (histories.length > 0) {
+            histories[0].from_id = lastMessage.from_id ?? 0
+            histories[0].to_id = lastMessage.to_id ?? 0
+            histories[0].chat_id = lastMessage.chat_id ?? 0
+            histories[0].message = lastMessage.message ?? ''
+            histories[0].message_type = lastMessage.message_type ?? ''
+            histories[0].is_deleted = lastMessage.is_deleted ?? false
+          }
         }
         showToastSuccess(response_model.message)
         selectedMessages.value.forEach((el) => {
@@ -1386,23 +1283,23 @@ async function deleteSelected() {
   .chat-hd-btn {
     gap: 0.5rem !important;
   }
-  
+
   .btn-sm {
     padding: 0.375rem 0.75rem;
     font-size: 0.8rem;
   }
-  
+
   .btn-outline-light svg {
     width: 14px;
     height: 14px;
   }
-  
+
   /* Sidebar dashboard button mobile optimizations */
   .cht-top .btn-outline-light {
     padding: 0.25rem 0.5rem;
     font-size: 0.75rem;
   }
-  
+
   .cht-top .btn-outline-light svg {
     width: 12px;
     height: 12px;
@@ -1414,7 +1311,7 @@ async function deleteSelected() {
   .btn-outline-light {
     padding: 0.5rem 0.875rem;
   }
-  
+
   .cht-top .btn-outline-light {
     padding: 0.375rem 0.625rem;
     font-size: 0.8rem;

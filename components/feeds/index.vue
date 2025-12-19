@@ -168,12 +168,14 @@
         </div>
     </div>
 
-    <Teleport to="body" v-if="props.fromFeeds === true">
+    <!-- <Teleport to="body" v-if="props.fromFeeds === true">
         <div style="position: fixed; z-index: 999999; left: 0; top: 0;">
             <EmojiPicker ref="emojiPickerRef" v-on:selected-emoji="selectedEmoji"
                 v-on:select-custom-emoji="selectCustomEmoji" />
         </div>
-    </Teleport>
+    </Teleport> -->
+        <EmojiPicker  ref="emojiPickerRef" v-on:selected-emoji="selectedEmoji"
+                v-on:select-custom-emoji="selectCustomEmoji" />
 </template>
 
 <script setup lang="ts">
