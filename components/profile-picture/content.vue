@@ -27,7 +27,7 @@
                 <span class="lsv-pill">All Photos</span>
               </h1>
               <p>
-                Choose a photo from your photos to use as your profile picture. 
+                Choose a photo from your photos to use as your profile picture.
               </p>
             </div>
           </div>
@@ -44,20 +44,16 @@
 
           <!-- Media Grid -->
           <div class="lsv-media-grid">
-            <div 
-              v-for="media in allFeeds" 
-              :key="media.feed_id"
-              class="lsv-media-item"
+            <div v-for="media in allFeeds" :key="media.feed_id" class="lsv-media-item"
               :class="{ 'lsv-media-item--selected': selectedMedia?.feed_id === media.feed_id }"
-              @click="selectMedia(media)"
-            >
+              @click="selectMedia(media)">
               <div class="lsv-media-image">
-                <img :src="(media.media_path ?? '') + media.hd_feed_image"  />
+                <img :src="(media.media_path ?? '') + media.hd_feed_image" />
                 <div class="lsv-media-overlay" v-if="selectedMedia?.feed_id === media.feed_id">
                   <span class="lsv-check-icon">✓</span>
                 </div>
               </div>
-             
+
             </div>
           </div>
 
@@ -65,7 +61,7 @@
           <div v-if="selectedMedia" class="lsv-selection-preview">
             <h3>Current Selection</h3>
             <div class="lsv-preview-content">
-              <img :src="(selectedMedia.media_path ?? '') + selectedMedia.hd_feed_image"  />
+              <img :src="(selectedMedia.media_path ?? '') + selectedMedia.hd_feed_image" />
             </div>
           </div>
 
@@ -74,12 +70,7 @@
             <div class="lsv-hint">
               Selected photo will become your new profile picture immediately.
             </div>
-            <button 
-              v-if="!is_uploading"
-              class="lsv-save" 
-              @click="saveProfilePicture"
-              :disabled="!selectedMedia"
-            >
+            <button v-if="!is_uploading" class="lsv-save" @click="saveProfilePicture" :disabled="!selectedMedia">
               Set as Profile Picture
             </button>
             <span class="btn-loader" v-if="is_uploading"></span>
@@ -99,37 +90,37 @@ const login_store = useLoginStore()
 const selectedMedia = ref<FeedsModel.FeedsResponseModel | null>(null)
 const is_uploading = ref(false)
 const fetchFeeds = async () => {
-    const api_url = getUrl(RequestURL.fetchFeeds);
-    const { data: feed_response, error: option_error } = await useFetch<SuccessError<FeedsModel.FeedsResponseModel>>(api_url, {
-        cache: "no-cache",
-        method: "post",
-        body: {
-            login_id: login_store.getUserDetails?.user_id ?? 0,
-            user_id: login_store.getUserDetails?.user_id ?? 0,
-            media_type: 'image',
-            feed_type : ''
-        },
-        headers: {
-            "content-type": "application/json"
-        }
-    });
-    return feed_response.value?.result ?? []
+  const api_url = getUrl(RequestURL.fetchFeeds);
+  const { data: feed_response, error: option_error } = await useFetch<SuccessError<FeedsModel.FeedsResponseModel>>(api_url, {
+    cache: "no-cache",
+    method: "post",
+    body: {
+      login_id: login_store.getUserDetails?.user_id ?? 0,
+      user_id: login_store.getUserDetails?.user_id ?? 0,
+      media_type: 'image',
+      feed_type: ''
+    },
+    headers: {
+      "content-type": "application/json"
+    }
+  });
+  return feed_response.value?.result ?? []
 }
 allFeeds.value = await fetchFeeds() as FeedsModel.FeedsResponseModel[]
 compareProfilePic()
 // Methods
-const selectMedia = (media : FeedsModel.FeedsResponseModel) => {
+const selectMedia = (media: FeedsModel.FeedsResponseModel) => {
   selectedMedia.value = media
 }
 
-const saveProfilePicture = async  () => {
+const saveProfilePicture = async () => {
   if (selectedMedia.value) {
     is_uploading.value = true
     let api_url = getUrl(RequestURL.updateProfilePicture);
     let postData = {
       user_id: login_store.getUserDetails?.user_id ?? 0,
-      profile_image : selectedMedia.value.lq_feed_image,
-      hd_profile_image : selectedMedia.value.hd_feed_image
+      profile_image: selectedMedia.value.lq_feed_image,
+      hd_profile_image: selectedMedia.value.hd_feed_image
     }
     let response = await $fetch<SuccessError<FeedsModel.FeedsResponseModel>>(api_url, {
       method: 'POST',
@@ -141,7 +132,7 @@ const saveProfilePicture = async  () => {
     is_uploading.value = false
     if (response.success) {
       showToastSuccess(response.message ?? "Success!!");
-      login_store.setProfilePic(selectedMedia.value.lq_feed_image ?? '',selectedMedia.value.hd_feed_image ?? '')
+      login_store.setProfilePic(selectedMedia.value.lq_feed_image ?? '', selectedMedia.value.hd_feed_image ?? '')
       selectedMedia.value = null
       await navigateTo('/')
     }

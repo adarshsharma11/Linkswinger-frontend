@@ -79,7 +79,7 @@
           <div class="meet-inline">
             <div>
               <span class="meet-label">Min</span>
-              <input type="number" id="filterMinAge" min="18" max="99" step="1"  />
+              <input type="number" id="filterMinAge" min="18" max="99" step="1" />
             </div>
             <div>
               <span class="meet-label">Max</span>
@@ -376,8 +376,8 @@
           <div class="meet-section">
             <span class="meet-label">Meet type (pick one)</span>
             <div class="meet-chips">
-              <label class="meet-chip"><input v-model="selectedMeetType" type="radio" name="createMeetType" value="Outdoor"
-                  checked><span>Outdoor</span></label>
+              <label class="meet-chip"><input v-model="selectedMeetType" type="radio" name="createMeetType"
+                  value="Outdoor" checked><span>Outdoor</span></label>
               <label class="meet-chip"><input v-model="selectedMeetType" type="radio" name="createMeetType"
                   value="Accommodate"><span>Accommodate</span></label>
               <label class="meet-chip"><input v-model="selectedMeetType" type="radio" name="createMeetType"
@@ -387,12 +387,18 @@
           <div class="meet-section">
             <span class="meet-label">Looking for (multi-select)</span>
             <div class="meet-chips" id="createLookingFor">
-              <label class="meet-chip"><input v-model="selectedLookingFor" type="checkbox" value="Man"><span>Man</span></label>
-              <label class="meet-chip"><input v-model="selectedLookingFor" type="checkbox" value="Woman"><span>Woman</span></label>
-              <label class="meet-chip"><input v-model="selectedLookingFor" type="checkbox" value="Couple MF"><span>Couple M/F</span></label>
-              <label class="meet-chip"><input v-model="selectedLookingFor" type="checkbox" value="Couple MM"><span>Couple M/M</span></label>
-              <label class="meet-chip"><input v-model="selectedLookingFor" type="checkbox" value="Couple FF"><span>Couple F/F</span></label>
-              <label class="meet-chip"><input v-model="selectedLookingFor" type="checkbox" value="TS"><span>TS</span></label>
+              <label class="meet-chip"><input v-model="selectedLookingFor" type="checkbox"
+                  value="Man"><span>Man</span></label>
+              <label class="meet-chip"><input v-model="selectedLookingFor" type="checkbox"
+                  value="Woman"><span>Woman</span></label>
+              <label class="meet-chip"><input v-model="selectedLookingFor" type="checkbox"
+                  value="Couple MF"><span>Couple M/F</span></label>
+              <label class="meet-chip"><input v-model="selectedLookingFor" type="checkbox"
+                  value="Couple MM"><span>Couple M/M</span></label>
+              <label class="meet-chip"><input v-model="selectedLookingFor" type="checkbox"
+                  value="Couple FF"><span>Couple F/F</span></label>
+              <label class="meet-chip"><input v-model="selectedLookingFor" type="checkbox"
+                  value="TS"><span>TS</span></label>
             </div>
           </div>
           <div class="meet-section">
@@ -400,11 +406,11 @@
             <div class="meet-inline">
               <div>
                 <span class="meet-label">Min</span>
-                <input type="number" id="createMinAge" min="18" max="99"  v-model.number="minAge">
+                <input type="number" id="createMinAge" min="18" max="99" v-model.number="minAge">
               </div>
               <div>
                 <span class="meet-label">Max</span>
-                <input type="number" id="createMaxAge" min="18" max="99"  v-model.number="maxAge">
+                <input type="number" id="createMaxAge" min="18" max="99" v-model.number="maxAge">
               </div>
             </div>
           </div>
@@ -419,12 +425,15 @@
                 <div class="meet-t-label">Custom location</div>
                 <div class="meet-t-sub">If off, we use your account location</div>
               </div>
-              <div class="meet-switch" :class="{'on' : isCustomLocation}" id="createCustomLocSwitch" role="switch" aria-checked="false" tabindex="0" @click="isCustomLocation = !isCustomLocation"></div>
+              <div class="meet-switch" :class="{ 'on': isCustomLocation }" id="createCustomLocSwitch" role="switch"
+                aria-checked="false" tabindex="0" @click="isCustomLocation = !isCustomLocation"></div>
             </div>
             <div class="meet-inline" style="margin-top:10px;">
               <div>
                 <span class="meet-label">Town</span>
-                <input type="text" id="createCustomLocInput" placeholder="Optional" disabled>
+                <!-- <input type="text" id="createCustomLocInput" placeholder="Optional" disabled> -->
+                <Multiselect v-model="selectedTown" :options="allTowns" :multiple="false" :close-on-select="true"
+                  placeholder="Select Town" label="town" track_by="town_id" :disabled="!isCustomLocation" />
               </div>
             </div>
             <div class="meet-section">
@@ -436,13 +445,28 @@
           </div>
           <div class="meet-section">
             <span class="meet-label">Description (emoji enabled)</span>
-            <textarea id="createDesc" placeholder="Write your meet details 😈🔥"></textarea>
+            <textarea v-model="description" id="createDesc" placeholder="Write your meet details 😈🔥"></textarea>
           </div>
           <div class="meet-section">
             <span class="meet-label">Picture</span>
             <div class="meet-inline">
-              <button class="meet-btn meet-small" id="openGalleryBtn" type="button">Add picture</button>
-              <input type="text" id="selectedPhotoField" value="No picture selected" readonly>
+              <button @click="showAddPicture()" v-if="allFeeds.length === 0" class="meet-btn meet-small"
+                id="openGalleryBtn" type="button">Add
+                picture</button>
+              <!-- <input type="text" id="selectedPhotoField" value="No picture selected" readonly> -->
+            </div>
+
+            <div class="lsv-media-grid">
+              <div v-for="media in allFeeds" :key="media.feed_id" class="lsv-media-item"
+                :class="{ 'lsv-media-item--selected': selectedMedia?.feed_id === media.feed_id }"
+                @click="selectMedia(media)">
+                <div class="lsv-media-image">
+                  <img :src="(media.media_path ?? '') + media.hd_feed_image" />
+                  <div class="lsv-media-overlay" v-if="selectedMedia?.feed_id === media.feed_id">
+                    <span class="lsv-check-icon">✓</span>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
           <div class="meet-section">
@@ -453,7 +477,8 @@
                   <div class="meet-t-label">Comments</div>
                   <div class="meet-t-sub">Allow comments on your event</div>
                 </div>
-                <div class="meet-switch on" id="createCommentsSwitch" role="switch" aria-checked="true" tabindex="0">
+                <div class="meet-switch" :class="{ 'on': can_comment }" id="createCommentsSwitch" role="switch"
+                  aria-checked="true" tabindex="0" @click="can_comment = !can_comment">
                 </div>
               </div>
 
@@ -462,17 +487,18 @@
                   <div class="meet-t-label">Likes</div>
                   <div class="meet-t-sub">Allow likes on your event</div>
                 </div>
-                <div class="meet-switch on" id="createLikesSwitch" role="switch" aria-checked="true" tabindex="0"></div>
+                <div class="meet-switch" :class="{ 'on': can_like }" id="createLikesSwitch" role="switch"
+                  aria-checked="true" tabindex="0" @click="can_like = !can_like"></div>
               </div>
             </div>
           </div>
           <div class="meet-divider"></div>
           <div class="meet-inline">
-            <button class="meet-btn meet-small meet-ghost" id="createResetBtn" type="button">Reset</button>
-            <button class="meet-btn meet-small meet-primary" id="createSaveBtn" type="button">Save Event (Demo)</button>
+            <button class="meet-btn meet-small meet-ghost" id="createResetBtn" type="button" @click="resetMeetEvent()">Reset</button>
+            <button class="meet-btn meet-small meet-primary" id="createSaveBtn" type="button">Save Event</button>
           </div>
           <div class="meet-foot">
-            Demo: saves an event by "You" and adds it to the feed.
+            Saves an event by "You" and adds it to the feed.
           </div>
         </div>
       </div>
@@ -482,8 +508,9 @@
 
 
 <script setup lang="ts">
-import type { MeetEventsModel, SuccessError, UsersModel } from '~/composables/models';
-
+import type { FeedsModel, MeetEventsModel, SuccessError, UsersModel } from '~/composables/models';
+import Multiselect from 'vue-multiselect';
+import 'vue-multiselect/dist/vue-multiselect.css';
 // MOBILE FILTERS
 const mobileFiltersOpen = ref(false);
 const filtersCollapsed = ref(false);
@@ -491,8 +518,8 @@ const user_store = userStore()
 const login_store = useLoginStore()
 
 const isCustomLocation = ref(false)
-const selectedTown = ref<any>(null)
-
+const selectedTown = ref<UsersModel.FetchTownResponseModel>({});
+const selectedMedia = ref<FeedsModel.FeedsResponseModel | null>(null)
 const radius = ref(40) // miles (max 40)
 
 const selectedMeetType = ref('Outdoor')
@@ -503,6 +530,8 @@ const maxAge = ref(99)
 
 const description = ref('')
 const meetPhoto = ref('')
+const can_comment = ref(true)
+const can_like = ref(true)
 
 // date & time
 const isTodayMode = ref(true)
@@ -510,7 +539,7 @@ const selectedTimeISO = ref<string | null>(null)
 const todayDateISO = ref<string | null>(null)
 const selectedDateISO = ref<string | null>(null)
 const allTowns = ref<UsersModel.FetchTownResponseModel[]>([]);
-
+const allFeeds = ref([] as FeedsModel.FeedsResponseModel[])
 
 const fetchTowns = async () => {
   const api_url = getUrl(RequestURL.fetchTowns);
@@ -522,11 +551,29 @@ const fetchTowns = async () => {
       "content-type": "application/json"
     }
   });
-  return fetch_response.value?.result 
+  return fetch_response.value?.result
 }
 
 allTowns.value = await fetchTowns() as UsersModel.FetchTownResponseModel[];
 
+const fetchFeeds = async () => {
+  const api_url = getUrl(RequestURL.fetchFeeds);
+  const { data: feed_response, error: option_error } = await useFetch<SuccessError<FeedsModel.FeedsResponseModel>>(api_url, {
+    cache: "no-cache",
+    method: "post",
+    body: {
+      login_id: login_store.getUserDetails?.user_id ?? 0,
+      user_id: login_store.getUserDetails?.user_id ?? 0,
+      media_type: 'image',
+      feed_type: ''
+    },
+    headers: {
+      "content-type": "application/json"
+    }
+  });
+  return feed_response.value?.result ?? []
+}
+allFeeds.value = await fetchFeeds() as FeedsModel.FeedsResponseModel[]
 
 function openMobileFilters() {
   mobileFiltersOpen.value = true;
@@ -552,6 +599,25 @@ function tommorowDate() {
   d.setDate(today.getDate() + 1)
   selectedDateISO.value = d.toISOString().split('T')[0]
 
+}
+
+const selectMedia = (media: FeedsModel.FeedsResponseModel) => {
+  if (selectedMedia.value === null) {
+    selectedMedia.value = media
+  }
+  else {
+    if (media.feed_id === selectedMedia.value.feed_id) {
+      selectedMedia.value = null
+    }
+    else {
+      selectedMedia.value = media
+    }
+  }
+
+}
+
+function showAddPicture() {
+  showToastError('Please add picture in your feeds')
 }
 
 const next14Days = computed(() => {
@@ -630,6 +696,21 @@ watch(isTodayMode, () => {
   selectedTimeISO.value = null
 })
 
+function resetMeetEvent() {
+  isTodayMode.value = true
+  isCustomLocation.value = false
+  selectedMedia.value = null
+  selectedTimeISO.value = null
+  minAge.value = 18
+  maxAge.value = 99
+  selectedLookingFor.value = []
+  selectedMeetType.value = 'Outdoor'
+  radius.value = 40
+  selectedTown.value = {}
+  can_comment.value = true
+  can_like.value = true
+}
+
 function closeMobileFilters() {
   mobileFiltersOpen.value = false;
   document.body.classList.remove('mobile-filters-open');
@@ -640,6 +721,7 @@ function closeMobileFilters() {
 function toggleFilters() {
   filtersCollapsed.value = !filtersCollapsed.value;
 }
+
 function buildMeetDateISO(): string | null {
   if (isTodayMode.value) {
     return selectedTimeISO.value // already ISO
@@ -717,3 +799,20 @@ async function createMeetEvent() {
 
 
 </script>
+<style scoped>
+.lsv-media-grid {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 200px;
+  /* width of each item */
+  gap: 16px;
+
+  overflow-x: auto;
+  overflow-y: hidden;
+
+  margin-bottom: 24px;
+  padding: 16px;
+
+
+}
+</style>
