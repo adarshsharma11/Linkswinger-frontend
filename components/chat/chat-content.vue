@@ -305,7 +305,12 @@
     :with-attachments="withAttachments" v-if="showFilters" @close="showFilters = false" @apply-filters="applyFilters"
     @clear-filters="clearFilters()" />
 
-  <EmojiPicker :key="route.fullPath" ref="emojiPickerRef" v-on:selected-emoji="selectedEmoji" v-on:select-custom-emoji="selectCustomEmoji" />
+      <Teleport to="body">
+    <div style="position: fixed; z-index: 999999; left: 0; top: 0;">
+       <EmojiPicker :key="route.fullPath" ref="emojiPickerRef" v-on:selected-emoji="selectedEmoji" v-on:select-custom-emoji="selectCustomEmoji" />
+    </div>
+  </Teleport>
+
 
 </template>
 

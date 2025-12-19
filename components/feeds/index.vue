@@ -174,8 +174,13 @@
     </div>
 
 
-    <EmojiPicker :key="route.fullPath" ref="emojiPickerRef" v-on:selected-emoji="selectedEmoji"
+  
+          <Teleport to="body">
+    <div style="position: fixed; z-index: 999999; left: 0; top: 0;">
+        <EmojiPicker :key="route.fullPath" ref="emojiPickerRef" v-on:selected-emoji="selectedEmoji"
         v-on:select-custom-emoji="selectCustomEmoji" />
+    </div>
+  </Teleport>
 </template>
 
 <script setup lang="ts">
