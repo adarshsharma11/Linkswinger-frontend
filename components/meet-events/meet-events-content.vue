@@ -58,9 +58,9 @@
           <div class="meet-chips" id="filterLookingFor">
             <label class="meet-chip"><input type="checkbox" value="Man"><span>Man</span></label>
             <label class="meet-chip"><input type="checkbox" value="Woman"><span>Woman</span></label>
-            <label class="meet-chip"><input type="checkbox" value="Couple M/F"><span>Couple M/F</span></label>
-            <label class="meet-chip"><input type="checkbox" value="Couple M/M"><span>Couple M/M</span></label>
-            <label class="meet-chip"><input type="checkbox" value="Couple F/F"><span>Couple F/F</span></label>
+            <label class="meet-chip"><input type="checkbox" value="Couple MF"><span>Couple M/F</span></label>
+            <label class="meet-chip"><input type="checkbox" value="Couple MM"><span>Couple M/M</span></label>
+            <label class="meet-chip"><input type="checkbox" value="Couple FF"><span>Couple F/F</span></label>
             <label class="meet-chip"><input type="checkbox" value="TS"><span>TS</span></label>
           </div>
         </div>
@@ -115,52 +115,20 @@
             <h2 style="margin-bottom:2px;">Active Meet Events</h2>
             <div class="meet-hint" style="margin:0;">Click a card to open event info.</div>
           </div>
-          <div class="meet-count" id="countLabel">3 events</div>
+          <div class="meet-count" id="countLabel">{{ allMeetEvents.length }} events</div>
         </div>
 
         <div id="eventList" class="meet-event-list">
           <div class="meet-event-card" aria-label="Go to details" data-bs-toggle="modal"
-            data-bs-target="#detailsBackdrop">
+            data-bs-target="#detailsBackdrop" v-for="meet in allMeetEvents" @click="selectEvent(meet)">
             <div class="meet-event-row">
               <div class="meet-who">
-                <div class="meet-avatar">CO</div>
+                <img v-if="(meet.meet_photo?.length ?? 0) > 0" :src="(meet.media_path ?? '') + meet.meet_photo" style="max-width: 30px; max-height: 30px; border-radius: 5px;"></img>
+                <div v-if="(meet.meet_photo?.length ?? 0) === 0" class="meet-avatar">{{ meet.nick_name?.slice(0,2).toUpperCase() }}</div>
                 <div>
-                  <div class="meet-name">Couple_Ruby</div>
+                  <div class="meet-name">{{ meet.nick_name }}</div>
                   <div class="meet-tagline">
-                    Couple F/F
-                    • Friend
-
-                  </div>
-                </div>
-              </div>
-              <span class="meet-badge meet-live">Meeting today</span>
-            </div>
-
-            <div class="meet-event-meta">
-              <span class="meet-badge">Accommodate</span>
-              <span class="meet-badge">Time: 06:47 PM</span>
-              <span class="meet-badge">Birmingham • B1</span>
-              <span class="meet-badge">Age: 25–45</span>
-            </div>
-
-            <div class="meet-event-mini" style="margin-top:6px;">
-              <span class="meet-muted">Looking for:</span>
-              Couple M/F, Couple M/M, Man
-            </div>
-
-            <div class="meet-event-desc-mini">Hotel chill, drinks first. Respectful vibes only ✨</div>
-          </div>
-          <div class="meet-event-card" aria-label="Go to details" data-bs-toggle="modal"
-            data-bs-target="#detailsBackdrop">
-            <div class="meet-event-row">
-              <div class="meet-who">
-                <div class="meet-avatar">DA</div>
-                <div>
-                  <div class="meet-name">Dan_31</div>
-                  <div class="meet-tagline">
-                    Man
-
-                    • Crush
+                    {{ meet.profile_type }}
                   </div>
                 </div>
               </div>
@@ -168,49 +136,18 @@
             </div>
 
             <div class="meet-event-meta">
-              <span class="meet-badge">Outdoor</span>
-              <span class="meet-badge">Date: 2025-12-18</span>
-              <span class="meet-badge">Walsall • WS1</span>
-              <span class="meet-badge">Age: 18–99</span>
+              <span class="meet-badge">{{ meet.meet_type }}</span>
+              <span class="meet-badge">Date: {{ formatLocal(meet.meet_date ?? '') }}</span>
+              <span class="meet-badge">{{ meet.town }}</span>
+              <span class="meet-badge">Age: {{meet.min_age}}-{{meet.max_age}}</span>
             </div>
 
             <div class="meet-event-mini" style="margin-top:6px;">
               <span class="meet-muted">Looking for:</span>
-              Woman, TS
+              {{ meet.looking_for?.join(',') }}
             </div>
 
-            <div class="meet-event-desc-mini">Coffee + walk, open to see where it goes ☕😉</div>
-          </div>
-          <div class="meet-event-card" aria-label="Go to details" data-bs-toggle="modal"
-            data-bs-target="#detailsBackdrop">
-            <div class="meet-event-row">
-              <div class="meet-who">
-                <div class="meet-avatar">MA</div>
-                <div>
-                  <div class="meet-name">Maya_X</div>
-                  <div class="meet-tagline">
-                    Woman
-
-
-                  </div>
-                </div>
-              </div>
-              <span class="meet-badge meet-live">Meeting today</span>
-            </div>
-
-            <div class="meet-event-meta">
-              <span class="meet-badge">Travel</span>
-              <span class="meet-badge">Time: 09:17 PM</span>
-              <span class="meet-badge">London • SW1</span>
-              <span class="meet-badge">Age: 28–50</span>
-            </div>
-
-            <div class="meet-event-mini" style="margin-top:6px;">
-              <span class="meet-muted">Looking for:</span>
-              Man, Couple M/F
-            </div>
-
-            <div class="meet-event-desc-mini">In town for the night. Discreet, fun, no drama 🔥</div>
+            <div class="meet-event-desc-mini">{{ meet.description }}</div>
           </div>
         </div>
 
@@ -227,30 +164,30 @@
           <!-- Header -->
           <div class="modal-head">
             <div>
-              <div class="modal-title">Meet Event</div>
-              <div class="modal-sub" id="detailsSub">Created: 12/16/2025, 12:17:55 PM</div>
+              <div class="modal-title" >Meet Event</div>
+              <!-- <div class="modal-sub" id="detailsSub">Created: {{ selectedEvent?.nick_name }}/div> -->
             </div>
 
             <div class="meet-head-right">
-              <a href="#" class="meet-profile-link" id="detailsProfileLink">Couple_Ruby</a>
-              <span class="meet-head-pill" id="detailsMeetTypePill">Accommodate</span>
-              <span class="meet-head-pill" id="detailsLookingPill">Couple M/F, Couple M/M, Man</span>
-              <span class="meet-head-pill" id="detailsLocationPill">Birmingham • B1</span>
-              <span class="meet-head-pill live" id="detailsWhenPill">Today • 02:02 PM</span>
+              <a href="#" class="meet-profile-link" id="detailsProfileLink">{{ selectedEvent?.nick_name }}</a>
+              <span class="meet-head-pill" id="detailsMeetTypePill">{{ selectedEvent?.meet_type }}</span>
+              <span class="meet-head-pill" id="detailsLookingPill">{{ selectedEvent?.looking_for?.join(',') }}</span>
+              <span class="meet-head-pill" id="detailsLocationPill">{{ selectedEvent?.town }}</span>
+              <span class="meet-head-pill live" id="detailsWhenPill">{{ formatLocal(selectedEvent?.meet_date ?? '') }}</span>
               <button class="meet-btn meet-small meet-ghost" data-bs-dismiss="modal" aria-label="Close">Close</button>
             </div>
           </div>
           <!-- Body -->
           <div class="meet-modal-grid">
             <div>
-              <div class="meet-detail-photo">
-                <span class="meet-label" id="detailsPhotoLabel">Photo 3</span>
+              <div class="meet-detail-photo" v-if="(selectedEvent?.meet_photo?.length ?? 0) > 0">
+                <img :src="(selectedEvent?.media_path ?? '') + selectedEvent?.meet_photo" style="max-height: 160px; object-fit: cover;"></img>
               </div>
 
               <div class="meet-section">
                 <span class="meet-label">Description</span>
                 <div id="detailsDesc" style="font-size:12px; line-height:1.45; color:#dfe3f7; white-space:pre-wrap;">
-                  Hotel chill, drinks first. Respectful vibes only ✨</div>
+                 {{ selectedEvent?.description }}</div>
               </div>
             </div>
 
@@ -260,23 +197,23 @@
                 <div class="meet-info-stack">
                   <div class="meet-info-box">
                     <div class="meet-info-label">Profile</div>
-                    <div class="meet-info-value" id="detailsWhoText">Couple_Ruby (Couple F/F)</div>
+                    <div class="meet-info-value" id="detailsWhoText">{{ selectedEvent?.nick_name }} {{ selectedEvent?.profile_type }}</div>
                   </div>
                   <div class="meet-info-box">
                     <div class="meet-info-label">When</div>
-                    <div class="meet-info-value" id="detailsWhenText">Meeting today at 02:02 PM</div>
+                    <div class="meet-info-value" id="detailsWhenText">{{ formatLocal(selectedEvent?.meet_date ?? '') }}</div>
                   </div>
                   <div class="meet-info-box">
                     <div class="meet-info-label">Looking for</div>
-                    <div class="meet-info-value" id="detailsLookingText">Couple M/F, Couple M/M, Man</div>
+                    <div class="meet-info-value" id="detailsLookingText">{{ selectedEvent?.looking_for?.join(',') }}</div>
                   </div>
                   <div class="meet-info-box">
                     <div class="meet-info-label">Location</div>
-                    <div class="meet-info-value" id="detailsLocationText">Birmingham • B1</div>
+                    <div class="meet-info-value" id="detailsLocationText">{{ selectedEvent?.town }}</div>
                   </div>
                   <div class="meet-info-box">
                     <div class="meet-info-label">Age target</div>
-                    <div class="meet-info-value" id="detailsAgeText">25–45</div>
+                    <div class="meet-info-value" id="detailsAgeText">{{ selectedEvent?.min_age }}-{{ selectedEvent?.max_age }}</div>
                   </div>
                 </div>
               </div>
@@ -306,11 +243,11 @@
               </div>
 
               <div class="meet-section">
-                <span class="meet-label">Demo actions</span>
+             
                 <div class="meet-inline">
-                  <button class="meet-btn meet-small" disabled>Like</button>
-                  <button class="meet-btn meet-small" disabled>Comment</button>
-                  <button class="meet-btn meet-small meet-ghost" disabled>Message</button>
+                  <button class="meet-btn meet-small" v-if="selectedEvent?.can_like ?? false">Like</button>
+                  <button class="meet-btn meet-small" v-if="selectedEvent?.can_comment ?? false">Comment</button>
+                  <button class="meet-btn meet-small meet-ghost" v-if="selectedEvent?.user_id !== user_store.getLoginId">Message</button>
                 </div>
               </div>
             </div>
@@ -433,7 +370,7 @@
                 <span class="meet-label">Town</span>
                 <!-- <input type="text" id="createCustomLocInput" placeholder="Optional" disabled> -->
                 <Multiselect v-model="selectedTown" :options="allTowns" :multiple="false" :close-on-select="true"
-                  placeholder="Select Town" label="town" track_by="town_id" :disabled="!isCustomLocation" />
+                  placeholder="Select Town" label="town" track_by="town_id" :loading="is_town_loading" @search-change="fetchTowns" :disabled="!isCustomLocation" />
               </div>
             </div>
             <div class="meet-section">
@@ -493,10 +430,13 @@
             </div>
           </div>
           <div class="meet-divider"></div>
-          <div class="meet-inline">
-            <button class="meet-btn meet-small meet-ghost" id="createResetBtn" type="button" @click="resetMeetEvent()">Reset</button>
-            <button class="meet-btn meet-small meet-primary" id="createSaveBtn" type="button">Save Event</button>
+          <div class="meet-inline" v-if="!is_event_loading">
+            <button class="meet-btn meet-small meet-ghost" id="createResetBtn" type="button"
+              @click="resetMeetEvent()">Reset</button>
+            <button class="meet-btn meet-small meet-primary" id="createSaveBtn" type="button"
+              @click="createMeetEvent()">Save Event</button>
           </div>
+          <span class="btn-loader" v-if="is_event_loading"></span>
           <div class="meet-foot">
             Saves an event by "You" and adds it to the feed.
           </div>
@@ -508,7 +448,7 @@
 
 
 <script setup lang="ts">
-import type { FeedsModel, MeetEventsModel, SuccessError, UsersModel } from '~/composables/models';
+import { RequestURL, type FeedsModel, type MeetEventsModel, type SuccessError, type UsersModel } from '~/composables/models';
 import Multiselect from 'vue-multiselect';
 import 'vue-multiselect/dist/vue-multiselect.css';
 // MOBILE FILTERS
@@ -520,6 +460,7 @@ const login_store = useLoginStore()
 const isCustomLocation = ref(false)
 const selectedTown = ref<UsersModel.FetchTownResponseModel>({});
 const selectedMedia = ref<FeedsModel.FeedsResponseModel | null>(null)
+const selectedEvent = ref<MeetEventsModel.ListResponseModel | null>(null)
 const radius = ref(40) // miles (max 40)
 
 const selectedMeetType = ref('Outdoor')
@@ -540,21 +481,13 @@ const todayDateISO = ref<string | null>(null)
 const selectedDateISO = ref<string | null>(null)
 const allTowns = ref<UsersModel.FetchTownResponseModel[]>([]);
 const allFeeds = ref([] as FeedsModel.FeedsResponseModel[])
+const allMeetEvents = ref([] as MeetEventsModel.ListResponseModel[])
+const is_event_loading = ref(false)
+const is_town_loading = ref(false)
 
-const fetchTowns = async () => {
-  const api_url = getUrl(RequestURL.fetchTowns);
-  const { data: fetch_response, error: option_error } = await useFetch<SuccessError<UsersModel.FetchTownResponseModel>>(api_url, {
-    cache: "no-cache",
-    method: "post",
-    body: {},
-    headers: {
-      "content-type": "application/json"
-    }
-  });
-  return fetch_response.value?.result
-}
+var addEventSub: any = null
+const { $bootstrap } = useNuxtApp();
 
-allTowns.value = await fetchTowns() as UsersModel.FetchTownResponseModel[];
 
 const fetchFeeds = async () => {
   const api_url = getUrl(RequestURL.fetchFeeds);
@@ -575,6 +508,53 @@ const fetchFeeds = async () => {
 }
 allFeeds.value = await fetchFeeds() as FeedsModel.FeedsResponseModel[]
 
+const fetchMeetEvents = async () => {
+  const api_url = getUrl(RequestURL.fetchMeetEvents);
+  const { data: meet_response, error: option_error } = await useFetch<SuccessError<MeetEventsModel.ListResponseModel>>(api_url, {
+    cache: "no-cache",
+    method: "post",
+    body: {
+      user_id: login_store.getUserDetails?.user_id ?? 0,
+    },
+    headers: {
+      "content-type": "application/json"
+    }
+  });
+
+  return meet_response.value?.result ?? []
+}
+
+allMeetEvents.value = await fetchMeetEvents() as MeetEventsModel.ListResponseModel[]
+
+
+onMounted(() => {
+  addEventSub = new ($bootstrap as any).Modal(document.getElementById('addMeetBtn'));
+})
+function fetchTowns(query: string) {
+  if (query.length === 0) {
+    allTowns.value = []
+    return;
+  }
+  let api_url = getUrl(RequestURL.fetchTowns);
+  is_town_loading.value = true;
+  allTowns.value = []
+  $fetch<SuccessError<UsersModel.SignUpResponseModel>>(api_url, {
+    method: 'POST',
+    body: { "search": query },
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  }).then((response) => {
+
+    if (response.success) {
+      allTowns.value = (response.result ?? []) as UsersModel.FetchTownResponseModel[]
+    }
+    is_town_loading.value = false;
+  }).catch((error) => {
+    is_town_loading.value = false;
+  });
+}
+
 function openMobileFilters() {
   mobileFiltersOpen.value = true;
   document.body.classList.add('mobile-filters-open');
@@ -589,6 +569,12 @@ function openMobileFilters() {
 
 
 tommorowDate()
+
+function formatLocal(meet_date:string) : string
+{
+  return formatToLocal(meet_date)
+}
+
 
 function tommorowDate() {
   const today = new Date()
@@ -614,6 +600,10 @@ const selectMedia = (media: FeedsModel.FeedsResponseModel) => {
     }
   }
 
+}
+
+const selectEvent = (event: MeetEventsModel.ListResponseModel) => {
+ selectedEvent.value =  event
 }
 
 function showAddPicture() {
@@ -746,8 +736,8 @@ function buildMeetDateISO(): string | null {
 async function createMeetEvent() {
   const meetDateISO = buildMeetDateISO()
   if (!meetDateISO) {
-    alert('Please select date and time')
-    return
+    showToastError('Please select date and time')
+    return;
   }
 
   const townId = isCustomLocation.value
@@ -755,8 +745,13 @@ async function createMeetEvent() {
     : login_store.getUserDetails?.town_id
 
   if (!townId) {
-    alert('Town not selected')
-    return
+    showToastError('Town not selected')
+    return;
+  }
+
+  if (selectedLookingFor.value.length === 0) {
+    showToastError('lookingFor not selected')
+    return;
   }
 
   const payload: MeetEventsModel.CreateRequestModel = {
@@ -764,7 +759,7 @@ async function createMeetEvent() {
     meet_date: meetDateISO,
     meet_type: selectedMeetType.value,
     description: description.value,
-    meet_photo: meetPhoto.value,
+    meet_photo: selectedMedia.value?.hd_feed_image ?? '',
 
     looking_for: selectedLookingFor.value,
     min_age: minAge.value,
@@ -773,18 +768,24 @@ async function createMeetEvent() {
     town_id: townId,
     radius: radius.value,
 
-    can_comment: true,
-    can_like: true
+    can_comment: can_comment.value,
+    can_like: can_like.value
   }
 
+  is_event_loading.value = true
   try {
-    let response = await $fetch<SuccessError<MeetEventsModel.CreateResponseModel>>('/api/meet/create', {
+    let requestUrl = getUrl(RequestURL.createMeetEvent)
+    let response = await $fetch<SuccessError<MeetEventsModel.CreateResponseModel>>(requestUrl, {
       method: 'POST',
       body: payload
     })
+    is_event_loading.value = false
 
+    console.log(response)
     // success UX
     if (response.success) {
+      resetMeetEvent()
+      addEventSub.hide()
       showToastSuccess(response.message)
     }
     else {
@@ -793,6 +794,8 @@ async function createMeetEvent() {
     // TODO: close modal + refresh list
 
   } catch (e: any) {
+    is_event_loading.value = false
+    console.log("why in catch", e)
     showToastError(e?.data?.message)
   }
 }

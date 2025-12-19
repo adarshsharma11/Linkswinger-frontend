@@ -24,7 +24,6 @@ const is_loading = ref(false)
 var callAlertSub: any = null
 const { $bootstrap } = useNuxtApp();
 onMounted(() => {
-  console.log('onmounted...strip')
   callAlertSub = new ($bootstrap as any).Modal(document.getElementById('callAlertModal'));
   eventBus.on('callAlert', (alertmodel) => {
     if (alertModel.value !== null) {

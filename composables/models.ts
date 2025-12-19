@@ -77,7 +77,9 @@ export enum RequestURL {
   removeFriend = "/removeFriend",
   userBlock = "/userBlock",
   userUnblock = "/userUnblock",
-  checkBlockStatus = "/checkBlockStatus"
+  checkBlockStatus = "/checkBlockStatus",
+  createMeetEvent = "/meet/create",
+  fetchMeetEvents = "/meet/list"
   
 }
 
@@ -165,6 +167,20 @@ export function toDate(dateString: string, format: string): Date | null {
   const parsedDate = new Date(dateString);
   return isNaN(parsedDate.getTime()) ? null : parsedDate;
 }
+export function formatToLocal(dateStr?: string) {
+  if (!dateStr) return ''
+
+  const d = new Date(dateStr + ' UTC')
+  return d.toLocaleString(undefined, {
+    year: 'numeric',
+    month: 'short',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true
+  })
+}
+
 export function addSecondsToDate(date: Date, seconds: number): Date {
   const newDate = new Date(date);
   newDate.setSeconds(newDate.getSeconds() + seconds);
@@ -841,6 +857,7 @@ export namespace MeetEventsModel {
     meet_event_id?: number
     user_id?: number
 
+    media_path?:string
     meet_date?: string
     meet_type?: string
     description?: string
@@ -862,6 +879,7 @@ export namespace MeetEventsModel {
     nick_name?: string
     profile_image?: string
     profile_type?: string
+    town?:string
   }
 
   // =========================
