@@ -33,6 +33,7 @@
                             @animationend="showRipple = false"></span>
                     </div>
                     <div class="form-group" style="margin-top: 10px;">
+                        <label for="feedType" class="form-label">Select Visibility</label>
                         <Multiselect v-model="feedType" :options="['Public', 'Friends-Only', 'Private']"
                             :multiple="false" :close-on-select="true" placeholder="Select Visibility" />
                     </div>

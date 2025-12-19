@@ -244,7 +244,9 @@
           <!-- Composer -->
           <div class="border-top border-secondary p-3 chat-ftr">
             <div class="d-flex align-items-center message-input chat-ftr-left">
-              <button class="btn btn-link text-light fs-5" @click="handleToggle">😊</button>
+              <!--<button class="btn btn-link text-light fs-5" @click="handleToggle">😊</button>-->
+              <button class="btn btn-link text-light fs-5" aria-label="Go to emoji icon" data-bs-toggle="modal"
+          data-bs-target="#emojiBtn">😊</button>
               <textarea v-model="messageTxt" id="composer" ref="messageRef" rows="1"
                 class="form-control bg-transparent border-0 text-light"
                 placeholder="Type a message… (Ctrl/⌘ + Enter to send)"></textarea>
@@ -297,6 +299,106 @@
       :data-video="item.isVideo ? item.video : null" :data-lg-size="item.isVideo ? item.size : null"></a>
   </component>
   <FilterModal  :friends-only="friendsOnly" :photo-verified-only="photoVerifiedOnly" :show-unread="showUnread" :with-attachments="withAttachments" v-if="showFilters" @close="showFilters = false" @apply-filters="applyFilters" @clear-filters="clearFilters()"/>
+
+<!--Symbole popup-->
+<div class="modal fade emoji-modal" id="emojiBtn" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable" role="document">
+        <div class="modal-content text-white modal-inner emoji-small">
+          <!-- Header -->
+			<div class="emj-topbar" id="dragHandle" title="Drag me" style="cursor: grab;">
+				<div class="emj-brand">
+				<!-- ✅ your logo replaces the LS icon -->
+					<div class="emj-badge">
+					  <img src="/images/badges/animated/150X150px/ls-watermark.gif" alt="LinkSwingers" class="emj-badgeLogo">
+					</div>
+					<div class="emj-titlewrap">
+					  <p class="emj-title">Emoji &amp; Stickers</p>
+					  <p class="emj-subtitle">Metallic red popup mock-up • searchable • mobile ready</p>
+					</div>
+				</div>
+
+				<button class="emj-close" id="closeBtn" aria-label="Close">✕</button>
+			</div>
+          <!-- Body -->
+			<div class="emj-tabs" role="tablist" aria-label="Tabs">
+				<button class="emj-tab active" id="tabEmoji" role="tab" aria-selected="true">😄 Emoji</button>
+				<button class="emj-tab" id="tabStickers" role="tab" aria-selected="false">✨ Stickers</button>
+			</div>
+			<div class="emj-search">
+				<div class="emj-searchbox">
+					<span>⌕</span>
+					<input id="search" type="text" placeholder="Search emoji or stickers (e.g. heart, laugh, fire)...">
+				</div>
+			  <button class="emj-chip" id="skinBtn" title="Skin tone">🎨 Tone</button>
+			</div>
+			<div class="emj-body">
+				<div class="emj-wm">
+					<img src="/images/badges/animated/150X150px/ls-watermark.gif" alt="">
+				</div>
+				<div class="emj-sectionbar">
+					<div class="label" id="sectionTitle">Smiles &amp; People</div>
+					<div class="emj-hint">
+					  <span id="countLabel">36 items</span>
+					  <span>•</span>
+					  <span>Click to pick</span>
+					</div>
+				</div>
+				<div class="emj-grid" id="grid">
+					<button class="emj-item" type="button" title=":grin:"><span class="emj-emoji">😁</span></button
+					><button class="emj-item" type="button" title=":smile:"><span class="emj-emoji">😄</span></button
+					><button class="emj-item" type="button" title=":laugh:"><span class="emj-emoji">😂</span></button
+					><button class="emj-item" type="button" title=":rofl:"><span class="emj-emoji">🤣</span></button
+					><button class="emj-item" type="button" title=":wink:"><span class="emj-emoji">😉</span></button
+					><button class="emj-item" type="button" title=":cool:"><span class="emj-emoji">😎</span></button
+					><button class="emj-item" type="button" title=":heart_eyes:"><span class="emj-emoji">😍</span></button
+					><button class="emj-item" type="button" title=":kiss:"><span class="emj-emoji">😘</span></button
+					><button class="emj-item" type="button" title=":thinking:"><span class="emj-emoji">🤔</span></button
+					><button class="emj-item" type="button" title=":fire:"><span class="emj-emoji">🔥</span></button
+					><button class="emj-item" type="button" title=":100:"><span class="emj-emoji">💯</span></button
+					><button class="emj-item" type="button" title=":party:"><span class="emj-emoji">🥳</span></button
+					><button class="emj-item" type="button" title=":cry:"><span class="emj-emoji">😢</span></button
+					><button class="emj-item" type="button" title=":sad:"><span class="emj-emoji">🙁</span></button
+					><button class="emj-item" type="button" title=":angry:"><span class="emj-emoji">😠</span></button
+					><button class="emj-item" type="button" title=":shock:"><span class="emj-emoji">😱</span></button
+					><button class="emj-item" type="button" title=":ok:"><span class="emj-emoji">👌</span></button
+					><button class="emj-item" type="button" title=":clap:"><span class="emj-emoji">👏</span></button
+					><button class="emj-item" type="button" title=":thumbs_up:"><span class="emj-emoji">👍</span></button
+					><button class="emj-item" type="button" title=":eyes:"><span class="emj-emoji">👀</span></button
+					><button class="emj-item" type="button" title=":lips:"><span class="emj-emoji">👄</span></button
+					><button class="emj-item" type="button" title=":love:"><span class="emj-emoji">❤️</span></button
+					><button class="emj-item" type="button" title=":sparkles:"><span class="emj-emoji">✨</span></button
+					><button class="emj-item" type="button" title=":star:"><span class="emj-emoji">⭐</span></button
+					><button class="emj-item" type="button" title=":kiss_mark:"><span class="emj-emoji">💋</span></button
+					><button class="emj-item" type="button" title=":tongue:"><span class="emj-emoji">😛</span></button
+					><button class="emj-item" type="button" title=":smirk:"><span class="emj-emoji">😏</span></button
+					><button class="emj-item" type="button" title=":halo:"><span class="emj-emoji">😇</span></button
+					><button class="emj-item" type="button" title=":devil:"><span class="emj-emoji">😈</span></button
+					><button class="emj-item" type="button" title=":ghost:"><span class="emj-emoji">👻</span></button
+					><button class="emj-item" type="button" title=":skull:"><span class="emj-emoji">💀</span></button
+					><button class="emj-item" type="button" title=":diamond:"><span class="emj-emoji">💎</span></button
+					><button class="emj-item" type="button" title=":crown:"><span class="emj-emoji">👑</span></button
+					><button class="emj-item" type="button" title=":lock:"><span class="emj-emoji">🔒</span></button
+					><button class="emj-item" type="button" title=":pin:"><span class="emj-emoji">📍</span></button
+					><button class="emj-item" type="button" title=":camera:"><span class="emj-emoji">📷</span></button>
+				</div>
+				<div class="emj-footer">
+					<div class="emj-picked">
+					  <div class="emj-bubble" id="pickedBubble">🙂</div>
+					  <div class="emj-meta">
+						<b id="pickedTitle">Nothing selected</b>
+						<span id="pickedSub">Pick an emoji or a sticker</span>
+					  </div>
+					</div>
+					<div class="emj-actions">
+					  <button class="emj-btn secondary" id="clearBtn">Clear</button>
+					  <button class="emj-btn" id="useBtn">Use</button>
+					</div>
+				</div>
+
+			</div>
+        </div>
+	</div>
+</div>
 </template>
 
 <script setup lang="ts">
@@ -1214,6 +1316,9 @@ async function deleteSelected() {
     await deleteChat()
   }
 }
+
+
+
 
 </script>
 
