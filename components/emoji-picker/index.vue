@@ -61,7 +61,7 @@
                     <div class="emj-brand">
                         <!-- ✅ your logo replaces the LS icon -->
                         <div class="emj-badge">
-                            <img src="/images/badges/animated/150X150px/ls-watermark.gif" alt="LinkSwingers"
+                            <img src="/public/images/badges/animated/150X150px/ls-watermark.gif" alt="LinkSwingers"
                                 class="emj-badgeLogo">
                         </div>
                         <div class="emj-titlewrap">
