@@ -862,7 +862,7 @@ async function fetchHome()
       'Content-Type': 'application/json'
     }
   });
-console.log(response)
+
   if (response.success) {
      dashboardStats.value = response.response
   }
@@ -1181,6 +1181,7 @@ async function logout() {
 onMounted(() => {
   // Handle hash-based navigation
 
+  
   advanceModelSub = new ($bootstrap as any).Modal(document.getElementById('advancesearchmodal'));
 
   isWSConnected.value = isSocketConnected()
@@ -1222,7 +1223,7 @@ onMounted(() => {
   else if (hash === '#friends') {
     fetchFriends()
   }
-  else if (hash === '#home') {
+  else if (hash === '#home' || activeNav.value === 'home') {
     fetchHome()
   }
 
