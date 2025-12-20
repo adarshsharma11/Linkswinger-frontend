@@ -125,7 +125,7 @@
           <div class="panel">
             <div class="panel-title">
               <h3 class="text-white">Activity Snapshot</h3>
-              <span class="link text-white">Archive →</span>
+              <!-- <span class="link text-white">Archive →</span> -->
             </div>
 
             <div v-for="a in activity" :key="a.title" class="admin-post">
