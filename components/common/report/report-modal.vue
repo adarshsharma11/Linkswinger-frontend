@@ -1,6 +1,6 @@
 <template>
 <!--Report popup-->
-<div class="modal fade report-modal" id="reportBtn" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal fade report-modal" tabindex="-1" role="dialog" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable" role="document">
         <div class="modal-content text-white modal-inner report-small">
           <!-- Header -->

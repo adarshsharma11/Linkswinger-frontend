@@ -406,14 +406,14 @@ const onReachEnd = () => {
 function openReport(feed_id: number) {
 
     showReport.value = true
-    // nextTick(() => {
-    //     reportModel = new ($bootstrap as any).Modal(document.getElementById('reportModel'));
-    //     console.log(reportModel)
-    //     // reportModel._element.addEventListener('hidden.bs.modal', () => {
+    nextTick(() => {
+        reportModel = new ($bootstrap as any).Modal(document.getElementById('reportModel'));
+        console.log(reportModel)
+        // reportModel._element.addEventListener('hidden.bs.modal', () => {
 
-    //     // })
-    //     reportModel.show();
-    // })
+        // })
+        reportModel.show();
+    })
 
 
 }
