@@ -64,8 +64,8 @@
                                 <div class="overlay-right">
                                     <!-- <span class="btn-loader" v-if="is_like_loading[index]"></span> -->
                                     <button>
-                                        <img src="/public/images/icons-folder/Report-150x150px.png"
-                                            class="Report-icon" />
+                                        <img src="/public/images/icons-folder/Report-150x150px.png" class="Report-icon"
+                                            @click="openReport(item.feed_id ?? 0)" />
                                     </button>
                                     <button :style="{ backgroundColor: item.is_liked ? 'green' : 'white' }"
                                         v-if="item.can_like === true"
@@ -73,7 +73,7 @@
                                         <img :src="likeImage" class="like-icon" />
                                     </button>
                                     <button v-if="item.can_comment === true" aria-label="Go to Comment"
-                                        @click.stop="openComments(item.feed_id ?? 0, index)">
+                                        @click.stop="openComments(item.feed_id ?? 0)">
                                         <img :src="commentImage" class="comment-icon" />
                                     </button>
                                     <!--<button aria-label="Fullscreen" @click.stop="toggleFullscreen(item.feed_id ?? 0, index)" class="fullscreen-btn">
@@ -174,8 +174,11 @@
     </div>
 
 
-  <EmojiPicker v-if="showPicker" ref="emojiPickerRef" v-on:selected-emoji="selectedEmoji"
-                    v-on:select-custom-emoji="selectCustomEmoji" @closed-emoji-picker="showPicker = false" />
+    <EmojiPicker v-if="showPicker" ref="emojiPickerRef" v-on:selected-emoji="selectedEmoji"
+        v-on:select-custom-emoji="selectCustomEmoji" @closed-emoji-picker="showPicker = false" />
+
+
+     <CommonReportModal id="reportModel"  v-if="showReport" @close="showReport = false"></CommonReportModal>
 </template>
 
 <script setup lang="ts">
@@ -186,6 +189,7 @@ const props = defineProps({
     mediaType: { type: String, default: () => 'image' }
 })
 const showPicker = ref(false)
+const showReport = ref(false)
 import { FeedsModel, RequestURL } from '~/composables/models';
 import videojs from "video.js";
 import { Swiper, SwiperSlide } from "swiper/vue";
@@ -213,6 +217,7 @@ const is_like_loading = ref([] as boolean[]);
 const is_add_comment_loading = ref(false);
 const commentRef = ref<HTMLInputElement | null>(null);
 const emojiPickerRef = ref(null)
+var reportModel: any = null
 const isFullscreen = ref([]) // track fullscreen state per video
 
 const allFeeds = ref(props.allFeeds as FeedsModel.FeedsResponseModel[])
@@ -398,7 +403,20 @@ const onReachEnd = () => {
         playingStates.value[lastIndex] = false
     }
 }
+function openReport(feed_id: number) {
 
+    showReport.value = true
+    // nextTick(() => {
+    //     reportModel = new ($bootstrap as any).Modal(document.getElementById('reportModel'));
+    //     console.log(reportModel)
+    //     // reportModel._element.addEventListener('hidden.bs.modal', () => {
+
+    //     // })
+    //     reportModel.show();
+    // })
+
+
+}
 
 
 function openComments(feed_id: number) {
@@ -471,12 +489,12 @@ async function selectCustomEmoji(emoji: string) {
 }
 
 function handleToggle() {
- showPicker.value = true
-  nextTick(() => {
-    if (emojiPickerRef.value) {
-      emojiPickerRef.value.toggleEmojiPicker()
-    }
-  })
+    showPicker.value = true
+    nextTick(() => {
+        if (emojiPickerRef.value) {
+            emojiPickerRef.value.toggleEmojiPicker()
+        }
+    })
 }
 
 async function addLikeDisLike(feed_id: number, index: number) {
