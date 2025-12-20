@@ -211,10 +211,11 @@
 
                 <div v-if="chat.message_type === 'emoji'">
                   <Lottie renderer="svg" v-if="getFileExtension(chat.message ?? '') === '.json'"
-                    :link="(chat.media_path ?? '') + (chat.message ?? '')" style="max-width: 80px; max-height: 80px;"></Lottie>
-                    <video loop autoplay playsinline v-else-if="getFileExtension(chat.message ?? '') === '.webm'"
-                      :src="(chat.media_path ?? '') + (chat.message ?? '')"
-                      style="max-width: 40px; max-height: 40px;"></video>
+                    :link="(chat.media_path ?? '') + (chat.message ?? '')" style="max-width: 80px; max-height: 80px;">
+                  </Lottie>
+                  <video loop autoplay playsinline v-else-if="getFileExtension(chat.message ?? '') === '.webm'"
+                    :src="(chat.media_path ?? '') + (chat.message ?? '')"
+                    style="max-width: 40px; max-height: 40px;"></video>
                   <img v-else-if="getFileExtension(chat.message ?? '') !== '.json'"
                     :src="(chat.media_path ?? '') + (chat.message ?? '')" style="max-width: 80px; max-height: 80px;" />
                 </div>
@@ -305,11 +306,8 @@
     :with-attachments="withAttachments" v-if="showFilters" @close="showFilters = false" @apply-filters="applyFilters"
     @clear-filters="clearFilters()" />
 
-      <Teleport to="body">
-    <div style="position: fixed; z-index: 999999; left: 0; top: 0;">
-       <EmojiPicker :key="route.fullPath" ref="emojiPickerRef" v-on:selected-emoji="selectedEmoji" v-on:select-custom-emoji="selectCustomEmoji" />
-    </div>
-  </Teleport>
+  <EmojiPicker v-if="showPicker" ref="emojiPickerRef" v-on:selected-emoji="selectedEmoji"
+    v-on:select-custom-emoji="selectCustomEmoji" @closed-emoji-picker="showPicker = false" />
 
 
 </template>
@@ -327,7 +325,7 @@ const route = useRoute()
 const user_store = userStore()
 const login_store = useLoginStore()
 const eventBus = useMittEmitter()
-
+const componentKey = ref(0)
 
 // refs / state
 const messageTxt = ref('')
@@ -357,8 +355,8 @@ const showMobileChat = ref(false);
 const selectMode = ref(false);
 const selectedMessages = ref<number[]>([]);
 const showFilters = ref(false);
-
-
+var pickerModel: any = null
+const { $bootstrap } = useNuxtApp();
 // LightGallery dynamic imports (client-only)
 const LightgalleryComp = ref<any>(null);
 const plugins = ref<any[]>([]);
@@ -373,7 +371,7 @@ const showUnread = ref(false)
 const friendsOnly = ref(false)
 const withAttachments = ref(false)
 const photoVerifiedOnly = ref(false)
-
+const showPicker = ref(false)
 function onGalleryInit(detail: any) {
   lgInstance = detail.instance;
 }
@@ -501,7 +499,7 @@ const fetchHistory = async () => {
       "content-type": "application/json"
     }
   });
-  console.log('Fetched chat history:', fetch_response.value);
+
   return fetch_response.value?.result
 }
 
@@ -704,9 +702,18 @@ function selectedEmoji(emoji: string) {
   }
 }
 
-function handleToggle() {
-  if (emojiPickerRef.value) emojiPickerRef.value.toggleEmojiPicker()
+function handleToggle() 
+{
+  showPicker.value = true
+  nextTick(() => {
+    if (emojiPickerRef.value) {
+      emojiPickerRef.value.toggleEmojiPicker()
+    }
+  })
+  // showPicker.value = false
 }
+
+
 
 function showCodeAlert(is_video: boolean) {
   Swal.fire({

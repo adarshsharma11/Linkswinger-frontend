@@ -488,11 +488,7 @@
       </div>
     </div>
   </section>
-  <Teleport to="body">
-    <div style="position: fixed; z-index: 999999; left: 0; top: 0;">
-      <EmojiPicker :key="route.fullPath" ref="emojiPickerRef" v-on:selected-emoji="selectedEmoji" />
-    </div>
-  </Teleport>
+  <EmojiPicker v-if="showPicker" :key="route.fullPath" ref="emojiPickerRef" v-on:selected-emoji="selectedEmoji" />
   <AcceptDeclineRequestModel :friend_status="friend_status" ref="acceptDeclineRequestModalRef" v-if="toggleRequestModal"
     @close="toggleRequestModal = false" @friends-list="openUsersFriendsList()" @send-request="sendFriendRequest()" />
 
@@ -559,6 +555,7 @@ const emojiPickerRef = ref(null)
 const user_store = userStore()
 const login_store = useLoginStore();
 const is_logout_loading = ref(false);
+const showPicker = ref(false);
 const is_verify_loading = ref(false);
 const is_status_loading = ref(false);
 const route = useRoute();
@@ -1061,9 +1058,12 @@ function editStatus() {
   });
 }
 function handleToggle() {
-  if (emojiPickerRef.value) {
-    emojiPickerRef.value.toggleEmojiPicker()
-  }
+   showPicker.value = true
+  nextTick(() => {
+    if (emojiPickerRef.value) {
+      emojiPickerRef.value.toggleEmojiPicker()
+    }
+  })
 }
 
 function getFeedCount(feed_type: string, media_type: string): number {

@@ -174,13 +174,8 @@
     </div>
 
 
-  
-          <Teleport to="body">
-    <div style="position: fixed; z-index: 999999; left: 0; top: 0;">
-        <EmojiPicker :key="route.fullPath" ref="emojiPickerRef" v-on:selected-emoji="selectedEmoji"
-        v-on:select-custom-emoji="selectCustomEmoji" />
-    </div>
-  </Teleport>
+  <EmojiPicker v-if="showPicker" ref="emojiPickerRef" v-on:selected-emoji="selectedEmoji"
+                    v-on:select-custom-emoji="selectCustomEmoji" @closed-emoji-picker="showPicker = false" />
 </template>
 
 <script setup lang="ts">
@@ -190,7 +185,7 @@ const props = defineProps({
     fromFeeds: { type: Boolean, default: () => true },
     mediaType: { type: String, default: () => 'image' }
 })
-
+const showPicker = ref(false)
 import { FeedsModel, RequestURL } from '~/composables/models';
 import videojs from "video.js";
 import { Swiper, SwiperSlide } from "swiper/vue";
@@ -476,9 +471,12 @@ async function selectCustomEmoji(emoji: string) {
 }
 
 function handleToggle() {
+ showPicker.value = true
+  nextTick(() => {
     if (emojiPickerRef.value) {
-        emojiPickerRef.value.toggleEmojiPicker()
+      emojiPickerRef.value.toggleEmojiPicker()
     }
+  })
 }
 
 async function addLikeDisLike(feed_id: number, index: number) {

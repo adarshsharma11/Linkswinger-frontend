@@ -53,8 +53,8 @@
         </transition>
     </div> -->
 
-    
-    <div class="modal fade emoji-modal" id="emojiPickerRef" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <div class="modal fade emoji-modal" id="emojiPickerModel" tabindex="-1" role="dialog" aria-hidden="false">
         <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable" role="document">
             <div class="modal-content text-white modal-inner emoji-small">
                 <!-- Header -->
@@ -98,13 +98,13 @@
                     <div class="emj-sectionbar" v-if="activeTab === 'emoji'">
                         <div class="label" id="sectionTitle">Smiles &amp; People</div>
                         <div class="emj-hint">
-                            <span id="countLabel">{{ filteredEmojis.length }} items</span>
+                            <span id="countLabel">{{ filteredEmojis().length }} items</span>
                             <span>•</span>
                             <span>Click to pick</span>
                         </div>
                     </div>
                     <div class="emj-grid" id="grid" v-if="activeTab === 'emoji'">
-                        <button v-for="(emoji, i) in filteredEmojis" :key="i" class="emj-item" type="button"
+                        <button v-for="(emoji, i) in filteredEmojis()" :key="i" class="emj-item" type="button"
                             :title="emoji.title" :class="{ active: selectedEmoji?.char === emoji.char }"
                             @click="pickEmoji(emoji)">
                             <span class="emj-emoji">
@@ -113,16 +113,17 @@
                         </button>
                     </div>
                     <div class="emj-grid" id="grid" v-if="activeTab === 'stickers'">
-                        <div class="emj-item" v-for="sticker in stickers" @click="onSelectCustomEmoji(sticker.emoji ?? '')">
+                        <div class="emj-item" v-for="sticker in stickers"
+                            @click="onSelectCustomEmoji(sticker.emoji ?? '')">
                             <Lottie renderer="svg" v-if="getFileExtension(sticker.emoji ?? '') === '.json'"
-                                :link="(sticker.media_path ?? '') + sticker.emoji" :key="sticker.emoji_id"
-                                ></Lottie>
-                            <video   loop autoplay playsinline v-else-if="getFileExtension(sticker.emoji ?? '') === '.webm'"
-                                :src="(sticker.media_path ?? '') + (sticker.emoji ?? '')" style="max-width: 40px; max-height: 40px;"
-                             ></video>
-                            <img  lazy v-else-if="getFileExtension(sticker.emoji ?? '') !== '.json'"
-                                :src="(sticker.media_path ?? '') + (sticker.emoji ?? '')" style="max-width: 40px; max-height: 40px;"
-                                 />
+                                :link="(sticker.media_path ?? '') + sticker.emoji" :key="sticker.emoji_id"></Lottie>
+                            <video loop autoplay playsinline
+                                v-else-if="getFileExtension(sticker.emoji ?? '') === '.webm'"
+                                :src="(sticker.media_path ?? '') + (sticker.emoji ?? '')"
+                                style="max-width: 40px; max-height: 40px;"></video>
+                            <img lazy v-else-if="getFileExtension(sticker.emoji ?? '') !== '.json'"
+                                :src="(sticker.media_path ?? '') + (sticker.emoji ?? '')"
+                                style="max-width: 40px; max-height: 40px;" />
                         </div>
 
                     </div>
@@ -150,12 +151,15 @@
             </div>
         </div>
     </div>
+
 </template>
 <script setup lang="ts">
 import type { EmojisModel } from '~/composables/models';
 import emojisData from '@/assets/emojis.json'
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
+const route = useRoute()
 
+const reloadKey = ref(0);
 /**
  * Emoji JSON item type
  */
@@ -170,7 +174,7 @@ interface EmojiItem {
  */
 type EmojiMap = Record<string, EmojiItem[]>
 
-const rawEmojis = emojisData as EmojiMap
+const rawEmojis = ref<EmojiMap>(emojisData)
 const searchQuery = ref('')
 /**
  * Active category (you can change later)
@@ -190,24 +194,30 @@ function unicodeToEmoji(code: string): string {
 /**
  * Normalized emojis for rendering
  */
-const emojis = computed(() =>
-    rawEmojis[activeCategory.value].map(e => ({
-        char: unicodeToEmoji(e.u),
-        names: e.n,
-        title: `:${e.n[0]}:`
-    }))
-)
-const filteredEmojis = computed(() => {
-    const q = searchQuery.value.trim().toLowerCase()
-    if (!q) return emojis.value
 
-    console.log('searching', searchQuery)
-    return emojis.value.filter(e =>
-        e.names.some(name =>
-            name.toLowerCase().includes(q.replace(/\s+/g, '_'))
-        )
+function emojis() {
+  const list = rawEmojis.value?.[activeCategory.value]
+  if (!Array.isArray(list)) return []
+
+  return list.map(e => ({
+    char: unicodeToEmoji(e.u),
+    names: e.n,
+    title: `:${e.n[0]}:`
+  }))
+}
+
+function filteredEmojis() {
+  const q = searchQuery.value.trim().toLowerCase()
+  if (!q) return emojis()
+
+  return emojis().filter(e =>
+    Array.isArray(e.names) &&
+    e.names.some(name =>
+      name.toLowerCase().includes(q.replace(/\s+/g, '_'))
     )
-})
+  )
+}
+
 
 const activeTab = ref('emoji');
 
@@ -220,7 +230,7 @@ const pickerPosition = ref({ x: 500, y: 200 }) // initial position
 const pickerWidth = ref(300)
 const pickerHeight = ref(410)
 const stickers = ref([] as EmojisModel.FetchEmojiResponseModel[])
-const emit = defineEmits(['selectedEmoji', 'selectCustomEmoji'])
+const emit = defineEmits(['selectedEmoji', 'selectCustomEmoji', 'closedEmojiPicker'])
 const { $bootstrap } = useNuxtApp();
 var pickerModel: any = null
 const selectedEmoji = ref<null | {
@@ -229,11 +239,14 @@ const selectedEmoji = ref<null | {
     names: string[]
 }>(null)
 const toggleEmojiPicker = () => {
-    showEmojiPicker.value = !showEmojiPicker.value
+   //rawEmojis.value = emojisData
+    pickerModel = new ($bootstrap as any).Modal(document.getElementById('emojiPickerModel'));
+    pickerModel._element.addEventListener('hidden.bs.modal', () => {
+        emit('closedEmojiPicker')
+    })
     pickerModel.show();
 }
 const closeEmojiPicker = () => {
-    showEmojiPicker.value = false
     pickerModel.hide();
 }
 
@@ -258,25 +271,24 @@ const startDrag = (e: any) => {
     // document.addEventListener('mouseup', stopDrag)
 }
 
-const onDrag = (e: any) => {
-    if (!isDragging.value) return
-    pickerPosition.value = {
-        x: e.clientX - dragOffset.value.x,
-        y: e.clientY - dragOffset.value.y,
-    }
-}
+// const onDrag = (e: any) => {
+//     if (!isDragging.value) return
+//     pickerPosition.value = {
+//         x: e.clientX - dragOffset.value.x,
+//         y: e.clientY - dragOffset.value.y,
+//     }
+// }
 
-const stopDrag = () => {
-    isDragging.value = false
-    document.removeEventListener('mousemove', onDrag)
-    document.removeEventListener('mouseup', stopDrag)
-}
+// const stopDrag = () => {
+//     isDragging.value = false
+//     document.removeEventListener('mousemove', onDrag)
+//     document.removeEventListener('mouseup', stopDrag)
+// }
 /**
  * 👉 Pick emoji
  */
 function pickEmoji(emoji: { char: string; title: string; names: string[] }) {
     selectedEmoji.value = emoji
-
 }
 
 function useEmoji() {
@@ -300,17 +312,7 @@ function getFileExtension(filename: string): string {
 function clearEmoji() {
     selectedEmoji.value = null
 }
-onMounted(() => {
 
-
-    pickerModel = new ($bootstrap as any).Modal(document.getElementById('emojiPickerRef'));
-    pickerPosition.value = {
-        x: window.innerWidth / 2 - pickerWidth.value / 2,
-        y: window.innerHeight / 2 - pickerHeight.value / 2,
-    }
-    //showEmojiPicker.value = true
-
-});
 
 defineExpose({
     closeEmojiPicker,
@@ -319,6 +321,13 @@ defineExpose({
 
 onMounted(async () => {
 
+        // pickerPosition.value = {
+    //     x: window.innerWidth / 2 - pickerWidth.value / 2,
+    //     y: window.innerHeight / 2 - pickerHeight.value / 2,
+    // }
+    //showEmojiPicker.value = true
+
+    console.log('picker mounted');
     const fetchEmojis = async () => {
         const api_url = getUrl(RequestURL.fetchEmojis);
         let response_model = await $fetch<SuccessError<EmojisModel.FetchEmojiResponseModel>>(api_url, {
@@ -332,14 +341,14 @@ onMounted(async () => {
         return response_model.result ?? []
     }
     stickers.value = await fetchEmojis() as EmojisModel.FetchEmojiResponseModel[]
-    console.log(stickers.value)
+
 });
 
 
 
 </script>
 
-<style scoped>
+<!-- <style scoped>
 /* prevent inheriting NuxtEmojiPicker item styles */
 .grid-container {
     display: grid;
@@ -360,4 +369,4 @@ onMounted(async () => {
     align-items: center;
     /* Centers content vertically */
 }
-</style>
+</style> -->
