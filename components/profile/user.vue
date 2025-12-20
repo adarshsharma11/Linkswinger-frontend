@@ -1016,7 +1016,7 @@ function editStatus() {
     box-shadow: none !important;
     border-radius: 10px !important;
   ">
-    ðŸ˜Š
+    😊
   </button>
 </div>
   `,
