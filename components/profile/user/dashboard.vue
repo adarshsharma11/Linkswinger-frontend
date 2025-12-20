@@ -84,7 +84,7 @@
       <main class="dashboard-content">
         <!-- FEED / HOME -->
         <section id="view-home" :hidden="activeNav !== 'home'">
-          <HomeTab />
+          <HomeTab :dashboard-stat="dashboardStats" :mode="homeMode" @home-mode-changed="homeModeChanged" />
         </section>
 
         <section id="view-list" :hidden="activeNav !== 'userlist'">
@@ -587,7 +587,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue'
-import { UsersModel } from '~/composables/models'
+import { HomeDashboardModel, UsersModel } from '~/composables/models'
 import Multiselect from 'vue-multiselect';
 import 'vue-multiselect/dist/vue-multiselect.css';
 import type { CallsModel, LastSeenModel } from '~/composables/websocketModels';
@@ -612,7 +612,8 @@ const isWSConnected = ref(false);
 
 const lookingFor = ref<Array<string>>([])   // binds to "I am looking for"
 const whoMeets = ref<Array<string>>([])   // binds to "Who wants to meet"
-
+const homeMode = ref('today')
+const dashboardStats = ref<HomeDashboardModel.Response|null | undefined>(null)
 // constants
 const MIN_AGE = 18
 const MAX_AGE = 99
@@ -695,6 +696,13 @@ async function setActiveNav(nav: string) {
     window.location.hash = nav
     fetchFriends()
   }
+else if (nav === 'home') {
+    activeNav.value = nav
+    window.location.hash = nav
+    fetchHome()
+
+  }
+  
   else if (nav === 'profile') {
     await navigateTo(`/profile`)
   }
@@ -829,6 +837,43 @@ async function fetchUsersList(fromAdvance = false) {
     users.value = []
     showToastError(response.message ?? "Something went wrong");
   }
+}
+
+function homeModeChanged(mode:string)
+{
+homeMode.value = mode
+fetchHome();
+}
+
+async function fetchHome() 
+{
+ 
+  try {
+ dashboardStats.value = null
+  const api_url = getUrl(RequestURL.homeDashboard);
+  const body: HomeDashboardModel.Request = {
+    user_id: login_store.getUserDetails?.user_id ?? 0,
+    mode: homeMode.value ?? 'today'
+  }
+  let response = await $fetch<SuccessError<HomeDashboardModel.Response>>(api_url, {
+    method: 'POST',
+    body,
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  });
+console.log(response)
+  if (response.success) {
+     dashboardStats.value = response.response
+  }
+  else {
+    showToastError(response.message ?? "Something went wrong");
+  }
+  }
+  catch(e) {
+ console.log('home called',e)
+  }
+ 
 }
 async function fetchFriends() {
   const api_url = getUrl(RequestURL.fetchFriends);
@@ -1176,6 +1221,9 @@ onMounted(() => {
   }
   else if (hash === '#friends') {
     fetchFriends()
+  }
+  else if (hash === '#home') {
+    fetchHome()
   }
 
 

@@ -83,6 +83,7 @@ export enum RequestURL {
   meetLikeDisLike = "/meet/likeDisLike",
   addMeetComment = "/meet/addComment",
   fetchMeetComments = "/meet/fetchComment",
+   homeDashboard = "/home/dashboard",
   
 
 }
@@ -924,6 +925,60 @@ export namespace MeetEventsModel {
     profile_image?: string
     profile_type?: string
     is_owner?: boolean
+  }
+}
+
+export namespace HomeDashboardModel {
+
+  export class Request {
+    user_id?: number
+    mode?: string
+  }
+
+  export class StatusItem {
+    user_id?: number
+    nick_name?: string
+    profile_type?: string
+    profile_status?: string
+    tag?: string
+  }
+
+  export class TopMediaItem {
+    feed_id?: number
+    user_id?: number
+    feed_type?: string
+    media_type?: string
+    like_count?: number
+    comment_count?: number
+    score?: number
+    nick_name?: string
+    profile_type?: string
+    distance_miles?: number
+    created_at?: string
+       media_path?:string
+    hd_feed_image?:string
+    feed_thumbnail?:string
+  }
+
+  export class Response {
+    online?: number
+    local?: number
+    meets?: number
+    signups?: number
+
+    women?: number
+    men?: number
+    couples?: number
+    trans?: number
+
+    most_active_region?: string
+    trending_category?: string
+    meets_today?: number
+
+    status_updates?: StatusItem[]
+    top_media?: TopMediaItem[]
+ 
+
   }
 }
 

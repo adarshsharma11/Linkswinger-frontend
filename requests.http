@@ -125,3 +125,12 @@ Content-Type: application/json
 {
   "user_id" : 1
 }
+
+###
+POST https://linkswingers.co.uk/api/home/dashboard
+Content-Type: application/json
+
+{
+  "user_id" : 30,
+  "mode" : "today"
+}
