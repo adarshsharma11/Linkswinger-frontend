@@ -1,117 +1,246 @@
 <template>
-  <!-- Overlay -->
-  <div
-    class="rm-overlay"
-    role="dialog"
-    aria-modal="true"
-    :aria-labelledby="titleId"
-    @click.self="close"
-  >
-    <div class="rm-modal">
+<!--Report popup-->
+<div class="modal fade report-modal" id="reportBtn" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable" role="document">
+        <div class="modal-content text-white modal-inner report-small">
+          <!-- Header -->
+			<div class="rep-modal-header">
+				<h2 id="rep-reportTitle">Report content</h2>
+				<button class="rep-modal-close" id="closeReport" aria-label="Close">✕</button>
+			</div>
 
-      <!-- Header -->
-      <div class="rm-header">
-        <h2 :id="titleId" class="text-white">Report content</h2>
-        <button class="rm-close" @click="close" aria-label="Close">✕</button>
-      </div>
+          <!-- Body -->
+			<div class="rep-modal-body">
+				<p class="rep-modal-subtitle">
+				  Please only report content that clearly breaks our rules.
+				</p>
 
-      <!-- Body -->
-      <div class="rm-body">
-        <p class="rm-subtitle">
-          Please only report content that clearly breaks our rules.
-        </p>
+				<div class="rep-warning-box">
+				  ⚠️ Please do not report for no reason. Misusing reports can lead
+				  to your own account being flagged and banned.
+				</div>
 
-        <div class="rm-warning">
-          ⚠️ Please do not report for no reason. Misusing reports can lead
-          to your own account being flagged and banned.
-        </div>
+				<div class="rep-field-group">
+				  <label class="rep-field-label">Reason for report</label>
 
-        <!-- Reason -->
-        <div class="rm-group">
-          <label class="rm-label">Reason for report</label>
+				  <div class="rep-reason-list">
+					<label class="rep-reason-option">
+					  <input type="radio" name="report_reason" value="underage" />
+					  <span>Underage / age concern</span>
+					</label>
 
-          <div class="rm-reasons">
-            <label v-for="r in reasons" :key="r.value" class="rm-option">
-              <input
-                type="radio"
-                name="report_reason"
-                :value="r.value"
-                v-model="selectedReason"
-              />
-              <span class="text-white">{{ r.label }}</span>
-            </label>
-          </div>
-        </div>
+					<label class="rep-reason-option">
+					  <input type="radio" name="report_reason" value="violence" />
+					  <span>Violence or self-harm</span>
+					</label>
 
-        <!-- Details -->
-        <div class="rm-group">
-          <label class="rm-label">Additional details (optional)</label>
-          <textarea
-            v-model="details"
-            class="rm-textarea"
-            placeholder="Write any details that help our team review this report…"
-          />
-          <p class="rm-helper">
-            For video chat, a screenshot may be captured when you submit this report.
-          </p>
-        </div>
-      </div>
+					<label class="rep-reason-option">
+					  <input type="radio" name="report_reason" value="bestiality" />
+					  <span>Bestiality or sexual activity with animals</span>
+					</label>
 
-      <!-- Footer -->
-      <div class="rm-footer">
-        <button class="rm-btn rm-secondary" @click="close">Cancel</button>
-        <button class="rm-btn rm-danger" @click="submit">Submit report</button>
-      </div>
+					<label class="rep-reason-option">
+					  <input type="radio" name="report_reason" value="drugs" />
+					  <span>Drug use or obvious drug dealing</span>
+					</label>
 
-    </div>
-  </div>
+					<label class="rep-reason-option">
+					  <input type="radio" name="report_reason" value="nonconsensual" />
+					  <span>Non-consensual or forced content</span>
+					</label>
+
+					<label class="rep-reason-option">
+					  <input type="radio" name="report_reason" value="harassment" />
+					  <span>Hate, harassment or threats</span>
+					</label>
+
+					<label class="rep-reason-option">
+					  <input type="radio" name="report_reason" value="spam" />
+					  <span>Spam / scam / fake profile</span>
+					</label>
+
+					<label class="rep-reason-option">
+					  <input type="radio" name="report_reason" value="copyright" />
+					  <span>Copyright / impersonation</span>
+					</label>
+
+					<label class="rep-reason-option">
+					  <input type="radio" name="report_reason" value="other" />
+					  <span>Other (please describe)</span>
+					</label>
+				  </div>
+				</div>
+
+				<div class="rep-field-group">
+				  <label class="rep-field-label">Additional details (optional)</label>
+				  <textarea class="textarea"
+					placeholder="Write any details that help our team review this report…"></textarea>
+				  <p class="rep-helper-text">
+					For video chat, a screenshot may be captured when you submit this report.
+				  </p>
+				</div>
+			</div>
+
+			<div class="rep-modal-footer">
+				<button class="rep-btn rep-btn-secondary" id="cancelReport">Cancel</button>
+				<button class="rep-btn rep-btn-danger" id="submitReport">Submit report</button>
+			</div>
+		</div>
+	</div>
+</div> 
 </template>
-
-<script setup>
-import { ref, onMounted, onBeforeUnmount } from "vue"
-
-const emit = defineEmits(["close", "submit"])
-
-const titleId = "report-title"
-
-const selectedReason = ref(null)
-const details = ref("")
-
-const reasons = [
-  { value: "underage", label: "Underage / age concern" },
-  { value: "violence", label: "Violence or self-harm" },
-  { value: "bestiality", label: "Bestiality or sexual activity with animals" },
-  { value: "drugs", label: "Drug use or obvious drug dealing" },
-  { value: "nonconsensual", label: "Non-consensual or forced content" },
-  { value: "harassment", label: "Hate, harassment or threats" },
-  { value: "spam", label: "Spam / scam / fake profile" },
-  { value: "copyright", label: "Copyright / impersonation" },
-  { value: "other", label: "Other (please describe)" },
-]
-
-function close() {
-  emit("close")
+<style>
+.rep-modal-header {
+    padding: 14px 18px;
+    background: linear-gradient(to right, #3b0711, #5a0b15);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}  
+.report-small {
+  width: 520px;
+  background:#111827;
+  border-radius: 12px;
+  border: 1px solid #111827;
+  color: #e5e7eb;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
+  overflow: hidden;
+  padding: 0;
+}
+.rep-modal-header h2 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
 }
 
-function submit() {
-  if (!selectedReason.value) {
-    alert("Please select a reason for this report.")
-    return
+.rep-modal-close {
+  background: transparent;
+  border: none;
+  color: #f9fafb;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.rep-modal-body {
+  padding: 18px;
+}
+
+.rep-modal-subtitle {
+  margin: 0 0 10px;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.rep-warning-box {
+  margin-bottom: 16px;
+    padding: 10px 12px;
+    font-size: 0.8rem;
+    border-radius: 8px;
+    background: rgba(220, 38, 38, 0.08);
+    border: 1px solid rgba(220, 38, 38, 0.3);
+    color: #fecaca;
+}
+.rep-reason-option span {
+    color: #fff;
+    font-weight: 400;
+}
+.rep-field-group {
+  margin-bottom: 16px;
+  text-align: left;
+}
+
+.rep-field-label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 0.85rem;
+  color: #d1d5db;
+}
+
+.rep-reason-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px 18px;
+}
+
+.rep-reason-option {
+  font-size: 0.8rem;
+  display: flex;
+  gap: 6px;
+  align-items: flex-start;
+  color: var(--text-main);
+}
+
+.rep-reason-option input {
+  margin-top: 2px;
+}
+
+.textarea {
+  width: 100%;
+  border-radius: 8px;
+  border: 1px solid #374151;
+  background: #020617;
+  color: #e5e7eb;
+  padding: 8px 10px;
+  font-size: 0.85rem;
+  resize: vertical;
+  min-height: 90px;
+}
+
+.textarea:focus {
+  outline: none;
+  border-color: #f97316;
+}
+
+.rep-helper-text {
+  margin-top: 6px;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.rep-modal-footer {
+  padding: 12px 18px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  background: #020617;
+}
+
+.rep-btn {
+  border-radius: 8px;
+  padding: 7px 16px;
+  font-size: 0.85rem;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.rep-btn-secondary {
+  background: #4b5563;
+  color: #e5e7eb;
+}
+
+.rep-btn-secondary:hover {
+  background: #6b7280;
+}
+
+.rep-btn-danger {
+  background: #ef4444;
+  color: #f9fafb;
+}
+
+.rep-btn-danger:hover {
+  background:#f97373;
+}
+
+@media (max-width: 480px) {
+  .rep-modal {
+    width: 100%;
+    margin: 0 10px;
   }
 
-  emit("submit", {
-    reason: selectedReason.value,
-    details: details.value,
-  })
-
-  close()
+  .rep-reason-list {
+    grid-template-columns: 1fr;
+  }
 }
-
-function onKey(e) {
-  if (e.key === "Escape") close()
-}
-
-onMounted(() => document.addEventListener("keydown", onKey))
-onBeforeUnmount(() => document.removeEventListener("keydown", onKey))
-</script>
-
+</style> 
