@@ -456,14 +456,14 @@
                 <button class="ls-help-btn-secondary" @click="openUserProfile(verification)">
                   {{ verification.nick_name }}:
                 </button>
-                <span class="ms-2" v-if="(verification.review?.length ?? 0) > 70">
+                <span class="ms-2 text-white" v-if="(verification.review?.length ?? 0) > 70">
                   {{ verification.isExpanded ? verification.review : (verification.review ?? '').slice(0, 70) + '...' }}
                 </span>
-                <span class="ms-2" v-if="(verification.review?.length ?? 0) <= 70">
+                <span class="ms-2 text-white" v-if="(verification.review?.length ?? 0) <= 70">
                   {{ verification.review }}
                 </span>
                 <button v-if="(verification.review ?? '').length > 70"
-                  @click="verification.isExpanded = !verification.isExpanded" class="more-less-btn">
+                  @click="verification.isExpanded = !verification.isExpanded" class="ls-help-btn-secondary me-2">
                   {{ verification.isExpanded ? 'Less' : 'More' }}
                 </button>
               </div>
