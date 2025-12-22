@@ -348,25 +348,8 @@ onMounted(async () => {
 
 </script>
 
-<!-- <style scoped>
-/* prevent inheriting NuxtEmojiPicker item styles */
-.grid-container {
-    display: grid;
-    /* Declares the element as a grid container */
-    grid-template-columns: repeat(3, 1fr);
-    /* Creates 3 columns, each taking equal fractional space */
-    grid-template-rows: repeat(3, 1fr);
-    height: 320px;
-    max-height: 320px;
-    /* Creates 3 rows, each taking equal fractional space */
-}
+<style scoped>
 
-.grid-item {
-    display: flex;
-    /* Centers content within each item */
-    justify-content: center;
-    /* Centers content horizontally */
-    align-items: center;
-    /* Centers content vertically */
-}
-</style> -->
+
+
+</style>

@@ -20,6 +20,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
                         "content-type": "application/json"
                     }
                 });
+                
                 if (response.success) {
                     login_store.setUserDetails(response.response)
                 }
@@ -29,7 +30,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
                     if (code === 300)
                     {
                         user_store.clear()
-                        await clearloginstore()
+                      // await clearloginstore()
                         await navigateTo('/')
                     }
                 }

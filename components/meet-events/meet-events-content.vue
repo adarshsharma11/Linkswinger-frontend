@@ -506,7 +506,7 @@
                   <video lazy loop autoplay playsinline v-else-if="getFileExtension(comment.comment ?? '') === '.webm'"
                     :src="(comment.media_path ?? '') + (comment.comment ?? '')"
                     style="max-width: 40px; max-height: 40px;"></video>
-                  <img  lazy v-else-if="getFileExtension(comment.comment ?? '') !== '.json'"
+                  <img lazy v-else-if="getFileExtension(comment.comment ?? '') !== '.json'"
                     :src="(comment.media_path ?? '') + (comment.comment ?? '')"
                     style="max-width: 80px; max-height: 80px;" />
                 </div>
@@ -535,9 +535,9 @@
       </div>
     </div>
   </div>
-   
+
   <EmojiPicker v-if="showPicker" :key="route.fullPath" ref="emojiPickerRef" v-on:selected-emoji="selectedEmoji"
-        v-on:select-custom-emoji="selectCustomEmoji" @closed-emoji-picker="showPicker = false" />
+    v-on:select-custom-emoji="selectCustomEmoji" @closed-emoji-picker="showPicker = false" />
 </template>
 
 
@@ -597,7 +597,7 @@ const comments = ref([] as FeedsModel.FetchFeedCommentResponseModel[])
 const is_comment_loading = ref(false);
 const is_like_loading = ref(false);
 const is_add_comment_loading = ref(false);
-const emojiPickerRef = ref<EmojiPicker|null>(null)
+const emojiPickerRef = ref<EmojiPicker | null>(null)
 var addEventSub: any = null
 var commentModal: any = null
 const { $bootstrap } = useNuxtApp();
@@ -770,31 +770,25 @@ const timeOptions = computed(() => {
 
   // ---------- TODAY MODE ----------
   if (isTodayMode.value) {
+    // next full hour
     const start = new Date(now)
     start.setMinutes(0, 0, 0)
-    start.setHours(start.getHours() + 1) // next full hour
-
+    start.setHours(start.getHours() + 1)
+    // end of today (11:59 PM)
     const end = new Date(now)
-    end.setHours(end.getHours() + 12)
-
+    end.setHours(23, 59, 59, 999)
     const current = new Date(start)
-
     while (current <= end) {
-      // ❌ skip 12:00 AM
-      if (current.getHours() !== 0) {
-        options.push({
-          label: current.toLocaleTimeString([], {
-            hour: '2-digit',
-            minute: '2-digit',
-            hour12: true
-          }),
-          value: current.toISOString()
-        })
-      }
-
+      options.push({
+        label: current.toLocaleTimeString([], {
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: true
+        }),
+        value: current.toISOString()
+      })
       current.setHours(current.getHours() + 1)
     }
-
     return options
   }
 
@@ -970,21 +964,21 @@ async function fetchMeetEventWithFilter(isFilter: boolean = true) {
 }
 
 function selectedEmoji(emoji: string) {
-    const statusInput = commentRef.value;
-    if (statusInput) {
-        const start = statusInput.selectionStart;
-        const end = statusInput.selectionEnd;
-        const value = statusInput.value;
+  const statusInput = commentRef.value;
+  if (statusInput) {
+    const start = statusInput.selectionStart;
+    const end = statusInput.selectionEnd;
+    const value = statusInput.value;
 
-        statusInput.value = value.substring(0, start) + emoji + value.substring(end);
+    statusInput.value = value.substring(0, start) + emoji + value.substring(end);
 
-        // Move cursor after the emoji
-        const newPos = start + emoji.length;
-        statusInput.setSelectionRange(newPos, newPos);
+    // Move cursor after the emoji
+    const newPos = start + emoji.length;
+    statusInput.setSelectionRange(newPos, newPos);
 
-        // Ensure input stays focused
-        statusInput.focus();
-    }
+    // Ensure input stays focused
+    statusInput.focus();
+  }
 }
 
 function openComments() {
@@ -993,7 +987,7 @@ function openComments() {
   fetchComments(selectedEvent.value?.meet_event_id ?? 0)
 }
 function handleToggle() {
-   showPicker.value = true
+  showPicker.value = true
   nextTick(() => {
     if (emojiPickerRef.value) {
       emojiPickerRef.value.toggleEmojiPicker()
@@ -1040,32 +1034,32 @@ async function addLikeDisLike() {
 
 async function selectCustomEmoji(emoji: string) {
 
-    if (is_add_comment_loading.value) {
-        return;
-    }
-    is_add_comment_loading.value = true;
-    let postData = {
-     meet_event_id: selectedEvent.value?.meet_event_id,
-        user_id: login_store.getUserDetails?.user_id,
-        comment: emoji,
-        comment_type: 'emoji'
-    }
+  if (is_add_comment_loading.value) {
+    return;
+  }
+  is_add_comment_loading.value = true;
+  let postData = {
+    meet_event_id: selectedEvent.value?.meet_event_id,
+    user_id: login_store.getUserDetails?.user_id,
+    comment: emoji,
+    comment_type: 'emoji'
+  }
 
-    let api_url = getUrl(RequestURL.addMeetComment);
-    let response = await $fetch<SuccessError<FeedsModel.FetchFeedCommentResponseModel>>(api_url, {
-        method: 'POST',
-        body: postData,
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    });
-    is_add_comment_loading.value = false;
-    if (response.success) {
-        comments.value.push(response.response ?? {})
+  let api_url = getUrl(RequestURL.addMeetComment);
+  let response = await $fetch<SuccessError<FeedsModel.FetchFeedCommentResponseModel>>(api_url, {
+    method: 'POST',
+    body: postData,
+    headers: {
+      'Content-Type': 'application/json'
     }
-    else {
-        showToastError(response.message)
-    }
+  });
+  is_add_comment_loading.value = false;
+  if (response.success) {
+    comments.value.push(response.response ?? {})
+  }
+  else {
+    showToastError(response.message)
+  }
 }
 
 async function addComment() {
