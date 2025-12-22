@@ -178,7 +178,7 @@
         v-on:select-custom-emoji="selectCustomEmoji" @closed-emoji-picker="showPicker = false" />
 
 
-    <CommonReportModal id="reportModel" v-if="showReport" @close="closeReport"></CommonReportModal>
+    <CommonReportModal id="reportModel" v-if="showReport" @close="closeReport" :report-type="'feed'" :ref-id="selectedFeedId"></CommonReportModal>
 </template>
 
 <script setup lang="ts">
@@ -405,6 +405,7 @@ const onReachEnd = () => {
 }
 function openReport(feed_id: number) {
 
+     selectedFeedId.value = feed_id
     showReport.value = true
     nextTick(() => {
         reportModel = new ($bootstrap as any).Modal(document.getElementById('reportModel'));

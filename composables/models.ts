@@ -84,7 +84,7 @@ export enum RequestURL {
   addMeetComment = "/meet/addComment",
   fetchMeetComments = "/meet/fetchComment",
    homeDashboard = "/home/dashboard",
-  
+     addReport = "/addReport",
 
 }
 
