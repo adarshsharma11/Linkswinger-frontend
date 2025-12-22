@@ -2,7 +2,7 @@
     <div class="shorts-wrapper">
         <Swiper :modules="[Pagination, Navigation, Mousewheel]" direction="vertical" :mousewheel="true"
             :slides-per-view="1" class="shorts-swiper" @swiper="onSwiper" :lazy="true" @slideChange="onSlideChange"
-            @reachEnd="onReachEnd">
+            @reachEnd="onReachEnd" >
             <SwiperSlide v-for="(item, index) in allFeeds" :key="item.feed_id" class="short-slide">
                 <div class="short-container" :key="item.feed_id">
                     <div class="short-frame" :key="item.feed_id" @click="onFrameTap(index)"
@@ -11,7 +11,7 @@
                             loading="lazy" v-if="item.media_type === 'image'" />
                         <img :key="item.feed_id" :src="`${item.media_path}${item.feed_thumbnail}`" class="short-image"
                             loading="lazy" v-if="item.media_type === 'video'" />
-                        <video v-if="item.media_type === 'video'" ref="videoRefs"
+                        <video v-if="item.media_type === 'video'"  :ref="el => setVideoRef(el, index)"
                             class="video-js vjs-defaultskin short-video vjs-16-9" playsinline webkit-playsinline
                             x5-playsinline></video>
                         <!-- ✅ Simple Play / Pause Button -->
@@ -178,7 +178,8 @@
         v-on:select-custom-emoji="selectCustomEmoji" @closed-emoji-picker="showPicker = false" />
 
 
-    <CommonReportModal id="reportModel" v-if="showReport" @close="closeReport" :report-type="'feed'" :ref-id="selectedFeedId"></CommonReportModal>
+    <CommonReportModal id="reportModel" v-if="showReport" @close="closeReport" :report-type="'feed'"
+        :ref-id="selectedFeedId"></CommonReportModal>
 </template>
 
 <script setup lang="ts">
@@ -230,9 +231,7 @@ const reportImage = ref('/images/icons-folder/Report-150x150px.png')
 const fullscreenImage = ref('/images/icons-folder/Full screen-150x150px.png')
 
 onMounted(async () => {
-    if (props.fromFeeds) {
-        commentModal = new ($bootstrap as any).Modal(document.getElementById('commentmodal'));
-    }
+  
     // Listen for fullscreen changes to update button state
     document.addEventListener('fullscreenchange', () => {
         players.value.forEach((player, index) => {
@@ -242,12 +241,13 @@ onMounted(async () => {
         });
     });
     await nextTick()
-    if (props.mediaType === 'video') {
 
+    allFeeds.value.forEach((feed, i) => {
 
-        allFeeds.value.forEach((feed, i) => {
-
-            const videoEl = videoRefs.value[i]
+const videoEl = videoRefs.value[i]
+       
+        if (feed.media_type === 'video' && videoEl) {
+     
             const player = videojs(videoEl, {
                 controls: false, // ✅ hide default UI
                 autoplay: false,
@@ -290,36 +290,55 @@ onMounted(async () => {
             player.on('fullscreenchange', () => {
                 isFullscreen.value[i] = player.isFullscreen();
             });
-        })
+        }
+        else {
+            console.log("videoEl..",videoEl)
+            players.value.push(null)
+            playingStates.value.push(false)
+            showPlayBtn.value.push(true) // show initially
+            videoProgress.value[i] = 0
+            videoCurrentTimes.value[i] = 0
+            videoDurations.value[i] = 0
+            isFullscreen.value.push(false) // initialize fullscreen state
+        }
 
-        // 🧠 Observe which slide is visible → play/pause automatically
-        const observer = new IntersectionObserver(
-            entries => {
-                entries.forEach(entry => {
-                    const index = entry.target.querySelector('video')?.dataset.index
-                    const player = players.value[index]
-                    if (!player) return
-                    if (entry.isIntersecting) {
-                        player.play().catch(() => { })
-                        playingStates.value[index] = true
-                    } else {
-                        player.pause()
-                        playingStates.value[index] = false
-                    }
-                })
-            },
-            { threshold: 0.7 }
-        )
-        document.querySelectorAll('.short-slide').forEach(el => observer.observe(el))
+    })
 
-        onBeforeUnmount(() => {
-            console.log('disposed')
-            observer.disconnect()
-            players.value.forEach(p => p.dispose())
-        })
+    // 🧠 Observe which slide is visible → play/pause automatically
+    const observer = new IntersectionObserver(
+        entries => {
+            entries.forEach(entry => {
+                const index = entry.target.querySelector('video')?.dataset.index
+                const player = players.value[index]
+             
+                if (!player) return
+                if (entry.isIntersecting) {
+                    player.play().catch(() => { })
+                    playingStates.value[index] = true
+                } else {
+                    player.pause()
+                    playingStates.value[index] = false
+                }
+            })
+        },
+        { threshold: 0.7 }
+    )
+    document.querySelectorAll('.short-slide').forEach(el => observer.observe(el))
+
+    onBeforeUnmount(() => {
+        console.log('disposed')
+        observer.disconnect()
+        players.value.forEach(p => p.dispose())
+    })
+
+      if (props.fromFeeds ) {
+        commentModal = new ($bootstrap as any).Modal(document.getElementById('commentmodal'));
     }
 })
 
+const setVideoRef = (el, index) => {
+  if (el) videoRefs.value[index] = el
+}
 
 const onSwiper = (swiper: any) => {
     swiperInstance = swiper
@@ -379,16 +398,24 @@ function showPlayTemporarily(index) {
 // Handle slide changes (pause others)
 const onSlideChange = () => {
     const activeIndex = swiperInstance?.activeIndex ?? 0
+
     players.value.forEach((player, i) => {
-        if (i === activeIndex) {
-            player.play().catch(() => { })
-            playingStates.value[i] = true
-            showPlayBtn.value[i] = false // ✅ hide immediately on new slide
-            // or showPlayTemporarily(i) if you want a short flash
-        } else {
-            player.pause()
-            playingStates.value[i] = false
-            showPlayBtn.value[i] = true // keep visible if paused
+        if (player) {
+            if (i === activeIndex) {
+                player.play().catch(() => { })
+                playingStates.value[i] = true
+                showPlayBtn.value[i] = false // ✅ hide immediately on new slide
+                // or showPlayTemporarily(i) if you want a short flash
+            } else {
+                player.pause()
+                playingStates.value[i] = false
+                showPlayBtn.value[i] = true // keep visible if paused
+            }
+        }
+        else
+        {
+              playingStates.value[i] = false
+              showPlayBtn.value[i] = false
         }
     })
 }
@@ -405,7 +432,7 @@ const onReachEnd = () => {
 }
 function openReport(feed_id: number) {
 
-     selectedFeedId.value = feed_id
+    selectedFeedId.value = feed_id
     showReport.value = true
     nextTick(() => {
         reportModel = new ($bootstrap as any).Modal(document.getElementById('reportModel'));
@@ -419,7 +446,7 @@ function openReport(feed_id: number) {
 }
 
 function closeReport() {
-   
+
     reportModel.hide()
     console.log('reportModel closed')
 }
