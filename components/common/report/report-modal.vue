@@ -6,7 +6,7 @@
           <!-- Header -->
 			<div class="rep-modal-header">
 				<h2 id="rep-reportTitle">Report content</h2>
-				<button class="rep-modal-close" id="closeReport" aria-label="Close">✕</button>
+				<button class="rep-modal-close" id="closeReport" aria-label="Close" @click="close()">✕</button>
 			</div>
 
           <!-- Body -->
@@ -82,13 +82,27 @@
 			</div>
 
 			<div class="rep-modal-footer">
-				<button class="rep-btn rep-btn-secondary" id="cancelReport">Cancel</button>
+				<button class="rep-btn rep-btn-secondary" id="cancelReport" @click="close()">Cancel</button>
 				<button class="rep-btn rep-btn-danger" id="submitReport">Submit report</button>
 			</div>
 		</div>
 	</div>
 </div> 
 </template>
+
+<script setup>
+
+const emit = defineEmits(['close'])
+
+function close()
+{
+  emit('close')
+}
+
+
+
+</script>
+
 <style>
 .rep-modal-header {
     padding: 14px 18px;

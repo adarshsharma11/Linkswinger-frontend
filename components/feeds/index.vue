@@ -178,7 +178,7 @@
         v-on:select-custom-emoji="selectCustomEmoji" @closed-emoji-picker="showPicker = false" />
 
 
-     <CommonReportModal id="reportModel"  v-if="showReport" @close="showReport = false"></CommonReportModal>
+    <CommonReportModal id="reportModel" v-if="showReport" @close="closeReport"></CommonReportModal>
 </template>
 
 <script setup lang="ts">
@@ -408,14 +408,19 @@ function openReport(feed_id: number) {
     showReport.value = true
     nextTick(() => {
         reportModel = new ($bootstrap as any).Modal(document.getElementById('reportModel'));
-        console.log(reportModel)
-        // reportModel._element.addEventListener('hidden.bs.modal', () => {
-
-        // })
+        reportModel._element.addEventListener('hidden.bs.modal', () => {
+            showReport.value = false
+        })
         reportModel.show();
     })
 
 
+}
+
+function closeReport() {
+   
+    reportModel.hide()
+    console.log('reportModel closed')
 }
 
 
