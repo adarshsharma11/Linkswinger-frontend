@@ -8,7 +8,7 @@
         <div class="row align-items-center d-md-none">
           <!-- Mobile Settings Menu -->
           <div class="col-12 mb-2 d-md-none">
-            <div class="dropdown d-flex justify-content-end">
+            <div class="dropdown d-flex justify-content-end pfr-hm-icons">
               <button v-if="isMine()" id="settingsMenuMobile"
                 class="btn p-0 border-0 bg-transparent d-flex flex-column align-items-center text-white mr-2 position-relative action-itm"
                 data-bs-toggle="dropdown" aria-expanded="false">
@@ -122,7 +122,7 @@
 
         </div>
         <!-- First Row -->
-        <div class="row align-items-center">
+        <div class="row align-items-center prf-align">
 
           <!-- Left: Avatar + Badge -->
           <div class="col-3 col-md-3 d-flex flex-wrap justify-content-center justify-content-md-start prf-avtar">
@@ -158,6 +158,13 @@
               <span class="badge bg-theme-color fs-6 mt-2">{{ (getUser()?.tier_name ?? '').length === 0
                 ? 'Free' :
                 (getUser()?.tier_name ?? '') }}</span>
+            </div>
+            <div class="col-12 col-md-3 d-flex justify-content-center justify-content-md-start prf-verf-badge d-none">
+              <div class="d-flex gap-0 gap-md-2 flex-wrap justify-content-center">
+                <img :src="getmembershipIcon()" alt="Elite" class="badge-icon" />
+                <img src="/images/badges/photo-verified.gif" v-if="(getUser()?.is_photo_verified ?? false) === true"
+                  alt="Silver" class="badge-icon" />
+              </div>
             </div>
           </div>
 
@@ -290,7 +297,7 @@
 
           <!-- Center: Action icons -->
           <div class="col-12 col-md-6">
-            <div class="d-flex gap-3 gap-md-4 flex-wrap justify-content-center">
+            <div class="d-flex gap-3 gap-md-4 flex-wrap justify-content-center prf-all-icons">
               <div class="d-flex flex-column align-items-center position-relative action-itm" @click="openChat()">
 
                 <!-- Square red glowing badge behind the icon -->
