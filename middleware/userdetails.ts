@@ -13,7 +13,8 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
                     cache: "no-cache",
                     method: "post",
                     body: {
-                        "user_id": user_store.getLoginId,
+                      "user_id": user_store.getLoginId,
+                        "login_id" : user_store.getLoginId
                     },
                     headers: {
                         "content-type": "application/json"
@@ -21,6 +22,16 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
                 });
                 if (response.success) {
                     login_store.setUserDetails(response.response)
+                }
+                else
+                {
+                   let code = response.code 
+                    if (code === 300)
+                    {
+                        user_store.clear()
+                        await clearloginstore()
+                        await navigateTo('/')
+                    }
                 }
             }
             catch (error) {
