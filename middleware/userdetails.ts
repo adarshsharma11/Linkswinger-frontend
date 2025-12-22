@@ -25,7 +25,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
                 }
                 else
                 {
-                   let code = response.code 
+                    let code = response.code 
                     if (code === 300)
                     {
                         user_store.clear()
