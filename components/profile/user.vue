@@ -5,10 +5,10 @@
       <!-- Header -->
       <div class="profile-header container-fluid px-3 px-md-4 mt-4">
 
-        <div class="row align-items-center d-md-none">
+        <div class="row align-items-center d-md-none prf-hd-icons">
           <!-- Mobile Settings Menu -->
           <div class="col-12 mb-2 d-md-none">
-            <div class="dropdown d-flex justify-content-end pfr-hm-icons">
+            <div class="dropdown d-flex justify-content-end">
               <button v-if="isMine()" id="settingsMenuMobile"
                 class="btn p-0 border-0 bg-transparent d-flex flex-column align-items-center text-white mr-2 position-relative action-itm"
                 data-bs-toggle="dropdown" aria-expanded="false">
@@ -122,7 +122,7 @@
 
         </div>
         <!-- First Row -->
-        <div class="row align-items-center prf-align">
+        <div class="row align-items-center prf-align-start">
 
           <!-- Left: Avatar + Badge -->
           <div class="col-3 col-md-3 d-flex flex-wrap justify-content-center justify-content-md-start prf-avtar">
@@ -159,8 +159,8 @@
                 ? 'Free' :
                 (getUser()?.tier_name ?? '') }}</span>
             </div>
-            <div class="col-12 col-md-3 d-flex justify-content-center justify-content-md-start prf-verf-badge d-none">
-              <div class="d-flex gap-0 gap-md-2 flex-wrap justify-content-center">
+            <div class="col-12 col-md-3 d-flex justify-content-center justify-content-md-start d-none prf-verf-badge">
+              <div class="d-flex gap-2 flex-wrap justify-content-center">
                 <img :src="getmembershipIcon()" alt="Elite" class="badge-icon" />
                 <img src="/images/badges/photo-verified.gif" v-if="(getUser()?.is_photo_verified ?? false) === true"
                   alt="Silver" class="badge-icon" />
@@ -297,7 +297,7 @@
 
           <!-- Center: Action icons -->
           <div class="col-12 col-md-6">
-            <div class="d-flex gap-3 gap-md-4 flex-wrap justify-content-center prf-all-icons">
+            <div class="d-flex gap-3 gap-md-4 flex-wrap justify-content-center prf-action-icons">
               <div class="d-flex flex-column align-items-center position-relative action-itm" @click="openChat()">
 
                 <!-- Square red glowing badge behind the icon -->
@@ -414,9 +414,6 @@
                 <li><strong>Ethnicity:</strong> {{ getUser()?.ethnicity }}</li>
                 <li><strong>Body Type:</strong> {{ getUser()?.body_type }}</li>
                 <li><strong>Town:</strong> {{ getUser()?.town }}</li>
-                <li><strong>Smoking:</strong> {{ getUser()?.smoking || 'N/A' }}</li>
-                <li><strong>Tattos:</strong> {{ getUser()?.tattoos || 'N/A' }}</li>
-                <li><strong>Piercings:</strong> {{ getUser()?.piercings || 'N/A' }}</li>
               </ul>
             </div>
           </div>
