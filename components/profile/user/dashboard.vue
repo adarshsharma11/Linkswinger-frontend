@@ -1,5 +1,5 @@
 <template>
-  <div class="dashboard-container" @click="handleBodyClick">
+  <div class="dashboard-container" @click="handleBodyClick" :class="{ active: isSidebarOpen }" @click.stop>
     <!-- Desktop Sidebar -->
     <aside class="dashboard-sidebar" :class="{ active: isSidebarOpen }" @click.stop>
       <div class="brand">
@@ -862,7 +862,7 @@ async function fetchHome()
       'Content-Type': 'application/json'
     }
   });
-
+console.log(response)
   if (response.success) {
      dashboardStats.value = response.response
   }
@@ -1181,7 +1181,6 @@ async function logout() {
 onMounted(() => {
   // Handle hash-based navigation
 
-  
   advanceModelSub = new ($bootstrap as any).Modal(document.getElementById('advancesearchmodal'));
 
   isWSConnected.value = isSocketConnected()
@@ -1223,7 +1222,7 @@ onMounted(() => {
   else if (hash === '#friends') {
     fetchFriends()
   }
-  else if (hash === '#home' || activeNav.value === 'home') {
+  else if (hash === '#home') {
     fetchHome()
   }
 

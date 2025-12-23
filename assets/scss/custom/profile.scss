@@ -355,7 +355,15 @@ button#settingsMenuMobile {
 }
 @media (max-width:767px){
  .prf-status h3 {text-align: left;font-size: 16px !important;order: 2;width: 100%;}
-
+.prf-hd-icons {
+    position: absolute;
+    right: 10px;
+    top: 35px;
+    z-index: 9;
+}
+.prf-align-start {
+    align-items: start !important;
+}
 .prf-status {
     display: flex;
     flex-wrap: wrap;
@@ -371,53 +379,41 @@ button#settingsMenuMobile {
 }
 .prf-status span.badge {
     order: 1;
-    margin-bottom: 25px;
+    margin-bottom: 30px;
     font-size: 14px !important;
-}
-.pfr-hm-icons {
-    position: absolute;
-    right: 10px;
-    top: 40px;
-}
-.prf-align {
-    align-items: start !important;
-}
-.pfr-hm-icons button img {
-    width: 34px !important;
-    height: 34px !important;
-}
-
-.pfr-hm-icons .ml-2 a img {
-    width: 34px;
-    height: 34px;
 }
 .prf-avtar {
     justify-content: start !important;
 }
+.prf-action-icons {
+    gap: 5px !important;
+    margin-top: 15px;
+}
+
+.prf-action-icons .chat-count-badge span {
+    font-size: 10px;
+    padding: 2px 5px;
+    top: -15px;
+}
+.prf-verf-badge {
+    display: none !important;
+}
+.prf-avtar .prf-verf-badge {
+    display: flex !important;
+    margin: 10px 0 0 !important;
+}
+
+
 .prf-status p {
     order: 3;
     margin: 0 0 5px !important;
     text-align: left;
 }
-.prf-all-icons {
-    gap: 5px !important;
-    margin-top: 20px;
-}
-.prf-avtar .prf-verf-badge {
-    display: flex !important;
-    margin: 10px 0 0;
-}
-.chat-count-badge span {
-    font-size: 10px;
-    padding: 2px 5px;
-    top: -10px;
-}
+
 .prf-avtar span.badge {
     display: none;
 }
-.prf-verf-badge {
-    display: none !important;
-}
+
 .prf-avtar .profile-avatar-container img {
     width: 70px !important;
     height: 70px !important;
