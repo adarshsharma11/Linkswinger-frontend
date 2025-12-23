@@ -245,7 +245,7 @@
         </div>
         <div class="modal-body p-0 h-100">
           <Feeds :key="selectedFeeds.length > 0 ? selectedFeeds[0].feed_id : 0" :all-feeds="selectedFeeds"
-            :from-feeds="false" :media-type="selectedFeeds[0]?.media_type" v-if="selectedFeeds.length > 0" />
+            :from-feeds="false" :media-type="selectedFeeds[0]?.media_type" v-if="selectedFeeds.length > 0" :selected-index="selectedFeedIndex" @model-open="modelOpen" @model-closed="modelClosed" />
         </div>
       </div>
     </div>
@@ -263,6 +263,7 @@ const { $bootstrap } = useNuxtApp();
 var videoModalSub: any = null
 var selectedFeeds = ref([] as FeedsModel.FeedsResponseModel[])
 const allFeeds = ref([] as FeedsModel.FeedsResponseModel[])
+const selectedFeedIndex = ref(0)
 const fetchFeeds = async () => {
   const api_url = getUrl(RequestURL.fetchNewFeeds);
   const { data: feed_response, error: option_error } = await useFetch<SuccessError<FeedsModel.FeedsResponseModel>>(api_url, {
@@ -298,6 +299,7 @@ const is_new_media_loading = ref(false);
 // MOBILE FILTERS
 const mobileFiltersOpen = ref(false);
 const filtersCollapsed = ref(false);
+const isModalOpen = ref(false)
 
 // -----------------------------
 // COMPUTED: FILTERED MEDIA
@@ -491,10 +493,21 @@ async function clearFilters() {
 }
 
 function openViewer(feed: FeedsModel.FeedsResponseModel) {
-  selectedFeeds.value = [feed]
+
+  let selectedIndex = allFeeds.value.findIndex(feed1 => feed1.feed_id === feed.feed_id)
+
+  selectedFeedIndex.value = selectedIndex
+  selectedFeeds.value = allFeeds.value
   videoModalSub.show();
 }
+function modelOpen()
+{
+isModalOpen.value = true
+}
+function modelClosed()
+{
 
+}
 // -----------------------------
 // LIFECYCLE
 // -----------------------------
@@ -502,7 +515,15 @@ onMounted(() => {
   videoModalSub = new ($bootstrap as any).Modal(document.getElementById('videoModal'));
 
   videoModalSub._element.addEventListener('hidden.bs.modal', () => {
-    selectedFeeds.value = []
+    if (isModalOpen.value === false)
+    {
+        selectedFeeds.value = []
+    }
+    else
+    {
+      isModalOpen.value = false
+    }
+
   })
 });
 </script>

@@ -2,7 +2,7 @@
     <div class="shorts-wrapper">
         <Swiper :modules="[Pagination, Navigation, Mousewheel]" direction="vertical" :mousewheel="true"
             :slides-per-view="1" class="shorts-swiper" @swiper="onSwiper" :lazy="true" @slideChange="onSlideChange"
-            @reachEnd="onReachEnd" >
+            @reachEnd="onReachEnd" :initial-slide="props.selectedIndex">
             <SwiperSlide v-for="(item, index) in allFeeds" :key="item.feed_id" class="short-slide">
                 <div class="short-container" :key="item.feed_id">
                     <div class="short-frame" :key="item.feed_id" @click="onFrameTap(index)"
@@ -11,7 +11,7 @@
                             loading="lazy" v-if="item.media_type === 'image'" />
                         <img :key="item.feed_id" :src="`${item.media_path}${item.feed_thumbnail}`" class="short-image"
                             loading="lazy" v-if="item.media_type === 'video'" />
-                        <video v-if="item.media_type === 'video'"  :ref="el => setVideoRef(el, index)"
+                        <video v-if="item.media_type === 'video'" :ref="el => setVideoRef(el, index)"
                             class="video-js vjs-defaultskin short-video vjs-16-9" playsinline webkit-playsinline
                             x5-playsinline></video>
                         <!-- ✅ Simple Play / Pause Button -->
@@ -45,9 +45,8 @@
                                     <span class="duration text-white">{{ formatTime(getDuration(index)) }}</span>
                                 </div>
                             </div>
-                            <div class="overlay-inner d-flex flex-wrap justify-content-between"
-                                v-if="props.fromFeeds === true">
-                                <div class="overlay-left">
+                            <div class="overlay-inner d-flex flex-wrap justify-content-between">
+                                <div class="overlay-left" v-if="props.fromFeeds === true">
                                     <div class="vd-name">
                                         <div class="vd-img">
                                             <img
@@ -105,7 +104,7 @@
     </div>
 
     <div class="modal fade comment-modal" id="commentmodal" tabindex="-1" role="dialog" aria-hidden="true"
-        v-if="props.fromFeeds === true">
+        v-if="showComment">
         <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable" role="document">
             <div class="modal-content bg-dark text-white">
                 <!-- Header -->
@@ -187,10 +186,13 @@
 const props = defineProps({
     allFeeds: { type: Array, default: () => [] },
     fromFeeds: { type: Boolean, default: () => true },
-    mediaType: { type: String, default: () => 'image' }
+    mediaType: { type: String, default: () => 'image' },
+    selectedIndex: { type: Number, default: () => 0 }
 })
+const emit = defineEmits(['modelOpen', 'modelClosed'])
 const showPicker = ref(false)
 const showReport = ref(false)
+const showComment = ref(false)
 import { FeedsModel, RequestURL } from '~/composables/models';
 import videojs from "video.js";
 import { Swiper, SwiperSlide } from "swiper/vue";
@@ -229,9 +231,9 @@ const likeImage = ref('/images/icons-folder/Like-150x150px.png')
 const commentImage = ref('/images/icons-folder/Comments-150x150px.png')
 const reportImage = ref('/images/icons-folder/Report-150x150px.png')
 const fullscreenImage = ref('/images/icons-folder/Full screen-150x150px.png')
-
+var observer: IntersectionObserver | null
 onMounted(async () => {
-  
+
     // Listen for fullscreen changes to update button state
     document.addEventListener('fullscreenchange', () => {
         players.value.forEach((player, index) => {
@@ -244,10 +246,10 @@ onMounted(async () => {
 
     allFeeds.value.forEach((feed, i) => {
 
-const videoEl = videoRefs.value[i]
-       
+        const videoEl = videoRefs.value[i]
+
         if (feed.media_type === 'video' && videoEl) {
-     
+
             const player = videojs(videoEl, {
                 controls: false, // ✅ hide default UI
                 autoplay: false,
@@ -292,7 +294,7 @@ const videoEl = videoRefs.value[i]
             });
         }
         else {
-            console.log("videoEl..",videoEl)
+
             players.value.push(null)
             playingStates.value.push(false)
             showPlayBtn.value.push(true) // show initially
@@ -305,12 +307,12 @@ const videoEl = videoRefs.value[i]
     })
 
     // 🧠 Observe which slide is visible → play/pause automatically
-    const observer = new IntersectionObserver(
+    observer = new IntersectionObserver(
         entries => {
             entries.forEach(entry => {
                 const index = entry.target.querySelector('video')?.dataset.index
                 const player = players.value[index]
-             
+
                 if (!player) return
                 if (entry.isIntersecting) {
                     player.play().catch(() => { })
@@ -325,23 +327,33 @@ const videoEl = videoRefs.value[i]
     )
     document.querySelectorAll('.short-slide').forEach(el => observer.observe(el))
 
-    onBeforeUnmount(() => {
-        console.log('disposed')
-        observer.disconnect()
-        players.value.forEach(p => p.dispose())
-    })
 
-      if (props.fromFeeds ) {
-        commentModal = new ($bootstrap as any).Modal(document.getElementById('commentmodal'));
-    }
+
+
+
+
+
+
 })
-
+onBeforeUnmount(() => {
+    console.log('disposed')
+    observer?.disconnect()
+    players.value.forEach(p => {
+        if (p) {
+            p.dispose()
+        }
+    })
+})
 const setVideoRef = (el, index) => {
-  if (el) videoRefs.value[index] = el
+    if (el) videoRefs.value[index] = el
 }
 
 const onSwiper = (swiper: any) => {
     swiperInstance = swiper
+    // if (props.selectedIndex > 0) {
+    //     swiperInstance.slideTo(props.selectedIndex, 0);
+    // }
+
 }
 
 const onFrameTap = (index) => {
@@ -412,10 +424,9 @@ const onSlideChange = () => {
                 showPlayBtn.value[i] = true // keep visible if paused
             }
         }
-        else
-        {
-              playingStates.value[i] = false
-              showPlayBtn.value[i] = false
+        else {
+            playingStates.value[i] = false
+            showPlayBtn.value[i] = false
         }
     })
 }
@@ -438,7 +449,10 @@ function openReport(feed_id: number) {
         reportModel = new ($bootstrap as any).Modal(document.getElementById('reportModel'));
         reportModel._element.addEventListener('hidden.bs.modal', () => {
             showReport.value = false
+            console.log('reportModel closed')
+            emit('modelClosed')
         })
+        emit('modelOpen')
         reportModel.show();
     })
 
@@ -448,20 +462,30 @@ function openReport(feed_id: number) {
 function closeReport() {
 
     reportModel.hide()
-    console.log('reportModel closed')
+
 }
 
 
 function openComments(feed_id: number) {
+    emit('modelOpen')
+    showComment.value = true
+    nextTick(() => {
+        commentModal = new ($bootstrap as any).Modal(document.getElementById('commentmodal'));
+        commentModal._element.addEventListener('hidden.bs.modal', () => {
+            showComment.value = false
+            console.log('comment closed')
+            emit('modelClosed')
+        })
+        commentImage.value = '/images/icons-folder/comments-50x50px.gif'
+        setTimeout(() => {
+            commentImage.value = '/images/icons-folder/Comments-150x150px.png'
+            commentTxt.value = ''
+            selectedFeedId.value = feed_id
+            commentModal.show();
+            fetchComments(feed_id)
+        }, 300);
+    })
 
-    commentImage.value = '/images/icons-folder/comments-50x50px.gif'
-    setTimeout(() => {
-        commentImage.value = '/images/icons-folder/Comments-150x150px.png'
-        commentTxt.value = ''
-        selectedFeedId.value = feed_id
-        commentModal.show();
-        fetchComments(feed_id)
-    }, 300);
 
 
 }
