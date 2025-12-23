@@ -414,6 +414,9 @@
                 <li><strong>Ethnicity:</strong> {{ getUser()?.ethnicity }}</li>
                 <li><strong>Body Type:</strong> {{ getUser()?.body_type }}</li>
                 <li><strong>Town:</strong> {{ getUser()?.town }}</li>
+                <li><strong>Smoking:</strong> {{ getUser()?.smoking || 'N/A' }}</li>
+                <li><strong>Tattos:</strong> {{ getUser()?.tattoos || 'N/A' }}</li>
+                <li><strong>Piercings:</strong> {{ getUser()?.piercings || 'N/A' }}</li>
               </ul>
             </div>
           </div>

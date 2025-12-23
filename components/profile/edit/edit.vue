@@ -28,9 +28,10 @@
                                     @change="handleFileUpload" /> -->
                             </div>
 
-
+                            <h2 class="edit-profile-title">Edit Profile</h2>
 
                         </div>
+
                         <div class="form-group ">
                             <label>About Me</label>
                             <textarea v-model="about_me" class="form-control" id="exampleFormControlTextarea1"
@@ -80,7 +81,11 @@
                             @search-change="fetchTowns" label="town" track_by="town_id" />
                     </div>
                     <div class="form-group ">
-                        <label>Post Code</label>
+                        <label>Post Code <span class="private-indicator">
+                            <span class="badge badge-secondary">Private</span>
+                            <i class="info-icon" 
+                               v-tooltip="'Your postcode is private and never shared. This is only used for sign up flow'">ⓘ</i>
+                        </span></label>
                         <Multiselect v-model="selectedPostCode" :options="allPostCodes" :multiple="false"
                             :close-on-select="true" placeholder="Select Post Code" :loading="is_post_code_loading"
                             @search-change="fetchPostCodes" label="post_code" track_by="post_code_id" />
@@ -822,5 +827,88 @@ function getProfileImage(): string {
 .form-group label i:hover {
     transform: scale(1.1);
     color: #17a2b8;
+}
+
+/* Private indicator styles */
+.private-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-left: 8px;
+}
+
+.private-indicator .badge {
+    font-size: 10px;
+    padding: 3px 6px;
+    border-radius: 4px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.private-indicator .badge-secondary {
+    background-color: rgba(108, 117, 125, 0.8);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.private-indicator .info-icon {
+    color: #6c757d;
+    cursor: help;
+    font-size: 14px;
+    font-style: normal;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    
+}
+
+.private-indicator .info-icon:hover {
+    color: #17a2b8;
+    transform: scale(1.1);
+    background: rgba(23, 162, 184, 0.1);
+    border-color: rgba(23, 162, 184, 0.3);
+}
+
+/* Responsive adjustments */
+@media (max-width: 576px) {
+    .private-indicator {
+        gap: 4px;
+        margin-left: 6px;
+    }
+    
+    .private-indicator .badge {
+        font-size: 9px;
+        padding: 2px 4px;
+    }
+    
+    .private-indicator .info-icon {
+        font-size: 12px;
+        width: 16px;
+        height: 16px;
+    }
+}
+
+/* Edit Profile title styling */
+.edit-profile-title {
+    text-align: center;
+    color: #fff;
+    font-size: 24px;
+    font-weight: 700;
+    margin: 20px 0 10px 0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+@media (max-width: 576px) {
+    .edit-profile-title {
+        font-size: 20px;
+        margin: 15px 0 8px 0;
+    }
 }
 </style>

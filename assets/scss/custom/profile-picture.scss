@@ -171,6 +171,49 @@
   }
 }
 
+/* ---------------- NO PICTURE BUTTON ---------------- */
+.lsv-no-picture-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02));
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 999px;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(4px);
+  
+  &:hover {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.04));
+    border-color: rgba(255, 255, 255, 0.25);
+    color: #fff;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+  
+  &:active {
+    transform: translateY(0);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.01));
+  }
+}
+
+.lsv-no-picture-icon {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+  filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.2)) brightness(0.9);
+  transition: all 0.3s ease;
+  
+  .lsv-no-picture-btn:hover & {
+    filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.3)) brightness(1.1);
+    transform: scale(1.1);
+  }
+}
+
 /* ---------------- SAVE BUTTON ---------------- */
 .lsv-save {
   padding: 14px 22px;
@@ -197,8 +240,19 @@
   }
 }
 
-/* ---------------- MOBILE RESPONSIVE ---------------- */
+/* Mobile responsive for no picture button */
 @media (max-width: 768px) {
+  .lsv-no-picture-btn {
+    padding: 6px 12px;
+    font-size: 12px;
+    gap: 6px;
+  }
+  
+  .lsv-no-picture-icon {
+    width: 16px;
+    height: 16px;
+  }
+  
   .lsv-media-grid {
     grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
     gap: 12px;
@@ -236,6 +290,17 @@
 }
 
 @media (max-width: 480px) {
+  .lsv-no-picture-btn {
+    padding: 5px 10px;
+    font-size: 11px;
+    gap: 5px;
+  }
+  
+  .lsv-no-picture-icon {
+    width: 14px;
+    height: 14px;
+  }
+  
   .lsv-media-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 10px;

@@ -36,9 +36,14 @@
           <div class="lsv-filters">
             <div class="lsv-filter-left">
               <span class="lsv-tag lsv-tag--accent">All Photos</span>
+              
             </div>
             <div class="lsv-filter-right lsv-hint">
               Tip: Your selected photo will be visible to all members.
+              <button class="lsv-no-picture-btn ms-2" @click="removeProfilePicture">
+                 Remove Profile Picture
+                <img src="/images/badges/animated/50X50px/delete.gif" alt="No picture" class="lsv-no-picture-icon" />
+              </button>
             </div>
           </div>
 
