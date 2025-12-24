@@ -3,10 +3,10 @@
 
         <video ref="videoRef" class="video-js vjs-defaultskin short-video vjs-16-9" playsinline webkit-playsinline
             x5-playsinline></video>
-        <Swiper :modules="[Pagination, Navigation, Mousewheel]" direction="vertical" :mousewheel="true"
+        <Swiper :modules="[Pagination, Navigation, Mousewheel,Virtual]" direction="vertical" :mousewheel="true"
             :slides-per-view="1" class="shorts-swiper" @swiper="onSwiper" :lazy="true" @slideChange="onSlideChange"
-            @reachEnd="onReachEnd" :initial-slide="props.selectedIndex">
-            <SwiperSlide v-for="(item, index) in allFeeds" :key="item.feed_id" class="short-slide">
+            @reachEnd="onReachEnd" :initial-slide="props.selectedIndex" :virtual="true">
+            <SwiperSlide v-for="(item, index) in allFeeds" :key="item.feed_id" :virtualIndex="index" class="short-slide" >
                 <div class="short-container" :key="item.feed_id">
                     <div class="short-frame" :key="item.feed_id" @click="onFrameTap(index)"
                         @touchstart="onFrameTap(index)" :ref="el => setFrameRef(el, index)">
@@ -191,7 +191,7 @@ const showComment = ref(false)
 import { FeedsModel, RequestURL } from '~/composables/models';
 import videojs from "video.js";
 import { Swiper, SwiperSlide } from "swiper/vue";
-import { Mousewheel, Navigation, Pagination } from 'swiper/modules'
+import { Mousewheel, Navigation, Pagination, Virtual } from 'swiper/modules'
 import "swiper/css";
 import { bool, boolean } from 'yup';
 import type Player from 'video.js/dist/types/player'
