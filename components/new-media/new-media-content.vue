@@ -245,7 +245,8 @@
         </div>
         <div class="modal-body p-0 h-100">
           <Feeds :key="selectedFeeds.length > 0 ? selectedFeeds[0].feed_id : 0" :all-feeds="selectedFeeds"
-            :from-feeds="false" :media-type="selectedFeeds[0]?.media_type" v-if="selectedFeeds.length > 0" :selected-index="selectedFeedIndex" @model-open="modelOpen" @model-closed="modelClosed" />
+            :from-feeds="false" :media-type="selectedFeeds[0]?.media_type" v-if="selectedFeeds.length > 0"
+            :selected-index="selectedFeedIndex" @model-open="modelOpen" @model-closed="modelClosed" />
         </div>
       </div>
     </div>
@@ -430,7 +431,7 @@ async function applyFilters() {
     age_max: ageMax.value || null,
   };
 
-    console.log("Filters applied:", postData);
+  console.log("Filters applied:", postData);
 
   let response = await $fetch<SuccessError<FeedsModel.FeedsResponseModel>>(api_url, {
     method: 'POST',
@@ -474,7 +475,7 @@ async function clearFilters() {
 
     // MEDIA TYPE
     // 'image' | 'video' | '' (all)
-    media_type: ''    
+    media_type: ''
   };
   let response = await $fetch<SuccessError<FeedsModel.FeedsResponseModel>>(api_url, {
     method: 'POST',
@@ -500,12 +501,10 @@ function openViewer(feed: FeedsModel.FeedsResponseModel) {
   selectedFeeds.value = allFeeds.value
   videoModalSub.show();
 }
-function modelOpen()
-{
-isModalOpen.value = true
+function modelOpen() {
+  isModalOpen.value = true
 }
-function modelClosed()
-{
+function modelClosed() {
 
 }
 // -----------------------------
@@ -515,14 +514,12 @@ onMounted(() => {
   videoModalSub = new ($bootstrap as any).Modal(document.getElementById('videoModal'));
 
   videoModalSub._element.addEventListener('hidden.bs.modal', () => {
-    if (isModalOpen.value === false)
-    {
-        selectedFeeds.value = []
-    }
-    else
-    {
-      isModalOpen.value = false
-    }
+    // if (isModalOpen.value === false) {
+    //   selectedFeeds.value = []
+    // }
+    // else {
+    //   isModalOpen.value = false
+    // }
 
   })
 });
