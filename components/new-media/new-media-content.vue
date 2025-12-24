@@ -496,8 +496,8 @@ function openViewer(feed: FeedsModel.FeedsResponseModel) {
 
   let selectedIndex = allFeeds.value.findIndex(feed1 => feed1.feed_id === feed.feed_id)
 
-  selectedFeedIndex.value = 0
-  selectedFeeds.value = [feed]
+  selectedFeedIndex.value = selectedIndex
+  selectedFeeds.value = allFeeds.value
   videoModalSub.show();
 }
 function modelOpen()

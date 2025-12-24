@@ -498,6 +498,7 @@
   <EmojiPicker v-if="showPicker" :key="route.fullPath" ref="emojiPickerRef" v-on:selected-emoji="selectedEmoji" />
   <AcceptDeclineRequestModel :friend_status="friend_status" ref="acceptDeclineRequestModalRef" v-if="toggleRequestModal"
     @close="toggleRequestModal = false" @friends-list="openUsersFriendsList()" @send-request="sendFriendRequest()" />
+  <CommonEditStatusModal id="statusModal" v-if="showStatusModal"></CommonEditStatusModal>
 
   <div class="modal fade" id="interestModal" tabindex="-1" aria-labelledby="interestModal" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-l">
@@ -554,6 +555,7 @@ import { Teleport } from 'vue';
 import type { CallsModel } from '~/composables/websocketModels';
 var interestModalSub: any = null
 var verificationModalSub: any = null
+var statusModalSub : any = null
 interface Props {
   user_id: number
 }
@@ -563,6 +565,7 @@ const user_store = userStore()
 const login_store = useLoginStore();
 const is_logout_loading = ref(false);
 const showPicker = ref(false);
+const showStatusModal = ref(false);
 const is_verify_loading = ref(false);
 const is_status_loading = ref(false);
 const route = useRoute();
@@ -844,7 +847,7 @@ onMounted(() => {
 
   interestModalSub = new ($bootstrap as any).Modal(document.getElementById('interestModal'));
   verificationModalSub = new ($bootstrap as any).Modal(document.getElementById('verificationModal'));
-
+  
 
   eventBus.on('callDeclineAlert', (eventModel) => {
     showToastError('Call declined')
@@ -951,6 +954,8 @@ function showVerificationAlert() {
       addVerification(result.value ?? '')
     }
   });
+
+ 
 }
 
 function showCodeAlert(is_video: boolean) {
@@ -1005,6 +1010,18 @@ async function validateCall(code: string, is_video: boolean) {
 
 
 function editStatus() {
+
+//   showStatusModal.value = true
+//   nextTick(() => {
+//  statusModalSub = new ($bootstrap as any).Modal(document.getElementById('statusModal'));
+//   statusModalSub._element.addEventListener('hidden.bs.modal', () => {
+//           showStatusModal.value = false
+//     })
+//  statusModalSub.show()
+//   })
+
+//  return;
+
   Swal.fire({
     title: 'Edit Profile Status',
     html: `

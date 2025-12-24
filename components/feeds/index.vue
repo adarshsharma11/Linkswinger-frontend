@@ -1,19 +1,24 @@
 <template>
     <div class="shorts-wrapper">
+
+        <video ref="videoRef" class="video-js vjs-defaultskin short-video vjs-16-9" playsinline webkit-playsinline
+            x5-playsinline></video>
         <Swiper :modules="[Pagination, Navigation, Mousewheel]" direction="vertical" :mousewheel="true"
             :slides-per-view="1" class="shorts-swiper" @swiper="onSwiper" :lazy="true" @slideChange="onSlideChange"
             @reachEnd="onReachEnd" :initial-slide="props.selectedIndex">
             <SwiperSlide v-for="(item, index) in allFeeds" :key="item.feed_id" class="short-slide">
                 <div class="short-container" :key="item.feed_id">
                     <div class="short-frame" :key="item.feed_id" @click="onFrameTap(index)"
-                        @touchstart="onFrameTap(index)">
+                        @touchstart="onFrameTap(index)" :ref="el => setFrameRef(el, index)">
                         <img :key="item.feed_id" :src="`${item.media_path}${item.hd_feed_image}`" class="short-image"
-                            loading="lazy" v-if="item.media_type === 'image'" />
+                            loading="lazy" v-if="item.media_type === 'image'" data-type="thumb" />
                         <img :key="item.feed_id" :src="`${item.media_path}${item.feed_thumbnail}`" class="short-image"
-                            loading="lazy" v-if="item.media_type === 'video'" />
-                        <video v-if="item.media_type === 'video'" :ref="el => setVideoRef(el, index)"
-                            class="video-js vjs-defaultskin short-video vjs-16-9" playsinline webkit-playsinline
-                            x5-playsinline></video>
+                            loading="lazy" v-if="item.media_type === 'video'" data-type="video-thumb" />
+
+                        <!-- <video v-if="item.media_type === 'video'" :ref="el => setVideoRef(el, index)"
+                                class="video-js vjs-defaultskin short-video vjs-16-9" playsinline webkit-playsinline
+                                x5-playsinline></video> -->
+
                         <!-- ✅ Simple Play / Pause Button -->
                         <!-- ✅ Play/Pause button with fade -->
                         <!--<transition name="fade" v-if="item.media_type === 'video'">
@@ -199,15 +204,18 @@ import { Swiper, SwiperSlide } from "swiper/vue";
 import { Mousewheel, Navigation, Pagination } from 'swiper/modules'
 import "swiper/css";
 import { bool, boolean } from 'yup';
+import type Player from 'video.js/dist/types/player'
 const route = useRoute();
 let swiperInstance = null
 const videoRefs = ref([])
-const players = ref([])
+const frameRefs = ref([])
+const players = ref<Player>([] as Player[])
 const showPlayBtn = ref([])
 const playingStates = ref([]) // track play/pause per video
 const videoProgress = ref([]) // track video progress
 const videoDurations = ref([]) // track video durations
 const videoCurrentTimes = ref([]) // track current time
+var videoPlayer: Player | null = null
 let fadeTimers = [] // store timeout IDs
 const { $bootstrap } = useNuxtApp();
 var commentModal: any = null
@@ -220,9 +228,11 @@ const is_like_loading = ref([] as boolean[]);
 const is_add_comment_loading = ref(false);
 const commentRef = ref<HTMLInputElement | null>(null);
 const emojiPickerRef = ref(null)
+const videoRef = ref(null)
 var reportModel: any = null
 const isFullscreen = ref([]) // track fullscreen state per video
 
+const selectedFeed = ref({} as FeedsModel.FeedsResponseModel)
 const allFeeds = ref(props.allFeeds as FeedsModel.FeedsResponseModel[])
 // Initialize per-video loading states
 is_like_loading.value = new Array(allFeeds.value.length).fill(false);
@@ -232,47 +242,54 @@ const commentImage = ref('/images/icons-folder/Comments-150x150px.png')
 const reportImage = ref('/images/icons-folder/Report-150x150px.png')
 const fullscreenImage = ref('/images/icons-folder/Full screen-150x150px.png')
 var observer: IntersectionObserver | null
+var currentIndex = ref(0)
+var shouldshow = ref(false)
 onMounted(async () => {
 
     // Listen for fullscreen changes to update button state
     document.addEventListener('fullscreenchange', () => {
-        players.value.forEach((player, index) => {
-            if (player) {
-                isFullscreen.value[index] = !!document.fullscreenElement;
-            }
-        });
+        // players.value.forEach((player, index) => {
+        //     if (player) {
+        //         isFullscreen.value[index] = !!document.fullscreenElement;
+        //     }
+        // });
+        const player = videoPlayer
+        if (player) {
+            isFullscreen.value[currentIndex.value] = !!document.fullscreenElement;
+        }
     });
     await nextTick()
-
+    createPlayer()
+    attachToIndex2Top(0)
     allFeeds.value.forEach((feed, i) => {
 
         const videoEl = videoRefs.value[i]
 
         if (feed.media_type === 'video' && videoEl) {
 
-            const player = videojs(videoEl, {
-                controls: false, // ✅ hide default UI
-                autoplay: false,
-                preload: 'auto',
-                muted: false,
-                loop: true,
-                fluid: true,
-                sources: [
-                    {
-                        src: `${feed.media_path}${feed.hd_feed_video}`,
-                        type: 'application/x-mpegURL'
-                    }
-                ],
-                html5: {
-                    vhs: {
-                        overrideNative: true
-                    },
-                    nativeAudioTracks: false,
-                    nativeVideoTracks: false
-                }
+            // const player = videojs(videoEl, {
+            //     controls: false, // ✅ hide default UI
+            //     autoplay: false,
+            //     preload: 'none',
+            //     muted: false,
+            //     loop: true,
+            //     fluid: true,
+            //     sources: [
+            //         {
+            //             src: `${feed.media_path}${feed.hd_feed_video}`,
+            //             type: 'application/x-mpegURL'
+            //         }
+            //     ],
+            //     html5: {
+            //         vhs: {
+            //             overrideNative: true
+            //         },
+            //         nativeAudioTracks: false,
+            //         nativeVideoTracks: false
+            //     }
 
-            })
-            players.value.push(player)
+            // })
+            players.value.push(null)
             playingStates.value.push(false)
             showPlayBtn.value.push(true) // show initially
             videoProgress.value[i] = 0
@@ -280,18 +297,18 @@ onMounted(async () => {
             videoDurations.value[i] = 0
             isFullscreen.value.push(false) // initialize fullscreen state
 
-            player.on('timeupdate', () => {
-                updateSeekbar(i)
-            })
+            // player.on('timeupdate', () => {
+            //     updateSeekbar(i)
+            // })
 
-            player.on('loadedmetadata', () => {
-                videoDurations.value[i] = player.duration()
-            })
+            // player.on('loadedmetadata', () => {
+            //     videoDurations.value[i] = player.duration()
+            // })
 
-            // Listen for fullscreen change events to update state
-            player.on('fullscreenchange', () => {
-                isFullscreen.value[i] = player.isFullscreen();
-            });
+            // // Listen for fullscreen change events to update state
+            // player.on('fullscreenchange', () => {
+            //     isFullscreen.value[i] = player.isFullscreen();
+            // });
         }
         else {
 
@@ -311,8 +328,8 @@ onMounted(async () => {
         entries => {
             entries.forEach(entry => {
                 const index = entry.target.querySelector('video')?.dataset.index
-                const player = players.value[index]
-
+                //    const player = players.value[index]
+                const player = videoPlayer
                 if (!player) return
                 if (entry.isIntersecting) {
                     player.play().catch(() => { })
@@ -343,7 +360,12 @@ onBeforeUnmount(() => {
             p.dispose()
         }
     })
+    videoPlayer?.dispose()
 })
+
+const setFrameRef = (el, index) => {
+    if (el) frameRefs.value[index] = el
+}
 const setVideoRef = (el, index) => {
     if (el) videoRefs.value[index] = el
 }
@@ -353,6 +375,55 @@ const onSwiper = (swiper: any) => {
     // if (props.selectedIndex > 0) {
     //     swiperInstance.slideTo(props.selectedIndex, 0);
     // }
+
+}
+
+function createPlayer() {
+
+    if (videoRef.value) {
+
+        videoPlayer = videojs(videoRef.value, {
+            controls: false, // ✅ hide default UI
+            autoplay: false,
+            preload: 'auto',
+            muted: false,
+            loop: true,
+            fluid: true,
+            html5: {
+                vhs: {
+                    overrideNative: true
+                },
+                nativeAudioTracks: false,
+                nativeVideoTracks: false
+            }
+        })
+
+        videoPlayer.on('timeupdate', () => {
+            if (currentIndex.value !== -1) {
+                updateSeekbar(currentIndex.value)
+            }
+
+        })
+
+        videoPlayer.on('loadedmetadata', () => {
+            if (currentIndex.value !== -1) {
+                videoDurations.value[currentIndex.value] = videoPlayer.duration()
+            }
+
+        })
+
+        // Listen for fullscreen change events to update state
+        videoPlayer.on('fullscreenchange', () => {
+            if (currentIndex.value !== -1) {
+                isFullscreen.value[currentIndex.value] = videoPlayer.isFullscreen();
+            }
+        });
+
+        nextTick(() => {
+            playAtIndex(0)
+        })
+
+    }
 
 }
 
@@ -380,7 +451,8 @@ const onFrameTap = (index) => {
 
 // ✅ Play/Pause toggle
 const togglePlay = (index) => {
-    const player = players.value[index]
+    //const player = players.value[index]
+    const player = videoPlayer
     if (!player) return
     if (player.paused()) {
         player.play()
@@ -388,6 +460,7 @@ const togglePlay = (index) => {
         showPlayTemporarily(index)
     } else {
         player.pause()
+        console.log('make it paused')
         playingStates.value[index] = false
         showPlayBtn.value[index] = true
     }
@@ -411,31 +484,132 @@ function showPlayTemporarily(index) {
 const onSlideChange = () => {
     const activeIndex = swiperInstance?.activeIndex ?? 0
 
-    players.value.forEach((player, i) => {
-        if (player) {
-            if (i === activeIndex) {
-                player.play().catch(() => { })
-                playingStates.value[i] = true
-                showPlayBtn.value[i] = false // ✅ hide immediately on new slide
-                // or showPlayTemporarily(i) if you want a short flash
-            } else {
-                player.pause()
-                playingStates.value[i] = false
-                showPlayBtn.value[i] = true // keep visible if paused
-            }
-        }
-        else {
-            playingStates.value[i] = false
-            showPlayBtn.value[i] = false
-        }
-    })
+
+    const feed = allFeeds.value[activeIndex]
+    if (videoPlayer && feed.media_type === 'video') {
+
+        playAtIndex(activeIndex)
+        playingStates.value[activeIndex] = true
+        showPlayBtn.value[activeIndex] = false
+        console.log('plainfnfff')
+    }
+    else {
+        videoPlayer.pause()
+        console.log('make it pause', videoPlayer?.paused())
+
+        nextTick(() => {
+            detachVideoFromFrames()
+            playingStates.value[activeIndex] = false
+            showPlayBtn.value[activeIndex] = false
+        })
+
+    }
+
+
+    // players.value.forEach((player, i) => {
+    //     player = videoPlayer
+
+    //     if (player) {
+
+    //         if (i === activeIndex) {
+
+    //             //   player.play().catch(() => { })
+
+    //             playAtIndex(activeIndex)
+    //             playingStates.value[i] = true
+    //             showPlayBtn.value[i] = false // ✅ hide immediately on new slide
+    //             // or showPlayTemporarily(i) if you want a short flash
+    //         } else {
+    //             player.pause()
+    //             //  player.reset()
+    //             playingStates.value[i] = false
+    //             showPlayBtn.value[i] = true // keep visible if paused
+    //         }
+    //     }
+    //     else 
+    //     {
+    //         player.pause()
+    //           detachVideoFromFrames()
+    //         playingStates.value[i] = false
+    //         showPlayBtn.value[i] = false
+    //     }
+    // })
 }
 
+
+
+
+function attachToIndex2Top(index: number) {
+    nextTick(() => {
+        removeVideoFromShortsWrapper()
+        const frame = frameRefs.value[index]
+        const video = videoRef.value
+        if (!frame || !videoRef.value) return
+        const position = 0 // second position
+        const referenceNode = frame.children[position] || null
+
+        //frame.insertBefore(videoRef.value, referenceNode)
+        const thumbnail = frame.querySelector('img[data-type="video-thumb"]')
+        if (thumbnail && thumbnail.nextSibling) {
+            frame.insertBefore(video, thumbnail.nextElementSibling)
+
+        } else {
+            // fallback: append at end
+            frame.appendChild(video)
+        }
+    })
+
+}
+
+function removeVideoFromShortsWrapper() {
+    const wrapper = document.querySelector('.shorts-wrapper')
+    const video = videoRef.value
+    if (!wrapper || !video || videoPlayer === null) return
+    const videoEl = document.getElementById(videoPlayer.id())
+    if (wrapper && videoEl && wrapper.contains(videoEl)) {
+        wrapper.removeChild(videoEl)
+    }
+}
+
+function detachVideoFromFrames() {
+    if (!videoRef.value) return
+
+    const parent = videoRef.value.parentElement
+
+    // If video is currently inside a short-frame, move it back
+    if (parent && parent.classList.contains('short-frame')) {
+     
+        parent.removeChild(videoRef.value)
+    }
+}
+
+
+
+function playAtIndex(index: number) {
+
+    attachToIndex2Top(index);
+    const feed = allFeeds.value[index]
+
+    if (feed.media_type !== 'video' || videoPlayer === null) {
+        return;
+    }
+
+
+    videoPlayer.pause()
+    videoPlayer.src({
+        src: `${feed.media_path}${feed.hd_feed_video}`,
+        type: 'application/x-mpegURL'
+    })
+    videoPlayer.load()
+    videoPlayer.play().catch(() => { })
+    currentIndex.value = index
+}
 
 // ✅ Stop last video when reaching the end
 const onReachEnd = () => {
     const lastIndex = allFeeds.value.length - 1
-    const lastPlayer = players.value[lastIndex]
+    //const lastPlayer = players.value[lastIndex]
+    const lastPlayer = videoPlayer
     if (lastPlayer) {
         lastPlayer.pause()
         playingStates.value[lastIndex] = false
@@ -683,7 +857,8 @@ function getDuration(index: number): number {
 }
 
 function seekToPosition(event: MouseEvent | TouchEvent, index: number) {
-    const player = players.value[index];
+    // const player = players.value[index];
+    const player = videoPlayer;
     if (!player) return;
 
     event.preventDefault(); // Prevent default touch behavior
@@ -702,7 +877,8 @@ function seekToPosition(event: MouseEvent | TouchEvent, index: number) {
 }
 
 function updateSeekbar(index: number) {
-    const player = players.value[index];
+    // const player = players.value[index];
+    const player = videoPlayer;
     if (!player) return;
 
     const currentTime = player.currentTime();
@@ -716,7 +892,8 @@ function updateSeekbar(index: number) {
 }
 
 function toggleFullscreen(feed_id: number, index: number) {
-    const player = players.value[index];
+    //   const player = players.value[index];
+    const player = videoPlayer;
     if (!player) return;
     fullscreenImage.value = '/images/icons-folder/full_screen-50x50px.gif'
     setTimeout(() => {
