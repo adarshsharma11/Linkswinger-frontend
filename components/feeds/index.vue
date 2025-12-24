@@ -12,8 +12,8 @@
                         @touchstart="onFrameTap(index)" :ref="el => setFrameRef(el, index)">
                         <img :key="item.feed_id" :src="`${item.media_path}${item.hd_feed_image}`" class="short-image"
                             loading="lazy" v-if="item.media_type === 'image'" data-type="thumb" />
-                        <!-- <img :key="item.feed_id" :src="`${item.media_path}${item.feed_thumbnail}`" class="short-image"
-                            loading="lazy" v-if="item.media_type === 'video'" data-type="video-thumb" /> -->
+                        <img :key="item.feed_id" :src="`${item.media_path}${item.feed_thumbnail}`" class="short-image"
+                            loading="lazy" v-if="item.media_type === 'video'" data-type="video-thumb" />
 
                         <!-- <video v-if="item.media_type === 'video'" :ref="el => setVideoRef(el, index)"
                                 class="video-js vjs-defaultskin short-video vjs-16-9" playsinline webkit-playsinline
@@ -246,18 +246,7 @@ var currentIndex = ref(0)
 var shouldshow = ref(false)
 onMounted(async () => {
 
-    // Listen for fullscreen changes to update button state
-    document.addEventListener('fullscreenchange', () => {
-        // players.value.forEach((player, index) => {
-        //     if (player) {
-        //         isFullscreen.value[index] = !!document.fullscreenElement;
-        //     }
-        // });
-        const player = videoPlayer
-        if (player) {
-            isFullscreen.value[currentIndex.value] = !!document.fullscreenElement;
-        }
-    });
+
     await nextTick()
 
     allFeeds.value.forEach((feed, i) => {
@@ -421,6 +410,20 @@ function createPlayer() {
             if (currentIndex.value !== -1) {
                 isFullscreen.value[currentIndex.value] = videoPlayer.isFullscreen();
             }
+            console.log('fullscreenchange')
+        });
+
+        // Listen for fullscreen changes to update button state
+        document.addEventListener('fullscreenchange', () => {
+            // players.value.forEach((player, index) => {
+            //     if (player) {
+            //         isFullscreen.value[index] = !!document.fullscreenElement;
+            //     }
+            // });
+            const player = videoPlayer
+            if (player) {
+                isFullscreen.value[currentIndex.value] = !!document.fullscreenElement;
+            }
         });
 
         nextTick(() => {
@@ -464,7 +467,7 @@ const togglePlay = (index) => {
         showPlayTemporarily(index)
     } else {
         player.pause()
-        console.log('make it paused')
+     
         playingStates.value[index] = false
         showPlayBtn.value[index] = true
     }
@@ -496,12 +499,12 @@ const onSlideChange = () => {
             playAtIndex(activeIndex)
             playingStates.value[activeIndex] = true
             showPlayBtn.value[activeIndex] = false
-            console.log('plainfnfff')
+        
         }
         else {
 
             videoPlayer?.pause()
-            console.log('make it pause', videoPlayer?.paused())
+     
 
             nextTick(() => {
                 detachVideoFromFrames()
@@ -576,7 +579,6 @@ function removeVideoFromShortsWrapper() {
     const videoEl = document.getElementById(videoPlayer.id())
     if (wrapper && videoEl && wrapper.contains(videoEl)) {
         wrapper.removeChild(videoEl)
-        console.log("removed from short")
     }
 }
 
@@ -867,7 +869,7 @@ function getDuration(index: number): number {
 
 function seekToPosition(event: MouseEvent | TouchEvent, index: number) {
     // const player = players.value[index];
-   
+
     const player = videoPlayer;
     if (!player) return;
 
@@ -890,7 +892,7 @@ function updateSeekbar(index: number) {
     // const player = players.value[index];
 
 
- 
+
     const player = videoPlayer;
     if (!player) return;
 
@@ -911,6 +913,7 @@ function toggleFullscreen(feed_id: number, index: number) {
     fullscreenImage.value = '/images/icons-folder/full_screen-50x50px.gif'
     setTimeout(() => {
         fullscreenImage.value = '/images/icons-folder/Full screen-150x150px.png'
+  
         try {
             if (player.isFullscreen()) {
                 player.exitFullscreen();
@@ -921,6 +924,7 @@ function toggleFullscreen(feed_id: number, index: number) {
             }
         } catch (error) {
             // Fallback to native fullscreen API
+      
             const videoElement = videoRefs.value[index];
             if (videoElement) {
                 if (!document.fullscreenElement) {
@@ -936,6 +940,7 @@ function toggleFullscreen(feed_id: number, index: number) {
                 }
             }
         }
+    
 
 
     }, 700);
