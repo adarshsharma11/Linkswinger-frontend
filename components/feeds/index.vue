@@ -259,8 +259,7 @@ onMounted(async () => {
         }
     });
     await nextTick()
-    createPlayer()
-    attachToIndex2Top(props.selectedIndex)
+
     allFeeds.value.forEach((feed, i) => {
 
         const videoEl = videoRefs.value[i]
@@ -329,16 +328,19 @@ onMounted(async () => {
             entries.forEach(entry => {
                 const index = entry.target.querySelector('video')?.dataset.index
                 //    const player = players.value[index]
-                const player = videoPlayer
-                const feed = allFeeds.value[index]
-                if (!player || feed.media_type !== 'video') return
-                if (entry.isIntersecting) {
-                    player.play().catch(() => { })
-                    playingStates.value[index] = true
-                } else {
-                    player.pause()
-                    playingStates.value[index] = false
+                if (allFeeds.value.length > 0 && index) {
+                    const player = videoPlayer
+                    const feed = allFeeds.value[index]
+                    if (!player || feed.media_type !== 'video') return
+                    if (entry.isIntersecting) {
+                        player.play().catch(() => { })
+                        playingStates.value[index] = true
+                    } else {
+                        player.pause()
+                        playingStates.value[index] = false
+                    }
                 }
+
             })
         },
         { threshold: 0.7 }
@@ -348,7 +350,8 @@ onMounted(async () => {
 
 
 
-
+    createPlayer()
+    attachToIndex2Top(props.selectedIndex)
 
 
 
@@ -486,25 +489,29 @@ const onSlideChange = () => {
     const activeIndex = swiperInstance?.activeIndex ?? 0
 
 
-    const feed = allFeeds.value[activeIndex]
-    if (videoPlayer && feed.media_type === 'video') {
+    if (allFeeds.value.length > 0) {
+        const feed = allFeeds.value[activeIndex]
+        if (videoPlayer && feed.media_type === 'video') {
 
-        playAtIndex(activeIndex)
-        playingStates.value[activeIndex] = true
-        showPlayBtn.value[activeIndex] = false
-        console.log('plainfnfff')
-    }
-    else {
-        videoPlayer.pause()
-        console.log('make it pause', videoPlayer?.paused())
-
-        nextTick(() => {
-            detachVideoFromFrames()
-            playingStates.value[activeIndex] = false
+            playAtIndex(activeIndex)
+            playingStates.value[activeIndex] = true
             showPlayBtn.value[activeIndex] = false
-        })
+            console.log('plainfnfff')
+        }
+        else {
 
+            videoPlayer?.pause()
+            console.log('make it pause', videoPlayer?.paused())
+
+            nextTick(() => {
+                detachVideoFromFrames()
+                playingStates.value[activeIndex] = false
+                showPlayBtn.value[activeIndex] = false
+            })
+
+        }
     }
+
 
 
     // players.value.forEach((player, i) => {
@@ -569,6 +576,7 @@ function removeVideoFromShortsWrapper() {
     const videoEl = document.getElementById(videoPlayer.id())
     if (wrapper && videoEl && wrapper.contains(videoEl)) {
         wrapper.removeChild(videoEl)
+        console.log("removed from short")
     }
 }
 
@@ -579,7 +587,7 @@ function detachVideoFromFrames() {
 
     // If video is currently inside a short-frame, move it back
     if (parent && parent.classList.contains('short-frame')) {
-     
+
         parent.removeChild(videoRef.value)
     }
 }
@@ -859,7 +867,7 @@ function getDuration(index: number): number {
 
 function seekToPosition(event: MouseEvent | TouchEvent, index: number) {
     // const player = players.value[index];
-     console.log('seekToPosition')
+   
     const player = videoPlayer;
     if (!player) return;
 
@@ -882,7 +890,7 @@ function updateSeekbar(index: number) {
     // const player = players.value[index];
 
 
-     console.log('updateSeekbar')
+ 
     const player = videoPlayer;
     if (!player) return;
 
