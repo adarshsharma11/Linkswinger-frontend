@@ -372,8 +372,8 @@ function createPlayer() {
         videoPlayer = videojs(videoRef.value, {
             controls: false, // ✅ hide default UI
             autoplay: false,
-            preload: 'auto',
-            muted: false,
+            preload: 'none',
+            muted: true,
             loop: true,
             fluid: true,
             html5: {
