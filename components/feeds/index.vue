@@ -329,12 +329,9 @@ onMounted(async () => {
 
 
 
-    createPlayer()
-    removeVideoFromShortsWrapper()
+ 
 
-    attachToIndex2Top(props.selectedIndex)
-  
-    
+
 
 
 })
@@ -361,6 +358,10 @@ const onSwiper = (swiper: any) => {
     // if (props.selectedIndex > 0) {
     //     swiperInstance.slideTo(props.selectedIndex, 0);
     // }
+
+    createPlayer()
+    removeVideoFromShortsWrapper()
+    attachToIndex2Top(props.selectedIndex)
 
 }
 
@@ -454,10 +455,13 @@ const togglePlay = (index) => {
     //const player = players.value[index]
     const player = videoPlayer
     if (!player) return
+
+
     if (player.paused()) {
         player.play()
         playingStates.value[index] = true
         showPlayTemporarily(index)
+
     } else {
         player.pause()
 
@@ -468,13 +472,14 @@ const togglePlay = (index) => {
 
 // ✅ Show for 2 seconds only if playing
 function showPlayTemporarily(index) {
+
     showPlayBtn.value[index] = true
     clearTimeout(fadeTimers[index])
     if (playingStates.value[index]) {
         fadeTimers[index] = setTimeout(() => {
             if (playingStates.value[index]) {
                 showPlayBtn.value[index] = false
-             
+
             }
 
         }, 2000)
@@ -490,7 +495,7 @@ const onSlideChange = () => {
         if (videoPlayer && feed.media_type === 'video') {
 
             playAtIndex(activeIndex)
-         
+
 
         }
         else {
@@ -575,7 +580,7 @@ function detachVideoFromFrames() {
     // If video is currently inside a short-frame, move it back
     if (parent && parent.classList.contains('short-frame')) {
 
-           parent.removeChild(videoRef.value)
+        //parent.removeChild(videoRef.value)
     }
 }
 
@@ -583,13 +588,13 @@ function detachVideoFromFrames() {
 
 function playAtIndex(index: number) {
 
-   
+
     const feed = allFeeds.value[index]
 
     if (feed.media_type !== 'video' || videoPlayer === null) {
         return;
     }
- attachToIndex2Top(index);
+    attachToIndex2Top(index);
 
     videoPlayer.pause()
     videoPlayer.src({
@@ -599,8 +604,8 @@ function playAtIndex(index: number) {
     videoPlayer.load()
     videoPlayer.play().catch(() => { })
 
-       playingStates.value[index] = true
-            showPlayBtn.value[index] = false
+    playingStates.value[index] = true
+    showPlayBtn.value[index] = false
     currentIndex.value = index
 }
 
