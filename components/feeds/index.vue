@@ -5,7 +5,7 @@
             x5-playsinline></video>
         <Swiper :modules="[Pagination, Navigation, Mousewheel]" direction="vertical" :mousewheel="true"
             :slides-per-view="1" class="shorts-swiper" @swiper="onSwiper" :lazy="true" @slideChange="onSlideChange"
-            @reachEnd="onReachEnd" :initial-slide="props.selectedIndex" >
+            @reachEnd="onReachEnd" :initial-slide="props.selectedIndex">
             <SwiperSlide v-for="(item, index) in allFeeds" :key="item.feed_id" class="short-slide">
                 <div class="short-container" :key="item.feed_id">
                     <div class="short-frame" :key="item.feed_id" @click="onFrameTap(index)"
@@ -581,24 +581,28 @@ function detachVideoFromFrames() {
 function playAtIndex(index: number) {
 
 
-    const feed = allFeeds.value[index]
 
-    if (feed.media_type !== 'video' || videoPlayer === null) {
-        return;
+    if (allFeeds.value.length > 0) {
+        const feed = allFeeds.value[index]
+        if (feed.media_type !== 'video' || videoPlayer === null) {
+            return;
+        }
+        attachToIndex2Top(index);
+
+        videoPlayer.pause()
+        videoPlayer.src({
+            src: `${feed.media_path}${feed.hd_feed_video}`,
+            type: 'application/x-mpegURL'
+        })
+        videoPlayer.load()
+        videoPlayer.play().catch(() => { })
+
+        playingStates.value[index] = true
+        showPlayBtn.value[index] = false
+        currentIndex.value = index
     }
-    attachToIndex2Top(index);
 
-    videoPlayer.pause()
-    videoPlayer.src({
-        src: `${feed.media_path}${feed.hd_feed_video}`,
-        type: 'application/x-mpegURL'
-    })
-    videoPlayer.load()
-    videoPlayer.play().catch(() => { })
 
-    playingStates.value[index] = true
-    showPlayBtn.value[index] = false
-    currentIndex.value = index
 }
 
 // ✅ Stop last video when reaching the end
