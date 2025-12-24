@@ -546,10 +546,17 @@ onMounted(() => {
   border-bottom: none !important;
 }
 
+
 .modal-dialog {
-  height: 100vh;
-  max-height: 100vh;
-  margin: 0 auto;
+  height: 100%;
+  max-height: 100%;
+    margin: 0 auto;
+}
+
+@supports (-webkit-touch-callout: none) {
+  .modal-dialog {
+    height: 100dvh;
+  }
 }
 
 .modal-content {
@@ -558,4 +565,6 @@ onMounted(() => {
   overflow: hidden;
   /* disables internal scroll */
 }
+
+
 </style>
