@@ -341,8 +341,10 @@ onMounted(async () => {
 
     createPlayer()
     removeVideoFromShortsWrapper()
-    attachToIndex2Top(props.selectedIndex)
 
+    attachToIndex2Top(props.selectedIndex)
+  
+    
 
 
 })
@@ -482,7 +484,7 @@ function showPlayTemporarily(index) {
         fadeTimers[index] = setTimeout(() => {
             if (playingStates.value[index]) {
                 showPlayBtn.value[index] = false
-                console.log('Frame tapped, showing play button')
+             
             }
 
         }, 2000)
@@ -498,8 +500,7 @@ const onSlideChange = () => {
         if (videoPlayer && feed.media_type === 'video') {
 
             playAtIndex(activeIndex)
-            playingStates.value[activeIndex] = true
-            showPlayBtn.value[activeIndex] = false
+         
 
         }
         else {
@@ -560,7 +561,7 @@ function attachToIndex2Top(index: number) {
         if (thumbnail && thumbnail.nextSibling) {
             frame.insertBefore(video, thumbnail.nextElementSibling)
         } else {
-            frame.appendChild(video)
+            //frame.appendChild(video)
         }
     })
 
@@ -584,7 +585,7 @@ function detachVideoFromFrames() {
     // If video is currently inside a short-frame, move it back
     if (parent && parent.classList.contains('short-frame')) {
 
-        //    parent.removeChild(videoRef.value)
+           parent.removeChild(videoRef.value)
     }
 }
 
@@ -592,13 +593,13 @@ function detachVideoFromFrames() {
 
 function playAtIndex(index: number) {
 
-    attachToIndex2Top(index);
+   
     const feed = allFeeds.value[index]
 
     if (feed.media_type !== 'video' || videoPlayer === null) {
         return;
     }
-
+ attachToIndex2Top(index);
 
     videoPlayer.pause()
     videoPlayer.src({
@@ -607,6 +608,9 @@ function playAtIndex(index: number) {
     })
     videoPlayer.load()
     videoPlayer.play().catch(() => { })
+
+       playingStates.value[index] = true
+            showPlayBtn.value[index] = false
     currentIndex.value = index
 }
 
