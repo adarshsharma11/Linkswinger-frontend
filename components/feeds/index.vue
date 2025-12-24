@@ -340,6 +340,7 @@ onMounted(async () => {
 
 
     createPlayer()
+    removeVideoFromShortsWrapper()
     attachToIndex2Top(props.selectedIndex)
 
 
@@ -467,7 +468,7 @@ const togglePlay = (index) => {
         showPlayTemporarily(index)
     } else {
         player.pause()
-     
+
         playingStates.value[index] = false
         showPlayBtn.value[index] = true
     }
@@ -499,12 +500,12 @@ const onSlideChange = () => {
             playAtIndex(activeIndex)
             playingStates.value[activeIndex] = true
             showPlayBtn.value[activeIndex] = false
-        
+
         }
         else {
 
             videoPlayer?.pause()
-     
+
 
             nextTick(() => {
                 detachVideoFromFrames()
@@ -552,20 +553,13 @@ const onSlideChange = () => {
 
 function attachToIndex2Top(index: number) {
     nextTick(() => {
-        removeVideoFromShortsWrapper()
         const frame = frameRefs.value[index]
-        const video = videoRef.value
+        const video = videoPlayer?.el()
         if (!frame || !videoRef.value) return
-        const position = 0 // second position
-        const referenceNode = frame.children[position] || null
-
-        //frame.insertBefore(videoRef.value, referenceNode)
         const thumbnail = frame.querySelector('img[data-type="video-thumb"]')
         if (thumbnail && thumbnail.nextSibling) {
             frame.insertBefore(video, thumbnail.nextElementSibling)
-
         } else {
-            // fallback: append at end
             frame.appendChild(video)
         }
     })
@@ -590,7 +584,7 @@ function detachVideoFromFrames() {
     // If video is currently inside a short-frame, move it back
     if (parent && parent.classList.contains('short-frame')) {
 
-        parent.removeChild(videoRef.value)
+        //    parent.removeChild(videoRef.value)
     }
 }
 
@@ -909,11 +903,11 @@ function updateSeekbar(index: number) {
 function toggleFullscreen(feed_id: number, index: number) {
     //   const player = players.value[index];
     const player = videoPlayer;
-    if (!player) return;
+    if (!player || player.el().isConnected === false) return;
     fullscreenImage.value = '/images/icons-folder/full_screen-50x50px.gif'
     setTimeout(() => {
         fullscreenImage.value = '/images/icons-folder/Full screen-150x150px.png'
-  
+
         try {
             if (player.isFullscreen()) {
                 player.exitFullscreen();
@@ -924,7 +918,7 @@ function toggleFullscreen(feed_id: number, index: number) {
             }
         } catch (error) {
             // Fallback to native fullscreen API
-      
+
             const videoElement = videoRefs.value[index];
             if (videoElement) {
                 if (!document.fullscreenElement) {
@@ -940,7 +934,7 @@ function toggleFullscreen(feed_id: number, index: number) {
                 }
             }
         }
-    
+
 
 
     }, 700);
