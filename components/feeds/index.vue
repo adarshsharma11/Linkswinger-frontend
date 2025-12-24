@@ -12,8 +12,8 @@
                         @touchstart="onFrameTap(index)" :ref="el => setFrameRef(el, index)">
                         <img :key="item.feed_id" :src="`${item.media_path}${item.hd_feed_image}`" class="short-image"
                             loading="lazy" v-if="item.media_type === 'image'" data-type="thumb" />
-                        <img :key="item.feed_id" :src="`${item.media_path}${item.feed_thumbnail}`" class="short-image"
-                            loading="lazy" v-if="item.media_type === 'video'" data-type="video-thumb" />
+                        <!-- <img :key="item.feed_id" :src="`${item.media_path}${item.feed_thumbnail}`" class="short-image"
+                            loading="lazy" v-if="item.media_type === 'video'" data-type="video-thumb" /> -->
 
                         <!-- <video v-if="item.media_type === 'video'" :ref="el => setVideoRef(el, index)"
                                 class="video-js vjs-defaultskin short-video vjs-16-9" playsinline webkit-playsinline
@@ -260,7 +260,7 @@ onMounted(async () => {
     });
     await nextTick()
     createPlayer()
-    attachToIndex2Top(0)
+    attachToIndex2Top(props.selectedIndex)
     allFeeds.value.forEach((feed, i) => {
 
         const videoEl = videoRefs.value[i]
@@ -330,7 +330,8 @@ onMounted(async () => {
                 const index = entry.target.querySelector('video')?.dataset.index
                 //    const player = players.value[index]
                 const player = videoPlayer
-                if (!player) return
+                const feed = allFeeds.value[index]
+                if (!player || feed.media_type !== 'video') return
                 if (entry.isIntersecting) {
                     player.play().catch(() => { })
                     playingStates.value[index] = true
@@ -420,7 +421,7 @@ function createPlayer() {
         });
 
         nextTick(() => {
-            playAtIndex(0)
+            playAtIndex(props.selectedIndex)
         })
 
     }
@@ -858,6 +859,7 @@ function getDuration(index: number): number {
 
 function seekToPosition(event: MouseEvent | TouchEvent, index: number) {
     // const player = players.value[index];
+     console.log('seekToPosition')
     const player = videoPlayer;
     if (!player) return;
 
@@ -878,6 +880,9 @@ function seekToPosition(event: MouseEvent | TouchEvent, index: number) {
 
 function updateSeekbar(index: number) {
     // const player = players.value[index];
+
+
+     console.log('updateSeekbar')
     const player = videoPlayer;
     if (!player) return;
 
