@@ -329,7 +329,7 @@ onMounted(async () => {
 })
 onBeforeUnmount(() => {
     console.log('disposed')
-    observer?.disconnect()
+  //  observer?.disconnect()
     players.value.forEach(p => {
         if (p) {
             p.dispose()
