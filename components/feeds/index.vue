@@ -324,7 +324,7 @@ onMounted(async () => {
     //     },
     //     { threshold: 0.7 }
     // )
-    document.querySelectorAll('.short-slide').forEach(el => observer.observe(el))
+  //  document.querySelectorAll('.short-slide').forEach(el => observer.observe(el))
 
 })
 onBeforeUnmount(() => {
