@@ -326,14 +326,6 @@ onMounted(async () => {
     )
     document.querySelectorAll('.short-slide').forEach(el => observer.observe(el))
 
-
-
-
- 
-
-
-
-
 })
 onBeforeUnmount(() => {
     console.log('disposed')
@@ -372,8 +364,8 @@ function createPlayer() {
         videoPlayer = videojs(videoRef.value, {
             controls: false, // ✅ hide default UI
             autoplay: false,
-            preload: 'none',
-            muted: true,
+            preload: 'auto',
+            muted: false,
             loop: true,
             fluid: true,
             html5: {
