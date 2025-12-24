@@ -15,17 +15,7 @@
                         <img :key="item.feed_id" :src="`${item.media_path}${item.feed_thumbnail}`" class="short-image"
                             loading="lazy" v-if="item.media_type === 'video'" data-type="video-thumb" />
 
-                        <!-- <video v-if="item.media_type === 'video'" :ref="el => setVideoRef(el, index)"
-                                class="video-js vjs-defaultskin short-video vjs-16-9" playsinline webkit-playsinline
-                                x5-playsinline></video> -->
 
-                        <!-- ✅ Simple Play / Pause Button -->
-                        <!-- ✅ Play/Pause button with fade -->
-                        <!--<transition name="fade" v-if="item.media_type === 'video'">
-                           <button v-if="showPlayBtn[index]" class="play-toggle" @click="togglePlay(index)">
-                               {{ playingStates[index] ? '❚❚' : '▶️' }}
-                            </button>
-                        </transition>-->
                         <transition name="fade" v-if="item.media_type === 'video'">
                             <button v-if="showPlayBtn[index]" class="play-toggle" @click="togglePlay(index)">
                                 <img v-if="playingStates[index]" src="/images/icons-folder/Pause-150x150px.png"
