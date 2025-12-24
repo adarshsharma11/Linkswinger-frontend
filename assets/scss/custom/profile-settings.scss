@@ -138,6 +138,7 @@ button#discardBtn {
     position: relative;
     outline: none;
     transition: .15s;
+    cursor: pointer;
 }
 
 .vs-toggle input[type="checkbox"].switch::after {

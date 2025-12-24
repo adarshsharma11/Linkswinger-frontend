@@ -215,6 +215,10 @@
 
         <!-- SUBPAGES (no sidebar entry) -->
         <section id="view-nearby" :hidden="activeNav !== 'nearby'">
+          <div class="nearby-loc-togl">
+             <div class="loc-togl-text">Location On/Off</div>
+            <div class="vs-toggle"><input type="checkbox" class="switch" id="hideProfile"></div>
+          </div>
           <div id="grid" class="grid user-grid" aria-live="polite">
             <UserCard v-for="user in users" :key="user.user_id" :user="user" :is-mine=false :online-users="onlineUsers"
               :last-seens="lastSeens" @open-profile="openProfile" @open-chat="openChat" @show-code-alert="showCodeAlert"
@@ -1222,7 +1226,7 @@ onMounted(() => {
   else if (hash === '#friends') {
     fetchFriends()
   }
-  else if (hash === '#home' || activeNav.value === 'home') {
+  else if (hash === '#home') {
     fetchHome()
   }
 

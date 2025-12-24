@@ -125,7 +125,7 @@
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
-    margin: 10px 0 50px;
+    margin: 10px 0 20px;
 }
 .user-grid .chip {
     border: 1px solid rgba(255, 255, 255, .08);
@@ -364,7 +364,16 @@ ul.nm-icons {
     flex-wrap: wrap;
     margin-left: 10px;
 }
-
+.nearby-loc-togl {
+    text-align: right;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    justify-content: flex-end;
+}
+.nearby-loc-togl .vs-toggle {
+    display: flex;
+}
 @media only screen and (min-width: 1650px) {
 .user-grid .content {
     padding: 12px 12px 80px;
