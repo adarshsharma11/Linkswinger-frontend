@@ -231,7 +231,7 @@ const likeImage = ref('/images/icons-folder/Like-150x150px.png')
 const commentImage = ref('/images/icons-folder/Comments-150x150px.png')
 const reportImage = ref('/images/icons-folder/Report-150x150px.png')
 const fullscreenImage = ref('/images/icons-folder/Full screen-150x150px.png')
-var observer: IntersectionObserver | null
+//var observer: IntersectionObserver | null
 var currentIndex = ref(0)
 var shouldshow = ref(false)
 onMounted(async () => {
@@ -302,28 +302,28 @@ onMounted(async () => {
     })
 
     // 🧠 Observe which slide is visible → play/pause automatically
-    observer = new IntersectionObserver(
-        entries => {
-            entries.forEach(entry => {
-                const index = entry.target.querySelector('video')?.dataset.index
-                //    const player = players.value[index]
-                if (allFeeds.value.length > 0 && index) {
-                    const player = videoPlayer
-                    const feed = allFeeds.value[index]
-                    if (!player || feed.media_type !== 'video') return
-                    if (entry.isIntersecting) {
-                        player.play().catch(() => { })
-                        playingStates.value[index] = true
-                    } else {
-                        player.pause()
-                        playingStates.value[index] = false
-                    }
-                }
+    // observer = new IntersectionObserver(
+    //     entries => {
+    //         entries.forEach(entry => {
+    //             const index = entry.target.querySelector('video')?.dataset.index
+    //             //    const player = players.value[index]
+    //             if (allFeeds.value.length > 0 && index) {
+    //                 const player = videoPlayer
+    //                 const feed = allFeeds.value[index]
+    //                 if (!player || feed.media_type !== 'video') return
+    //                 if (entry.isIntersecting) {
+    //                     player.play().catch(() => { })
+    //                     playingStates.value[index] = true
+    //                 } else {
+    //                     player.pause()
+    //                     playingStates.value[index] = false
+    //                 }
+    //             }
 
-            })
-        },
-        { threshold: 0.7 }
-    )
+    //         })
+    //     },
+    //     { threshold: 0.7 }
+    // )
     document.querySelectorAll('.short-slide').forEach(el => observer.observe(el))
 
 })
