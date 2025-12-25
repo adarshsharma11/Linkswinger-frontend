@@ -216,8 +216,9 @@
         <!-- SUBPAGES (no sidebar entry) -->
         <section id="view-nearby" :hidden="activeNav !== 'nearby'">
           <div class="nearby-loc-togl">
-             <div class="loc-togl-text">Location On/Off</div>
-            <div class="vs-toggle"><input type="checkbox" class="switch" id="hideProfile"></div>
+            <div class="loc-togl-text">Location On/Off</div>
+            <div class="vs-toggle"><input v-model="is_location_on" type="checkbox" class="switch" id="hideProfile">
+            </div>
           </div>
           <div id="grid" class="grid user-grid" aria-live="polite">
             <UserCard v-for="user in users" :key="user.user_id" :user="user" :is-mine=false :online-users="onlineUsers"
@@ -325,7 +326,7 @@
 
         <!-- NOTIFICATIONS -->
         <section id="view-notifications" :hidden="activeNav !== 'notifications'">
-         <NotificationTab />
+          <NotificationTab />
         </section>
 
         <!-- PROFILE -->
@@ -617,7 +618,7 @@ const isWSConnected = ref(false);
 const lookingFor = ref<Array<string>>([])   // binds to "I am looking for"
 const whoMeets = ref<Array<string>>([])   // binds to "Who wants to meet"
 const homeMode = ref('today')
-const dashboardStats = ref<HomeDashboardModel.Response|null | undefined>(null)
+const dashboardStats = ref<HomeDashboardModel.Response | null | undefined>(null)
 // constants
 const MIN_AGE = 18
 const MAX_AGE = 99
@@ -649,6 +650,7 @@ var advanceModelSub: any = null
 const latitude = ref<number | null>(null)
 const longitude = ref<number | null>(null)
 const is_logout_loading = ref(false);
+const is_location_on = ref(false);
 
 // Computed numeric version for backend payload
 var radiusMiles = computed<number | null>(() => {
@@ -700,13 +702,13 @@ async function setActiveNav(nav: string) {
     window.location.hash = nav
     fetchFriends()
   }
-else if (nav === 'home') {
+  else if (nav === 'home') {
     activeNav.value = nav
     window.location.hash = nav
     fetchHome()
 
   }
-  
+
   else if (nav === 'profile') {
     await navigateTo(`/profile`)
   }
@@ -725,14 +727,14 @@ else if (nav === 'home') {
   else if (nav === 'new-media') {
     await navigateTo(`/new-media`)
   }
-    else if (nav === 'meet-events') {
+  else if (nav === 'meet-events') {
     await navigateTo(`/meet-events`)
   }
-   else if (nav === 'live') {
+  else if (nav === 'live') {
     await navigateTo(`/live-on-cam`)
   }
 
-  
+
   else {
     activeNav.value = nav
     window.location.hash = nav
@@ -843,41 +845,39 @@ async function fetchUsersList(fromAdvance = false) {
   }
 }
 
-function homeModeChanged(mode:string)
-{
-homeMode.value = mode
-fetchHome();
+function homeModeChanged(mode: string) {
+  homeMode.value = mode
+  fetchHome();
 }
 
-async function fetchHome() 
-{
- 
+async function fetchHome() {
+
   try {
- dashboardStats.value = null
-  const api_url = getUrl(RequestURL.homeDashboard);
-  const body: HomeDashboardModel.Request = {
-    user_id: login_store.getUserDetails?.user_id ?? 0,
-    mode: homeMode.value ?? 'today'
-  }
-  let response = await $fetch<SuccessError<HomeDashboardModel.Response>>(api_url, {
-    method: 'POST',
-    body,
-    headers: {
-      'Content-Type': 'application/json'
+    dashboardStats.value = null
+    const api_url = getUrl(RequestURL.homeDashboard);
+    const body: HomeDashboardModel.Request = {
+      user_id: login_store.getUserDetails?.user_id ?? 0,
+      mode: homeMode.value ?? 'today'
     }
-  });
-console.log(response)
-  if (response.success) {
-     dashboardStats.value = response.response
+    let response = await $fetch<SuccessError<HomeDashboardModel.Response>>(api_url, {
+      method: 'POST',
+      body,
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+    console.log(response)
+    if (response.success) {
+      dashboardStats.value = response.response
+    }
+    else {
+      showToastError(response.message ?? "Something went wrong");
+    }
   }
-  else {
-    showToastError(response.message ?? "Something went wrong");
+  catch (e) {
+    console.log('home called', e)
   }
-  }
-  catch(e) {
- console.log('home called',e)
-  }
- 
+
 }
 async function fetchFriends() {
   const api_url = getUrl(RequestURL.fetchFriends);
@@ -925,14 +925,27 @@ async function fetchCrushList() {
     showToastError(response.message ?? "Something went wrong");
   }
 }
+
+
+
 async function fetchNearByUserList() {
   const api_url = getUrl(RequestURL.fetchNearByUsers);
   users.value = []
+  let body = {
+    user_id: login_store.getUserDetails?.user_id ?? 0,
+    latitude: null,
+    longitude: null
+  }
+  if (is_location_on.value) {
+    body = {
+      user_id: login_store.getUserDetails?.user_id ?? 0,
+      latitude: latitude.value,
+      longitude: longitude.value
+    }
+  }
   let response = await $fetch<SuccessError<UsersModel.LoginRequestModel>>(api_url, {
     method: 'POST',
-    body: {
-      user_id: login_store.getUserDetails?.user_id ?? 0,
-    },
+    body: body,
     headers: {
       'Content-Type': 'application/json'
     }
@@ -995,11 +1008,35 @@ watch(current_loc, () => {
         current_loc.value = false
         latitude.value = null
         longitude.value = null
+        showToastError(err.message)
       }
     )
   }
 
 });
+
+watch(is_location_on, () => {
+  if (is_location_on.value) {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        latitude.value = position.coords.latitude
+        longitude.value = position.coords.longitude
+        fetchNearByUserList()
+      },
+      (err) => {
+        is_location_on.value = false
+        latitude.value = null
+        longitude.value = null
+        showToastError(err.message)
+      }
+    )
+  }
+  else
+  {
+    fetchNearByUserList()
+  }
+});
+
 watch(selectedTown, () => {
 
   if (selectedTown.value !== null) {
