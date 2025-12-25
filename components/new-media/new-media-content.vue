@@ -502,7 +502,9 @@ function openViewer(feed: FeedsModel.FeedsResponseModel) {
   selectedFeedIndex.value = selectedIndex
   selectedFeeds.value = allFeeds.value
   videoModalSub.show();
-  router.push({ hash: '#media' })
+ router.push({
+  query: { modal: 'media' }
+})
 }
 function modelOpen() {
   isModalOpen.value = true
@@ -517,9 +519,10 @@ function modelClosed() {
 
 
 watch(
-  () => route.hash,
+  () => route.query.modal,
   (newHash, oldHash) => {
-    if (newHash.length === 0 && oldHash === '#media') {
+    console.log(newHash,oldHash)
+    if ((newHash ?? '').length === 0 && oldHash === 'media') {
       videoModalSub.hide()
     }
   }
@@ -531,7 +534,7 @@ onMounted(() => {
   videoModalSub._element.addEventListener('hidden.bs.modal', () => {
     if (isModalOpen.value === false) {
       selectedFeeds.value = []
-      router.replace({ hash: '' })
+     router.replace({ query: {} })
     }
     else {
       isModalOpen.value = false

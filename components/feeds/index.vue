@@ -3,10 +3,11 @@
 
         <video ref="videoRef" class="video-js vjs-defaultskin short-video vjs-16-9" playsinline webkit-playsinline
             x5-playsinline></video>
-        <Swiper :modules="[Pagination, Navigation, Mousewheel,Virtual]" direction="vertical" :mousewheel="true"
+        <Swiper :modules="[Pagination, Navigation, Mousewheel, Virtual]" direction="vertical" :mousewheel="true"
             :slides-per-view="1" class="shorts-swiper" @swiper="onSwiper" :lazy="true" @slideChange="onSlideChange"
             @reachEnd="onReachEnd" :initial-slide="props.selectedIndex" :virtual="true">
-            <SwiperSlide v-for="(item, index) in allFeeds" :key="item.feed_id" :virtualIndex="index" class="short-slide" >
+            <SwiperSlide v-for="(item, index) in allFeeds" :key="item.feed_id" :virtualIndex="index"
+                class="short-slide">
                 <div class="short-container" :key="item.feed_id">
                     <div class="short-frame" :key="item.feed_id" @click="onFrameTap(index)"
                         @touchstart="onFrameTap(index)" :ref="el => setFrameRef(el, index)">
@@ -324,22 +325,33 @@ onMounted(async () => {
     //     },
     //     { threshold: 0.7 }
     // )
-  //  document.querySelectorAll('.short-slide').forEach(el => observer.observe(el))
+    //  document.querySelectorAll('.short-slide').forEach(el => observer.observe(el))
+
+    createPlayer()
+    removeVideoFromShortsWrapper()
+    //attachToIndex2Top(props.selectedIndex)
+    nextTick(() => {
+        playAtIndex(props.selectedIndex)
+    })
 
 })
 onBeforeUnmount(() => {
-    console.log('disposed')
-  //  observer?.disconnect()
+   
+    //  observer?.disconnect()
     players.value.forEach(p => {
         if (p) {
             p.dispose()
         }
+    })
+    allFeeds.value.forEach(fe =>{
+fe.is_attached = false
     })
     videoPlayer?.dispose()
 })
 
 const setFrameRef = (el, index) => {
     if (el) frameRefs.value[index] = el
+
 }
 const setVideoRef = (el, index) => {
     if (el) videoRefs.value[index] = el
@@ -351,9 +363,7 @@ const onSwiper = (swiper: any) => {
     //     swiperInstance.slideTo(props.selectedIndex, 0);
     // }
 
-    createPlayer()
-    removeVideoFromShortsWrapper()
-    attachToIndex2Top(props.selectedIndex)
+
 
 }
 
@@ -380,6 +390,12 @@ function createPlayer() {
         videoPlayer.on('timeupdate', () => {
             if (currentIndex.value !== -1) {
                 updateSeekbar(currentIndex.value)
+                let feed = allFeeds.value[currentIndex.value]
+                let is_attached = feed.is_attached ?? false
+                if (is_attached === false) {
+                    attachToIndex2Top(currentIndex.value)
+                }
+
             }
 
         })
@@ -396,7 +412,7 @@ function createPlayer() {
             if (currentIndex.value !== -1) {
                 isFullscreen.value[currentIndex.value] = videoPlayer.isFullscreen();
             }
-            console.log('fullscreenchange')
+
         });
 
         // Listen for fullscreen changes to update button state
@@ -412,9 +428,7 @@ function createPlayer() {
             }
         });
 
-        nextTick(() => {
-            playAtIndex(props.selectedIndex)
-        })
+
 
     }
 
@@ -543,12 +557,14 @@ function attachToIndex2Top(index: number) {
     nextTick(() => {
         const frame = frameRefs.value[index]
         const video = videoPlayer?.el()
-        if (!frame || !videoRef.value) return
+        const feed = allFeeds.value[index]
+        if (!frame || !videoRef.value || !feed) return
         const thumbnail = frame.querySelector('img[data-type="video-thumb"]')
         if (thumbnail && thumbnail.nextSibling) {
             frame.insertBefore(video, thumbnail.nextElementSibling)
+            feed.is_attached = true
         } else {
-            //frame.appendChild(video)
+            //  frame.appendChild(video)
         }
     })
 
@@ -588,6 +604,7 @@ function playAtIndex(index: number) {
             return;
         }
         attachToIndex2Top(index);
+
 
         videoPlayer.pause()
         videoPlayer.src({

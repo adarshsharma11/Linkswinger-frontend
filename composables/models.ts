@@ -607,7 +607,7 @@ export namespace FeedsModel {
     approval_status?: string
     classification?: string
     reason?: string
-
+is_attached?: boolean
   }
 
 
