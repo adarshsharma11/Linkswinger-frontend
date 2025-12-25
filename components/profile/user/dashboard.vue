@@ -698,9 +698,10 @@ async function setActiveNav(nav: string) {
     fetchCrushList()
   }
   else if (nav === 'friends') {
-    activeNav.value = nav
-    window.location.hash = nav
-    fetchFriends()
+    // activeNav.value = nav
+    // window.location.hash = nav
+    // fetchFriends()
+     await navigateTo(`/friends-list/${login_store.getUserDetails?.user_udid}`)
   }
   else if (nav === 'home') {
     activeNav.value = nav
@@ -1260,9 +1261,9 @@ onMounted(() => {
   else if (hash === '#crush') {
     fetchCrushList()
   }
-  else if (hash === '#friends') {
-    fetchFriends()
-  }
+  // else if (hash === '#friends') {
+  //   fetchFriends()
+  // }
   else if (hash === '#home' || activeNav.value === 'home') {
     fetchHome()
   }

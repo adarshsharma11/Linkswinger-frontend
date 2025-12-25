@@ -1274,7 +1274,7 @@ async function openChat() {
 async function friendListTapped() {
   if (isMine()) {
     let udid = login_store.getUserDetails?.user_udid ?? ''
-    await navigateTo(`/user-listing?user_id=${udid}&type=friends`);
+    await navigateTo(`/friends-list/${udid}`);
   }
   else {
     toggleRequestModal.value = !toggleRequestModal.value
@@ -1314,7 +1314,7 @@ async function sendFriendRequest() {
 }
 async function openUsersFriendsList() {
   let udid = userDetails.value?.user_udid ?? ''
-  await navigateTo(`/user-listing?user_id=${udid}&type=friends`);
+  await navigateTo(`/friends-list/${udid}`);
 }
 
 async function crushListTapped() {

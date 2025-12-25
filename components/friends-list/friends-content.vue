@@ -17,6 +17,7 @@
           aria-controls="panel-requests" 
           id="tab-requests"
           @click="setActiveTab('requests')"
+          v-if="isMine()"
         >
           Friend Requests <span class="friends-badge">{{ friendRequests.length }}</span>
         </button>
@@ -40,6 +41,7 @@
         id="panel-requests" 
         role="tabpanel" 
         aria-labelledby="tab-requests"
+        v-if="isMine()"
       >
         <div class="friends-section-header">
           <h2>Friend Requests (Pending)</h2>
@@ -189,10 +191,13 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-
+import type { UsersModel } from '~/composables/models'
+const route = useRoute()
+const user_store = userStore()
+const login_store = useLoginStore();
 // Reactive data
-const activeTab = ref<'requests' | 'friends'>('requests')
-
+const activeTab = ref<'requests' | 'friends'>( isMine() ? 'requests' : 'friends')
+const users = ref<UsersModel.ProfileDetailsResponseModel[]>([])
 // Mock data - replace with actual API calls
 const friendRequests = ref([
   {
@@ -253,6 +258,32 @@ const myFriends = ref([
     bio: 'Weekend plans? 🔥'
   }
 ])
+
+ const userList = async () => {
+    const api_url = getUrl(RequestURL.fetchFriends);
+    const { data: response, error: option_error } = await useFetch<SuccessError<UsersModel.ProfileDetailsResponseModel>>(
+      api_url,
+      {
+        method: "POST",
+        body: {
+          user_udid: route.params.id,
+          user_id: user_store.getLoginId,
+        },
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return response.value?.result || []
+  };
+
+users.value = await userList();
+
+function isMine()
+{
+  return route.params.id === login_store.getUserDetails?.user_udid
+}
+
 
 // Methods
 const setActiveTab = (tab: 'requests' | 'friends') => {

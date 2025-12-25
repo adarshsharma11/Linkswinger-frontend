@@ -122,7 +122,6 @@ else if (type.value === 'friends') {
     return response.value?.result || []
   };
   users.value = await userList();
-
 }
 
 
