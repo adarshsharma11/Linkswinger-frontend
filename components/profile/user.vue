@@ -495,10 +495,11 @@
       </div>
     </div>
   </section>
+  <CommonEditStatusModal id="statusModal" ref="statusModalRef" :status-txt="getUser()?.profile_status ?? ''" v-if="showStatusModal" @close-status-modal="closeStatusModel()" @open-emoji-picker="handleToggle()" @updated-profile-status="updatedProfileStatus"></CommonEditStatusModal>
   <EmojiPicker v-if="showPicker" :key="route.fullPath" ref="emojiPickerRef" v-on:selected-emoji="selectedEmoji" />
   <AcceptDeclineRequestModel :friend_status="friend_status" ref="acceptDeclineRequestModalRef" v-if="toggleRequestModal"
     @close="toggleRequestModal = false" @friends-list="openUsersFriendsList()" @send-request="sendFriendRequest()" />
-  <CommonEditStatusModal id="statusModal" v-if="showStatusModal"></CommonEditStatusModal>
+
 
   <div class="modal fade" id="interestModal" tabindex="-1" aria-labelledby="interestModal" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-l">
@@ -556,6 +557,10 @@ import type { CallsModel } from '~/composables/websocketModels';
 var interestModalSub: any = null
 var verificationModalSub: any = null
 var statusModalSub : any = null
+const  statusModalRef
+ = ref<{
+  addEmoji: (emoji: string) => void
+} | null>(null)
 interface Props {
   user_id: number
 }
@@ -1007,20 +1012,23 @@ async function validateCall(code: string, is_video: boolean) {
     }
   });
 }
-
+function closeStatusModel() 
+{
+ statusModalSub.hide()
+}
 
 function editStatus() {
 
-//   showStatusModal.value = true
-//   nextTick(() => {
-//  statusModalSub = new ($bootstrap as any).Modal(document.getElementById('statusModal'));
-//   statusModalSub._element.addEventListener('hidden.bs.modal', () => {
-//           showStatusModal.value = false
-//     })
-//  statusModalSub.show()
-//   })
+  showStatusModal.value = true
+  nextTick(() => {
+ statusModalSub = new ($bootstrap as any).Modal(document.getElementById('statusModal'));
+  statusModalSub._element.addEventListener('hidden.bs.modal', () => {
+          showStatusModal.value = false
+    })
+ statusModalSub.show()
+  })
 
-//  return;
+ return;
 
   Swal.fire({
     title: 'Edit Profile Status',
@@ -1096,21 +1104,26 @@ function getFeedCount(feed_type: string, media_type: string): number {
 }
 
 function selectedEmoji(emoji: string) {
-  const statusInput = document.getElementById('status-input') as HTMLInputElement;
-  if (statusInput) {
-    const start = statusInput.selectionStart;
-    const end = statusInput.selectionEnd;
-    const value = statusInput.value;
 
-    statusInput.value = value.substring(0, start) + emoji + value.substring(end);
+  statusModalRef.value?.addEmoji(emoji)
+  // const statusInput = document.getElementById('status-input') as HTMLInputElement;
+  // if (statusInput) {
+  //   const start = statusInput.selectionStart;
+  //   const end = statusInput.selectionEnd;
+  //   const value = statusInput.value;
 
-    // Move cursor after the emoji
-    const newPos = start + emoji.length;
-    statusInput.setSelectionRange(newPos, newPos);
+  //   statusInput.value = value.substring(0, start) + emoji + value.substring(end);
 
-    // Ensure input stays focused
-    statusInput.focus();
-  }
+  //   // Move cursor after the emoji
+  //   const newPos = start + emoji.length;
+  //   statusInput.setSelectionRange(newPos, newPos);
+
+  //   // Ensure input stays focused
+  //   statusInput.focus();
+  // }
+}
+async function updatedProfileStatus(profile_status: string) {
+  getUser()!.profile_status = profile_status
 }
 
 async function updateStatus(profile_status: string) {
