@@ -262,6 +262,8 @@ const login_store = useLoginStore()
 const feedTypeFilter = ref('')
 const { $bootstrap } = useNuxtApp();
 var videoModalSub: any = null
+const router = useRouter()
+const route = useRoute()
 var selectedFeeds = ref([] as FeedsModel.FeedsResponseModel[])
 const allFeeds = ref([] as FeedsModel.FeedsResponseModel[])
 const selectedFeedIndex = ref(0)
@@ -500,6 +502,7 @@ function openViewer(feed: FeedsModel.FeedsResponseModel) {
   selectedFeedIndex.value = selectedIndex
   selectedFeeds.value = allFeeds.value
   videoModalSub.show();
+  router.push({ hash: '#media' })
 }
 function modelOpen() {
   isModalOpen.value = true
@@ -510,12 +513,25 @@ function modelClosed() {
 // -----------------------------
 // LIFECYCLE
 // -----------------------------
+
+
+
+watch(
+  () => route.hash,
+  (newHash, oldHash) => {
+    if (newHash.length === 0 && oldHash === '#media') {
+      videoModalSub.hide()
+    }
+  }
+);
+
 onMounted(() => {
   videoModalSub = new ($bootstrap as any).Modal(document.getElementById('videoModal'));
 
   videoModalSub._element.addEventListener('hidden.bs.modal', () => {
     if (isModalOpen.value === false) {
       selectedFeeds.value = []
+      router.replace({ hash: '' })
     }
     else {
       isModalOpen.value = false
@@ -550,7 +566,7 @@ onMounted(() => {
 .modal-dialog {
   height: 100%;
   max-height: 100%;
-    margin: 0 auto;
+  margin: 0 auto;
 }
 
 @supports (-webkit-touch-callout: none) {
@@ -565,6 +581,4 @@ onMounted(() => {
   overflow: hidden;
   /* disables internal scroll */
 }
-
-
 </style>
