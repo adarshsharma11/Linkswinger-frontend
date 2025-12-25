@@ -1,12 +1,15 @@
 <template>
   <div class="user-list-container">
-
-    <div class="user-grid" :class="gridClass">
-      <UserCard v-for="(user, index) in users" :key="user.user_id" :user="user" :is-mine=isMine 
-        :online-users="onlineUsers" :last-seens="lastSeens" @open-profile="openProfile" @open-chat="openChat"
-        @show-code-alert="showCodeAlert" @decline-user="declineUser" @remove-like-user="removeLikeUser"/>
+    <div class="nearby-loc-togl" v-if="type === 'nearby'">
+      <div class="loc-togl-text">Location On/Off</div>
+      <div class="vs-toggle"><input v-model="is_location_on" type="checkbox" class="switch" id="hideProfile">
+      </div>
     </div>
-
+    <div class="user-grid" :class="gridClass">
+      <UserCard v-for="(user, index) in users" :key="user.user_id" :user="user" :is-mine=isMine
+        :online-users="onlineUsers" :last-seens="lastSeens" @open-profile="openProfile" @open-chat="openChat"
+        @show-code-alert="showCodeAlert" @decline-user="declineUser" @remove-like-user="removeLikeUser" />
+    </div>
     <div v-if="users.length === 0" class="no-users">
       <p>No users found</p>
     </div>
@@ -24,7 +27,7 @@ const user_store = userStore()
 const login_store = useLoginStore();
 const type = ref('')
 const user_id = ref('')
-
+const is_location_on = ref(false);
 
 const users = ref<UsersModel.ProfileDetailsResponseModel[]>([])
 const eventBus = useMittEmitter()
@@ -162,11 +165,11 @@ const showCodeAlert = (userId: number, isVideo: boolean) => {
   });
 }
 const declineUser = (userId: number) => {
-     users.value.splice(users.value.findIndex(u => u.user_id === userId), 1);
+  users.value.splice(users.value.findIndex(u => u.user_id === userId), 1);
 }
 
 const removeLikeUser = (userId: number) => {
-     users.value.splice(users.value.findIndex(u => u.user_id === userId), 1);
+  users.value.splice(users.value.findIndex(u => u.user_id === userId), 1);
 }
 
 async function validateCall(to_id: number, code: string, is_video: boolean) {
