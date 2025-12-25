@@ -289,7 +289,7 @@ allFeeds.value = await fetchFeeds() as FeedsModel.FeedsResponseModel[]
 // FILTER STATE
 const selectedMediaType = ref<string>('all');
 const selectedProfileTypes = ref<string[]>(['Man', 'Woman', 'Couple MM', 'Couple FF', 'Couple MF']);
-const radius = ref(3000);
+const radius = ref(3005);
 
 const sourceFilter = ref<string>('');
 
