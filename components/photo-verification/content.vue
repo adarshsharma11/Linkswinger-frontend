@@ -67,7 +67,7 @@
           </div>
 
           <!-- Footer -->
-          <div class="lsv-footer">
+          <div class="lsv-footer" v-if="has_approved === false">
             <!-- <div class="lsv-hint">
               Selected photo will become your new profile picture immediately.
             </div> -->
@@ -92,7 +92,7 @@ const allVerifications = ref([] as UsersModel.ProfileDetailsResponseModel[])
 const login_store = useLoginStore()
 const selectedMedia = ref<UsersModel.ProfileDetailsResponseModel | null>(null)
 const is_uploading = ref(false)
-
+const has_approved = ref(false)
 
  const api_url = getUrl(RequestURL.fetchPhotoVerifications);
   const { data: feed_response, error: option_error , refresh } = await useFetch<SuccessError<UsersModel.ProfileDetailsResponseModel>>(api_url, {
@@ -107,6 +107,9 @@ const is_uploading = ref(false)
   });
 
 allVerifications.value = feed_response.value?.result ?? []
+
+has_approved.value = (allVerifications.value.filter((el) => {return el.verification_status === "approved"}).length !== 0)
+
 selectedMedia.value = allVerifications.value.length > 0 ? allVerifications.value[0] : null
 compareProfilePic()
 
