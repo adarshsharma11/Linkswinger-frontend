@@ -188,6 +188,8 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import type { UsersModel } from '~/composables/models'
+import type { CallsModel } from '~/composables/websocketModels';
+import Swal from 'sweetalert2'
 const route = useRoute()
 const user_store = userStore()
 const login_store = useLoginStore();
@@ -269,6 +271,58 @@ const videoCallFriend = (user: UsersModel.ProfileDetailsResponseModel) => {
 
 const removeFriend = (user: UsersModel.ProfileDetailsResponseModel) => {
 
+}
+const openProfile = async (user: UsersModel.ProfileDetailsResponseModel) => {
+  await navigateTo(`/user-profile/${user.user_id}`)
+}
+
+const openChat = async (user: UsersModel.ProfileDetailsResponseModel) => {
+  await navigateTo(`/chat/${user.user_id}`)
+}
+
+const showCodeAlert = (userId: number, isVideo: boolean) => {
+  Swal.fire({
+    title: 'Please enter code',
+    input: 'text', // Specifies a text input field
+    inputPlaceholder: 'Type code here', // Placeholder text for the input
+    showCancelButton: true, // Displays a cancel button
+    inputValidator: (value: string) => { // Optional: input validation
+      if (!value) {
+        return 'Please enter code';
+      }
+    }
+  }).then((result) => {
+    if (result.isConfirmed) {
+      validateCall(userId, result.value ?? '', isVideo)
+    }
+  });
+}
+async function validateCall(to_id: number, code: string, is_video: boolean) {
+  const api_url = getUrl(RequestURL.validateCall);
+  await $fetch<SuccessError<CallsModel.ValidateCallResponseModel>>(api_url, {
+    cache: "no-cache",
+    method: "post",
+    body: {
+      "from_id": login_store.getUserDetails?.user_id ?? 0,
+      "from_socket_id": id_store.getDeviceId,
+      "to_id": to_id,
+      "call_code": code,
+      "is_video": is_video
+    },
+    headers: {
+      "content-type": "application/json"
+    },
+    onResponse: async ({ response }) => {
+
+      var response_model = response._data as SuccessError<CallsModel.ValidateCallResponseModel>
+      if (response_model.success) {
+        showToastSuccess(response_model.message)
+      }
+      else {
+        showToastError(response_model.message)
+      }
+    }
+  });
 }
 
 async function removeCancelFriendRequest(user: UsersModel.ProfileDetailsResponseModel, cancel: boolean) {
