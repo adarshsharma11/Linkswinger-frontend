@@ -35,6 +35,9 @@ const id_store = idStore()
 const onlineUsers = ref([] as number[])
 const lastSeens = ref([] as LastSeenModel[])
 const isWSConnected = ref(false)
+const latitude = ref<number | null>(null)
+const longitude = ref<number | null>(null)
+
 // Event emitters
 user_id.value = route.query.user_id as string || 'all'
 type.value = route.query.type as string || 'all'
@@ -122,6 +125,60 @@ else if (type.value === 'friends') {
 
 }
 
+
+async function fetchNearByUserList() {
+  const api_url = getUrl(RequestURL.fetchNearByUsers);
+  users.value = []
+  let body = {
+    user_id: login_store.getUserDetails?.user_id ?? 0,
+    latitude: null,
+    longitude: null
+  }
+  if (is_location_on.value) {
+    body = {
+      user_id: login_store.getUserDetails?.user_id ?? 0,
+      latitude: latitude.value,
+      longitude: longitude.value
+    }
+  }
+  let response = await $fetch<SuccessError<UsersModel.LoginRequestModel>>(api_url, {
+    method: 'POST',
+    body: body,
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  });
+
+  if (response.success) {
+    users.value = response.result as UsersModel.ProfileDetailsResponseModel[];
+    checkuseronline()
+  }
+  else {
+    users.value = []
+    showToastError(response.message ?? "Something went wrong");
+  }
+}
+watch(is_location_on, () => {
+  if (is_location_on.value) {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        latitude.value = position.coords.latitude
+        longitude.value = position.coords.longitude
+        fetchNearByUserList()
+      },
+      (err) => {
+        is_location_on.value = false
+        latitude.value = null
+        longitude.value = null
+        showToastError(err.message)
+      }
+    )
+  }
+  else
+  {
+    fetchNearByUserList()
+  }
+});
 
 
 // Computed properties
