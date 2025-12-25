@@ -10,8 +10,7 @@
       </div>
 
       <div class="nm-top-actions">
-        <button class="meet-btn meet-primary" aria-label="Go to Add Meet Event" data-bs-toggle="modal"
-          data-bs-target="#addMeetBtn">Add Meet Event</button>
+        <button class="meet-btn meet-primary" aria-label="Go to Add Meet Event" @click="openMeetEvent()">Add Meet Event</button>
       </div>
     </div>
     <div class="meet-grid">
@@ -545,14 +544,14 @@
 import { RequestURL, type FeedsModel, type MeetEventsModel, type SuccessError, type UsersModel } from '~/composables/models';
 import Multiselect from 'vue-multiselect';
 import 'vue-multiselect/dist/vue-multiselect.css';
-
+const router = useRouter()
+const route = useRoute()
 // MOBILE FILTERS
 const showPicker = ref(false)
 const mobileFiltersOpen = ref(false);
 const filtersCollapsed = ref(false);
 const user_store = userStore()
 const login_store = useLoginStore()
-const route = useRoute();
 const isCustomLocation = ref(false)
 const selectedTown = ref<UsersModel.FetchTownResponseModel>({});
 const selectedPostTown = ref<UsersModel.FetchTownPostCodesResponseModel>({});
@@ -641,8 +640,22 @@ const fetchMeetEvents = async () => {
 allMeetEvents.value = await fetchMeetEvents() as MeetEventsModel.ListResponseModel[]
 
 
+watch(
+  () => route.query.modal,
+  (newHash, oldHash) => {
+    if ((newHash ?? '').length === 0 && oldHash === 'addEvent') {
+      addEventSub.hide()
+    }
+  }
+);
+
 onMounted(() => {
   addEventSub = new ($bootstrap as any).Modal(document.getElementById('addMeetBtn'));
+
+  addEventSub._element.addEventListener('hidden.bs.modal', () => {
+      router.replace({ query: {} })
+  })
+
   commentModal = new ($bootstrap as any).Modal(document.getElementById('commentmodal'));
 })
 function fetchTowns(query: string) {
@@ -979,6 +992,14 @@ function selectedEmoji(emoji: string) {
     // Ensure input stays focused
     statusInput.focus();
   }
+}
+function openMeetEvent() 
+{
+
+  addEventSub.show()
+   router.push({
+    query: { modal: 'addEvent' }
+  })
 }
 
 function openComments() {
