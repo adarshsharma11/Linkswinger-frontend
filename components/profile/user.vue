@@ -146,11 +146,11 @@
                   <i class="fa fa-photo text-white"></i>
                 </button>
                 <!-- Remove button - bottom right -->
-                <button @click="removeProfilePhoto()"
+                <!-- <button @click="removeProfilePhoto()"
                   v-if="!is_photo_uploading && isMine() && (getUser()?.profile_image ?? '').length !== 0" type="button"
                   class="btn btn-transparent rounded-circle position-absolute profile-remove-btn">
                   <i class="fa fa-trash text-white"></i>
-                </button>
+                </button> -->
               </div>
               <input type="file" v-if="!is_photo_uploading && isMine()" accept="image/png,image/jpeg" class="d-none"
                 ref="fileInput" @change="handleFileUpload" />

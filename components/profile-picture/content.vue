@@ -36,11 +36,12 @@
           <div class="lsv-filters">
             <div class="lsv-filter-left">
               <span class="lsv-tag lsv-tag--accent">All Photos</span>
+           
               
             </div>
-            <div class="lsv-filter-right lsv-hint">
+            <div class="lsv-filter-right lsv-hint" v-if="is_uploading === false">
               Tip: Your selected photo will be visible to all members.
-              <button class="lsv-no-picture-btn ms-2" @click="removeProfilePicture">
+              <button class="lsv-no-picture-btn ms-2" @click="removeProfilePhoto()">
                  Remove Profile Picture
                 <img src="/images/badges/animated/50X50px/delete.gif" alt="No picture" class="lsv-no-picture-icon" />
               </button>
@@ -88,7 +89,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
-import type { FeedsModel } from '~/composables/models'
+import type { FeedsModel, UsersModel } from '~/composables/models'
 
 const allFeeds = ref([] as FeedsModel.FeedsResponseModel[])
 const login_store = useLoginStore()
@@ -144,6 +145,35 @@ const saveProfilePicture = async () => {
     else {
       showToastError(response.message ?? "Something went wrong");
     }
+  }
+}
+
+async function removeProfilePhoto() {
+  const api_url = getUrl(RequestURL.removeProfilePhoto);
+  is_uploading.value = true;
+  const response = await $fetch<SuccessError<UsersModel.LoginResponseModel>>(
+    api_url,
+    {
+      method: "POST",
+      body: {
+        user_id: login_store.getUserDetails?.user_id
+      },
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+  is_uploading.value = false;
+  if (response.success) {
+    selectedMedia.value = null
+    login_store.setProfilePic('','')
+    // reloadNuxtApp({
+    //   path: "/profile",
+    //   ttl: 1000
+    // })
+  }
+  else {
+    showToastError("Failed to remove photo. Please try again.");
   }
 }
 
