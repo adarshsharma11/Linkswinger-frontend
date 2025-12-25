@@ -69,7 +69,7 @@
 
           <div class="st-media-grid">
             <!-- Photo – Public -->
-            <article class="st-media-item" v-for="image in getImages()" >
+            <article class="st-media-item" v-for="image in getImages()">
               <div class="st-thumb-wrapper">
                 <img class="st-thumb-placeholder" :src="(image.media_path ?? '') + image.hd_feed_image"
                   style="width: 100%; height: 100%; object-fit: cover;" @click="openPreview(image)"></img>
@@ -136,7 +136,7 @@
 
           <div class="st-media-grid">
             <!-- Video – Public -->
-            <article class="st-media-item" v-for="video in getVideos()" >
+            <article class="st-media-item" v-for="video in getVideos()">
               <div class="st-thumb-wrapper st-video-thumb">
                 <img class="st-thumb-placeholder" :src="(video.media_path ?? '') + video.feed_thumbnail"
                   style="width: 100%; height: 100%; object-fit: cover;" @click="openPreview(video)"></img>
@@ -206,9 +206,15 @@
   <div class="modal fade" id="videoModal" tabindex="-1" aria-labelledby="videoModal" aria-hidden="true">
     <div class="modal-dialog modal-xl">
       <div class="modal-content bg-black">
+        <div class="modal-header">
+          <button type="button" class="msgf-pill" data-bs-dismiss="modal" aria-label="Close">
+            ✕
+          </button>
+        </div>
         <div class="modal-body p-0 h-100">
           <Feeds :key="selectedFeeds.length > 0 ? selectedFeeds[0].feed_id : 0" :all-feeds="selectedFeeds"
-            :from-feeds="false" :media-type="selectedFeeds[0]?.media_type" v-if="selectedFeeds.length > 0" />
+            :from-feeds="false" :media-type="selectedFeeds[0]?.media_type" v-if="selectedFeeds.length > 0"
+            @model-open="modelOpen" @model-closed="modelClosed" :selected-index="0" />
         </div>
       </div>
     </div>
@@ -223,7 +229,9 @@
 import { Feeds } from '#components'
 import { ref, computed, onMounted } from 'vue'
 import type { FeedsModel } from '~/composables/models'
-
+const router = useRouter()
+const route = useRoute()
+const isModalOpen = ref(false)
 const allFeeds = ref([] as FeedsModel.FeedsResponseModel[])
 const login_store = useLoginStore()
 const feedTypeFilter = ref('')
@@ -368,7 +376,7 @@ async function updateFeedType(feed: FeedsModel.FeedsResponseModel) {
 
 function showreason(feed: FeedsModel.FeedsResponseModel) {
   if (feed.approval_status === 'rejected') {
-    showalert(feed.reason ?? '','Rejected',false,5000)
+    showalert(feed.reason ?? '', 'Rejected', false, 5000)
   }
 }
 
@@ -377,14 +385,39 @@ function openPreview(feed: FeedsModel.FeedLikeDisLikeResponseModel) {
   selectedFeeds.value = [feed]
 
   videoModalSub.show();
+  router.push({
+    query: { modal: 'media' }
+  })
 
 }
+function modelOpen() {
+  isModalOpen.value = true
+}
+function modelClosed() {
+
+}
+
+watch(
+  () => route.query.modal,
+  (newHash, oldHash) => {
+    console.log(newHash, oldHash)
+    if ((newHash ?? '').length === 0 && oldHash === 'media') {
+      videoModalSub.hide()
+    }
+  }
+);
 
 onMounted(async () => {
   videoModalSub = new ($bootstrap as any).Modal(document.getElementById('videoModal'));
 
   videoModalSub._element.addEventListener('hidden.bs.modal', () => {
-    selectedFeeds.value = []
+    if (isModalOpen.value === false) {
+      selectedFeeds.value = []
+      router.replace({ query: {} })
+    }
+    else {
+      isModalOpen.value = false
+    }
   })
 
 
@@ -453,3 +486,46 @@ onMounted(async () => {
 //   },
 // };
 </script>
+<style scoped>
+.msgf-pill {
+  font-size: 14px;
+  line-height: 1;
+  height: 20px;
+  width: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: auto;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  background: transparent;
+  /* optional */
+}
+
+.modal-header {
+  min-height: 0 !important;
+  max-height: 20px;
+  border-bottom: none !important;
+}
+
+
+.modal-dialog {
+  height: 100%;
+  max-height: 100%;
+  margin: 0 auto;
+}
+
+@supports (-webkit-touch-callout: none) {
+  .modal-dialog {
+    height: 100dvh;
+  }
+}
+
+.modal-content {
+  height: auto;
+  max-height: 100vh;
+  overflow: hidden;
+  /* disables internal scroll */
+}
+</style>

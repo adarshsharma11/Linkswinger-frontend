@@ -512,11 +512,6 @@ function modelOpen() {
 function modelClosed() {
 
 }
-// -----------------------------
-// LIFECYCLE
-// -----------------------------
-
-
 
 watch(
   () => route.query.modal,
