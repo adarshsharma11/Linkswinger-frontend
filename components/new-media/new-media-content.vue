@@ -159,9 +159,9 @@
         </div>
 
         <div class="nm-sep"></div>
-        <div class="nm-hint">
+        <!--<div class="nm-hint">
           This is a UI mockup with placeholder images and sample data.
-        </div>
+        </div>-->
       </aside>
 
       <!-- CONTENT -->
