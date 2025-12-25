@@ -568,6 +568,29 @@ button#btnSend {
 .chat-ftr-btns button svg {
     width: 15px;
 } 
+.chat-hd-btn button.btn {
+    flex-wrap: wrap;
+    flex-direction: column;
+    gap: 2px;
+    align-items: center;
+    padding: 5px 10px;
+    line-height: normal;
+    font-size: 12px;
+}
+
+.chat-hd-btn {
+    align-items: self-start;
+    height: 100%;
+}
+
+.chat-hd-btn button.btn.glow-red-strong.text-white {
+    padding: 6px 10px;
+}
+
+.chat-hd-btn button.btn span {
+    font-weight: 400;
+    font-size: 12px;
+}
 }
 
 /* Desktop back button visibility and sizing */
