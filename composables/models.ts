@@ -876,6 +876,8 @@ export namespace MeetEventsModel {
 
     town_id?: number
     radius?: number
+    comment_count?:number
+    like_count?:number
 
     can_comment?: boolean
     can_like?: boolean

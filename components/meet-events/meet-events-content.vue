@@ -268,9 +268,9 @@
                     style="width: 20px; height: 20px; max-width: 20px; max-height: 40px;"></span>
                   <button class="meet-btn meet-small"
                     v-if="(selectedEvent?.can_like ?? false) && is_like_loading === false" @click="addLikeDisLike()">{{
-                      selectedEvent?.is_liked ? 'Unlike' : 'Like' }}</button>
+                      selectedEvent?.is_liked ? 'Unlike' : 'Like' }} {{ selectedEvent?.like_count ?? 0 }}</button>
                   <button class="meet-btn meet-small" v-if="selectedEvent?.can_comment ?? false"
-                    @click="openComments()">Comment</button>
+                    @click="openComments()">Comment {{ selectedEvent?.comment_count ?? 0 }}</button>
                   <button class="meet-btn meet-small meet-ghost"
                     v-if="selectedEvent?.user_id !== user_store.getLoginId">Message</button>
                 </div>
@@ -1019,9 +1019,16 @@ async function addLikeDisLike() {
     if (feed.length > 0) {
       if (state === 'liked') {
         feed[0].is_liked = true
+        if (selectedEvent.value) {
+          selectedEvent.value.like_count = (selectedEvent.value?.like_count ?? 0) + 1
+        }
+
       }
       else {
         feed[0].is_liked = false
+        if (selectedEvent.value) {
+          selectedEvent.value.like_count = (selectedEvent.value?.like_count ?? 0) - 1
+        }
       }
     }
   }
@@ -1056,6 +1063,9 @@ async function selectCustomEmoji(emoji: string) {
   is_add_comment_loading.value = false;
   if (response.success) {
     comments.value.push(response.response ?? {})
+    if (selectedEvent.value) {
+      selectedEvent.value.comment_count = (selectedEvent.value.comment_count ?? 0) + 1
+    }
   }
   else {
     showToastError(response.message)
@@ -1087,6 +1097,10 @@ async function addComment() {
   if (response.success) {
     comments.value.push(response.response ?? {})
     commentTxt.value = ''
+    if (selectedEvent.value) {
+      selectedEvent.value.comment_count = (selectedEvent.value.comment_count ?? 0) + 1
+    }
+
   }
   else {
     showToastError(response.message)
@@ -1112,6 +1126,9 @@ async function fetchComments(feed_id: number) {
   });
   is_comment_loading.value = false;
   comments.value = response.result ?? []
+  if (selectedEvent.value) {
+    selectedEvent.value.comment_count = comments.value.length
+  }
 }
 
 async function createMeetEvent() {
