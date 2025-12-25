@@ -129,7 +129,7 @@
         </div>
 
         <div id="eventList" class="meet-event-list">
-          <div class="meet-event-card" aria-label="Go to details" data-bs-toggle="modal"
+          <div class="meet-event-card"  aria-label="Go to details" data-bs-toggle="modal"
             data-bs-target="#detailsBackdrop" v-for="meet in allMeetEvents" @click="selectEvent(meet)">
             <div class="meet-event-row">
               <div class="meet-who">
@@ -170,7 +170,7 @@
     </div>
 
 
-    <div class="modal fade meetdetails-modal" id="detailsBackdrop" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal fade meetdetails-modal" id="detailsBackdrop"  tabindex="-1" role="dialog" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable" role="document">
         <div class="modal-content text-white modal-inner">
           <!-- Header -->
@@ -211,8 +211,9 @@
                 <div class="meet-info-stack">
                   <div class="meet-info-box">
                     <div class="meet-info-label">Profile</div>
-                    <div class="meet-info-value" id="detailsWhoText">{{ selectedEvent?.nick_name }} {{
+                    <div class="meet-info-value"  id="detailsWhoText" @click="openProfile()" >{{ selectedEvent?.nick_name }} {{
                       selectedEvent?.profile_type }}</div>
+                   
                   </div>
                   <div class="meet-info-box">
                     <div class="meet-info-label">When</div>
@@ -236,7 +237,7 @@
                 </div>
               </div>
 
-              <div class="meet-section" id="ownerInteractionBlock" style="display:none;">
+              <div class="meet-section" id="ownerInteractionBlock" v-if="selectedEvent?.user_id === login_store.getUserDetails?.user_id">
                 <span class="meet-label">Your event settings</span>
                 <div class="meet-inline">
                   <div class="meet-toggle-row">
@@ -599,6 +600,9 @@ const is_add_comment_loading = ref(false);
 const emojiPickerRef = ref<EmojiPicker | null>(null)
 var addEventSub: any = null
 var commentModal: any = null
+var detailEventModal: any = null
+
+
 const { $bootstrap } = useNuxtApp();
 
 
@@ -651,6 +655,7 @@ watch(
 
 onMounted(() => {
   addEventSub = new ($bootstrap as any).Modal(document.getElementById('addMeetBtn'));
+  detailEventModal = new ($bootstrap as any).Modal(document.getElementById('detailsBackdrop'));
 
   addEventSub._element.addEventListener('hidden.bs.modal', () => {
       router.replace({ query: {} })
@@ -681,6 +686,12 @@ function fetchTowns(query: string) {
   }).catch((error) => {
     is_town_loading.value = false;
   });
+}
+
+async function openProfile()
+{
+  detailEventModal.hide()
+  await navigateTo(`user-profile/${selectedEvent.value?.user_id ?? 0}`)
 }
 
 function fetchTownsPostCodes(query: string) {
