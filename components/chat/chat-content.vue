@@ -127,8 +127,7 @@
                   style="width:12px;height:12px;" v-if="onlineUsers.includes(userDetails?.user_id ?? 0)"></span>
               </div>
               <div>
-                <h6 class="mb-0"> {{ userDetails?.nick_name }} <span class="badge bg-warning text-dark ms-1">{{
-                  userDetails?.tier_name ?? 'Free' }}</span></h6>
+                <h6 class="mb-0"> {{ userDetails?.nick_name }} </h6>
                 <div v-if="(userDetails?.is_typing ?? false) === false">
                   <small class="text-secondary" v-if="onlineUsers.includes(userDetails?.user_id ?? 0)">Online now
                     •</small>
@@ -220,10 +219,10 @@
                     :src="(chat.media_path ?? '') + (chat.message ?? '')" style="max-width: 80px; max-height: 80px;" />
                 </div>
               </div>
-              <div class="message-time" v-if="chat.from_id !== login_store.getUserDetails?.user_id">{{ chat.created_at
+              <div class="message-time" v-if="chat.from_id !== login_store.getUserDetails?.user_id">{{ formatRelativeDate(chat.created_at)
               }}
               </div>
-              <div class="message-time" v-if="chat.from_id === login_store.getUserDetails?.user_id">{{ chat.created_at
+              <div class="message-time" v-if="chat.from_id === login_store.getUserDetails?.user_id">{{ formatRelativeDate(chat.created_at)
               }}
                 • {{ chat.status }}</div>
 
