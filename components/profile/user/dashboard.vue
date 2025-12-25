@@ -1226,7 +1226,7 @@ onMounted(() => {
   else if (hash === '#friends') {
     fetchFriends()
   }
-  else if (hash === '#home') {
+  else if (hash === '#home' || activeNav.value === 'home') {
     fetchHome()
   }
 
