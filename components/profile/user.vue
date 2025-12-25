@@ -292,6 +292,8 @@
               <img :src="getmembershipIcon()" alt="Elite" class="badge-icon" />
               <img src="/images/badges/photo-verified.gif" v-if="(getUser()?.is_photo_verified ?? false) === true"
                 alt="Silver" class="badge-icon" />
+              <img v-if="(getUser()?.is_meet_verified ?? false) === true" src="/images/badges/animated/150X150px/MEET-VERIFYED.gif" alt="Meet Verified"
+                  class="badge-icon" />
             </div>
           </div>
 
