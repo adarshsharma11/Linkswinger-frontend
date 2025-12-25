@@ -50,13 +50,13 @@
         <div class="nm-group">
           <div class="nm-group-title">
             <span>Location radius</span>
-            <span class="nm-range-value">{{ radius }} miles</span>
+            <span class="nm-range-value">{{ radius > 3000 ? 'Unlimted' : radius }} miles</span>
           </div>
           <!-- <label class="nm-chk">
             <input type="checkbox" v-model="radiusAll" />
             All distances
           </label> -->
-          <input class="nm-range" type="range" min="5" max="3000" step="5" v-model.number="radius" />
+          <input class="nm-range" type="range" min="5" max="3005" step="5" v-model.number="radius" />
           <div class="nm-hint">Used for Nearby/Local filtering. Max shown is 3000 miles.</div>
         </div>
 
