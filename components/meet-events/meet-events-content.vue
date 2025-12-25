@@ -341,7 +341,7 @@
               <label class="meet-chip"><input v-model="selectedMeetType" type="radio" name="createMeetType"
                   value="Outdoor" checked><span>Outdoor</span></label>
               <label class="meet-chip"><input v-model="selectedMeetType" type="radio" name="createMeetType"
-                  value="Accommodate"><span>Accommodate</span></label>
+                  value="Host"><span>Host</span></label>
               <label class="meet-chip"><input v-model="selectedMeetType" type="radio" name="createMeetType"
                   value="Travel"><span>Travel</span></label>
             </div>
