@@ -171,7 +171,7 @@
                 <button class="friends-btn friends-btn-small" @click="callFriend(friend)">Call</button>
                 <button class="friends-btn friends-btn-small" @click="videoCallFriend(friend)">Video</button>
                 <button class="friends-btn friends-btn-small friends-btn-decline"
-                  @click="removeFriend(friend)">Remove</button>
+                  @click="removeFriend(friend)" v-if="isMine()">Remove</button>
               </div>
             </div>
           </article>
@@ -270,6 +270,61 @@ const videoCallFriend = (user: UsersModel.ProfileDetailsResponseModel) => {
 const removeFriend = (user: UsersModel.ProfileDetailsResponseModel) => {
 
 }
+
+async function removeCancelFriendRequest(user: UsersModel.ProfileDetailsResponseModel, cancel: boolean) {
+  let postData = {
+    "from_id": login_store.getUserDetails?.user_id ?? 0,
+    "to_id": user.user_id ?? 0,
+    "action": cancel ? "cancel" : "remove"
+  };
+  user.isFriendDecisionLoading = true;
+  let api_url = getUrl(RequestURL.removeFriend);
+  let response = await $fetch<SuccessError<UsersModel.ProfileDetailsResponseModel>>(api_url, {
+    method: 'POST',
+    body: postData,
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  });
+  user.isFriendDecisionLoading = false;
+  if (response.success) {
+     // emit('declineUser', user.user_id ?? 0)
+  }
+  else {
+    showToastError(response.message)
+  }
+}
+
+async function acceptDeclineFriendRequest(user: UsersModel.ProfileDetailsResponseModel, accept: boolean) {
+  let postData = {
+    "to_id": login_store.getUserDetails?.user_id ?? 0,
+    "from_id": user.user_id ?? 0,
+    "action": accept ? "accepted" : "declined"
+  };
+  user.isFriendDecisionLoading = true;
+  let api_url = getUrl(RequestURL.acceptDeclineFriend);
+  let response = await $fetch<SuccessError<UsersModel.ProfileDetailsResponseModel>>(api_url, {
+    method: 'POST',
+    body: postData,
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  });
+  user.isFriendDecisionLoading = false;
+  if (response.success) {
+    if (accept) {
+      user.friend_status = 'accepted'
+    }
+    else {
+      //emit('declineUser', user.user_id ?? 0)
+    }
+
+  }
+  else {
+    showToastError(response.message)
+  }
+}
+
 
 function getDistance(user: UsersModel.ProfileDetailsResponseModel): string {
   let lat = login_store.getUserDetails?.latitude ?? 0
