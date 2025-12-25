@@ -18,7 +18,7 @@
           :aria-selected="activeTab === 'friends'" aria-controls="panel-friends" id="tab-friends"
           @click="setActiveTab('friends')">
           {{ isMine() ? 'My' : '' }} Friends <span class="friends-badge green">{{ filteredUsers('friends').length
-          }}</span>
+            }}</span>
         </button>
       </div>
 
@@ -34,9 +34,9 @@
           <article v-for="request in filteredUsers('requests')" :key="request.user_id" class="friends-card">
             <div class="friends-card-inner">
               <div class="friends-card-image">
-                 <img :src="getImagePath(request)" :alt="request.nick_name" loading="lazy" decoding="async">
+                <img :src="getImagePath(request)" :alt="request.nick_name" loading="lazy" decoding="async">
                 <span class="friends-pill">
-                  <span class="friends-dot" :class="{'green' : isOnline(request)}"></span>
+                  <span class="friends-dot" :class="{ 'green': isOnline(request) }"></span>
                   <span class="text-white">REQUEST</span>
                 </span>
               </div>
@@ -57,13 +57,14 @@
                 </div>
                 <div class="friends-info">
                   {{ request.town }} • {{ getDistance(request) }}<br />
-                   <div class="meta" v-if="!isOnline(request) && lastDate(request).length > 0">Last seen: {{
+                  <div class="meta" v-if="!isOnline(request) && lastDate(request).length > 0">Last seen: {{
                     lastDate(request) }}</div>
                 </div>
                 <div class="friends-bio">{{ request.profile_status }}</div>
               </div>
 
-              <div class="friends-actions friends-actions-two">
+              <div class="friends-actions friends-actions-two"
+                v-if="(request.isFriendDecisionLoading ?? false) === false">
                 <button class="friends-btn friends-btn-accept" @click="acceptFriendRequest(request)"
                   aria-label="Accept friend request">
                   <svg class="friends-icon-3d" viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -114,6 +115,7 @@
                   Decline
                 </button>
               </div>
+              <span class="btn-loader" v-if="request.isFriendDecisionLoading"></span>
             </div>
           </article>
         </div>
@@ -137,9 +139,9 @@
           <article v-for="friend in filteredUsers('friends')" :key="friend.user_id" class="friends-card">
             <div class="friends-card-inner">
               <div class="friends-card-image">
-                 <img :src="getImagePath(friend)" :alt="friend.nick_name"  loading="lazy" decoding="async">
+                <img :src="getImagePath(friend)" :alt="friend.nick_name" loading="lazy" decoding="async">
                 <span class="friends-pill">
-                  <span class="friends-dot" :class="{'green' : isOnline(friend)}"></span>
+                  <span class="friends-dot" :class="{ 'green': isOnline(friend) }"></span>
                   <span class="text-white">FRIEND</span>
                 </span>
               </div>
@@ -166,13 +168,15 @@
                 <div class="friends-bio">{{ friend.profile_status }}</div>
               </div>
 
-              <div class="friends-actions friends-actions-four">
+              <div class="friends-actions friends-actions-four"
+                v-if="(friend.isFriendDecisionLoading ?? false) === false">
                 <button class="friends-btn friends-btn-small" @click="messageFriend(friend)">Message</button>
                 <button class="friends-btn friends-btn-small" @click="callFriend(friend)">Call</button>
                 <button class="friends-btn friends-btn-small" @click="videoCallFriend(friend)">Video</button>
-                <button class="friends-btn friends-btn-small friends-btn-decline"
-                  @click="removeFriend(friend)" v-if="isMine()">Remove</button>
+                <button class="friends-btn friends-btn-small friends-btn-decline" @click="removeFriend(friend)"
+                  v-if="isMine()">Remove</button>
               </div>
+              <span class="btn-loader" v-if="friend.isFriendDecisionLoading"></span>
             </div>
           </article>
         </div>
@@ -227,15 +231,14 @@ users.value = await userList();
 function filteredUsers(type: string): UsersModel.ProfileDetailsResponseModel[] {
   if (isMine()) {
 
-    if (type === 'friends')
-    {
-        return users.value.filter((el) => {
-          return el.friend_status === 'accepted'
-        })
+    if (type === 'friends') {
+      return users.value.filter((el) => {
+        return el.friend_status === 'accepted'
+      })
     }
     return users.value.filter((el) => {
-          return el.friend_status === 'pending' && el.from_id !==  login_store.getUserDetails?.user_id
-        })
+      return el.friend_status === 'pending' && el.from_id !== login_store.getUserDetails?.user_id
+    })
   }
   return users.value
 }
@@ -250,27 +253,27 @@ const setActiveTab = (tab: 'requests' | 'friends') => {
 }
 
 const acceptFriendRequest = (user: UsersModel.ProfileDetailsResponseModel) => {
-
+  acceptDeclineFriendRequest(user, true)
 }
 
 const declineFriendRequest = (user: UsersModel.ProfileDetailsResponseModel) => {
-
+  acceptDeclineFriendRequest(user, false)
 }
 
 const messageFriend = (user: UsersModel.ProfileDetailsResponseModel) => {
-
+  openChat(user)
 }
 
 const callFriend = (user: UsersModel.ProfileDetailsResponseModel) => {
-
+  showCodeAlert(user, false)
 }
 
 const videoCallFriend = (user: UsersModel.ProfileDetailsResponseModel) => {
-
+  showCodeAlert(user, true)
 }
 
 const removeFriend = (user: UsersModel.ProfileDetailsResponseModel) => {
-
+  removeCancelFriendRequest(user, false)
 }
 const openProfile = async (user: UsersModel.ProfileDetailsResponseModel) => {
   await navigateTo(`/user-profile/${user.user_id}`)
@@ -280,7 +283,7 @@ const openChat = async (user: UsersModel.ProfileDetailsResponseModel) => {
   await navigateTo(`/chat/${user.user_id}`)
 }
 
-const showCodeAlert = (userId: number, isVideo: boolean) => {
+const showCodeAlert = (user: UsersModel.ProfileDetailsResponseModel, isVideo: boolean) => {
   Swal.fire({
     title: 'Please enter code',
     input: 'text', // Specifies a text input field
@@ -293,19 +296,20 @@ const showCodeAlert = (userId: number, isVideo: boolean) => {
     }
   }).then((result) => {
     if (result.isConfirmed) {
-      validateCall(userId, result.value ?? '', isVideo)
+      validateCall(user, result.value ?? '', isVideo)
     }
   });
 }
-async function validateCall(to_id: number, code: string, is_video: boolean) {
+async function validateCall(user: UsersModel.ProfileDetailsResponseModel, code: string, is_video: boolean) {
   const api_url = getUrl(RequestURL.validateCall);
+  user.isFriendDecisionLoading = true;
   await $fetch<SuccessError<CallsModel.ValidateCallResponseModel>>(api_url, {
     cache: "no-cache",
     method: "post",
     body: {
       "from_id": login_store.getUserDetails?.user_id ?? 0,
       "from_socket_id": id_store.getDeviceId,
-      "to_id": to_id,
+      "to_id": user.user_id ?? 0,
       "call_code": code,
       "is_video": is_video
     },
@@ -314,6 +318,7 @@ async function validateCall(to_id: number, code: string, is_video: boolean) {
     },
     onResponse: async ({ response }) => {
 
+      user.isFriendDecisionLoading = false;
       var response_model = response._data as SuccessError<CallsModel.ValidateCallResponseModel>
       if (response_model.success) {
         showToastSuccess(response_model.message)
@@ -342,7 +347,8 @@ async function removeCancelFriendRequest(user: UsersModel.ProfileDetailsResponse
   });
   user.isFriendDecisionLoading = false;
   if (response.success) {
-     // emit('declineUser', user.user_id ?? 0)
+    // emit('declineUser', user.user_id ?? 0)
+    users.value.splice(users.value.findIndex(u => u.user_id === user.user_id), 1);
   }
   else {
     showToastError(response.message)
@@ -371,6 +377,7 @@ async function acceptDeclineFriendRequest(user: UsersModel.ProfileDetailsRespons
     }
     else {
       //emit('declineUser', user.user_id ?? 0)
+      users.value.splice(users.value.findIndex(u => u.user_id === user.user_id), 1);
     }
 
   }
