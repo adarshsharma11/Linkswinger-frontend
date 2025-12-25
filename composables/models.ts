@@ -83,9 +83,10 @@ export enum RequestURL {
   meetLikeDisLike = "/meet/likeDisLike",
   addMeetComment = "/meet/addComment",
   fetchMeetComments = "/meet/fetchComment",
-   homeDashboard = "/home/dashboard",
-     addReport = "/addReport",
-
+  meetupdateCommentStatus = "/meet/updateCommentStatus",
+  meetupdateLikeStatus = "/meet/updateLikeStatus",
+  homeDashboard = "/home/dashboard",
+  addReport = "/addReport",
 }
 
 
@@ -890,6 +891,8 @@ export namespace MeetEventsModel {
     profile_image?: string
     profile_type?: string
     town?:string
+    is_like_loading?:boolean
+    is_comment_loading?:boolean
   }
 
   // =========================

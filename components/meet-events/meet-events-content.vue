@@ -10,7 +10,8 @@
       </div>
 
       <div class="nm-top-actions">
-        <button class="meet-btn meet-primary" aria-label="Go to Add Meet Event" @click="openMeetEvent()">Add Meet Event</button>
+        <button class="meet-btn meet-primary" aria-label="Go to Add Meet Event" @click="openMeetEvent()">Add Meet
+          Event</button>
       </div>
     </div>
     <div class="meet-grid">
@@ -129,7 +130,7 @@
         </div>
 
         <div id="eventList" class="meet-event-list">
-          <div class="meet-event-card"  aria-label="Go to details" data-bs-toggle="modal"
+          <div class="meet-event-card" aria-label="Go to details" data-bs-toggle="modal"
             data-bs-target="#detailsBackdrop" v-for="meet in allMeetEvents" @click="selectEvent(meet)">
             <div class="meet-event-row">
               <div class="meet-who">
@@ -170,7 +171,7 @@
     </div>
 
 
-    <div class="modal fade meetdetails-modal" id="detailsBackdrop"  tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal fade meetdetails-modal" id="detailsBackdrop" tabindex="-1" role="dialog" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable" role="document">
         <div class="modal-content text-white modal-inner">
           <!-- Header -->
@@ -211,9 +212,10 @@
                 <div class="meet-info-stack">
                   <div class="meet-info-box">
                     <div class="meet-info-label">Profile</div>
-                    <div class="meet-info-value"  id="detailsWhoText" @click="openProfile()" >{{ selectedEvent?.nick_name }} {{
-                      selectedEvent?.profile_type }}</div>
-                   
+                    <div class="meet-info-value" id="detailsWhoText" @click="openProfile()">{{ selectedEvent?.nick_name
+                      }} {{
+                        selectedEvent?.profile_type }}</div>
+
                   </div>
                   <div class="meet-info-box">
                     <div class="meet-info-label">When</div>
@@ -237,7 +239,8 @@
                 </div>
               </div>
 
-              <div class="meet-section" id="ownerInteractionBlock" v-if="selectedEvent?.user_id === login_store.getUserDetails?.user_id">
+              <div class="meet-section" id="ownerInteractionBlock"
+                v-if="selectedEvent?.user_id === login_store.getUserDetails?.user_id">
                 <span class="meet-label">Your event settings</span>
                 <div class="meet-inline">
                   <div class="meet-toggle-row">
@@ -245,8 +248,10 @@
                       <div class="meet-t-label">Comments</div>
                       <div class="meet-t-sub">Turn comments on/off</div>
                     </div>
-                    <div class="meet-switch on" id="ownerCommentsSwitch" role="switch" aria-checked="true" tabindex="0">
+                    <div class="meet-switch" :class="{ 'on': selectedEvent?.can_comment }" id="ownerCommentsSwitch"
+                      role="switch" aria-checked="true" tabindex="0" v-if="(selectedEvent?.is_comment_loading ?? false) === false" @click="updateCommentStatus(selectedEvent)">
                     </div>
+                     <span class="btn-loader" v-if="selectedEvent?.is_comment_loading"></span>
                   </div>
 
                   <div class="meet-toggle-row">
@@ -254,8 +259,10 @@
                       <div class="meet-t-label">Likes</div>
                       <div class="meet-t-sub">Turn likes on/off</div>
                     </div>
-                    <div class="meet-switch on" id="ownerLikesSwitch" role="switch" aria-checked="true" tabindex="0">
+                    <div class="meet-switch" :class="{ 'on': selectedEvent?.can_like }" id="ownerLikesSwitch"
+                      role="switch" aria-checked="true" tabindex="0" v-if="(selectedEvent?.is_like_loading ?? false) === false" @click="updateLikeStatus(selectedEvent)">
                     </div>
+                    <span class="btn-loader" v-if="selectedEvent?.is_like_loading"></span>
                   </div>
                 </div>
                 <div class="meet-foot">Only visible for your own meet event.</div>
@@ -574,6 +581,8 @@ const description = ref('')
 const can_comment = ref(true)
 const can_like = ref(true)
 
+
+
 const friends_only = ref(false)
 const crush_only = ref(false)
 const isFilterTodayMode = ref<boolean>(false)
@@ -658,7 +667,7 @@ onMounted(() => {
   detailEventModal = new ($bootstrap as any).Modal(document.getElementById('detailsBackdrop'));
 
   addEventSub._element.addEventListener('hidden.bs.modal', () => {
-      router.replace({ query: {} })
+    router.replace({ query: {} })
   })
 
   commentModal = new ($bootstrap as any).Modal(document.getElementById('commentmodal'));
@@ -688,8 +697,7 @@ function fetchTowns(query: string) {
   });
 }
 
-async function openProfile()
-{
+async function openProfile() {
   detailEventModal.hide()
   await navigateTo(`user-profile/${selectedEvent.value?.user_id ?? 0}`)
 }
@@ -766,6 +774,53 @@ const selectMedia = (media: FeedsModel.FeedsResponseModel) => {
 
 const selectEvent = (event: MeetEventsModel.ListResponseModel) => {
   selectedEvent.value = event
+}
+
+
+async function updateCommentStatus(feed: MeetEventsModel.ListResponseModel) {
+  feed.is_comment_loading = true;
+  let api_url = getUrl(RequestURL.meetupdateCommentStatus);
+  let postData = {
+    meet_event_id: feed.meet_event_id
+  }
+  let response = await $fetch<SuccessError<FeedsModel.FeedsResponseModel>>(api_url, {
+    method: 'POST',
+    body: postData,
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  });
+  feed.is_comment_loading = false;
+
+  if (response.success) {
+    feed.can_comment = response.response?.can_comment ?? false
+    showToastSuccess(response.message ?? "Reset link sent to your email");
+  }
+  else {
+    showToastError(response.message ?? "Something went wrong");
+  }
+}
+async function updateLikeStatus(feed: MeetEventsModel.ListResponseModel) {
+  feed.is_like_loading = true;
+  let api_url = getUrl(RequestURL.meetupdateLikeStatus);
+  let postData = {
+  meet_event_id: feed.meet_event_id
+  }
+  let response = await $fetch<SuccessError<FeedsModel.FeedsResponseModel>>(api_url, {
+    method: 'POST',
+    body: postData,
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  });
+  feed.is_like_loading = false;
+  if (response.success) {
+    feed.can_like = response.response?.can_like ?? false
+    showToastSuccess(response.message ?? "Reset link sent to your email");
+  }
+  else {
+    showToastError(response.message ?? "Something went wrong");
+  }
 }
 
 function showAddPicture() {
@@ -1004,11 +1059,10 @@ function selectedEmoji(emoji: string) {
     statusInput.focus();
   }
 }
-function openMeetEvent() 
-{
+function openMeetEvent() {
 
   addEventSub.show()
-   router.push({
+  router.push({
     query: { modal: 'addEvent' }
   })
 }
