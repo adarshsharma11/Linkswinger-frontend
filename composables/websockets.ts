@@ -29,7 +29,7 @@ export function setupWebSocket() {
 
     initsocket.onopen = () => {
         is_reconnecting = false
-        console.log("websocket connected. we are ready to go", socketId)
+        console.log("websocket connected. we are ready to go")
         detectonline()
         let connectedmodel = new SocketConnectionModel()
         connectedmodel.is_connected = true
