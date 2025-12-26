@@ -170,7 +170,7 @@
 
 
     <EmojiPicker v-if="showPicker" ref="emojiPickerRef" v-on:selected-emoji="selectedEmoji"
-        v-on:select-custom-emoji="selectCustomEmoji" @closed-emoji-picker="showPicker = false" />
+        v-on:select-custom-emoji="selectCustomEmoji" @closed-emoji-picker="closedEmojiPicker()" />
 
 
     <CommonReportModal id="reportModel" v-if="showReport" @close="closeReport" :report-type="'feed'"
@@ -656,6 +656,12 @@ function closeReport() {
 
 }
 
+function closedEmojiPicker()
+{
+ 
+      emit('modelOpen')
+      showPicker.value = false
+}
 
 function openComments(feed_id: number) {
     emit('modelOpen')

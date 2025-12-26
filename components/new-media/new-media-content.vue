@@ -527,6 +527,7 @@ onMounted(() => {
   videoModalSub = new ($bootstrap as any).Modal(document.getElementById('videoModal'));
 
   videoModalSub._element.addEventListener('hidden.bs.modal', () => {
+      
     if (isModalOpen.value === false) {
       selectedFeeds.value = []
      router.replace({ query: {} })
