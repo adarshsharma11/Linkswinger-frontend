@@ -292,8 +292,8 @@
               <img :src="getmembershipIcon()" alt="Elite" class="badge-icon" />
               <img src="/images/badges/photo-verified.gif" v-if="(getUser()?.is_photo_verified ?? false) === true"
                 alt="Silver" class="badge-icon" />
-              <img v-if="(getUser()?.is_meet_verified ?? false) === true" src="/images/badges/animated/150X150px/MEET-VERIFYED.gif" alt="Meet Verified"
-                  class="badge-icon" />
+              <img v-if="(getUser()?.is_meet_verified ?? false) === true"
+                src="/images/badges/animated/150X150px/MEET-VERIFYED.gif" alt="Meet Verified" class="badge-icon" />
             </div>
           </div>
 
@@ -416,7 +416,7 @@
                 <li><strong>Ethnicity:</strong> {{ getUser()?.ethnicity }}</li>
                 <li><strong>Body Type:</strong> {{ getUser()?.body_type }}</li>
                 <li><strong>Town:</strong> {{ getUser()?.town }}</li>
-                 <li><strong>Smoking:</strong> {{ getUser()?.smoking }}</li>
+                <li><strong>Smoking:</strong> {{ getUser()?.smoking }}</li>
                 <li><strong>Tattoos:</strong> {{ getUser()?.tattoos }}</li>
                 <li><strong>Piercings:</strong> {{ getUser()?.piercings }}</li>
               </ul>
@@ -480,9 +480,9 @@
                 </button>
               </div>
               <div v-if="verification.visibility === 'friends'"><strong>Verified by {{ verification.profile_type
-              }}</strong></div>
+                  }}</strong></div>
               <div v-if="verification.visibility === 'private'"><strong>Verified by {{ verification.profile_type
-              }}</strong></div>
+                  }}</strong></div>
               </p>
               <button class="ls-help-btn-secondary ls-help-submit-btn" v-if="verifications.length > 3"
                 @click="openVerifications()">More</button>
@@ -495,12 +495,14 @@
       </div>
       <div class="block-user" v-if="!isMine()">
         <button class="block-btn action-itm" @click="blockUser()" v-if="!is_block_loading"><img
-            src="/images/badges/animated/150X150px/13.gif"><span>{{is_blocked ? 'UnBlock User' : 'Block User'}}</span></button>
+            src="/images/badges/animated/150X150px/13.gif"><span>{{ is_blocked ? 'UnBlock User' : 'Block User'}}</span></button>
         <span class="btn-loader" v-if="is_block_loading"></span>
       </div>
     </div>
   </section>
-  <CommonEditStatusModal id="statusModal" ref="statusModalRef" :status-txt="getUser()?.profile_status ?? ''" v-if="showStatusModal" @close-status-modal="closeStatusModel()" @open-emoji-picker="handleToggle()" @updated-profile-status="updatedProfileStatus"></CommonEditStatusModal>
+  <CommonEditStatusModal id="statusModal" ref="statusModalRef" :status-txt="getUser()?.profile_status ?? ''"
+    v-if="showStatusModal" @close-status-modal="closeStatusModel()" @open-emoji-picker="handleToggle()"
+    @updated-profile-status="updatedProfileStatus"></CommonEditStatusModal>
   <EmojiPicker v-if="showPicker" :key="route.fullPath" ref="emojiPickerRef" v-on:selected-emoji="selectedEmoji" />
   <AcceptDeclineRequestModel :friend_status="friend_status" ref="acceptDeclineRequestModalRef" v-if="toggleRequestModal"
     @close="toggleRequestModal = false" @friends-list="openUsersFriendsList()" @send-request="sendFriendRequest()" />
@@ -538,11 +540,11 @@
             <p v-for="verification in getallVerifications()">
             <div v-if="verification.visibility === 'public'"><button @click="openUserProfile(verification)">{{
               verification.nick_name
-            }}:</button>{{ verification.review }}</div>
+                }}:</button>{{ verification.review }}</div>
             <div v-if="verification.visibility === 'friends'"><strong>Verified by {{ verification.profile_type
-                }}</strong></div>
+            }}</strong></div>
             <div v-if="verification.visibility === 'private'"><strong>Verified by {{ verification.profile_type
-                }}</strong></div>
+            }}</strong></div>
             </p>
           </div>
         </div>
@@ -561,11 +563,11 @@ import { Teleport } from 'vue';
 import type { CallsModel } from '~/composables/websocketModels';
 var interestModalSub: any = null
 var verificationModalSub: any = null
-var statusModalSub : any = null
-const  statusModalRef
- = ref<{
-  addEmoji: (emoji: string) => void
-} | null>(null)
+var statusModalSub: any = null
+const statusModalRef
+  = ref<{
+    addEmoji: (emoji: string) => void
+  } | null>(null)
 interface Props {
   user_id: number
 }
@@ -601,12 +603,12 @@ const is_blocked = ref(false);
 
 if (isMine() === false) {
   const goBackOrRedirect = async () => {
-  if (import.meta.client && window.history.length > 1) {
-    window.history.back()
-  } else {
-    await navigateTo('/profile')
+    if (import.meta.client && window.history.length > 1) {
+      window.history.back()
+    } else {
+      await navigateTo('/profile')
+    }
   }
-}
 
   const fetchUserDetails = async () => {
     const api_url = getUrl(RequestURL.getProfileDetails);
@@ -626,10 +628,10 @@ if (isMine() === false) {
     if (response.value?.success) {
       userDetails.value = response.value.response;
     }
-     else {
-    // ✅ Safe navigation
-    await goBackOrRedirect() // or any route
-  }
+    else {
+      // ✅ Safe navigation
+      await goBackOrRedirect() // or any route
+    }
   };
   fetchUserDetails();
 
@@ -814,7 +816,7 @@ async function blockUser() {
     is_block_loading.value = false
 
     if (response.success) {
-       is_blocked.value = false
+      is_blocked.value = false
       showToastSuccess(response.message)
     }
     else {
@@ -857,7 +859,7 @@ onMounted(() => {
 
   interestModalSub = new ($bootstrap as any).Modal(document.getElementById('interestModal'));
   verificationModalSub = new ($bootstrap as any).Modal(document.getElementById('verificationModal'));
-  
+
 
   eventBus.on('callDeclineAlert', (eventModel) => {
     showToastError('Call declined')
@@ -870,6 +872,27 @@ onMounted(() => {
       await navigateTo(`/voice-call/${eventModel.token}`)
     }
   })
+
+  if (isMine()) {
+    let has_warning = login_store.getUserDetails?.has_warning ?? false
+    if (has_warning) {
+      showalert(login_store.getUserDetails?.banned_reason ?? '')
+      const api_url = getUrl(RequestURL.removeBannedWarning);
+       $fetch<SuccessError<CallsModel.ValidateCallResponseModel>>(api_url, {
+        cache: "no-cache",
+        method: "post",
+        body: {
+          "user_id": user_store.getLoginId,
+        },
+        headers: {
+          "content-type": "application/json"
+        },
+        onResponse: async ({ response }) => {
+        }
+      });
+    }
+    //
+  }
 
 });
 
@@ -965,7 +988,7 @@ function showVerificationAlert() {
     }
   });
 
- 
+
 }
 
 function showCodeAlert(is_video: boolean) {
@@ -1017,23 +1040,22 @@ async function validateCall(code: string, is_video: boolean) {
     }
   });
 }
-function closeStatusModel() 
-{
- statusModalSub.hide()
+function closeStatusModel() {
+  statusModalSub.hide()
 }
 
 function editStatus() {
 
   showStatusModal.value = true
   nextTick(() => {
- statusModalSub = new ($bootstrap as any).Modal(document.getElementById('statusModal'));
-  statusModalSub._element.addEventListener('hidden.bs.modal', () => {
-          showStatusModal.value = false
+    statusModalSub = new ($bootstrap as any).Modal(document.getElementById('statusModal'));
+    statusModalSub._element.addEventListener('hidden.bs.modal', () => {
+      showStatusModal.value = false
     })
- statusModalSub.show()
+    statusModalSub.show()
   })
 
- return;
+  return;
 
   Swal.fire({
     title: 'Edit Profile Status',
@@ -1095,7 +1117,7 @@ function editStatus() {
   });
 }
 function handleToggle() {
-   showPicker.value = true
+  showPicker.value = true
   nextTick(() => {
     if (emojiPickerRef.value) {
       emojiPickerRef.value.toggleEmojiPicker()

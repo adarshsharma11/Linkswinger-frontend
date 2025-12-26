@@ -87,6 +87,7 @@ export enum RequestURL {
   meetupdateLikeStatus = "/meet/updateLikeStatus",
   homeDashboard = "/home/dashboard",
   addReport = "/addReport",
+  removeBannedWarning = "/removeBannedWarning"
 }
 
 
@@ -469,7 +470,9 @@ export namespace UsersModel {
     partner_piercings? : string
 
     is_blocked?:boolean
-
+    banned_reason?:string
+    has_warning?:boolean
+  
   }
 
   export class FetchMembershipRequestModel {
