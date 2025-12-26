@@ -551,19 +551,22 @@
       </div>
     </div>
   </div>
-
+ <CommonAccountWarning v-if="showWarning" ref="warningModalRef" :warning="login_store.getUserDetails?.banned_reason" @close-warning-popup="showWarning = false"/>
 </template>
 <script setup lang="ts">
 import { ChatsModel, MeetVerificationsModel, type UsersModel } from '~/composables/models';
 import AcceptDeclineRequestModel from './accept-decline-request-modal.vue';
 
 import Swal from 'sweetalert2'
-import { EmojiPicker } from '#components';
+import { EmojiPicker  } from '#components';
 import { Teleport } from 'vue';
 import type { CallsModel } from '~/composables/websocketModels';
 var interestModalSub: any = null
 var verificationModalSub: any = null
 var statusModalSub: any = null
+var warningModalRef: any = null
+var showWarning = ref(false)
+
 const statusModalRef
   = ref<{
     addEmoji: (emoji: string) => void
@@ -860,6 +863,7 @@ onMounted(() => {
   interestModalSub = new ($bootstrap as any).Modal(document.getElementById('interestModal'));
   verificationModalSub = new ($bootstrap as any).Modal(document.getElementById('verificationModal'));
 
+ 
 
   eventBus.on('callDeclineAlert', (eventModel) => {
     showToastError('Call declined')
@@ -876,7 +880,8 @@ onMounted(() => {
   if (isMine()) {
     let has_warning = login_store.getUserDetails?.has_warning ?? false
     if (has_warning) {
-      showalert(login_store.getUserDetails?.banned_reason ?? '')
+    //  showalert(login_store.getUserDetails?.banned_reason ?? '')
+     showWarning.value = true
       const api_url = getUrl(RequestURL.removeBannedWarning);
        $fetch<SuccessError<CallsModel.ValidateCallResponseModel>>(api_url, {
         cache: "no-cache",
