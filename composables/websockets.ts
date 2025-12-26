@@ -1,4 +1,4 @@
-import type { RouletteWorkerModel } from "./models";
+import type { RouletteWorkerModel, UserBannedModel } from "./models";
 import { detectonline } from "./useDatabase";
 
 var is_reconnecting = false
@@ -200,6 +200,10 @@ else if (event_name === "call_alert")
        }
          else if (json.event_name === "roullete_next_failed") {
        let json = JSON.parse(jsontext) as  RouletteWorkerModel
+          sendmsgtoworker(json, true,true)
+       }
+       else if (json.event_name === "account_banned_warning") {
+       let json = JSON.parse(jsontext) as  UserBannedModel
           sendmsgtoworker(json, true,true)
        }
     

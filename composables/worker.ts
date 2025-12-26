@@ -4,7 +4,7 @@ import mitt from 'mitt'
 import { CallAlertModel, CallsModel, CallSocketModel, ChatEventSocketModel, GroupEventSocketModel, LeaderEventModel, TypingEventSocketModel } from './websocketModels';
 import { detectonline } from './useDatabase';
 import { setupWebSocket } from './websockets';
-import type { RouletteWorkerModel } from './models';
+import type { RouletteWorkerModel, UserBannedModel } from './models';
 
 const uniqueId = uuid();
 let tab_id = uuid();
@@ -47,10 +47,10 @@ type Events = {
   roullete_start_failed: RouletteWorkerModel,
   roullete_stopped: RouletteWorkerModel,
   roullete_stop_failed: RouletteWorkerModel,
-  roullete_next_success : RouletteWorkerModel,
-  roullete_next_failed : RouletteWorkerModel,
-  roullete_radius_success : RouletteWorkerModel,
-  roullete_gender_success : RouletteWorkerModel,
+  roullete_next_success: RouletteWorkerModel,
+  roullete_next_failed: RouletteWorkerModel,
+  roullete_radius_success: RouletteWorkerModel,
+  roullete_gender_success: RouletteWorkerModel,
 }
 let onlinemodel: OnlineEventResponse | null = null
 
@@ -291,9 +291,9 @@ async function handleworkerevent(event: MessageEvent<any>) {
   }
   else if (json.event_name === "user_updated_to_group") {
     let json = event.data as GroupEventSocketModel
- 
+
     emitter.emit('onlineUserIds', json)
-   
+
   }
   else if (json.event_name === "chat_update_status") {
     let json = event.data as ChatEventSocketModel
@@ -384,44 +384,58 @@ async function handleworkerevent(event: MessageEvent<any>) {
   else if (json.event_name === "roullete_stop_failed") {
     let json = event.data as RouletteWorkerModel
     emitter.emit('roullete_stop_failed', json)
-  } 
+  }
 
   else if (json.event_name === "roullete_next") {
     let json = event.data as RouletteWorkerModel
     sendtosocket(json)
   }
-   else if (json.event_name === "roullete_next_success") {
+  else if (json.event_name === "roullete_next_success") {
     let json = event.data as RouletteWorkerModel
     emitter.emit('roullete_next_success', json)
-  } 
-   else if (json.event_name === "roullete_next_failed") {
+  }
+  else if (json.event_name === "roullete_next_failed") {
     let json = event.data as RouletteWorkerModel
     emitter.emit('roullete_next_failed', json)
-  } 
-   else if (json.event_name === "roullete_radius_success") {
+  }
+  else if (json.event_name === "roullete_radius_success") {
     let json = event.data as RouletteWorkerModel
     emitter.emit('roullete_radius_success', json)
-  } 
+  }
   else if (json.event_name === "update_roullete_gender") {
     let json = event.data as RouletteWorkerModel
-   sendtosocket(json)
-  } 
-   else if (json.event_name === "update_roullete_radius") {
+    sendtosocket(json)
+  }
+  else if (json.event_name === "update_roullete_radius") {
     let json = event.data as RouletteWorkerModel
-   sendtosocket(json)
-  } 
+    sendtosocket(json)
+  }
 
-   else if (json.event_name === "roullete_radius_success") {
+  else if (json.event_name === "roullete_radius_success") {
     let json = event.data as RouletteWorkerModel
     emitter.emit('roullete_radius_success', json)
-  } 
-   else if (json.event_name === "roullete_gender_success") {
+  }
+  else if (json.event_name === "roullete_gender_success") {
     let json = event.data as RouletteWorkerModel
     emitter.emit('roullete_gender_success', json)
-  } 
+  }
+  else if (json.event_name === "account_banned_warning") {
+    let json = event.data as UserBannedModel
+    let is_warning = json.is_warning ?? false
+    if (is_warning === false) {
+      const user_store = userStore();
+      user_store.clear()
+      await clearloginstore()
+      reloadNuxtApp({
+        path: "/",
+        ttl: 1000
+      })
+    }
+  }
 
 
-  
+
+
 }
 
 

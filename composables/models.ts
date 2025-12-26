@@ -1007,6 +1007,10 @@ export class RouletteWorkerModel {
   is_from?: boolean
   timeStamp?: number
 }
+export class UserBannedModel {
+    event_name?: string
+      is_warning?: boolean
+}
 
 
 
