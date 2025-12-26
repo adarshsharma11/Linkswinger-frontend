@@ -867,7 +867,7 @@ async function fetchHome() {
         'Content-Type': 'application/json'
       }
     });
-    console.log(response)
+ 
     if (response.success) {
       dashboardStats.value = response.response
     }
