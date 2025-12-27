@@ -364,10 +364,12 @@
           @click.prevent="setActiveNav('friends')"><img src="/images/badges/animated/50X50px/my-friends.gif"
             alt="My Friends" class="badge-icon" /></a>
         <a href="#notifications" data-route="notifications" class="nav-item"
-          :class="{ active: activeNav === 'notifications' }" @click.prevent="setActiveNav('notifications')"><img
+          :class="{ active: activeNav === 'notifications' }" @click.prevent="setActiveNav('notifications')">
+          <div class="position-absolute chat-count-badge cursor-pointer"><span>1k</span></div>
+          <img
             src="/images/badges/animated/50X50px/notification.gif" alt="Notifications" class="badge-icon" /></a>
         <a href="#messages" data-route="messages" class="nav-item" :class="{ active: activeNav === 'messages' }"
-          @click.prevent="setActiveNav('messages')"><img src="/images/badges/animated/50X50px/chat.gif" alt="Chats"
+          @click.prevent="setActiveNav('messages')"><div class="position-absolute chat-count-badge cursor-pointer"><span>1k</span></div><img src="/images/badges/animated/50X50px/chat.gif" alt="Chats"
             class="badge-icon" /></a>
       </nav>
     </div>

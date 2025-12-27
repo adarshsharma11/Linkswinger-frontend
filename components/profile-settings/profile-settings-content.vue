@@ -157,28 +157,84 @@
           <section id="view-block-list" class="pro-tab" :hidden="activeNav !== 'block-list'">
               <div class="tab-pannel">
               <h2 class="text-xl font-semibold mb-4"><button class="back-btn btn" v-if="isMobile" @click="handleBack">← Back</button> Block List</h2>
-                <div class="py-3 border-b border-white/5">
-                  <label class="font-medium">Who can comment on my posts/media</label>
-                  <select class="mt-2 w-full px-3 py-2">
-                    <option>Everyone</option>
-                    <option>Friends</option>
-                    <option>Nobody</option>
-                  </select>
+                
+                <!-- User List -->
+                <div class="space-y-3">
+                  <!-- User Item 1 -->
+                  <div class="d-flex align-items-center justify-content-between p-3 bg-black/20 rounded-lg">
+                    <div class="d-flex align-items-center gap-3">
+                      <div class="avatar avatar-sm">
+                        <img src="/images/user-list/user-1.jpg" alt="User" class="rounded-circle" width="40" height="40">
+                      </div>
+                      <div>
+                        <div class="font-medium">John Doe</div>
+                        <div class="text-sm text-slate-400">@johndoe</div>
+                      </div>
+                    </div>
+                    <button class="btn btn-sm btn-outline-danger">Unblock</button>
+                  </div>
+                  
+                  <!-- User Item 2 -->
+                  <div class="d-flex align-items-center justify-content-between p-3 bg-black/20 rounded-lg">
+                    <div class="d-flex align-items-center gap-3">
+                      <div class="avatar avatar-sm">
+                        <img src="/images/user-list/user-1.jpg" alt="User" class="rounded-circle" width="40" height="40">
+                      </div>
+                      <div>
+                        <div class="font-medium">Jane Smith</div>
+                        <div class="text-sm text-slate-400">@janesmith</div>
+                      </div>
+                    </div>
+                    <button class="btn btn-sm btn-outline-danger">Unblock</button>
+                  </div>
+                  
+                  <!-- User Item 3 -->
+                  <div class="d-flex align-items-center justify-content-between p-3 bg-black/20 rounded-lg">
+                    <div class="d-flex align-items-center gap-3">
+                      <div class="avatar avatar-sm">
+                        <img src="/images/user-list/user-1.jpg" alt="User" class="rounded-circle" width="40" height="40">
+                      </div>
+                      <div>
+                        <div class="font-medium">Mike Johnson</div>
+                        <div class="text-sm text-slate-400">@mikejohnson</div>
+                      </div>
+                    </div>
+                    <button class="btn btn-sm btn-outline-danger">Unblock</button>
+                  </div>
+                  
+                  <!-- User Item 4 -->
+                  <div class="d-flex align-items-center justify-content-between p-3 bg-black/20 rounded-lg">
+                    <div class="d-flex align-items-center gap-3">
+                      <div class="avatar avatar-sm">
+                        <img src="/images/user-list/user-1.jpg" alt="User" class="rounded-circle" width="40" height="40">
+                      </div>
+                      <div>
+                        <div class="font-medium">Sarah Wilson</div>
+                        <div class="text-sm text-slate-400">@sarahwilson</div>
+                      </div>
+                    </div>
+                    <button class="btn btn-sm btn-outline-danger">Unblock</button>
+                  </div>
+                  
+                  <!-- User Item 5 -->
+                  <div class="d-flex align-items-center justify-content-between p-3 bg-black/20 rounded-lg">
+                    <div class="d-flex align-items-center gap-3">
+                      <div class="avatar avatar-sm">
+                        <img src="/images/user-list/user-1.jpg" alt="User" class="rounded-circle" width="40" height="40">
+                      </div>
+                      <div>
+                        <div class="font-medium">David Brown</div>
+                        <div class="text-sm text-slate-400">@davidbrown</div>
+                      </div>
+                    </div>
+                    <button class="btn btn-sm btn-outline-danger">Unblock</button>
+                  </div>
                 </div>
-                <div class="d-flex align-items-center justify-content-between py-3 border-b">
-                  <div class="vs-left">
-                    <div class="font-medium">Hide me from “Looked at me” lists</div>
-                  </div>
-                  <div class="vs-toggle">
-                    <input type="checkbox" class="switch">
-                  </div>
-                </div>
-                <div class="py-3">
-                  <label class="font-medium">Verification status</label>
-                  <div class="mt-2 d-flex align-items-center gap-2">
-                    <span class="green-tag px-2 py-1">Unverified</span>
-                    <button class="btn btn-primary glow-green">Start verification</button>
-                  </div>
+                
+                <!-- Empty State (Optional) -->
+                <div class="text-center py-8" style="display: none;">
+                  <div class="text-slate-400 mb-2">No blocked users</div>
+                  <div class="text-sm text-slate-500">You haven't blocked anyone yet</div>
                 </div>
                 
               </div>
