@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <!-- <div>
     <div class="inner-page">
       <CommonHeader/>
       <CommonBreadcrumbBreadCrumbs main="Home" title="About" />
@@ -9,7 +9,7 @@
     </div>
     <CommonFooter/>
     <CommonTapToTopTaptop />
-  </div>
+  </div> -->
 </template>
 
 <script setup>

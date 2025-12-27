@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <!-- <div>
     <client-only>
       <div class="inner-page">
         <CommonHeader/>
@@ -9,7 +9,7 @@
       <CommonFooter />
       <CommonTapToTopTaptop />
     </client-only>
-  </div>
+  </div> -->
 </template>
 
 <script setup>

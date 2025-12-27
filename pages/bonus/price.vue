@@ -1,5 +1,5 @@
 <template>
-<BonusPagePrice/>
+<!-- <BonusPagePrice/> -->
 </template>
 
 <script setup>
