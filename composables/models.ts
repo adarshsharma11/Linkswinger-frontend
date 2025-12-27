@@ -614,6 +614,10 @@ export namespace FeedsModel {
     classification?: string
     reason?: string
 is_attached?: boolean
+is_local?: boolean
+width?:number
+height?:number
+
   }
 
 

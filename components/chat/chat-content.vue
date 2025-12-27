@@ -184,12 +184,14 @@
               <div v-if="(chat.is_deleted ?? false) === false" class="chat-item">
                 <div v-if="chat.message_type === 'text'">{{ chat.message }}</div>
                 <!-- IMAGE PREVIEW -->
-                <div v-if="chat.message_type === 'image'" class="attachment-preview" @click="openPreview(chat)">
+                <div v-if="chat.message_type === 'image' && is_mounted" class="attachment-preview"
+                  @click="openPreview(chat)">
                   <img :src="(chat.media_path ?? '') + (chat.message ?? '')" class="attachment-img" loading="lazy" />
                 </div>
 
                 <!-- VIDEO PREVIEW -->
-                <div v-if="chat.message_type === 'video'" class="attachment-preview video" @click="openPreview(chat)">
+                <div v-if="chat.message_type === 'video' && is_mounted" class="attachment-preview video"
+                  @click="openPreview(chat)">
                   <video :src="(chat.media_path ?? '') + (chat.message ?? '')" class="attachment-video" muted></video>
 
                   <div class="video-play-overlay">
@@ -200,7 +202,7 @@
 
                 <!-- FALLBACK FOR UNKNOWN FILES (DOC, PDF etc.) -->
                 <div
-                  v-if="chat.message_type !== 'image' && chat.message_type !== 'video' && chat.message_type !== 'text' && chat.message_type !== 'emoji'"
+                  v-if="chat.message_type !== 'image' && chat.message_type !== 'video' && chat.message_type !== 'text' && chat.message_type !== 'emoji' && is_mounted"
                   class="attachment-file" @click="openPreview(chat)">
                   <svg viewBox="0 0 24 24" width="40" height="40" fill="currentColor">
                     <path d="M6 2h9l5 5v15a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z" />
@@ -208,7 +210,7 @@
                   <small>{{ chat.message }}</small>
                 </div>
 
-                <div v-if="chat.message_type === 'emoji'">
+                <div v-if="chat.message_type === 'emoji' && is_mounted">
                   <Lottie renderer="svg" v-if="getFileExtension(chat.message ?? '') === '.json'"
                     :link="(chat.media_path ?? '') + (chat.message ?? '')" style="max-width: 80px; max-height: 80px;">
                   </Lottie>
@@ -219,11 +221,13 @@
                     :src="(chat.media_path ?? '') + (chat.message ?? '')" style="max-width: 80px; max-height: 80px;" />
                 </div>
               </div>
-              <div class="message-time" v-if="chat.from_id !== login_store.getUserDetails?.user_id">{{ formatRelativeDate(chat.created_at)
-              }}
+              <div class="message-time" v-if="chat.from_id !== login_store.getUserDetails?.user_id">{{
+                formatRelativeDate(chat.created_at)
+                }}
               </div>
-              <div class="message-time" v-if="chat.from_id === login_store.getUserDetails?.user_id">{{ formatRelativeDate(chat.created_at)
-              }}
+              <div class="message-time" v-if="chat.from_id === login_store.getUserDetails?.user_id">{{
+                formatRelativeDate(chat.created_at)
+                }}
                 • {{ chat.status }}</div>
 
               <div v-if="selectMode && (chat.is_deleting ?? false) === false && (chat.is_deleted ?? false) === false"
@@ -261,8 +265,7 @@
               <div class="d-flex flex items-center gap-2 chat-ftr-btns">
                 <input type="file" accept="image/png,image/jpeg,video/mp4" class="form-control d-none" ref="fileInput"
                   @change="handleFileUpload" />
-                <button id="attach-btn" class="btn bbtn-dark border-secondary text-white ms-2"
-                  @click="triggerFileInput">
+                <button id="attach-btn" class="btn bbtn-dark border-secondary text-white ms-2" @click="openChatModal()">
                   <svg viewBox="0 0 24 24" class="h-5 w-5" fill="currentColor">
                     <path d="M16.5 6.5 9 14a3 3 0 1 0 4.24 4.24l7.07-7.07a5 5 0 1 0-7.07-7.07L6.1 7.17" fill="none"
                       stroke="currentColor" stroke-width="1.5"></path>
@@ -309,6 +312,7 @@
     v-on:select-custom-emoji="selectCustomEmoji" @closed-emoji-picker="showPicker = false" />
 
 
+  <CommonChatMediaModel id="chatMediaModal"></CommonChatMediaModel>
 </template>
 
 <script setup lang="ts">
@@ -357,6 +361,7 @@ const showFilters = ref(false);
 var pickerModel: any = null
 const { $bootstrap } = useNuxtApp();
 // LightGallery dynamic imports (client-only)
+var chatMediaModal: any = null
 const LightgalleryComp = ref<any>(null);
 const plugins = ref<any[]>([]);
 const lgRef = ref<any>(null);
@@ -371,6 +376,7 @@ const friendsOnly = ref(false)
 const withAttachments = ref(false)
 const photoVerifiedOnly = ref(false)
 const showPicker = ref(false)
+const is_mounted = ref(false)
 function onGalleryInit(detail: any) {
   lgInstance = detail.instance;
 }
@@ -701,8 +707,7 @@ function selectedEmoji(emoji: string) {
   }
 }
 
-function handleToggle() 
-{
+function handleToggle() {
   showPicker.value = true
   nextTick(() => {
     if (emojiPickerRef.value) {
@@ -765,41 +770,45 @@ function sendTypingStatus(to_id: number) {
 watch(messageTxt, () => {
   const emojiRegex = /(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])/g;
   messageTxt.value = messageTxt.value.replace(emojiRegex, '')
- onUserTyping(userDetails.value?.user_id ?? 0)
+  onUserTyping(userDetails.value?.user_id ?? 0)
 });
+
+function openChatModal() {
+  chatMediaModal.show();
+}
 
 // mount / socket event wiring
 onMounted(async () => {
+  chatMediaModal = new ($bootstrap as any).Modal(document.getElementById('chatMediaModal'));
+  chatMediaModal._element.addEventListener('hidden.bs.modal', () => {
+
+  })
   // client-only: ensure LightGallery loads only on client
-  if (process.client) {
-    try {
-      // dynamically import LightGallery CSS on client only
-      await Promise.all([
-        import('lightgallery/css/lightgallery.css').catch(() => { }),
-        import('lightgallery/css/lg-thumbnail.css').catch(() => { }),
-        import('lightgallery/css/lg-video.css').catch(() => { }),
-        import('lightgallery/css/lg-zoom.css').catch(() => { })
-      ]);
-      // dynamic import of the component and plugins
-      const mod = await import('lightgallery/vue');
-      const { default: zoom } = await import('lightgallery/plugins/zoom');
-      const { default: thumbnail } = await import('lightgallery/plugins/thumbnail');
-      const { default: video } = await import('lightgallery/plugins/video');
-      LightgalleryComp.value = mod.default ?? mod;
-      // set plugins array (LightGallery expects the plugin functions)
-      plugins.value = [zoom, video].filter(Boolean);
+  // if (process.client) {
+  //   try {
+  //     // dynamically import LightGallery CSS on client only
+  //     await Promise.all([
+  //       import('lightgallery/css/lightgallery.css').catch(() => { }),
+  //       import('lightgallery/css/lg-thumbnail.css').catch(() => { }),
+  //       import('lightgallery/css/lg-video.css').catch(() => { }),
+  //       import('lightgallery/css/lg-zoom.css').catch(() => { })
+  //     ]);
+  //     // dynamic import of the component and plugins
+  //     const mod = await import('lightgallery/vue');
+  //     const { default: zoom } = await import('lightgallery/plugins/zoom');
+  //     const { default: thumbnail } = await import('lightgallery/plugins/thumbnail');
+  //     const { default: video } = await import('lightgallery/plugins/video');
+  //     LightgalleryComp.value = mod.default ?? mod;
+  //     // set plugins array (LightGallery expects the plugin functions)
+  //     plugins.value = [zoom, video].filter(Boolean);
 
-
-
-
-
-    } catch (err) {
-      // if LightGallery fails to load, keep component non-blocking
-      console.warn('LightGallery dynamic import failed:', err);
-      LightgalleryComp.value = null;
-      plugins.value = [];
-    }
-  }
+  //   } catch (err) {
+  //     // if LightGallery fails to load, keep component non-blocking
+  //     console.warn('LightGallery dynamic import failed:', err);
+  //     LightgalleryComp.value = null;
+  //     plugins.value = [];
+  //   }
+  // }
 
   // ensure mobile detection and listeners
   if (process.client) {
@@ -864,7 +873,9 @@ onMounted(async () => {
     nextTick(() => { if (scrollContainer.value) scrollContainer.value.scrollTop = scrollContainer.value.scrollHeight; })
   })
 
-  nextTick(() => { scrollBottomSmooth() });
+  nextTick(() => { 
+          is_mounted.value = true
+           scrollBottomSmooth() });
 
   checkuseronline()
   const tid = Number(route.params.id) ?? 0
@@ -873,10 +884,10 @@ onMounted(async () => {
 
 const scrollBottomSmooth = () => {
   requestAnimationFrame(() => {
-    if (scrollContainer.value) {
-      scrollContainer.value.scrollTop = scrollContainer.value.scrollHeight;
-    }
-  });
+    const el = scrollContainer.value
+    if (!el) return
+    el.scrollTop = el.scrollHeight
+  })
 };
 
 
