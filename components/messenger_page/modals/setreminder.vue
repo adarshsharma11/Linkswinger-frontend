@@ -45,12 +45,12 @@
                 <div class="custom-remider-main">
                   <div class="custom-remider-content">
                     <div class="custom-reminder-inline">
-                      <ClientOnly>
+                      <!-- <ClientOnly>
                 <VueDatePicker class="" v-model="date" />
                 </ClientOnly>
                 <ClientOnly>
                 <VueDatePicker class="" v-model="time" timePicker />
-                </ClientOnly>
+                </ClientOnly> -->
                     </div>
                     <div class="custom-reminder-block">
                       <select> 
@@ -72,11 +72,11 @@
 </template>
 
 <script setup>
-import VueDatePicker from '@vuepic/vue-datepicker';
-import '@vuepic/vue-datepicker/dist/main.css';
-const date = ref();
-const time = ref({
-    hours: new Date().getHours(),
-    minutes: new Date().getMinutes()
-});
+// import VueDatePicker from '@vuepic/vue-datepicker';
+// import '@vuepic/vue-datepicker/dist/main.css';
+// const date = ref();
+// const time = ref({
+//     hours: new Date().getHours(),
+//     minutes: new Date().getMinutes()
+// });
 </script>

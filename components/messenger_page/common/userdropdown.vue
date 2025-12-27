@@ -14,14 +14,14 @@
         <li><a href="#">Jhon john</a></li>
       </ul>
     </div>
-    <ClientOnly>
+    <!-- <ClientOnly>
       <VueDatePicker v-model="date"></VueDatePicker>
-    </ClientOnly>
+    </ClientOnly> -->
   </div>
 </template>
 
 <script setup>
-import VueDatePicker from "@vuepic/vue-datepicker";
-import "@vuepic/vue-datepicker/dist/main.css";
-const date = ref('');
+// import VueDatePicker from "@vuepic/vue-datepicker";
+// import "@vuepic/vue-datepicker/dist/main.css";
+// const date = ref('');
 </script>
