@@ -41,7 +41,7 @@ const emit = defineEmits(['accept', 'reject'])
 
 interface Props {
   is_loading: boolean,
-  alertModel?: CallAlertModel
+  alertModel?: CallAlertModel | null
 }
 const props = defineProps<Props>()
 

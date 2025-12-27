@@ -19,7 +19,7 @@ interface Props {
 const props = defineProps<Props>()
 const scrollSpeed = ref(props.speed ?? 100)
 const eventBus = useMittEmitter()
-const alertModel = ref(null as CallAlertModel | null)
+const alertModel = ref(null as CallAlertModel | null | undefined)
 const is_loading = ref(false)
 var callAlertSub: any = null
 const { $bootstrap } = useNuxtApp();

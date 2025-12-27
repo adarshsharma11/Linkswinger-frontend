@@ -16,6 +16,7 @@ const promotion_text = ref('')
 const speed = ref(50)
 
 const fetchOptions = async () => {
+  try {
   const api_url = getUrl(RequestURL.fetchPromotion);
   const { data: fetch_response, error: option_error } = await useFetch<SuccessError<PromotionsModel.FetchResponseModel>>(api_url, {
     cache: "no-cache",
@@ -26,11 +27,15 @@ const fetchOptions = async () => {
     }
   });
   return fetch_response.value?.response 
+  }
+  catch {
+return {}
+  }
+
 }
 let response_model = await fetchOptions() as PromotionsModel.FetchResponseModel
 promotion_text.value = response_model.text ?? ''
 speed.value = response_model.speed ?? 5
-
 
 onMounted(() => {
     useDatabase();

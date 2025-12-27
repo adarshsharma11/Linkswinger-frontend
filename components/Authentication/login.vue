@@ -8,13 +8,9 @@
         </div>
         <h4 class="text-white">Welcome to LinkSwingers – Please log in to your account.</h4>
 
-        <Form
-          :validation-schema="schema"
-          :initial-values="{ nickemail: '', password: '', confirmAge: false, agreeTerms: false }"
-          @submit="userlogin"
-          v-slot="{ meta }"
-          class="form2"
-        >
+        <Form :validation-schema="schema"
+          :initial-values="{ nickemail: '', password: '', confirmAge: false, agreeTerms: false }" @submit="userlogin"
+          v-slot="{ meta }" class="form2">
           <!-- Email / Nickname -->
           <div class="form-group">
             <label class="col-form-label text-white" for="nickemail">
@@ -37,14 +33,8 @@
           <div class="form-group">
             <div class="rememberchk">
               <div class="checkbox-wrapper">
-                <Field
-                  type="checkbox"
-                  id="gridCheck1"
-                  name="confirmAge"
-                  class="form-check-input custom-theme-checkbox"
-                  :value="true"
-                  :unchecked-value="false"
-                />
+                <Field type="checkbox" id="gridCheck1" name="confirmAge" class="form-check-input custom-theme-checkbox"
+                  :value="true" :unchecked-value="false" />
                 <label class="form-check-label ps-4 text-white" for="gridCheck1">
                   I confirm that I am 18 years or older
                 </label>
@@ -56,19 +46,13 @@
           <div class="form-group">
             <div class="rememberchk">
               <div class="checkbox-wrapper">
-              <Field
-                type="checkbox"
-                id="gridCheck2"
-                name="agreeTerms"
-                class="form-check-input custom-theme-checkbox"
-                :value="true"
-                :unchecked-value="false"
-              />
-              <label class="form-check-label ps-4 text-white" for="gridCheck2">
-                I agree to the
-                <nuxt-link to="/terms">Terms & Conditions</nuxt-link> and
-                <nuxt-link to="/privacy">Privacy Policy</nuxt-link>, and confirm that I am 18 years or older
-              </label>
+                <Field type="checkbox" id="gridCheck2" name="agreeTerms" class="form-check-input custom-theme-checkbox"
+                  :value="true" :unchecked-value="false" />
+                <label class="form-check-label ps-4 text-white" for="gridCheck2">
+                  I agree to the
+                  <nuxt-link to="/terms">Terms & Conditions</nuxt-link> and
+                  <nuxt-link to="/privacy">Privacy Policy</nuxt-link>, and confirm that I am 18 years or older
+                </label>
               </div>
             </div>
             <ErrorMessage name="agreeTerms" class="text-danger small" />
@@ -86,11 +70,8 @@
           <!-- Submit -->
           <div class="form-group mb-4">
             <div class="buttons">
-              <button
-                type="submit"
-                class="btn button-effect btn-primary mt-4 w-100"
-                :disabled="is_login_loading || !meta.valid"
-              >
+              <button type="submit" class="btn button-effect btn-primary mt-4 w-100"
+                :disabled="is_login_loading || !meta.valid">
                 <template v-if="is_login_loading">
                   <span class="btn-loader"></span>
                 </template>
@@ -99,7 +80,7 @@
                 </template>
               </button>
             </div>
-             <!-- <p class="text-white">
+            <!-- <p class="text-white">
               Don't have an account?
               <nuxt-link to="/authentication/signup">Create new account</nuxt-link>
             </p> -->
@@ -115,6 +96,9 @@
       </div>
     </div>
   </div>
+
+  <CommonSoftBan v-if="showSoftBan" :banned_date="banned_date" :banned_reason="banned_reason" @close-soft-ban-popup="showSoftBan = false"></CommonSoftBan>
+   <CommonCloseAccount v-if="showClosedBan" :banned_date="banned_date" :banned_reason="banned_reason" @close-soft-ban-popup="showClosedBan = false"></CommonCloseAccount>
 </template>
 
 <script lang="ts" setup>
@@ -124,9 +108,14 @@ import { Form, Field, ErrorMessage } from "vee-validate";
 import * as Yup from "yup";
 import type { UsersModel } from "~/composables/models";
 
+
 const is_login_loading = ref(false);
 const user_store = userStore();
 const id_store = idStore();
+const showSoftBan = ref(false)
+const showClosedBan = ref(false)
+const banned_date = ref('')
+const banned_reason = ref('')
 
 // ✅ Yup schema
 const schema = Yup.object({
@@ -166,12 +155,36 @@ async function userlogin(values: any, { resetForm }: any) {
     if (response.success) {
       user_store.setLoginId(response.response?.user_id ?? 0);
       await storerole(response.response?.user_id ?? 0);
-      sendmsgtoworker({ event_name: "loginsuccess"},true);
-      
+      sendmsgtoworker({ event_name: "loginsuccess" }, true);
+
     } else {
       if (response.code === 100) {
         showmultiple(response.message);
-      } else {
+      }
+      else if (response.code === 300) {
+        let res_banned_date = response.response?.banned_date ?? ''
+        const now = new Date();
+        const banned = new Date(res_banned_date);
+        if (banned) {
+          const diffMs = banned.getTime() - now.getTime();
+          const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+             banned_date.value = res_banned_date
+              banned_reason.value = response.response?.banned_reason ?? ''
+          if (diffDays > 60) {
+
+            showClosedBan.value = true
+
+          }
+          else {
+         
+            showSoftBan.value = true
+          }
+        }
+
+
+
+      }
+      else {
         showToastError(response.message || "Login failed. Please try again.");
       }
     }
@@ -193,7 +206,7 @@ function showmultiple(message: string) {
     confirmButtonText: "Proceed",
   }).then(async (result) => {
     if (result.isConfirmed) {
-      await userlogin({ nickemail: "", password: "" }, { resetForm: () => {} });
+      await userlogin({ nickemail: "", password: "" }, { resetForm: () => { } });
     }
   });
 }

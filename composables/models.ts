@@ -274,6 +274,8 @@ export namespace UsersModel {
     profile_type?: string;
     user_type?: string;
     is_email_confirmed?: boolean;
+    banned_date?:string
+    banned_reason? :string
   }
 
   export class SignUpRequestModel {
