@@ -1,10 +1,10 @@
 <template>
-      <div>
+      <!-- <div>
         <BlogsCommonBlogHeader/>
         <BlogsRightSidebar/>
         <CommonFooter/>
         <CommonTapToTopTaptop/>
-      </div>
+      </div> -->
     </template>
     <script setup>
 useHead({
