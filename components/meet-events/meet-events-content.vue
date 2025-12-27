@@ -182,12 +182,8 @@
             </div>
 
             <div class="meet-head-right">
-              <a href="#" class="meet-profile-link" id="detailsProfileLink">{{ selectedEvent?.nick_name }}</a>
+           
               <span class="meet-head-pill" id="detailsMeetTypePill">{{ selectedEvent?.meet_type }}</span>
-              <span class="meet-head-pill" id="detailsLookingPill">{{ selectedEvent?.looking_for?.join(',') }}</span>
-              <span class="meet-head-pill" id="detailsLocationPill">{{ selectedEvent?.town }}</span>
-              <span class="meet-head-pill live" id="detailsWhenPill">{{ formatLocal(selectedEvent?.meet_date ?? '')
-              }}</span>
               <button class="meet-btn meet-small meet-ghost" data-bs-dismiss="modal" aria-label="Close">Close</button>
             </div>
           </div>
@@ -269,7 +265,10 @@
               </div>
 
               <div class="meet-section">
-
+              <div class="meet-inline mb-2">
+                    <button class="meet-btn meet-small"
+                    >Delete</button>
+              </div>
                 <div class="meet-inline">
                   <span class="btn-loader" v-if="is_like_loading"
                     style="width: 20px; height: 20px; max-width: 20px; max-height: 40px;"></span>
