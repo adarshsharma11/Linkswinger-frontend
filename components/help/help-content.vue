@@ -65,7 +65,7 @@
           <!-- Contact Form for Support Section -->
           <div v-if="s.showForm" class="ls-help-contact-form">
             <div v-if="!formSubmitted" class="ls-help-form-container">
-              <div class="ls-help-form-group">
+              <!-- <div class="ls-help-form-group">
                 <label for="subject" class="ls-help-form-label">Subject</label>
                 <input 
                   id="subject"
@@ -75,9 +75,9 @@
                   placeholder="Enter your subject"
                   required
                 >
-              </div>
+              </div> -->
               
-              <div class="ls-help-form-group">
+              <!-- <div class="ls-help-form-group">
                 <label for="message" class="ls-help-form-label">Message</label>
                 <textarea 
                   id="message"
@@ -87,15 +87,23 @@
                   rows="5"
                   required
                 ></textarea>
-              </div>
+              </div> -->
               
-              <button 
+              <!-- <button 
                 @click="handleSubmit" 
                 :disabled="isSubmitting || !formData.subject.trim() || !formData.message.trim()"
                 class="ls-help-btn-secondary ls-help-submit-btn"
                 type="button"
               >
                 {{ isSubmitting ? 'Sending...' : 'Send Message' }}
+              </button> -->
+               <button 
+                @click="handleSubmit" 
+               
+                class="ls-help-btn-secondary ls-help-submit-btn"
+                type="button"
+              >
+                {{ 'Message Admin' }}
               </button>
             </div>
             
@@ -111,13 +119,16 @@
       </main>
     </div>
   </div>
+
+  <AdminChat v-if="isSupportOpen"></AdminChat>
+
 </template>
 
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 
 const logoSrc = '/images/logo/landing-logo.gif'
-
+const isSupportOpen = ref(false)
 // Sections data (converted from provided HTML)
 const sections = [
   {
@@ -323,6 +334,7 @@ const isSubmitting = ref(false)
 
 function openSection(id) {
   activeSection.value = id
+  isSupportOpen.value = false
   if (isMobile.value) showContent.value = true
 }
 
@@ -331,24 +343,26 @@ function closeContent() {
 }
 
 function handleSubmit() {
-  if (!formData.value.subject.trim() || !formData.value.message.trim()) {
-    return
-  }
+
+  isSupportOpen.value = true
+  // if (!formData.value.subject.trim() || !formData.value.message.trim()) {
+  //   return
+  // }
   
-  isSubmitting.value = true
+  // isSubmitting.value = true
   
-  // Simulate form submission
-  setTimeout(() => {
-    formSubmitted.value = true
-    isSubmitting.value = false
+  // // Simulate form submission
+  // setTimeout(() => {
+  //   formSubmitted.value = true
+  //   isSubmitting.value = false
     
-    // Reset form after 3 seconds
-    setTimeout(() => {
-      formData.value.subject = ''
-      formData.value.message = ''
-      formSubmitted.value = false
-    }, 3000)
-  }, 1000)
+  //   // Reset form after 3 seconds
+  //   setTimeout(() => {
+  //     formData.value.subject = ''
+  //     formData.value.message = ''
+  //     formSubmitted.value = false
+  //   }, 3000)
+  // }, 1000)
 }
 
 // responsive detection
