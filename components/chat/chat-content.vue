@@ -144,17 +144,10 @@
                 <span style="color: white;" v-if="selectMode === false">Select</span>
                 <span style="color: white;" v-if="selectMode">DeSelect</span>
               </button>
-              <button class="btn btn-sm btn-dark border-secondary" @click="showCodeAlert(false)"><svg
-                  viewBox="0 0 24 24" class="h-4 w-4" fill="currentColor">
-                  <path
-                    d="M6.6 10.8a15 15 0 0 0 6.6 6.6l2.2-2.2a1.5 1.5 0 0 1 1.6-.36l3.4 1.14a1.5 1.5 0 0 1 1 1.41V20a2 2 0 0 1-2 2c-9.39 0-17-7.61-17-17a2 2 0 0 1 2-2h2.61a1.5 1.5 0 0 1 1.41 1l1.14 3.4a1.5 1.5 0 0 1-.36 1.6L6.6 10.8z">
-                  </path>
-                </svg> Voice</button>
-              <button class="btn btn-sm btn-dark border-secondary" @click="showCodeAlert(true)"><svg viewBox="0 0 24 24"
-                  class="h-4 w-4" fill="currentColor">
-                  <path d="M23 7l-6 4V7a2 2 0 0 0-2-2H3a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4l6 4V7z">
-                  </path>
-                </svg> Video</button>
+              <button class="btn btn-sm btn-dark border-secondary" @click="showCodeAlert(false)">
+                <img src="/images/badges/animated/50X50px/call.gif" alt="voice call" class="chat-btn-icon"/> Voice</button>
+              <button class="btn btn-sm btn-dark border-secondary" @click="showCodeAlert(true)">
+                 <img src="/images/badges/animated/50X50px/video.gif" alt="video call" class="chat-btn-icon"/>Video</button>
               <span class="btn-loader" v-if="is_code_loading"></span>
               <button class="btn btn-sm btn-danger glow-red-strong text-white"
                 v-if="!is_code_loading && call_code.length === 0" @click="fetchCallCode()">Show my call code</button>

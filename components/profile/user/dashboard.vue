@@ -355,8 +355,8 @@
         <a href="#home" data-route="home" class="nav-item" :class="{ active: activeNav === 'home' }"
           @click.prevent="setActiveNav('home')"><img src="/images/badges/animated/50X50px/home.gif" alt="Home"
             class="badge-icon" /></a>
-        <a href="#search" data-route="search" class="nav-item" :class="{ active: activeNav === 'search' }"
-          @click.prevent="setActiveNav('search')"><img src="/images/badges/animated/50X50px/search.gif" alt="Search"
+        <a href="#userlist" data-route="userlist" class="nav-item" :class="{ active: activeNav === 'userlist' }"
+          @click.prevent="setActiveNav('userlist')"><img src="/images/badges/animated/50X50px/user-list.gif" alt="User list"
             class="badge-icon" /></a>
         <a href="#upload" id="mUpload" @click.prevent="fakeUpload" class="nav-item"><img
             src="/images/badges/animated/50X50px/upload-media.gif" alt="Post" class="badge-icon" /></a>
