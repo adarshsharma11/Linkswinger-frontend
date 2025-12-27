@@ -293,12 +293,7 @@
 
 
   <!-- LightGallery: rendered only client-side and only after dynamic import -->
-  <component v-if="LightgalleryComp && plugins.length > 0" :is="LightgalleryComp" ref="lgRef"
-    :settings="{ plugins: plugins, thumbnail: false, speed: 500, download: false, controls: true, loop: false, slideEndAnimation: false, }"
-    :onInit="onGalleryInit">
-    <a v-for="item in galleryItems" :key="item.id" :data-src="item.isVideo ? null : item.src"
-      :data-video="item.isVideo ? item.video : null" :data-lg-size="item.isVideo ? item.size : null"></a>
-  </component>
+  
   <FilterModal :friends-only="friendsOnly" :photo-verified-only="photoVerifiedOnly" :show-unread="showUnread"
     :with-attachments="withAttachments" v-if="showFilters" @close="showFilters = false" @apply-filters="applyFilters"
     @clear-filters="clearFilters()" />
@@ -374,10 +369,8 @@ const { $bootstrap } = useNuxtApp();
 // LightGallery dynamic imports (client-only)
 var chatMediaModal: any = null
 var videoModalSub: any = null
-const LightgalleryComp = ref<any>(null);
-const plugins = ref<any[]>([]);
-const lgRef = ref<any>(null);
-let lgInstance: any = null;
+
+
 const galleryItems = ref<any[]>([]);
 
 const fileWidth = ref(0);
@@ -390,9 +383,7 @@ const photoVerifiedOnly = ref(false)
 const showPicker = ref(false)
 const is_mounted = ref(true)
 const selectedMediaIndex = ref(0)
-function onGalleryInit(detail: any) {
-  lgInstance = detail.instance;
-}
+
 
 function buildGalleryItems() {
   const allMedia = chatModels.value.filter(
@@ -801,32 +792,7 @@ onMounted(async () => {
   videoModalSub._element.addEventListener('hidden.bs.modal', () => {
      galleryItems.value = []
   })
-  // client-only: ensure LightGallery loads only on client
-  // if (process.client) {
-  //   try {
-  //     // dynamically import LightGallery CSS on client only
-  //     await Promise.all([
-  //       import('lightgallery/css/lightgallery.css').catch(() => { }),
-  //       import('lightgallery/css/lg-thumbnail.css').catch(() => { }),
-  //       import('lightgallery/css/lg-video.css').catch(() => { }),
-  //       import('lightgallery/css/lg-zoom.css').catch(() => { })
-  //     ]);
-  //     // dynamic import of the component and plugins
-  //     const mod = await import('lightgallery/vue');
-  //     const { default: zoom } = await import('lightgallery/plugins/zoom');
-  //     const { default: thumbnail } = await import('lightgallery/plugins/thumbnail');
-  //     const { default: video } = await import('lightgallery/plugins/video');
-  //     LightgalleryComp.value = mod.default ?? mod;
-  //     // set plugins array (LightGallery expects the plugin functions)
-  //     plugins.value = [zoom, video].filter(Boolean);
 
-  //   } catch (err) {
-  //     // if LightGallery fails to load, keep component non-blocking
-  //     console.warn('LightGallery dynamic import failed:', err);
-  //     LightgalleryComp.value = null;
-  //     plugins.value = [];
-  //   }
-  // }
 
   // ensure mobile detection and listeners
   if (process.client) {
