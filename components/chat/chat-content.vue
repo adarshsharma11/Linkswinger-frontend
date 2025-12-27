@@ -308,6 +308,22 @@
 
 
   <CommonChatMediaModel id="chatMediaModal" @send-media="sendMedia"></CommonChatMediaModel>
+
+  <div class="modal fade" id="videoModal" tabindex="-1" aria-labelledby="videoModal" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content bg-black">
+        <div class="modal-header">
+          <button type="button" class="msgf-pill" data-bs-dismiss="modal" aria-label="Close">
+            ✕
+          </button>
+        </div>
+        <div class="modal-body p-0 h-100">
+          <ChatGallery :key="galleryItems.length > 0 ? galleryItems[0].chat_id : 0" :all-feeds="galleryItems"
+            :from-feeds="false" v-if="galleryItems.length > 0" :selected-index="selectedMediaIndex" />
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -357,6 +373,7 @@ var pickerModel: any = null
 const { $bootstrap } = useNuxtApp();
 // LightGallery dynamic imports (client-only)
 var chatMediaModal: any = null
+var videoModalSub: any = null
 const LightgalleryComp = ref<any>(null);
 const plugins = ref<any[]>([]);
 const lgRef = ref<any>(null);
@@ -372,6 +389,7 @@ const withAttachments = ref(false)
 const photoVerifiedOnly = ref(false)
 const showPicker = ref(false)
 const is_mounted = ref(true)
+const selectedMediaIndex = ref(0)
 function onGalleryInit(detail: any) {
   lgInstance = detail.instance;
 }
@@ -380,57 +398,56 @@ function buildGalleryItems() {
   const allMedia = chatModels.value.filter(
     (c) => c.message_type === "image" || c.message_type === "video"
   );
+  galleryItems.value = allMedia
 
-  galleryItems.value = allMedia.map((c) => {
-    const src = (c.media_path ?? "") + (c.message ?? "");
-    const isVideo = c.message_type === "video";
-    // fallback in case metadata fails
-    const width = c?.width || 720;
-    const height = c?.height || 1280;
 
-    if (isVideo) {
-      return {
-        id: c.chat_id,
-        isVideo: true,
-        src,
-        size: `${width}-${height}`,
-        thumb: null,
-        poster: null,
-        video: JSON.stringify({
-          source: [{ src, type: "video/mp4" }],
-          attributes: {
-            controls: true,
-            preload: "metadata"
-          }
-        })
-      };
-    }
-    return {
-      id: c.chat_id,
-      isVideo: false,
-      src,
-      thumb: src,
-      poster: null,
-      size: `${width}-${height}`,
-      video: null
-    };
-  })
+  // allMedia.map((c) => {
+  //   const src = (c.media_path ?? "") + (c.message ?? "");
+  //   const isVideo = c.message_type === "video";
+  //   // fallback in case metadata fails
+  //   const width = c?.width || 720;
+  //   const height = c?.height || 1280;
+
+  //   if (isVideo) {
+  //     return {
+  //       id: c.chat_id,
+  //       isVideo: true,
+  //       src,
+  //       size: `${width}-${height}`,
+  //       thumb: null,
+  //       poster: null,
+  //       video: JSON.stringify({
+  //         source: [{ src, type: "video/mp4" }],
+  //         attributes: {
+  //           controls: true,
+  //           preload: "metadata"
+  //         }
+  //       })
+  //     };
+  //   }
+  //   return {
+  //     id: c.chat_id,
+  //     isVideo: false,
+  //     src,
+  //     thumb: src,
+  //     poster: null,
+  //     size: `${width}-${height}`,
+  //     video: null
+  //   };
+  // })
 }
 
 
 function openPreview(chat: any) {
-  buildGalleryItems()
-
-  const index = galleryItems.value.findIndex(
-    (i) => i.id === chat.chat_id
-  );
-
   nextTick(() => {
-    if (lgInstance) {
-      lgInstance.refresh();
-      lgInstance.openGallery(index);
-    }
-  });
+    buildGalleryItems()
+    const index = galleryItems.value.findIndex(
+      (i) => i.chat_id === chat.chat_id
+    );
+    console.log("index...",index)
+    selectedMediaIndex.value = index
+      videoModalSub.show();
+  })
 }
 
 function applyFilters(filters?: { unread: boolean; friends: boolean; attachments: boolean; photoVerified: boolean }) {
@@ -777,6 +794,12 @@ onMounted(async () => {
   chatMediaModal = new ($bootstrap as any).Modal(document.getElementById('chatMediaModal'));
   chatMediaModal._element.addEventListener('hidden.bs.modal', () => {
 
+  })
+
+   videoModalSub = new ($bootstrap as any).Modal(document.getElementById('videoModal'));
+
+  videoModalSub._element.addEventListener('hidden.bs.modal', () => {
+     galleryItems.value = []
   })
   // client-only: ensure LightGallery loads only on client
   // if (process.client) {
@@ -1403,5 +1426,47 @@ async function deleteSelected() {
   z-index: 50;
   padding: 0.5rem;
   background: rgba(15, 15, 15, 0.6);
+}
+
+.msgf-pill {
+  font-size: 14px;
+  line-height: 1;
+  height: 20px;
+  width: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: auto;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  background: transparent;
+  /* optional */
+}
+
+.modal-header {
+  min-height: 0 !important;
+  max-height: 20px;
+  border-bottom: none !important;
+}
+
+
+.modal-dialog {
+  height: 100%;
+  max-height: 100%;
+  margin: 0 auto;
+}
+
+@supports (-webkit-touch-callout: none) {
+  .modal-dialog {
+    height: 100dvh;
+  }
+}
+
+.modal-content {
+  height: auto;
+  max-height: 100vh;
+  overflow: hidden;
+  /* disables internal scroll */
 }
 </style>

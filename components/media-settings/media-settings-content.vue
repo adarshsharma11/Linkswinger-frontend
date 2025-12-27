@@ -419,9 +419,6 @@ onMounted(async () => {
       isModalOpen.value = false
     }
   })
-
-
-
 })
 
 

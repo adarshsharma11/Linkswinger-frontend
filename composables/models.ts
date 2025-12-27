@@ -703,6 +703,7 @@ export namespace ChatsModel {
     url?: string;
     key?: string;
     unread_user_count?: number
+    is_attached?:boolean
 
   }
 
