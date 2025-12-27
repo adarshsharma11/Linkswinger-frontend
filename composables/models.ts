@@ -617,6 +617,8 @@ is_attached?: boolean
 is_local?: boolean
 width?:number
 height?:number
+contentType?:string
+fileBlob?:Blob
 
   }
 

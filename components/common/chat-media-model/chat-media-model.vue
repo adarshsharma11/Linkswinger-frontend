@@ -20,7 +20,8 @@
               :class="{ active: selectedMedia?.feed_id === media.feed_id }">
               <div class="lsv-media-image">
                 <img v-if="media.is_local && media.media_type === 'image'" :src="(media.media_path ?? '')" />
-                <video v-if="media.is_local && media.media_type === 'video'" :src="(media.media_path ?? '')" controls></video>
+                <video v-if="media.is_local && media.media_type === 'video'" :src="(media.media_path ?? '')"
+                  controls></video>
                 <img v-else-if="media.media_type === 'image'" :src="(media.media_path ?? '') + media.hd_feed_image" />
                 <img v-else-if="media.media_type === 'video'" :src="(media.media_path ?? '') + media.feed_thumbnail" />
               </div>
@@ -29,7 +30,8 @@
           <div class="meet-inline" style="margin-top: 10px;">
             <button class="meet-btn meet-small" id="addmediaBtn" type="button" @click="triggerFilePicker"> Add picture
             </button>
-            <input type="file" ref="fileInput" style="display:none" accept="image/png,image/jpeg,video/mp4" @change="handleFileSelect" />
+            <input type="file" ref="fileInput" style="display:none" accept="image/png,image/jpeg,video/mp4"
+              @change="handleFileSelect" />
           </div>
 
         </div>
@@ -47,7 +49,7 @@ import { FeedsModel } from '~/composables/models'
 const allFeeds = ref([] as FeedsModel.FeedsResponseModel[])
 const login_store = useLoginStore()
 
-const emits = defineEmits(['sendMedia'])
+const emit = defineEmits(['sendMedia'])
 const fetchFeeds = async () => {
   const api_url = getUrl(RequestURL.fetchFeeds);
   const { data: feed_response, error: option_error } = await useFetch<SuccessError<FeedsModel.FeedsResponseModel>>(api_url, {
@@ -73,12 +75,17 @@ const triggerFilePicker = () => {
 };
 
 function sendMedia() {
-  emits('sendMedia', selectedMedia)
+  
+  if (selectedMedia !== null) {
+   
+    emit('sendMedia', selectedMedia.value)
+  }
+
 }
 
 
 
-const handleFileSelect = (e: Event) => {
+const handleFileSelect = async (e: Event) => {
   const target = e.target as HTMLInputElement;
   const file = target.files?.[0];
   if (!file) return;
@@ -90,7 +97,7 @@ const handleFileSelect = (e: Event) => {
   }
   const url = URL.createObjectURL(file);
   if (file.type.startsWith("image/")) {
-
+    const profile_image = await file.arrayBuffer()
     const img = new Image();
     img.onload = async function () {
       let model = new FeedsModel.FeedsResponseModel()
@@ -100,6 +107,8 @@ const handleFileSelect = (e: Event) => {
       model.height = img.height
       model.feed_id = Date.now()
       model.media_type = 'image'
+      model.contentType = file.type
+      model.fileBlob = new Blob([profile_image])
       allFeeds.value.unshift(model)
       selectedMedia.value = model;
     }
@@ -109,6 +118,7 @@ const handleFileSelect = (e: Event) => {
   else {
     const video = document.createElement('video');
     video.preload = 'metadata';
+    const video_file = await file.arrayBuffer()
     video.onloadedmetadata = async function () {
       if (video.duration > 180) {
         showToastError("Please upload video less than 3 minutes long.");
@@ -121,6 +131,8 @@ const handleFileSelect = (e: Event) => {
         model.height = video.videoHeight
         model.feed_id = Date.now()
         model.media_type = 'video'
+        model.contentType = file.type
+        model.fileBlob = new Blob([video_file])
         allFeeds.value.unshift(model)
         selectedMedia.value = model;
       }

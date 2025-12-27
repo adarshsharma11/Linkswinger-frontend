@@ -145,9 +145,11 @@
                 <span style="color: white;" v-if="selectMode">DeSelect</span>
               </button>
               <button class="btn btn-sm btn-dark border-secondary" @click="showCodeAlert(false)">
-                <img src="/images/badges/animated/50X50px/call.gif" alt="voice call" class="chat-btn-icon"/> Voice</button>
+                <img src="/images/badges/animated/50X50px/call.gif" alt="voice call" class="chat-btn-icon" />
+                Voice</button>
               <button class="btn btn-sm btn-dark border-secondary" @click="showCodeAlert(true)">
-                 <img src="/images/badges/animated/50X50px/video.gif" alt="video call" class="chat-btn-icon"/>Video</button>
+                <img src="/images/badges/animated/50X50px/video.gif" alt="video call"
+                  class="chat-btn-icon" />Video</button>
               <span class="btn-loader" v-if="is_code_loading"></span>
               <button class="btn btn-sm btn-danger glow-red-strong text-white"
                 v-if="!is_code_loading && call_code.length === 0" @click="fetchCallCode()">Show my call code</button>
@@ -216,11 +218,11 @@
               </div>
               <div class="message-time" v-if="chat.from_id !== login_store.getUserDetails?.user_id">{{
                 formatRelativeDate(chat.created_at)
-                }}
+              }}
               </div>
               <div class="message-time" v-if="chat.from_id === login_store.getUserDetails?.user_id">{{
                 formatRelativeDate(chat.created_at)
-                }}
+              }}
                 • {{ chat.status }}</div>
 
               <div v-if="selectMode && (chat.is_deleting ?? false) === false && (chat.is_deleted ?? false) === false"
@@ -305,12 +307,12 @@
     v-on:select-custom-emoji="selectCustomEmoji" @closed-emoji-picker="showPicker = false" />
 
 
-  <CommonChatMediaModel id="chatMediaModal"></CommonChatMediaModel>
+  <CommonChatMediaModel id="chatMediaModal" @send-media="sendMedia"></CommonChatMediaModel>
 </template>
 
 <script setup lang="ts">
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { ChatsModel, UsersModel } from '~/composables/models'
+import { ChatsModel, FeedsModel, UsersModel } from '~/composables/models'
 import Swal from 'sweetalert2'
 import FilterModal from './filter-modal.vue'
 import type { CallsModel } from '~/composables/websocketModels'// optional fallback component if you want
@@ -369,7 +371,7 @@ const friendsOnly = ref(false)
 const withAttachments = ref(false)
 const photoVerifiedOnly = ref(false)
 const showPicker = ref(false)
-const is_mounted = ref(false)
+const is_mounted = ref(true)
 function onGalleryInit(detail: any) {
   lgInstance = detail.instance;
 }
@@ -866,9 +868,10 @@ onMounted(async () => {
     nextTick(() => { if (scrollContainer.value) scrollContainer.value.scrollTop = scrollContainer.value.scrollHeight; })
   })
 
-  nextTick(() => { 
-          is_mounted.value = true
-           scrollBottomSmooth() });
+  nextTick(() => {
+    is_mounted.value = true
+    scrollBottomSmooth()
+  });
 
   checkuseronline()
   const tid = Number(route.params.id) ?? 0
@@ -1166,6 +1169,36 @@ async function handleFileUpload(event: Event) {
     }
   }
   target.value = ''
+}
+function sendMedia(item: FeedsModel.FeedsResponseModel) {
+  let is_local = item.is_local ?? false
+  if (is_local) {
+
+    previewUrl.value = item.media_path ?? ''
+    contentType.value = item.contentType ?? ''
+    fileWidth.value = item.width ?? 0
+    fileHeight.value = item.height ?? 0
+    if (item.fileBlob) {
+      previewUrlFile.value = item.fileBlob
+    }
+    uploadMedia()
+    chatMediaModal.hide()
+  }
+  else {
+    const to_id2 = Number(route.params.id ?? '0') ?? 0
+    const eventmodel = new ChatEventSocketModel()
+    eventmodel.event_name = 'chat'
+    eventmodel.from_id = login_store.getUserDetails?.user_id ?? 0
+    eventmodel.to_id = to_id2
+    eventmodel.message_type = item.media_type
+    eventmodel.message = item.media_type === 'image' ? item.hd_feed_image : item.hd_feed_video
+    eventmodel.socket_id = id_store.getDeviceId
+    eventmodel.width = 0
+    eventmodel.height = 0
+    sendmsgtoworker(eventmodel, true)
+    chatMediaModal.hide()
+  }
+
 }
 async function uploadMedia() {
   if (previewUrl.value === null) { showToastError('Please select media to upload.'); return; }
