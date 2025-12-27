@@ -1,5 +1,6 @@
 <template>
    <Membership />
+     <!-- <SiteSupporter/> -->
 </template>
 <script setup lang="ts">
 const user_store = userStore();
