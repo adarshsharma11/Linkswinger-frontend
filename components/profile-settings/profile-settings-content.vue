@@ -454,7 +454,7 @@ const fetchBlockers = async () => {
         "content-type": "application/json"
       }
     });
-    return fetch_response.value?.result
+    return fetch_response.value?.result ?? []
   }
   catch {
     return []
