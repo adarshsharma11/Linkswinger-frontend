@@ -66,6 +66,7 @@ export class ChatEventSocketModel implements SocketEventModel {
   media_path?: string;
   socket_id?: string;
   status?:string
+  role?:string
 }
 
 export class GroupEventSocketModel implements SocketEventModel {

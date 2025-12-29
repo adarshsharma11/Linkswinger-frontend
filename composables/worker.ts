@@ -30,6 +30,7 @@ type Events = {
   serverTime: Date,
   socketConnection: boolean,
   chatEvent: ChatEventSocketModel,
+  adminChatEvent: ChatEventSocketModel,
   chatUpdateStatus: ChatEventSocketModel,
   chatDeleteStatus: ChatEventSocketModel,
   onlineUserIds: GroupEventSocketModel,
@@ -273,9 +274,21 @@ async function handleworkerevent(event: MessageEvent<any>) {
     let chatmodel = event.data as ChatEventSocketModel
     emitter.emit('chatEvent', chatmodel)
   }
+   else if (json.event_name === "admin_chat") {
+    let onlinemodel = event.data as WorkerModel
+    sendtosocket(onlinemodel)
+  }
   else if (json.event_name === "chat_response") {
     let chatmodel = event.data as ChatEventSocketModel
     emitter.emit('chatEvent', chatmodel)
+  }
+    else if (json.event_name === "admin_chat_sent") {
+    let chatmodel = event.data as ChatEventSocketModel
+    emitter.emit('adminChatEvent', chatmodel)
+  }
+  else if (json.event_name === "admin_chat_response") {
+    let chatmodel = event.data as ChatEventSocketModel
+    emitter.emit('adminChatEvent', chatmodel)
   }
   else if (json.event_name === "add_user_to_group") {
     let onlinemodel = event.data as GroupEventSocketModel
@@ -300,6 +313,10 @@ async function handleworkerevent(event: MessageEvent<any>) {
     emitter.emit('chatUpdateStatus', json)
   }
   else if (json.event_name === "chat_read_status") {
+    let json = event.data as ChatEventSocketModel
+    sendtosocket(json)
+  }
+  else if (json.event_name === "admin_chat_read_status") {
     let json = event.data as ChatEventSocketModel
     sendtosocket(json)
   }

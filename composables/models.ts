@@ -87,7 +87,8 @@ export enum RequestURL {
   meetupdateLikeStatus = "/meet/updateLikeStatus",
   homeDashboard = "/home/dashboard",
   addReport = "/addReport",
-  removeBannedWarning = "/removeBannedWarning"
+  removeBannedWarning = "/removeBannedWarning",
+  fetchAdminChat = "/fetchAdminChat"
 }
 
 
@@ -704,6 +705,8 @@ export namespace ChatsModel {
     key?: string;
     unread_user_count?: number
     is_attached?:boolean
+
+    role?:string
 
   }
 
