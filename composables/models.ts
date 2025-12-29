@@ -89,7 +89,8 @@ export enum RequestURL {
   homeDashboard = "/home/dashboard",
   addReport = "/addReport",
   removeBannedWarning = "/removeBannedWarning",
-  fetchAdminChat = "/fetchAdminChat"
+  fetchAdminChat = "/fetchAdminChat",
+  fetchBlockList = "/fetchBlockList"
 
 }
 
@@ -477,7 +478,7 @@ export namespace UsersModel {
     is_blocked?:boolean
     banned_reason?:string
     has_warning?:boolean
-  
+  is_loading?:boolean
   }
 
   export class FetchMembershipRequestModel {
