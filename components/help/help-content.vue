@@ -117,9 +117,9 @@
     </div>
 
     <!-- Body -->
-    <div class="chat-body">
+    <div class="chat-body" ref="scrollContainer">
       <div class="bubble" :class="{ 'left': chat.role === 'admin', 'right': chat.role === 'user' }"
-        v-for="chat in chatModels">
+        v-for="chat in chatModels" :id="`${chat.chat_id ?? 0}`">
         {{ chat.message }}
       </div>
     </div>
@@ -355,10 +355,11 @@ const sections = [
       }
     ],
     cta: 'Message admin',
-    hint: 'When you click <strong>Message admin</strong>, a pop-up window will appear where you can choose a subject and type your message to the admin team.',
+    hint: 'When you click <strong>Message admin</strong>, a pop-up window will appear where you can type your message to the admin team.',
     showForm: true
   }
 ]
+const scrollContainer = ref<HTMLElement | null>(null);
 const eventBus = useMittEmitter()
 const activeSection = ref('section1')
 const showContent = ref(false)
@@ -416,38 +417,42 @@ function sendMessage() {
   sendmsgtoworker(eventmodel, true)
 }
 
+
+
+const scrollToMessage = (messageId: number) => { nextTick(() => { const messageElement = document.getElementById(`${messageId}`); if (messageElement) messageElement.scrollIntoView({ behavior: "smooth", block: "center" }); }) };
+
 async function fetchadminChat() {
-  if (isFetched.value)
-  {
-     return;
+  if (isFetched.value) {
+    return;
   }
   isFetched.value = true
-    const api_url = getUrl(RequestURL.fetchAdminChat);
-    await $fetch<SuccessError<ChatsModel.ChatResponseModel>>(api_url, {
-      cache: "no-cache",
-      method: "post",
-      body: {
-        "from_id": user_store.getLoginId,
-        "viewerRole" : "user",
-        "to_id": 1,
-        "page": 0
-      },
-      headers: { "content-type": "application/json" },
-      onResponse: async ({ response }) => {
-        console.log(response)
-        const response_model = response._data as SuccessError<ChatsModel.ChatResponseModel>
-        if (response_model.success) {
-          const filterarray = response_model.result?.sort((a, b) => (a.chat_id ?? 0) - (b.chat_id ?? 0));
-          const lastMessage = (filterarray ?? []).at(-1);
-          chatModels.value.push(...filterarray ?? [])
-          chatModels.value.sort((a, b) => (a.chat_id ?? 0) - (b.chat_id ?? 0));
-        } else {
-        }
+  const api_url = getUrl(RequestURL.fetchAdminChat);
+  await $fetch<SuccessError<ChatsModel.ChatResponseModel>>(api_url, {
+    cache: "no-cache",
+    method: "post",
+    body: {
+      "from_id": user_store.getLoginId,
+      "viewerRole": "user",
+      "to_id": 1,
+      "page": 0
+    },
+    headers: { "content-type": "application/json" },
+    onResponse: async ({ response }) => {
+      console.log(response)
+      const response_model = response._data as SuccessError<ChatsModel.ChatResponseModel>
+      if (response_model.success) {
+        const filterarray = response_model.result?.sort((a, b) => (a.chat_id ?? 0) - (b.chat_id ?? 0));
+        const lastMessage = (filterarray ?? []).at(-1);
+        chatModels.value.push(...filterarray ?? [])
+        chatModels.value.sort((a, b) => (a.chat_id ?? 0) - (b.chat_id ?? 0));
+         scrollToMessage(lastMessage?.chat_id ?? 0)
+      } else {
       }
-    });
-  
-}
+    }
+  });
 
+}
+      
 // responsive detection
 
 onMounted(() => {
@@ -496,8 +501,7 @@ onMounted(() => {
         sendmsgtoworker(chatresponse2, true)
       }
     }
-
-
+        nextTick(() => { if (scrollContainer.value) scrollContainer.value.scrollTop = scrollContainer.value.scrollHeight; })
   })
 
 })
@@ -519,17 +523,20 @@ onBeforeUnmount(() => {
   position: fixed;
   right: 20px;
   bottom: 0;
-  width: 300px;
+
+  width: 320px;
   height: 420px;
+
   background: #fff;
   border-radius: 12px 12px 0 0;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
 
-  transform: translateY(360px);
-  transition: transform 0.3s ease;
   display: flex;
   flex-direction: column;
+  /* 🔑 IMPORTANT */
   overflow: hidden;
+  transform: translateY(360px);
+  transition: transform 0.3s ease;
 }
 
 .chat-wrapper.open {
@@ -543,12 +550,18 @@ onBeforeUnmount(() => {
   font-weight: 600;
   cursor: pointer;
   text-align: center;
+  flex-shrink: 0;
 }
+
 
 .chat-body {
   flex: 1;
+  /* 🔑 takes remaining height */
+  overflow-y: auto;
+  /* 🔑 scrolling here */
   padding: 12px;
   background: #f5f5f5;
+
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -565,17 +578,22 @@ onBeforeUnmount(() => {
   align-self: flex-start;
   background-color: rgba(32, 32, 32, 0.8);
   border: 1px solid #3a3a3a;
+  color: white;
 }
 
 .bubble.right {
   background: #FF0000;
   color: #fff;
   align-self: flex-end;
+  color: white;
 }
 
 .chat-input {
+  flex-shrink: 0;
+  /* 🔑 never shrink */
   display: flex;
   align-items: center;
+
   padding: 10px;
   border-top: 1px solid #ddd;
   background: #fff;
@@ -600,6 +618,4 @@ onBeforeUnmount(() => {
   padding: 0;
   line-height: 1;
 }
-
-
 </style>
