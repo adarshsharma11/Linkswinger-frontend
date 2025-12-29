@@ -85,10 +85,12 @@ export enum RequestURL {
   fetchMeetComments = "/meet/fetchComment",
   meetupdateCommentStatus = "/meet/updateCommentStatus",
   meetupdateLikeStatus = "/meet/updateLikeStatus",
+  deleteMeetEvent = "/meet/deleteEvent",
   homeDashboard = "/home/dashboard",
   addReport = "/addReport",
   removeBannedWarning = "/removeBannedWarning",
   fetchAdminChat = "/fetchAdminChat"
+
 }
 
 

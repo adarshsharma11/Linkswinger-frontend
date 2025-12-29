@@ -266,8 +266,9 @@
 
               <div class="meet-section">
               <div class="meet-inline mb-2">
-                    <button class="meet-btn meet-small"
-                    >Delete</button>
+                 <span class="btn-loader" v-if="is_delete_loading"
+                    style="width: 20px; height: 20px; max-width: 20px; max-height: 40px;"></span>
+                    <button class="meet-btn meet-small" @click="deleteEvent()" v-if="!is_delete_loading">Delete</button>
               </div>
                 <div class="meet-inline">
                   <span class="btn-loader" v-if="is_like_loading"
@@ -604,6 +605,7 @@ const is_town_post_loading = ref(false)
 const comments = ref([] as FeedsModel.FetchFeedCommentResponseModel[])
 const is_comment_loading = ref(false);
 const is_like_loading = ref(false);
+const is_delete_loading = ref(false);
 const is_add_comment_loading = ref(false);
 const emojiPickerRef = ref<EmojiPicker | null>(null)
 var addEventSub: any = null
@@ -1078,6 +1080,36 @@ function handleToggle() {
       emojiPickerRef.value.toggleEmojiPicker()
     }
   })
+}
+
+
+async function deleteEvent() 
+{
+  if (is_delete_loading.value)
+{
+  return;
+}
+  is_delete_loading.value = true
+let meet_event_id = selectedEvent.value?.meet_event_id
+ let postData = {
+    meet_event_id: meet_event_id,
+  }
+ let api_url = getUrl(RequestURL.deleteMeetEvent);
+let response = await $fetch<SuccessError<FeedsModel.FeedLikeDisLikeResponseModel>>(api_url, {
+    method: 'POST',
+    body: postData,
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  });
+    is_delete_loading.value = false
+    if (response.success) {
+ allMeetEvents.value.splice(allMeetEvents.value.findIndex(u => u.meet_event_id === meet_event_id), 1);
+  detailEventModal.hide()
+    }
+      else {
+    showToastError(response.message)
+  }
 }
 
 async function addLikeDisLike() {
