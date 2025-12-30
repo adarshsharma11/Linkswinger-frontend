@@ -175,7 +175,7 @@
               {{ getUser()?.town ?? '' }}</h3>
             <span class="badge bg-success fs-6">Active</span>
             <p class="mb-0 mt-2 text-white text-break">{{ getUser()?.profile_status }} <i
-                v-if="isMine() && !is_status_loading" class="fa fa-pencil text-white fa-lg"
+                v-if="isMine() && !is_status_loading" class="fa fa-pencil text-white fa-lg cursor-pointer"
                 @click="editStatus()"></i><span class="btn-loader" v-if="is_status_loading"></span></p>
 
           </div>

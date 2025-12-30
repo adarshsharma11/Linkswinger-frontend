@@ -421,7 +421,12 @@ button#btnSend {
   position:relative;
   z-index:1;
 }
-
+.emoji-modal .modal-dialog-centered {
+    align-items: flex-end;
+}
+.emj-body .emj-grid {
+    height: 215px;
+}
 .emj-item{
   border:1px solid rgba(255,255,255,.06);
   background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(0,0,0,.18));
@@ -590,6 +595,9 @@ button#btnSend {
 .chat-hd-btn button.btn span {
     font-weight: 400;
     font-size: 12px;
+}
+.emj-body .emj-grid {
+    height: 165px;
 }
 }
 
@@ -866,14 +874,4 @@ button#btnSend {
 
 .message-outgoing.emoji-bubble .message-time {
     text-align: right;
-}
-.chat-btn-icon {
-    width: 24px;
-    height: 24px;
-}
-@media only screen and (max-width: 767px) {
-    .chat-btn-icon {
-        width: 16px;
-        height: 16px;
-    }
 }
