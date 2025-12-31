@@ -3,8 +3,8 @@
     <!-- Top Red Strip -->
     <!-- <CommonPromotionStrip :text="promotion_text" /> -->
 
-    <div class="container text-center py-5 mt-4">
-      <div class="row justify-content-center landing-logo mt-4">
+    <div class="container text-center py-3">
+      <div class="row justify-content-center landing-logo">
         <CommonLogo :logo="'landing-logo.gif'" />
       </div>
 

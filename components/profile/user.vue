@@ -155,9 +155,9 @@
               <input type="file" v-if="!is_photo_uploading && isMine()" accept="image/png,image/jpeg" class="d-none"
                 ref="fileInput" @change="handleFileUpload" />
               <span class="btn-loader" v-if="is_photo_uploading"></span>
-              <span class="badge bg-theme-color fs-6 mt-2">{{ (getUser()?.tier_name ?? '').length === 0
+              <!-- <span class="badge bg-theme-color fs-6 mt-2">{{ (getUser()?.tier_name ?? '').length === 0
                 ? 'Free' :
-                (getUser()?.tier_name ?? '') }}</span>
+                (getUser()?.tier_name ?? '') }}</span> -->
             </div>
             <div class="col-12 col-md-3 d-flex justify-content-center justify-content-md-start d-none prf-verf-badge">
               <div class="d-flex gap-2 flex-wrap justify-content-center">
@@ -285,7 +285,7 @@
         </div>
 
         <!-- Second Row: Membership + Actions -->
-        <div class="row align-items-center mb-2 mt-2">
+        <div class="row align-items-center mb-2 mt-4">
           <!-- Left: Membership badges -->
           <div class="col-12 col-md-3 d-flex justify-content-center justify-content-md-start prf-verf-badge">
             <div class="d-flex gap-2 flex-wrap justify-content-center">

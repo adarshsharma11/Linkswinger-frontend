@@ -423,6 +423,15 @@ button#btnSend {
 }
 .emoji-modal .modal-dialog-centered {
     align-items: flex-end;
+    margin-left: auto;
+    margin-right: 0;
+    max-width: 100%;
+    padding: 0 10px;
+}
+.emoji-modal .modal-dialog-centered .emoji-small {
+    margin-left: auto;
+    margin-right: 0;
+    margin-bottom: 0;
 }
 .emj-body .emj-grid {
     height: 215px;
