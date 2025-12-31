@@ -42,7 +42,7 @@
                                 </div>
                             </div>
                             <div class="overlay-inner d-flex flex-wrap justify-content-between">
-                                <div class="overlay-left" v-if="props.fromFeeds === true">
+                                <div class="overlay-left" >
                                     <div class="vd-name">
                                         <div class="vd-img">
                                             <img
