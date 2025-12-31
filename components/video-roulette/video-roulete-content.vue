@@ -7,15 +7,29 @@
       <div class="vd-brand">LinkSwingers</div>
     </div>
     <div class="container-fluid py-4">
-      <section class="video-stage" aria-label="Video stage">
-        <div class="video-card self-video-card">
-          <!-- <span class="corner-tag">You</span> -->
-          <!-- <video id="local-video-track" muted class="placeholder"
+      <section class="video-stage" aria-label="Video stage" ref="stageRef">
+        <div class="video-card self-video-card" ref="pipRef" :class="{ pip: isMobile, minimised: isMobile && isMinimised }">
+            <div class="pipControls" v-if="isMobile">
+              <button class="pipBtn btnMin" @click.stop="minimisePip" v-show="!isMinimised">—</button>
+              <button class="pipBtn btnRestore" @click.stop="restorePip" v-show="isMinimised">▢</button>
+            </div>
+
+            <video
+              id="local-video-track"
+              class="w-100 h-100 object-cover bg-black"
+              autoplay
+              muted
+              playsinline
+            ></video>
+          </div>
+        <!-- <div class="video-card self-video-card">
+          <span class="corner-tag">You</span>
+          <video id="local-video-track" muted class="placeholder"
             style="background: repeating-conic-gradient(rgb(10, 10, 10) 0%, rgb(10, 10, 10) 25%, rgb(16, 16, 23) 0%, rgb(16, 16, 23) 50%) 50% center / 20px 20px; display: grid; place-items: center; color: rgb(154, 163, 175);">
             <p style="padding:16px; text-align:center;">Camera unavailable. Allow access to preview yourself here.</p>
-          </video> -->
+          </video>
           <video id="local-video-track" class="w-100 h-100 object-cover bg-black" autoplay playsinline muted></video>
-        </div>
+        </div> -->
 
         <div class="video-card">
           <!-- <span class="corner-tag">Partner {{ connectStatus }}</span> -->
@@ -103,6 +117,10 @@ const isPremissionAccepted = ref(false);
 const id_store = idStore();
 const login_store = useLoginStore()
 const call_store = ref<RouletteWorkerModel | null>(null)
+const pipRef = ref<HTMLElement | null>(null)
+const stageRef = ref<HTMLElement | null>(null)
+const isMinimised = ref(false)
+const isMobile = ref(false)
 var updatecount = 0
 
 const route = useRoute()
@@ -113,6 +131,76 @@ const isRadiusLoading = ref(false)
 const isGenderLoading = ref(false)
 const genderSelect = ref("any");
 const radiusSelect = ref(3000);
+let dragging = false
+let startX = 0
+let startY = 0
+let startLeft = 0
+let startTop = 0
+const pipX = ref(0)
+const pipY = ref(0)
+const bounds = ref({ maxLeft: 0, maxTop: 0 })
+let rafId: number | null = null
+
+const clamp = (v: number, min: number, max: number) =>
+  Math.max(min, Math.min(max, v))
+
+function onPointerDown(e: PointerEvent) {
+  if (!isMobile.value) return
+  if (e.pointerType !== 'touch') return
+  if ((e.target as HTMLElement)?.closest('button')) return
+
+  dragging = true
+  pipRef.value?.setPointerCapture(e.pointerId)
+
+  startX = e.clientX
+  startY = e.clientY
+  startLeft = pipX.value
+  startTop = pipY.value
+
+  e.preventDefault()
+}
+
+
+function onPointerMove(e: PointerEvent) {
+  if (!dragging || !isMobile.value) return
+
+  const dx = e.clientX - startX
+  const dy = e.clientY - startY
+
+  pipX.value = clamp(startLeft + dx, 0, bounds.value.maxLeft)
+  pipY.value = clamp(startTop + dy, 0, bounds.value.maxTop)
+
+  if (rafId !== null) return
+
+  rafId = requestAnimationFrame(() => {
+    pipRef.value!.style.transform =
+      `translate3d(${pipX.value}px, ${pipY.value}px, 0)`
+    rafId = null
+  })
+}
+
+
+
+function onPointerUp() {
+  dragging = false
+  if (rafId !== null) {
+    cancelAnimationFrame(rafId)
+    rafId = null
+  }
+  pipRef.value?.classList.remove('dragging')
+}
+
+function minimisePip() {
+  if (!isMobile.value || !pipRef.value) return
+  isMinimised.value = true
+}
+
+function restorePip() {
+  if (!isMobile.value || !pipRef.value) return
+  isMinimised.value = false
+}
+
+
 
 const formattedTime = computed(() => {
   const hours = Math.floor(timeStart.value / 3600).toString().padStart(2, '0');
@@ -157,6 +245,9 @@ onMounted(async () => {
     isRadiusLoading.value = false;
     isGenderLoading.value = false;
   })
+  isMobile.value =
+    window.matchMedia('(pointer: coarse)').matches ||
+    window.innerWidth <= 767
 
 
   eventBus.on('serverTime', (serverTime: Date) => {
@@ -293,6 +384,41 @@ onMounted(async () => {
     isPremissionAccepted.value = true;
     // showalert('Unable to get permission of microphone or camera', false, 5000)
   }
+  if (isMobile.value && pipRef.value && stageRef.value) {
+  const pip = pipRef.value
+  const stage = stageRef.value
+
+  const r = stage.getBoundingClientRect()
+  const p = pip.getBoundingClientRect()
+
+  const left = p.left - r.left
+  const top = p.top - r.top
+
+  // 🔑 CRITICAL: reset anchors
+  pip.style.left = '0px'
+  pip.style.top = '0px'
+  pip.style.transform = `translate(${left}px, ${top}px)`
+}
+if (isMobile.value && pipRef.value && stageRef.value) {
+  const stage = stageRef.value.getBoundingClientRect()
+  const pip = pipRef.value.getBoundingClientRect()
+
+  bounds.value = {
+    maxLeft: stage.width - pip.width,
+    maxTop: stage.height - pip.height,
+  }
+}
+  if (!isMobile.value) return
+
+  const pip = pipRef.value
+  if (!pip) return
+
+  pip.style.touchAction = 'none'
+
+  pip.addEventListener('pointerdown', onPointerDown)
+  pip.addEventListener('pointermove', onPointerMove)
+  pip.addEventListener('pointerup', onPointerUp)
+  pip.addEventListener('pointercancel', onPointerUp)
 
 })
 
