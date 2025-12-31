@@ -157,9 +157,13 @@ function onPointerDown(e: PointerEvent) {
   startLeft = pipX.value
   startTop = pipY.value
 
+  // Remove transition during drag for smooth movement
+  if (pipRef.value) {
+    pipRef.value.style.transition = 'none'
+  }
+
   e.preventDefault()
 }
-
 
 function onPointerMove(e: PointerEvent) {
   if (!dragging || !isMobile.value) return
@@ -170,16 +174,11 @@ function onPointerMove(e: PointerEvent) {
   pipX.value = clamp(startLeft + dx, 0, bounds.value.maxLeft)
   pipY.value = clamp(startTop + dy, 0, bounds.value.maxTop)
 
-  if (rafId !== null) return
-
-  rafId = requestAnimationFrame(() => {
-    pipRef.value!.style.transform =
-      `translate3d(${pipX.value}px, ${pipY.value}px, 0)`
-    rafId = null
-  })
+  // Use transform instead of translate3d for better performance and to match HTML
+  if (pipRef.value) {
+    pipRef.value.style.transform = `translate(${pipX.value}px, ${pipY.value}px)`
+  }
 }
-
-
 
 function onPointerUp() {
   dragging = false
@@ -187,6 +186,33 @@ function onPointerUp() {
     cancelAnimationFrame(rafId)
     rafId = null
   }
+
+  // Add snap-to-corner functionality like the HTML reference
+  if (pipRef.value && stageRef.value) {
+    const stageRect = stageRef.value.getBoundingClientRect()
+    const pipRect = pipRef.value.getBoundingClientRect()
+    const pad = 16
+    
+    const centerX = pipX.value + pipRect.width / 2
+    const centerY = pipY.value + pipRect.height / 2
+    
+    // Snap to nearest corner
+    let snapLeft = centerX < stageRect.width / 2 ? pad : (stageRect.width - pipRect.width - pad)
+    let snapTop = centerY < stageRect.height / 2 ? pad : (stageRect.height - pipRect.height - pad)
+    
+    // Clamp to bounds
+    snapLeft = clamp(snapLeft, 0, bounds.value.maxLeft)
+    snapTop = clamp(snapTop, 0, bounds.value.maxTop)
+    
+    // Apply snap with smooth animation
+    pipRef.value.style.transition = 'transform 140ms ease-out'
+    pipRef.value.style.transform = `translate(${snapLeft}px, ${snapTop}px)`
+    
+    // Update the reactive values
+    pipX.value = snapLeft
+    pipY.value = snapTop
+  }
+  
   pipRef.value?.classList.remove('dragging')
 }
 
@@ -424,7 +450,7 @@ if (isMobile.value && pipRef.value && stageRef.value) {
 
 function onPageHide(event: any) {
   if (event.persisted) return;
-  const nav = performance.getEntriesByType("navigation")[0];
+  const nav = performance.getEntriesByType("navigation")[0] as PerformanceNavigationTiming;
   const isReload = nav && (nav.type === "reload" || nav.type === "navigate");
   if (isReload) {
     sendEndRoulleteBeacon()

@@ -155,98 +155,120 @@
 
     
 @media (max-width: 767px) {
-  /* Mobile PiP minimize styles - ENHANCED USER EXPERIENCE */
+  /* Mobile PiP styles - FIXED TO MATCH HTML REFERENCE */
+  /* CSS Variables matching HTML reference */
+  :root {
+    --pipW: 132px;
+    --pipH: 172px;
+    --pipMinW: 112px;
+    --pipMinH: 28px;
+    --pad: 16px;
+  }
+
   .pip {
-  position: absolute;
-  width: 132px;
-  height: 172px;
-  top: 16px;
-  left: 16px;
-  border-radius: 18px;
-  overflow: hidden;
-  cursor: grab;
-  touch-action: none;
-  user-select: none;
-  z-index: 10;
-  box-shadow:
+    position: absolute;
+    left: var(--pad);
+    top: var(--pad);
+    width: var(--pipW);
+    height: var(--pipH);
+    border-radius: 18px;
+    overflow: hidden;
+    background: #0b0b0f;
+    box-shadow:
       0 10px 26px rgba(0,0,0,0.55),
       0 0 0 2px rgba(255, 70, 70, 0.40),
       0 0 18px rgba(255, 20, 20, 0.25);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* Smooth transitions */
-}
-
-.pip:active {
-    cursor: grabbing;
+    
+    /* Mobile drag - EXACT MATCH to HTML */
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+    cursor: grab;
+    transform: translate(0px, 0px);
+    
+    /* Reset positioning for transform-based dragging */
+    right: auto !important;
+    bottom: auto !important;
+    
+    /* Smooth transitions */
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    
+    &:active {
+      cursor: grabbing;
+    }
+    
+    &::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      box-shadow:
+        inset 0 0 0 1px rgba(255, 120, 0, 0.25),
+        inset 0 -18px 30px rgba(0,0,0,0.35);
+    }
   }
 
-.pip::after {
-    content: "";
+  /* Minimized state - EXACT MATCH to HTML */
+  .pip.minimised {
+    width: var(--pipMinW);
+    height: var(--pipMinH);
+    border-radius: 999px;
+    overflow: hidden;
+    
+    video {
+      display: none;
+    }
+    
+    &::after {
+      box-shadow:
+        inset 0 0 0 1px rgba(255, 120, 0, 0.35);
+    }
+    
+    /* Hide elements when minimized */
+    .pipHandleBar { display: none; }
+    .pipBtn.btnMin { display: none; }
+    .pipBtn.btnRestore { display: grid; }
+  }
+
+  /* Handle bar - EXACT MATCH to HTML */
+  .pipHandleBar {
     position: absolute;
-    inset: 0;
+    left: 10px;
+    right: 10px;
+    top: 8px;
+    height: 6px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, rgba(255,26,26,0.0), rgba(255,26,26,0.55), rgba(255,106,0,0.55), rgba(255,26,26,0.0));
+    opacity: 0.85;
     pointer-events: none;
-    box-shadow:
-      inset 0 0 0 1px rgba(255,120,0,0.25),
-      inset 0 -18px 30px rgba(0,0,0,0.35);
+    filter: drop-shadow(0 0 10px rgba(255,20,20,0.35));
+    z-index: 2;
   }
 
-/* Enhanced minimize button hover effects */
-  .pip .pipBtn {
-    transition: all 0.2s ease;
-  }
-
-.pip .pipBtn:hover {
-    background: rgba(20,20,28,0.7);
-    border-color: rgba(255, 120, 120, 0.6);
-    transform: scale(1.05);
-  }
-
-.pip .pipBtn:active {
-    transform: scale(0.95);
-  }
-
-/* Minimized state with enhanced UX */
-.pip.minimised {
-  width: 112px;
-  height: 28px;
-  border-radius: 999px;
-  cursor: pointer; /* Change cursor to indicate clickability */
-}
-
-.pip.minimised:hover {
-    height: 28px; /* Slight expansion on hover */
-    box-shadow:
-      0 12px 28px rgba(0,0,0,0.65),
-      0 0 0 2px rgba(255, 90, 90, 0.50),
-      0 0 22px rgba(255, 30, 30, 0.35);
-  }
-
-.pip.minimised::after {
-    box-shadow:
-      inset 0 0 0 1px rgba(255,120,0,0.35);
-  }
-
-/* Hide elements when minimized */
-.pip.minimised .pipHandleBar { display: none; }
-.pip.minimised .pipBtn.btnMin { display: none; }
-.pip.minimised .pipBtn.btnRestore { display: grid; }
-
-/* Enhanced minimize line */
-.pip.minimised .pipMinLine {
-    display: block;
+  /* Minimize line - EXACT MATCH to HTML */
+  .pipMinLine {
     position: absolute;
     inset: 0;
+    display: none;
     background: linear-gradient(90deg, rgba(255,26,26,0.35), rgba(255,106,0,0.5), rgba(255,26,26,0.35));
     filter: drop-shadow(0 0 10px rgba(255,20,20,0.35));
-    border-radius: 999px;
-    transition: all 0.2s ease;
   }
 
-.pip.minimised:hover .pipMinLine {
-    background: linear-gradient(90deg, rgba(255,26,26,0.45), rgba(255,106,0,0.6), rgba(255,26,26,0.45));
+  .pip.minimised .pipMinLine {
+    display: block;
   }
 
-/* Enhanced minimize button styles */
-.pipBtn {
+  /* Controls - EXACT MATCH to HTML */
+  .pipControls {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    display: flex;
+    gap: 6px;
+    z-index: 3;
+  }
+
+  .pipBtn {
     width: 20px;
     height: 20px;
     border-radius: 5px;
@@ -261,48 +283,35 @@
     -webkit-tap-highlight-color: transparent;
     touch-action: manipulation;
     box-shadow: 0 0 14px rgba(255,20,20,0.16);
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
-    overflow: hidden;
-}
+    transition: all 0.2s ease;
+    
+    &:active {
+      transform: scale(0.98);
+    }
+    
+    &:hover {
+      background: rgba(20,20,28,0.7);
+      border-color: rgba(255, 120, 120, 0.6);
+    }
+  }
 
-.pipBtn:hover {
-    background: rgba(20,20,28,0.7);
-    border-color: rgba(255, 120, 120, 0.6);
-    transform: scale(1.05);
-    box-shadow: 0 0 20px rgba(255,20,20,0.25);
-}
+  .btnRestore {
+    display: none;
+  }
 
-.pipBtn:active {
-    transform: scale(0.95);
-    box-shadow: 0 0 8px rgba(255,20,20,0.1);
-}
-
-/* Ripple effect on click */
-.pipBtn::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 0;
-    height: 0;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.2);
-    transform: translate(-50%, -50%);
-    transition: width 0.3s, height 0.3s;
-}
-
-.pipBtn:active::before {
-    width: 40px;
-    height: 40px;
-}
-
-/* Ensure buttons stay visible during transitions */
-.pipBtn.btnMin,
-.pipBtn.btnRestore {
-    z-index: 2;
-    position: relative;
-}
+  /* Smaller on very small screens - EXACT MATCH to HTML */
+  @media (max-width: 360px) {
+    :root {
+      --pipW: 116px;
+      --pipH: 152px;
+    }
+    
+    .pipBtn {
+      width: 28px;
+      height: 28px;
+      border-radius: 9px;
+    }
+  }
 .pipControls {
     position: absolute;
     top: 2px;
