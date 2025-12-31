@@ -173,7 +173,9 @@
             <h3 class="mb-2 text-white fs-5 fs-md-4">{{ getUser()?.nick_name }},
               {{ getGender() }} {{ getAge(getUser()?.dob ?? '') }} from
               {{ getUser()?.town ?? '' }}</h3>
-            <span class="badge bg-success fs-6">Active</span>
+            <span class="badge bg-success fs-6" v-if="isMine()">Online</span>
+            <span class="badge bg-success fs-6" v-else-if="!isMine() && isUserOnline()">Online</span>
+             <span class="badge bg-success fs-6" v-else-if="!isMine() && !isUserOnline()">{{ getlastSeen() }}</span>
             <p class="mb-0 mt-2 text-white text-break">{{ getUser()?.profile_status }} <i
                 v-if="isMine() && !is_status_loading" class="fa fa-pencil text-white fa-lg cursor-pointer"
                 @click="editStatus()"></i><span class="btn-loader" v-if="is_status_loading"></span></p>
@@ -603,7 +605,9 @@ const friend_status = ref('');
 const is_friend_loading = ref(false);
 const is_block_loading = ref(false);
 const is_blocked = ref(false);
-
+const isWSConnected = ref(false)
+const onlineUsers = ref([] as number[])
+const lastSeens = ref([] as LastSeenModel[])
 if (isMine() === false) {
   const goBackOrRedirect = async () => {
     if (import.meta.client && window.history.length > 1) {
@@ -712,6 +716,10 @@ if (isMine() === false) {
     is_blocked.value = response.value?.response?.is_blocked ?? false
   };
   checkBlockStatus();
+
+
+
+
 }
 if (isMine() === true) {
   const fetchReadCount = async () => {
@@ -856,6 +864,33 @@ async function blockUser() {
 
 }
 
+function checkuseronline() {
+  if (isWSConnected.value && !isMine()) 
+  {
+    const user_ids = [getUser()?.user_id ?? 0]
+    const groupmodel = new GroupEventSocketModel()
+    groupmodel.admin_id = id_store.getDeviceId
+    groupmodel.event_name = "add_user_to_group"
+    groupmodel.user_ids = user_ids ?? []
+    groupmodel.socket_id = id_store.getDeviceId
+    sendmsgtoworker(groupmodel, true)
+  }
+}
+
+function isUserOnline(): boolean {
+  return onlineUsers.value.includes(getUser()?.user_id ?? 0)
+}
+
+function getlastSeen(): string 
+{
+  if (lastSeens.value.length > 0) {
+    const lastSeen = lastSeens.value.filter(ls => ls.user_id === (getUser()?.user_id ?? 0))
+    if (lastSeen.length > 0) {
+      return formatRelativeDate(lastSeen[0].last_active ?? '') ?? ''
+    }
+  }
+  return ''
+}
 
 onMounted(() => {
 
@@ -864,7 +899,18 @@ onMounted(() => {
   verificationModalSub = new ($bootstrap as any).Modal(document.getElementById('verificationModal'));
 
  
+  
 
+isWSConnected.value = isSocketConnected()
+checkuseronline()
+  eventBus.on('socketConnection', (is_connected) => {
+    isWSConnected.value = is_connected
+    checkuseronline()
+  })
+  eventBus.on('onlineUserIds', (group) => {
+    onlineUsers.value = group.user_ids ?? []
+    lastSeens.value = group.last_seens ?? []
+  })
   eventBus.on('callDeclineAlert', (eventModel) => {
     showToastError('Call declined')
   })
@@ -904,6 +950,9 @@ onMounted(() => {
 onBeforeUnmount(() => {
   eventBus.off('callDeclineAlert')
   eventBus.off('callAcceptAlert')
+  eventBus.off('socketConnection')
+  eventBus.off('onlineUserIds')
+  
 })
 
 
