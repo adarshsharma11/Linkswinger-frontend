@@ -1,64 +1,9 @@
 <template>
-    <!-- <div class="absolute" ref="emojiButtonRef">
-
-
-        <transition name="fade">
-            <div v-if="showEmojiPicker" ref="emojiPickerRef" class="fixed z-50 bg-white border rounded-lg shadow-lg"
-                :style="{
-                    position: 'absolute',
-                    top: pickerPosition.y + 'px',
-                    left: pickerPosition.x + 'px',
-                    width: pickerWidth + 'px',
-                    height: pickerHeight + 'px',
-                }">
-
-                <div class="cursor-move bg-gray-100 px-2 py-1 rounded-t-lg border-b flex justify-between items-center select-none"
-                    @mousedown="startDrag">
-                    <span class="text-sm text-gray-600">Drag me 😄</span>
-                    <button @click="showEmojiPicker = false" class="text-gray-400 hover:text-gray-700">&times;</button>
-                </div>
-
-                <div class="flex border-b">
-                    <button class="flex-1 py-2 text-sm"
-                        :class="activeTab === 'emoji' ? 'bg-white border-b-2 border-blue-500 font-semibold' : 'bg-gray-100'"
-                        @click="activeTab = 'emoji'">
-                        Emoji
-                    </button>
-
-                    <button class="flex-1 py-2 text-sm"
-                        :class="activeTab === 'stickers' ? 'bg-white border-b-2 border-blue-500 font-semibold' : 'bg-gray-100'"
-                        @click="activeTab = 'stickers'">
-                        Stickers
-                    </button>
-                </div>
-
-
-                <div class="p-2 overflow-auto block">
-               
-                    <div v-if="activeTab === 'emoji'">
-                        <NuxtEmojiPicker @select="onSelectEmoji" />
-                    </div>
-                    <div v-else-if="activeTab === 'stickers'" class="grid-container">
-                        <Lottie renderer="svg" class="grid-item" v-for="sticker in emojis" :link="(sticker.media_path ?? '') + sticker.emoji" :key="sticker.emoji_id"
-                            style="width: 80px; height: 80px;" @click="onSelectCustomEmoji(sticker.emoji ?? '')" ></Lottie>
-                    </div>
-                  
-
-                    
-       
-
-                </div>
-
-               
-        </transition>
-    </div> -->
-
-
-    <div class="modal fade emoji-modal" id="emojiPickerModel" tabindex="-1" role="dialog" aria-hidden="false">
-        <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable" role="document">
+    <div class="modal fade emoji-modal" id="emojiPickerModel" tabindex="-1" role="dialog" aria-hidden="false" >
+        <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable" role="document" ref="emojiPickerRef">
             <div class="modal-content text-white modal-inner emoji-small">
                 <!-- Header -->
-                <div class="emj-topbar" id="dragHandle" title="Drag me" style="cursor: grab;">
+                <div class="emj-topbar" id="dragHandle" title="Drag me" style="cursor: grab;" @mousedown="startDrag">
                     <div class="emj-brand">
                         <!-- ✅ your logo replaces the LS icon -->
                         <div class="emj-badge">
@@ -259,31 +204,37 @@ const onSelectCustomEmoji = (name: string) => {
     emit('selectCustomEmoji', name)
 }
 
-const startDrag = (e: any) => {
-    // if (!emojiPickerRef.value) return
-    // isDragging.value = true
-    // const rect = emojiPickerRef.value.getBoundingClientRect()
-    // dragOffset.value = {
-    //     x: e.clientX - rect.left,
-    //     y: e.clientY - (rect.top - 50),
-    // }
-    // document.addEventListener('mousemove', onDrag)
-    // document.addEventListener('mouseup', stopDrag)
+const startDrag = (e: MouseEvent) => {
+  if (!emojiPickerRef.value) return
+
+  isDragging.value = true
+
+  const rect = emojiPickerRef.value.getBoundingClientRect()
+
+  dragOffset.value = {
+    x: e.clientX - rect.left,
+    y: e.clientY - rect.top,
+  }
+
+  document.addEventListener('mousemove', onDrag)
+  document.addEventListener('mouseup', stopDrag)
 }
 
-// const onDrag = (e: any) => {
-//     if (!isDragging.value) return
-//     pickerPosition.value = {
-//         x: e.clientX - dragOffset.value.x,
-//         y: e.clientY - dragOffset.value.y,
-//     }
-// }
 
-// const stopDrag = () => {
-//     isDragging.value = false
-//     document.removeEventListener('mousemove', onDrag)
-//     document.removeEventListener('mouseup', stopDrag)
-// }
+const onDrag = (e: MouseEvent) => {
+  if (!isDragging.value || !emojiPickerRef.value) return
+
+  emojiPickerRef.value.style.transform = `translate(
+    ${e.clientX - dragOffset.value.x}px,
+    ${e.clientY - dragOffset.value.y}px
+  )`
+}
+
+const stopDrag = () => {
+    isDragging.value = false
+    document.removeEventListener('mousemove', onDrag)
+    document.removeEventListener('mouseup', stopDrag)
+}
 /**
  * 👉 Pick emoji
  */
@@ -347,9 +298,3 @@ onMounted(async () => {
 
 
 </script>
-
-<style scoped>
-
-
-
-</style>
