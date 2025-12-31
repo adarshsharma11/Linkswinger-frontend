@@ -171,8 +171,24 @@ function onPointerMove(e: PointerEvent) {
   const dx = e.clientX - startX
   const dy = e.clientY - startY
 
-  pipX.value = clamp(startLeft + dx, 0, bounds.value.maxLeft)
-  pipY.value = clamp(startTop + dy, 0, bounds.value.maxTop)
+  // Update bounds dynamically based on current element size
+  if (pipRef.value && stageRef.value) {
+    const stageRect = stageRef.value.getBoundingClientRect()
+    const pipRect = pipRef.value.getBoundingClientRect()
+    
+    // Calculate dynamic bounds based on current size
+    const dynamicBounds = {
+      maxLeft: stageRect.width - pipRect.width,
+      maxTop: stageRect.height - pipRect.height
+    }
+    
+    pipX.value = clamp(startLeft + dx, 0, dynamicBounds.maxLeft)
+    pipY.value = clamp(startTop + dy, 0, dynamicBounds.maxTop)
+  } else {
+    // Fallback to stored bounds
+    pipX.value = clamp(startLeft + dx, 0, bounds.value.maxLeft)
+    pipY.value = clamp(startTop + dy, 0, bounds.value.maxTop)
+  }
 
   // Use transform instead of translate3d for better performance and to match HTML
   if (pipRef.value) {
@@ -193,16 +209,22 @@ function onPointerUp() {
     const pipRect = pipRef.value.getBoundingClientRect()
     const pad = 16
     
+    // Calculate dynamic bounds for snap-to-corner
+    const dynamicBounds = {
+      maxLeft: stageRect.width - pipRect.width,
+      maxTop: stageRect.height - pipRect.height
+    }
+    
     const centerX = pipX.value + pipRect.width / 2
     const centerY = pipY.value + pipRect.height / 2
     
-    // Snap to nearest corner
-    let snapLeft = centerX < stageRect.width / 2 ? pad : (stageRect.width - pipRect.width - pad)
-    let snapTop = centerY < stageRect.height / 2 ? pad : (stageRect.height - pipRect.height - pad)
+    // Snap to nearest corner using dynamic bounds
+    let snapLeft = centerX < stageRect.width / 2 ? pad : (dynamicBounds.maxLeft - pad)
+    let snapTop = centerY < stageRect.height / 2 ? pad : (dynamicBounds.maxTop - pad)
     
-    // Clamp to bounds
-    snapLeft = clamp(snapLeft, 0, bounds.value.maxLeft)
-    snapTop = clamp(snapTop, 0, bounds.value.maxTop)
+    // Clamp to dynamic bounds
+    snapLeft = clamp(snapLeft, 0, dynamicBounds.maxLeft)
+    snapTop = clamp(snapTop, 0, dynamicBounds.maxTop)
     
     // Apply snap with smooth animation
     pipRef.value.style.transition = 'transform 140ms ease-out'
@@ -219,11 +241,107 @@ function onPointerUp() {
 function minimisePip() {
   if (!isMobile.value || !pipRef.value) return
   isMinimised.value = true
+  
+  // Use requestAnimationFrame like HTML reference to ensure proper bounds calculation
+  nextTick(() => {
+    if (pipRef.value && stageRef.value) {
+      // Get current position before minimize
+      const currentLeft = parseFloat(pipRef.value.dataset.left || "0")
+      const currentTop = parseFloat(pipRef.value.dataset.top || "0")
+      
+      // Get new bounds after minimize (smaller size)
+      const stageRect = stageRef.value.getBoundingClientRect()
+      const pipRect = pipRef.value.getBoundingClientRect()
+      
+      // Calculate dynamic bounds for minimized state
+      const dynamicBounds = {
+        minLeft: 0,
+        minTop: 0,
+        maxLeft: stageRect.width - pipRect.width,
+        maxTop: stageRect.height - pipRect.height
+      }
+      
+      // Clamp position within new bounds
+      const clampedLeft = clamp(currentLeft, dynamicBounds.minLeft, dynamicBounds.maxLeft)
+      const clampedTop = clamp(currentTop, dynamicBounds.minTop, dynamicBounds.maxTop)
+      
+      // Snap to nearest corner with smooth animation
+      const centerX = clampedLeft + pipRect.width / 2
+      const centerY = clampedTop + pipRect.height / 2
+      const pad = 16
+      
+      let snapLeft = centerX < stageRect.width / 2 ? pad : (dynamicBounds.maxLeft - pad)
+      let snapTop = centerY < stageRect.height / 2 ? pad : (dynamicBounds.maxTop - pad)
+      
+      snapLeft = clamp(snapLeft, dynamicBounds.minLeft, dynamicBounds.maxLeft)
+      snapTop = clamp(snapTop, dynamicBounds.minTop, dynamicBounds.maxTop)
+      
+      // Apply with smooth transition
+      if (pipRef.value) {
+        pipRef.value.style.transition = 'transform 140ms ease-out'
+        pipRef.value.style.transform = `translate(${snapLeft}px, ${snapTop}px)`
+        pipRef.value.dataset.left = String(snapLeft)
+        pipRef.value.dataset.top = String(snapTop)
+        
+        // Update reactive values
+        pipX.value = snapLeft
+        pipY.value = snapTop
+      }
+    }
+  })
 }
 
 function restorePip() {
   if (!isMobile.value || !pipRef.value) return
   isMinimised.value = false
+  
+  // Use requestAnimationFrame like HTML reference
+  nextTick(() => {
+    if (pipRef.value && stageRef.value) {
+      // Get current position before restore
+      const currentLeft = parseFloat(pipRef.value.dataset.left || "0")
+      const currentTop = parseFloat(pipRef.value.dataset.top || "0")
+      
+      // Get new bounds after restore (larger size)
+      const stageRect = stageRef.value.getBoundingClientRect()
+      const pipRect = pipRef.value.getBoundingClientRect()
+      
+      // Calculate dynamic bounds for restored state
+      const dynamicBounds = {
+        minLeft: 0,
+        minTop: 0,
+        maxLeft: stageRect.width - pipRect.width,
+        maxTop: stageRect.height - pipRect.height
+      }
+      
+      // Clamp position within new bounds
+      const clampedLeft = clamp(currentLeft, dynamicBounds.minLeft, dynamicBounds.maxLeft)
+      const clampedTop = clamp(currentTop, dynamicBounds.minTop, dynamicBounds.maxTop)
+      
+      // Snap to nearest corner with smooth animation
+      const centerX = clampedLeft + pipRect.width / 2
+      const centerY = clampedTop + pipRect.height / 2
+      const pad = 16
+      
+      let snapLeft = centerX < stageRect.width / 2 ? pad : (dynamicBounds.maxLeft - pad)
+      let snapTop = centerY < stageRect.height / 2 ? pad : (dynamicBounds.maxTop - pad)
+      
+      snapLeft = clamp(snapLeft, dynamicBounds.minLeft, dynamicBounds.maxLeft)
+      snapTop = clamp(snapTop, dynamicBounds.minTop, dynamicBounds.maxTop)
+      
+      // Apply with smooth transition
+      if (pipRef.value) {
+        pipRef.value.style.transition = 'transform 140ms ease-out'
+        pipRef.value.style.transform = `translate(${snapLeft}px, ${snapTop}px)`
+        pipRef.value.dataset.left = String(snapLeft)
+        pipRef.value.dataset.top = String(snapTop)
+        
+        // Update reactive values
+        pipX.value = snapLeft
+        pipY.value = snapTop
+      }
+    }
+  })
 }
 
 
