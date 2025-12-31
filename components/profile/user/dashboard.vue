@@ -358,7 +358,7 @@
         <a href="#userlist" data-route="userlist" class="nav-item" :class="{ active: activeNav === 'userlist' }"
           @click.prevent="setActiveNav('userlist')"><img src="/images/badges/animated/50X50px/user-list.gif" alt="User list"
             class="badge-icon" /></a>
-        <a href="#upload" id="mUpload" @click.prevent="fakeUpload" class="nav-item"><img
+        <a href="#upload" id="mUpload" @click.prevent="uploadMediaPopup()" class="nav-item" data-bs-toggle="modal" data-bs-target="#mediaUploadModal"><img
             src="/images/badges/animated/50X50px/upload-media.gif" alt="Post" class="badge-icon" /></a>
         <a href="#friends" data-route="friends" class="nav-item" :class="{ active: activeNav === 'friends' }"
           @click.prevent="setActiveNav('friends')"><img src="/images/badges/animated/50X50px/my-friends.gif"
@@ -590,6 +590,7 @@
       </div>
     </div>
   </div>
+  <ProfileMediaUploadModal/>
 </template>
 
 <script setup lang="ts">
@@ -755,8 +756,8 @@ function closeAdvanced() {
   showAdvancedSearch.value = false
 }
 
-function fakeUpload() {
-  alert('Open upload composer here (photo/video/event/post).')
+function uploadMediaPopup() {
+  
 }
 
 function checkMobile() {
