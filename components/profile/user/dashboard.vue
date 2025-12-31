@@ -361,7 +361,7 @@
         <a href="#upload" id="mUpload" @click.prevent="uploadMediaPopup()" class="nav-item" data-bs-toggle="modal" data-bs-target="#mediaUploadModal"><img
             src="/images/badges/animated/50X50px/upload-media.gif" alt="Post" class="badge-icon" /></a>
         <a href="#friends" data-route="friends" class="nav-item" :class="{ active: activeNav === 'friends' }"
-          @click.prevent="setActiveNav('friends')"><img src="/images/badges/animated/50X50px/my-friends.gif"
+          @click.prevent="setActiveNav('friends')"><div class="position-absolute chat-count-badge cursor-pointer"><span>1k</span></div><img src="/images/badges/animated/50X50px/my-friends.gif"
             alt="My Friends" class="badge-icon" /></a>
         <a href="#notifications" data-route="notifications" class="nav-item"
           :class="{ active: activeNav === 'notifications' }" @click.prevent="setActiveNav('notifications')">
