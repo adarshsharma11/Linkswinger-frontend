@@ -1,5 +1,5 @@
 <template>
- <Feeds :all-feeds="allFeeds" :from-feeds=true :media-type="(route.query.media_type ?? 'image')"></Feeds>
+ <Feeds :all-feeds="allFeeds" :from-feeds=true :media-type="(route.query.media_type ?? 'image')" @open-profile="openProfile"></Feeds>
 </template>
 
 <script setup lang="ts">
@@ -31,6 +31,11 @@ const fetchFeeds = async () => {
     return feed_response.value?.result ?? []
 }
 allFeeds.value = await fetchFeeds() as FeedsModel.FeedsResponseModel[]
+
+async function openProfile(item:FeedsModel.FeedsResponseModel) {
+
+   await navigateTo(`/user-profile/${item.user_id}`)
+}
 
 </script>
 

@@ -48,7 +48,7 @@
                                             <img
                                                 :src="getProfilePlaceholder(item.media_path ?? '', item.profile_image ?? '', item.profile_type ?? '')" />
                                         </div>
-                                        <div class="vdo-name">
+                                        <div class="vdo-name" style="cursor: pointer;" @click="openProfile(item)">
                                             <h3>{{ item.nick_name }}</h3>
                                         </div>
                                     </div>
@@ -185,7 +185,7 @@ const props = defineProps({
     mediaType: { type: String, default: () => 'image' },
     selectedIndex: { type: Number, default: () => 0 }
 })
-const emit = defineEmits(['modelOpen', 'modelClosed'])
+const emit = defineEmits(['modelOpen', 'modelClosed','openProfile'])
 const showPicker = ref(false)
 const showReport = ref(false)
 const showComment = ref(false)
@@ -661,6 +661,11 @@ function closedEmojiPicker()
  
       emit('modelOpen')
       showPicker.value = false
+}
+
+function openProfile(feed:FeedsModel.FeedsResponseModel)
+{
+  emit('openProfile',feed)
 }
 
 function openComments(feed_id: number) {

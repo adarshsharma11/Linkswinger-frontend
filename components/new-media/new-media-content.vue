@@ -246,7 +246,7 @@
         <div class="modal-body p-0 h-100">
           <Feeds :key="selectedFeeds.length > 0 ? selectedFeeds[0].feed_id : 0" :all-feeds="selectedFeeds"
             :from-feeds="false" :media-type="selectedFeeds[0]?.media_type" v-if="selectedFeeds.length > 0"
-            :selected-index="selectedFeedIndex" @model-open="modelOpen" @model-closed="modelClosed" />
+            :selected-index="selectedFeedIndex" @model-open="modelOpen" @model-closed="modelClosed" @open-profile="openProfile" />
         </div>
       </div>
     </div>
@@ -511,6 +511,14 @@ function modelOpen() {
 }
 function modelClosed() {
 
+}
+async function openProfile(item:FeedsModel.FeedsResponseModel) {
+
+videoModalSub.hide()
+     selectedFeeds.value = []
+     router.replace({ query: {} })
+
+   await navigateTo(`/user-profile/${item.user_id}`)
 }
 
 watch(
