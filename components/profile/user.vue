@@ -175,7 +175,7 @@
               {{ getUser()?.town ?? '' }}</h3>
             <span class="badge bg-success fs-6" v-if="isMine()">Online</span>
             <span class="badge bg-success fs-6" v-else-if="!isMine() && isUserOnline()">Online</span>
-             <span class="badge bg-success fs-6" v-else-if="!isMine() && !isUserOnline()">{{ getlastSeen() }}</span>
+            <span class="badge bg-success fs-6" v-else-if="!isMine() && !isUserOnline()">{{ getlastSeen() }}</span>
             <p class="mb-0 mt-2 text-white text-break">{{ getUser()?.profile_status }} <i
                 v-if="isMine() && !is_status_loading" class="fa fa-pencil text-white fa-lg cursor-pointer"
                 @click="editStatus()"></i><span class="btn-loader" v-if="is_status_loading"></span></p>
@@ -482,9 +482,9 @@
                 </button>
               </div>
               <div v-if="verification.visibility === 'friends'"><strong>Verified by {{ verification.profile_type
-                  }}</strong></div>
+              }}</strong></div>
               <div v-if="verification.visibility === 'private'"><strong>Verified by {{ verification.profile_type
-                  }}</strong></div>
+              }}</strong></div>
               </p>
               <button class="ls-help-btn-secondary ls-help-submit-btn" v-if="verifications.length > 3"
                 @click="openVerifications()">More</button>
@@ -497,13 +497,13 @@
       </div>
       <div class="block-user" v-if="!isMine()">
         <button class="block-btn action-itm" @click="blockUser()" v-if="!is_block_loading"><img
-            src="/images/badges/animated/150X150px/13.gif"><span>{{ is_blocked ? 'UnBlock User' : 'Block User'}}</span></button>
+            src="/images/badges/animated/150X150px/13.gif"><span>{{ getBlockUserText() }}</span></button>
         <span class="btn-loader" v-if="is_block_loading"></span>
       </div>
     </div>
   </section>
   <CommonEditStatusModal id="statusModal" ref="statusModalRef" :status-txt="getUser()?.profile_status ?? ''"
-    v-if="showStatusModal" @close-status-modal="closeStatusModel()" @open-emoji-picker="handleToggle()"
+    @close-status-modal="closeStatusModel()" @open-emoji-picker="handleToggle()"
     @updated-profile-status="updatedProfileStatus"></CommonEditStatusModal>
   <EmojiPicker v-if="showPicker" :key="route.fullPath" ref="emojiPickerRef" v-on:selected-emoji="selectedEmoji" />
   <AcceptDeclineRequestModel :friend_status="friend_status" ref="acceptDeclineRequestModalRef" v-if="toggleRequestModal"
@@ -542,25 +542,26 @@
             <p v-for="verification in getallVerifications()">
             <div v-if="verification.visibility === 'public'"><button @click="openUserProfile(verification)">{{
               verification.nick_name
-                }}:</button>{{ verification.review }}</div>
+            }}:</button>{{ verification.review }}</div>
             <div v-if="verification.visibility === 'friends'"><strong>Verified by {{ verification.profile_type
-            }}</strong></div>
+                }}</strong></div>
             <div v-if="verification.visibility === 'private'"><strong>Verified by {{ verification.profile_type
-            }}</strong></div>
+                }}</strong></div>
             </p>
           </div>
         </div>
       </div>
     </div>
   </div>
- <CommonAccountWarning v-if="showWarning" ref="warningModalRef" :warning="login_store.getUserDetails?.banned_reason" @close-warning-popup="showWarning = false"/>
+  <CommonAccountWarning v-if="showWarning" ref="warningModalRef" :warning="login_store.getUserDetails?.banned_reason"
+    @close-warning-popup="showWarning = false" />
 </template>
 <script setup lang="ts">
 import { ChatsModel, MeetVerificationsModel, type UsersModel } from '~/composables/models';
 import AcceptDeclineRequestModel from './accept-decline-request-modal.vue';
 
 import Swal from 'sweetalert2'
-import { EmojiPicker  } from '#components';
+import { EmojiPicker } from '#components';
 import { Teleport } from 'vue';
 import type { CallsModel } from '~/composables/websocketModels';
 var interestModalSub: any = null
@@ -576,6 +577,7 @@ const statusModalRef
 interface Props {
   user_id: number
 }
+
 const props = defineProps<Props>()
 const emojiPickerRef = ref(null)
 const user_store = userStore()
@@ -586,6 +588,7 @@ const showStatusModal = ref(false);
 const is_verify_loading = ref(false);
 const is_status_loading = ref(false);
 const route = useRoute();
+const router = useRouter()
 const verifications = ref([] as MeetVerificationsModel.FetchVerifyResponseModel[])
 const userDetails = ref<UsersModel.ProfileDetailsResponseModel | null | undefined>(null);
 const feedCounts = ref([] as UsersModel.FeedCountResponseModel[])
@@ -608,6 +611,11 @@ const is_blocked = ref(false);
 const isWSConnected = ref(false)
 const onlineUsers = ref([] as number[])
 const lastSeens = ref([] as LastSeenModel[])
+const stack = computed(() =>
+  route.query.modals ? route.query.modals.toString().split(',') : []
+)
+const { openModal, closeTopModal } = useModalStack()
+
 if (isMine() === false) {
   const goBackOrRedirect = async () => {
     if (import.meta.client && window.history.length > 1) {
@@ -716,10 +724,6 @@ if (isMine() === false) {
     is_blocked.value = response.value?.response?.is_blocked ?? false
   };
   checkBlockStatus();
-
-
-
-
 }
 if (isMine() === true) {
   const fetchReadCount = async () => {
@@ -799,12 +803,17 @@ async function openUserProfile(verify: MeetVerificationsModel.FetchVerifyRespons
   await navigateTo(`/user-profile/${verify.from_id ?? 0}`)
 }
 
+function getBlockUserText() {
+  return is_blocked.value ? 'UnBlock User' : 'Block User'
+}
 function openInterest() {
   interestModalSub.show()
+  openModal('interest')
 }
 
 function openVerifications() {
   verificationModalSub.show()
+  openModal('verification')
 }
 
 async function blockUser() {
@@ -865,8 +874,7 @@ async function blockUser() {
 }
 
 function checkuseronline() {
-  if (isWSConnected.value && !isMine()) 
-  {
+  if (isWSConnected.value && !isMine()) {
     const user_ids = [getUser()?.user_id ?? 0]
     const groupmodel = new GroupEventSocketModel()
     groupmodel.admin_id = id_store.getDeviceId
@@ -881,8 +889,7 @@ function isUserOnline(): boolean {
   return onlineUsers.value.includes(getUser()?.user_id ?? 0)
 }
 
-function getlastSeen(): string 
-{
+function getlastSeen(): string {
   if (lastSeens.value.length > 0) {
     const lastSeen = lastSeens.value.filter(ls => ls.user_id === (getUser()?.user_id ?? 0))
     if (lastSeen.length > 0) {
@@ -891,18 +898,76 @@ function getlastSeen(): string
   }
   return ''
 }
+watch(() => stack.value, (s) => {
+
+  if (s.includes('interest') === true) {
+    interestModalSub?.show()
+  }
+  else if (s.includes('verification') === true) {
+    verificationModalSub?.show()
+  }
+  else if (s.includes('status') === true) {
+    statusModalSub?.show()
+  }
+
+  if (s.includes('interest') === false) {
+    interestModalSub?.hide()
+  }
+  if (s.includes('verification') === false) {
+    verificationModalSub?.hide()
+  }
+  if (s.includes('status') === false) {
+    statusModalSub?.hide()
+  }
+
+},
+  { immediate: true })
+
+
+function closeStatusModel() {
+  statusModalSub.hide()
+}
+
+function editStatus() {
+  nextTick(() => {
+    showStatusModal.value = true
+    openModal('status')
+    statusModalSub.show()
+  })
+}
 
 onMounted(() => {
-
 
   interestModalSub = new ($bootstrap as any).Modal(document.getElementById('interestModal'));
   verificationModalSub = new ($bootstrap as any).Modal(document.getElementById('verificationModal'));
 
- 
-  
+  statusModalSub = new ($bootstrap as any).Modal(document.getElementById('statusModal'));
+  statusModalSub._element.addEventListener('hidden.bs.modal', () => {
+    showStatusModal.value = false
+    if (stack.value.includes('status') === true) {
+      closeTopModal()
+    }
+  })
 
-isWSConnected.value = isSocketConnected()
-checkuseronline()
+  interestModalSub._element.addEventListener('hidden.bs.modal', () => {
+    if (stack.value.includes('interest') === true) {
+      closeTopModal()
+    }
+
+  })
+  verificationModalSub._element.addEventListener('hidden.bs.modal', () => {
+    if (stack.value.includes('verification') === true) {
+      closeTopModal()
+    }
+  })
+
+  if (route.query.media || route.query.modals) {
+    router.replace({ query: {} })
+  }
+
+
+  isWSConnected.value = isSocketConnected()
+  checkuseronline()
   eventBus.on('socketConnection', (is_connected) => {
     isWSConnected.value = is_connected
     checkuseronline()
@@ -926,10 +991,10 @@ checkuseronline()
   if (isMine()) {
     let has_warning = login_store.getUserDetails?.has_warning ?? false
     if (has_warning) {
-    //  showalert(login_store.getUserDetails?.banned_reason ?? '')
-     showWarning.value = true
+      //  showalert(login_store.getUserDetails?.banned_reason ?? '')
+      showWarning.value = true
       const api_url = getUrl(RequestURL.removeBannedWarning);
-       $fetch<SuccessError<CallsModel.ValidateCallResponseModel>>(api_url, {
+      $fetch<SuccessError<CallsModel.ValidateCallResponseModel>>(api_url, {
         cache: "no-cache",
         method: "post",
         body: {
@@ -952,7 +1017,6 @@ onBeforeUnmount(() => {
   eventBus.off('callAcceptAlert')
   eventBus.off('socketConnection')
   eventBus.off('onlineUserIds')
-  
 })
 
 
@@ -1094,82 +1158,7 @@ async function validateCall(code: string, is_video: boolean) {
     }
   });
 }
-function closeStatusModel() {
-  statusModalSub.hide()
-}
 
-function editStatus() {
-
-  showStatusModal.value = true
-  nextTick(() => {
-    statusModalSub = new ($bootstrap as any).Modal(document.getElementById('statusModal'));
-    statusModalSub._element.addEventListener('hidden.bs.modal', () => {
-      showStatusModal.value = false
-    })
-    statusModalSub.show()
-  })
-
-  return;
-
-  Swal.fire({
-    title: 'Edit Profile Status',
-    html: `
-  <div style="
-  display: flex;
-  align-items: center; 
-  gap: 6px;
-">
-  <input id="status-input" class="swal2-input" placeholder="Type status here"
-    style="margin: 0; width: auto; flex: 1;" />
-  <button  id="clear-btn" class="swal2-confirm" 
-     style="
-    height: 2.5em;
-    padding: 0 12px;
-    border: none !important;
-    box-shadow: none !important;
-    border-radius: 10px !important;
-  ">
-    😊
-  </button>
-</div>
-  `,
-    focusConfirm: false,
-    showCancelButton: true,
-    willClose: () => {
-      // Close your emoji picker here
-      emojiPickerRef.value?.closeEmojiPicker()
-      // or: showEmoji.value = false
-    },
-    preConfirm: () => {
-      const value = (document.getElementById('status-input') as HTMLInputElement).value.trim();
-      if (!value) {
-        Swal.showValidationMessage("Please enter status");
-        return false;
-      }
-      updateStatus(value);
-      return value;
-    }
-  });
-
-
-  nextTick(() => {
-    const clearBtn = document.getElementById('clear-btn');
-    const statusInput = document.getElementById('status-input') as HTMLInputElement;
-    statusInput.value = getUser()?.profile_status ?? ''
-    clearBtn?.addEventListener('click', () => {
-      statusInput.focus();
-      handleToggle()
-    });
-
-    const emojiRegex =
-      /(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])/g
-    // Watch input changes
-    statusInput.addEventListener("input", () => {
-      statusInput.value = statusInput.value.replace(emojiRegex, "")
-      statusInput.focus();
-    })
-  });
-}
 function handleToggle() {
   showPicker.value = true
   nextTick(() => {

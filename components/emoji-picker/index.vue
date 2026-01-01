@@ -294,7 +294,9 @@ onMounted(async () => {
     stickers.value = await fetchEmojis() as EmojisModel.FetchEmojiResponseModel[]
 
 });
-
+onBeforeUnmount(() => {
+    pickerModel?.hide();
+})
 
 
 </script>

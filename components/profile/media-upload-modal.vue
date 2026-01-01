@@ -55,55 +55,57 @@
                                 ✖
                             </button>
 
-                            <p  class="small text-white fw-bold">{{ contentType.startsWith('image/') ? 'Your Uploaded Photo' : 'Your Uploaded Video'}}</p>
-                            <img v-if="contentType.startsWith('image/')" :src="previewUrl" alt="Preview" class="img-fluid rounded shadow uploaded-photo" />
-                             <video controls v-if="contentType.startsWith('image/') === false" :src="previewUrl" alt="Preview" class="img-fluid rounded shadow uploaded-photo" ></video>
+                            <p class="small text-white fw-bold">{{ showContentTypeLbl() }}</p>
+                            <img v-if="contentType.startsWith('image/')" :src="previewUrl" alt="Preview"
+                                class="img-fluid rounded shadow uploaded-photo" />
+                            <video controls v-if="contentType.startsWith('image/') === false" :src="previewUrl"
+                                alt="Preview" class="img-fluid rounded shadow uploaded-photo"></video>
                         </div>
                     </div>
 
-        <div class="options-row">
-          <div class="option-block">
-            <div class="option-label">Comments</div>
-            <select class="option-select" v-model="canComment">
-              <option selected :value=true>On</option>
-              <option :value=false>Off</option>
-            </select>
-          </div>
+                    <div class="options-row">
+                        <div class="option-block">
+                            <div class="option-label">Comments</div>
+                            <select class="option-select" v-model="canComment">
+                                <option selected :value=true>On</option>
+                                <option :value=false>Off</option>
+                            </select>
+                        </div>
 
-          <div class="option-block">
-            <div class="option-label">Likes</div>
-            <select class="option-select" v-model="canLike">
-              <option selected :value=true>On</option>
-              <option :value=false>Off</option>
-            </select>
-          </div>
-        </div>
+                        <div class="option-block">
+                            <div class="option-label">Likes</div>
+                            <select class="option-select" v-model="canLike">
+                                <option selected :value=true>On</option>
+                                <option :value=false>Off</option>
+                            </select>
+                        </div>
+                    </div>
 
-        <!-- NEW: Explicit / Non-explicit classification -->
-        <div class="explicit-block">
-          <div class="explicit-title">Is this media explicit?</div>
-          <div class="explicit-options">
-            <label class="explicit-option">
-              <input v-model="classification" type="radio" name="explicit"   value="nonexplicit"  />
-              <div class="cursor-pointer">
-                <span class="explicit-text-strong">Non-explicit</span>
-                <span class="explicit-text-muted">
-                  Face / body shown but decent clothing, no nudity, no sexual acts.
-                </span>
-              </div>
-            </label>
+                    <!-- NEW: Explicit / Non-explicit classification -->
+                    <div class="explicit-block">
+                        <div class="explicit-title">Is this media explicit?</div>
+                        <div class="explicit-options">
+                            <label class="explicit-option">
+                                <input v-model="classification" type="radio" name="explicit" value="nonexplicit" />
+                                <div class="cursor-pointer">
+                                    <span class="explicit-text-strong">Non-explicit</span>
+                                    <span class="explicit-text-muted">
+                                        Face / body shown but decent clothing, no nudity, no sexual acts.
+                                    </span>
+                                </div>
+                            </label>
 
-            <label class="explicit-option">
-              <input v-model="classification" type="radio" name="explicit"  value="explicit" />
-              <div class="cursor-pointer">
-                <span class="explicit-text-strong">Explicit</span>
-                <span class="explicit-text-muted">
-                  Nudity, underwear focused content or clear sexual content/acts.
-                </span>
-              </div>
-            </label>
-          </div>
-        </div>
+                            <label class="explicit-option">
+                                <input v-model="classification" type="radio" name="explicit" value="explicit" />
+                                <div class="cursor-pointer">
+                                    <span class="explicit-text-strong">Explicit</span>
+                                    <span class="explicit-text-muted">
+                                        Nudity, underwear focused content or clear sexual content/acts.
+                                    </span>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Footer -->
@@ -121,12 +123,9 @@
             </div>
         </div>
     </div>
-    <PhotoAlertModal
-  v-if="togglePhotoAlert"
-  title="Media uploaded — under review"
-  message="Your media has been <b>successfully uploaded</b> and is now under review."
-  @close="togglePhotoAlert = false"
-  />  
+    <PhotoAlertModal v-if="togglePhotoAlert" title="Media uploaded — under review"
+        message="Your media has been <b>successfully uploaded</b> and is now under review."
+        @close="togglePhotoAlert = false" />
 </template>
 
 <script setup lang="ts">
@@ -155,14 +154,44 @@ const contentType = ref('');
 const canComment = ref(false);
 const canLike = ref(false);
 const classification = ref('nonexplicit');
-
+const { openModal, closeTopModal } = useModalStack()
+const route = useRoute()
+const stack = computed(() =>
+    route.query.modals ? route.query.modals.toString().split(',') : []
+)
 
 var mediaUploadModalSub: any = null
 onMounted(() => {
     mediaUploadModalSub = new ($bootstrap as any).Modal(document.getElementById('mediaUploadModal'));
+    mediaUploadModalSub._element.addEventListener('show.bs.modal', () => {
+        if (stack.value.includes('media') === false) {
+            openModal('media')
+        }
+    })
+    mediaUploadModalSub._element.addEventListener('hidden.bs.modal', () => {
+        if (stack.value.includes('media') === true) {
+            closeTopModal()
+        }
+
+    })
 })
+
+watch(() => stack.value, (s) => {
+    if (s.includes('media') === true) {
+        mediaUploadModalSub?.show()
+    }
+    if (s.includes('media') === false) {
+        mediaUploadModalSub?.hide()
+    }
+},
+    { immediate: true })
+
 function triggerFileInput() {
     fileInput.value?.click();
+}
+
+function showContentTypeLbl(): string {
+    return contentType.value.startsWith('image/') ? 'Your Uploaded Photo' : 'Your Uploaded Video'
 }
 
 async function handleFileUpload(event: Event) {
@@ -332,7 +361,7 @@ function upload(worker_model: WorkerModel, contentType: string = 'image/jpeg') {
             removePhoto();
 
             togglePhotoAlert.value = true;
-           // showalert('Photo uploaded successfully and is under processing. You feed will be updated once processed.', true)
+            // showalert('Photo uploaded successfully and is under processing. You feed will be updated once processed.', true)
         }
     }
 

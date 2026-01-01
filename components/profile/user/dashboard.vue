@@ -98,7 +98,7 @@
                   <button class="btn primary" style="white-space: nowrap; height: fit-content;"
                     @click="searchTapped()">Search</button>
                   <a class="btn primary" href="#" aria-label="Go to Advanced Search" data-bs-toggle="modal"
-                    data-bs-target="#advancesearchmodal" style="white-space: nowrap; height: fit-content;">Advanced
+                    data-bs-target="#advancesearchmodal" style="white-space: nowrap; height: fit-content;" @click="openAdvancedsearch()">Advanced
                     Search</a>
                 </div>
               </div>
@@ -654,6 +654,11 @@ const latitude = ref<number | null>(null)
 const longitude = ref<number | null>(null)
 const is_logout_loading = ref(false);
 const is_location_on = ref(false);
+
+const stack = computed(() =>
+  route.query.modals ? route.query.modals.toString().split(',') : []
+)
+const { openModal, closeTopModal } = useModalStack()
 
 // Computed numeric version for backend payload
 var radiusMiles = computed<number | null>(() => {
@@ -1223,10 +1228,31 @@ async function logout() {
   }
 }
 
+watch(() => stack.value, (s) => {
+  if (s.includes('search') === true) {
+    advanceModelSub?.show()
+  }
+  if (s.includes('search') === false) {
+    advanceModelSub?.hide()
+  }
+},
+  { immediate: true })
+
+  function openAdvancedsearch()
+  {
+    openModal('search')
+  }
+
 onMounted(() => {
   // Handle hash-based navigation
 
   advanceModelSub = new ($bootstrap as any).Modal(document.getElementById('advancesearchmodal'));
+
+  advanceModelSub._element.addEventListener('hidden.bs.modal', () => {
+    if (stack.value.includes('search') === true) {
+      closeTopModal()
+    }
+  })
 
   isWSConnected.value = isSocketConnected()
   eventBus.on('socketConnection', (is_connected) => {

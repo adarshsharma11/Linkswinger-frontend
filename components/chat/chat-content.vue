@@ -293,7 +293,7 @@
 
 
   <!-- LightGallery: rendered only client-side and only after dynamic import -->
-  
+
   <FilterModal :friends-only="friendsOnly" :photo-verified-only="photoVerifiedOnly" :show-unread="showUnread"
     :with-attachments="withAttachments" v-if="showFilters" @close="showFilters = false" @apply-filters="applyFilters"
     @clear-filters="clearFilters()" />
@@ -313,7 +313,7 @@
           </button>
         </div>
         <div class="modal-body p-0 h-100">
-          <ChatGallery :key="galleryItems.length > 0 ? galleryItems[0].chat_id : 0" :all-feeds="galleryItems"
+          <ChatGallery :key="galleryItems.length > 0 ? galleryItems[selectedMediaIndex].chat_id : 0" :all-feeds="galleryItems"
             :from-feeds="false" v-if="galleryItems.length > 0" :selected-index="selectedMediaIndex" />
         </div>
       </div>
@@ -383,6 +383,10 @@ const photoVerifiedOnly = ref(false)
 const showPicker = ref(false)
 const is_mounted = ref(true)
 const selectedMediaIndex = ref(0)
+const stack = computed(() =>
+  route.query.modals ? route.query.modals.toString().split(',') : []
+)
+const { openModal, closeTopModal } = useModalStack()
 
 
 function buildGalleryItems() {
@@ -435,9 +439,10 @@ function openPreview(chat: any) {
     const index = galleryItems.value.findIndex(
       (i) => i.chat_id === chat.chat_id
     );
-    console.log("index...",index)
+
     selectedMediaIndex.value = index
-      videoModalSub.show();
+    openModal('gallery')
+    videoModalSub.show();
   })
 }
 
@@ -778,19 +783,44 @@ watch(messageTxt, () => {
 
 function openChatModal() {
   chatMediaModal.show();
+  openModal('media')
 }
+
+watch(() => stack.value, (s) => {
+
+  if (s.includes('media') === true) {
+    chatMediaModal?.show()
+  }
+  else if (s.includes('gallery') === true) {
+    videoModalSub?.show()
+  }
+  if (s.includes('media') === false) {
+    chatMediaModal?.hide()
+  }
+  if (s.includes('gallery') === false) {
+    videoModalSub?.hide()
+  }
+ 
+
+},
+  { immediate: true })
 
 // mount / socket event wiring
 onMounted(async () => {
   chatMediaModal = new ($bootstrap as any).Modal(document.getElementById('chatMediaModal'));
   chatMediaModal._element.addEventListener('hidden.bs.modal', () => {
-
+    if (stack.value.includes('media') === true) {
+      closeTopModal()
+    }
   })
 
-   videoModalSub = new ($bootstrap as any).Modal(document.getElementById('videoModal'));
+  videoModalSub = new ($bootstrap as any).Modal(document.getElementById('videoModal'));
 
   videoModalSub._element.addEventListener('hidden.bs.modal', () => {
-     galleryItems.value = []
+    //galleryItems.value = []
+    if (stack.value.includes('gallery') === true) {
+      closeTopModal()
+    }
   })
 
 

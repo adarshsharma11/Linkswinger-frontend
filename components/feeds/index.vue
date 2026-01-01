@@ -174,7 +174,7 @@
 
 
     <CommonReportModal id="reportModel" v-if="showReport" @close="closeReport" :report-type="'feed'"
-        :ref-id="selectedFeedId"></CommonReportModal>
+        :ref-id="selectedFeedId" ></CommonReportModal>
 </template>
 
 <script setup lang="ts">
