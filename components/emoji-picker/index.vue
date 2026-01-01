@@ -322,7 +322,7 @@ onMounted(async () => {
     // }
     //showEmojiPicker.value = true
 
-    console.log('picker mounted');
+  
     const fetchEmojis = async () => {
         const api_url = getUrl(RequestURL.fetchEmojis);
         let response_model = await $fetch<SuccessError<EmojisModel.FetchEmojiResponseModel>>(api_url, {

@@ -714,6 +714,8 @@ function selectedEmoji(emoji: string) {
 
         // Ensure input stays focused
         statusInput.focus();
+
+        commentTxt.value = statusInput.value
     }
 }
 
