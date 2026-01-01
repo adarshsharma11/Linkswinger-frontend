@@ -97,8 +97,7 @@
                     style="width: 100%; min-width: 300px;" />
                   <button class="btn primary" style="white-space: nowrap; height: fit-content;"
                     @click="searchTapped()">Search</button>
-                  <a class="btn primary" href="#" aria-label="Go to Advanced Search" data-bs-toggle="modal"
-                    data-bs-target="#advancesearchmodal" style="white-space: nowrap; height: fit-content;" @click="openAdvancedsearch()">Advanced
+                  <a class="btn primary" href="#" aria-label="Go to Advanced Search"  style="white-space: nowrap; height: fit-content;" @click="openAdvancedsearch()">Advanced
                     Search</a>
                 </div>
               </div>
@@ -436,7 +435,7 @@
 
 
 
-  <div class="modal fade ad-search-modal" id="advancesearchmodal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal fade ad-search-modal"  id="advancesearchmodal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable" role="document">
       <div class="modal-content bg-dark text-white">
         <!-- Header -->
@@ -582,7 +581,9 @@
             <div class="actions">
               <button type="submit" class="btn primary" @click="fetchUsersList(true)">Search</button>
               <button type="reset" class="btn ghost" @click="resetSearch">Reset</button>
-              <button type="button" class="btn" @click="saveSearch">💾 Save this search</button>
+              <button type="button" class="btn" @click="saveSearch" v-if="savedSearches.length < 2">💾 Save this search</button>
+              <button type="button" class="btn" @click="loadSearch(0)" v-if="savedSearches.length >= 1">💾 Slot 1</button>
+              <button type="button" class="btn" @click="loadSearch(1)" v-if="savedSearches.length == 2">💾 Slot 2</button>
             </div>
             <div class="footnote">Tip: You can tick multiple options in the lists above.</div>
           </div>
@@ -654,6 +655,10 @@ const latitude = ref<number | null>(null)
 const longitude = ref<number | null>(null)
 const is_logout_loading = ref(false);
 const is_location_on = ref(false);
+const selected_slot = ref(0)
+
+
+const savedSearches = ref([])
 
 const stack = computed(() =>
   route.query.modals ? route.query.modals.toString().split(',') : []
@@ -1082,9 +1087,70 @@ function resetSearch() {
   is_online.value = false
   current_loc.value = false
 
+ savedSearches.value = []
+
 }
 
-function saveSearch() {
+function getSavedSearches() {
+  let storage = localStorage.getItem(STORAGE_KEY)
+  if (storage)
+  {
+    savedSearches.value = JSON.parse(storage) ?? []
+return JSON.parse(storage)
+  }
+  return []
+}
+
+function loadSearch(slot = 0) {
+
+  selected_slot.value = slot
+  const searches = savedSearches.value
+
+ const saved = searches.find(s => s.slot === slot) || null
+
+  if (saved) {
+    try {
+     
+  
+      const data = saved.data
+
+      lookingFor.value = data.looking_for ?? []
+      whoMeets.value = data.who_wants_to_meet ?? []
+      ageMin.value = data.age_min ?? MIN_AGE
+      ageMax.value = data.age_max ?? MAX_AGE
+
+      current_loc.value = false
+      if (data.townPostCode) {
+        selectedTown.value = data.townPostCode
+      }
+      if (data.latitude && data.longitude) {
+        latitude.value = data.latitude
+        longitude.value = data.longitude
+        current_loc.value = true
+      }
+      radius.value = data.radius ?? '0.25'
+
+      lookingToMeetToday.value = data.looking_to_meet_today ?? false
+      is_photo_verified.value = data.is_photo_verified ?? false
+      is_meet_verified.value = data.is_meet_verified ?? false
+      with_public_media.value = data.with_public_media ?? false
+      with_media_gallery.value = data.with_media_gallery ?? false
+      has_profile_description.value = data.has_profile_description ?? false
+      recently_active.value = data.recently_active ?? false
+      premium_only.value = data.premium_only ?? false
+      is_online.value = data.is_online ?? false
+
+  
+    
+    } catch (err) {
+      console.warn('Failed to load saved filters:', err)
+    }
+  }
+
+   
+}
+function updateSearch() 
+{
   const payload = {
     looking_for: lookingFor.value,
     who_wants_to_meet: whoMeets.value,
@@ -1103,9 +1169,86 @@ function saveSearch() {
     recently_active: recently_active.value,
     premium_only: premium_only.value,
     is_online: is_online.value,
+    saved_at: Date.now(),
   }
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+  const searches = getSavedSearches()
+  let index = searches.findIndex((s) => s.slot === selected_slot.value)
+   if (index !== -1) {
+    // overwrite slot
+    searches[index].data = payload
+  }
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(searches))
 }
+function saveSearch() 
+{
+
+  if (savedSearches.value.length >= 2) 
+  {
+    updateSearch()
+    return
+  }
+
+  const payload = {
+    looking_for: lookingFor.value,
+    who_wants_to_meet: whoMeets.value,
+    age_min: ageMin.value,
+    age_max: ageMax.value,
+    townPostCode: selectedTown.value,
+    latitude: latitude.value ?? null,
+    longitude: longitude.value ?? null,
+    radius: radius.value,
+    looking_to_meet_today: lookingToMeetToday.value,
+    is_photo_verified: is_photo_verified.value,
+    is_meet_verified: is_meet_verified.value,
+    with_public_media: with_public_media.value,
+    with_media_gallery: with_media_gallery.value,
+    has_profile_description: has_profile_description.value,
+    recently_active: recently_active.value,
+    premium_only: premium_only.value,
+    is_online: is_online.value,
+    saved_at: Date.now(),
+  }
+
+  const searches = getSavedSearches()
+    searches.push({ slot : searches.length, data: payload })
+  // if (index !== -1) {
+  //   // overwrite slot
+  //   searches[index].data = payload
+  // } else {
+  //   // add new slot
+  //   searches.push({ slot, data: payload })
+  // }
+selected_slot.value = searches.length - 1
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(searches))
+
+ getSavedSearches()
+ 
+
+}
+
+
+// function saveSearch() {
+//   const payload = {
+//     looking_for: lookingFor.value,
+//     who_wants_to_meet: whoMeets.value,
+//     age_min: ageMin.value,
+//     age_max: ageMax.value,
+//     townPostCode: selectedTown.value,
+//     latitude: latitude.value ?? null,
+//     longitude: longitude.value ?? null,
+//     radius: radius.value,
+//     looking_to_meet_today: lookingToMeetToday.value,
+//     is_photo_verified: is_photo_verified.value,
+//     is_meet_verified: is_meet_verified.value,
+//     with_public_media: with_public_media.value,
+//     with_media_gallery: with_media_gallery.value,
+//     has_profile_description: has_profile_description.value,
+//     recently_active: recently_active.value,
+//     premium_only: premium_only.value,
+//     is_online: is_online.value,
+//   }
+//   localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+// }
 
 // optional: if user clears the field, we'll set null so buildPayload can omit it
 // helper: clamp a value and ensure integer
@@ -1230,6 +1373,7 @@ async function logout() {
 
 watch(() => stack.value, (s) => {
   if (s.includes('search') === true) {
+    reloadKey.value = reloadKey.value + 1
     advanceModelSub?.show()
   }
   if (s.includes('search') === false) {
@@ -1240,6 +1384,7 @@ watch(() => stack.value, (s) => {
 
   function openAdvancedsearch()
   {
+    advanceModelSub.show()
     openModal('search')
   }
 
@@ -1314,44 +1459,8 @@ onMounted(() => {
   if (isWSConnected.value) {
     checkuseronline()
   }
-
-  const saved = localStorage.getItem(STORAGE_KEY)
-  if (saved) {
-    try {
-      const data = JSON.parse(saved)
-      // Restore only if keys exist
-
-      lookingFor.value = data.looking_for ?? []
-      whoMeets.value = data.who_wants_to_meet ?? []
-      ageMin.value = data.age_min ?? MIN_AGE
-      ageMax.value = data.age_max ?? MAX_AGE
-
-      current_loc.value = false
-      if (data.townPostCode) {
-        selectedTown.value = data.townPostCode
-      }
-      if (data.latitude && data.longitude) {
-        latitude.value = data.latitude
-        longitude.value = data.longitude
-        current_loc.value = true
-      }
-      radius.value = data.radius ?? '0.25'
-
-      lookingToMeetToday.value = data.looking_to_meet_today ?? false
-      is_photo_verified.value = data.is_photo_verified ?? false
-      is_meet_verified.value = data.is_meet_verified ?? false
-      with_public_media.value = data.with_public_media ?? false
-      with_media_gallery.value = data.with_media_gallery ?? false
-      has_profile_description.value = data.has_profile_description ?? false
-      recently_active.value = data.recently_active ?? false
-      premium_only.value = data.premium_only ?? false
-      is_online.value = data.is_online ?? false
-
-      console.log('✅ Filters restored from localStorage', data.looking_for)
-    } catch (err) {
-      console.warn('Failed to load saved filters:', err)
-    }
-  }
+getSavedSearches()
+ loadSearch()
 
 
 })
