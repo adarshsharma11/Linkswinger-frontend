@@ -179,7 +179,7 @@
               <div v-if="(chat.is_deleted ?? false) === false" class="chat-item">
                 <div v-if="chat.message_type === 'text'">{{ chat.message }}</div>
                 <!-- IMAGE PREVIEW -->
-                <div v-if="chat.message_type === 'image' && is_mounted" class="attachment-preview"
+                <div v-if="chat.message_type === 'image' && is_mounted" class="attachment-preview "
                   @click="openPreview(chat)">
                   <img :src="(chat.media_path ?? '') + (chat.message ?? '')" class="attachment-img" loading="lazy" />
                 </div>
