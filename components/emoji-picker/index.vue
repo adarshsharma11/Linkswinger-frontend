@@ -1,7 +1,7 @@
 <template>
     <div class="modal fade emoji-modal" id="emojiPickerModel" tabindex="-1" role="dialog" aria-hidden="false" >
         <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable" role="document" ref="emojiPickerRef">
-            <div class="modal-content text-white modal-inner emoji-small">
+            <div class="modal-content text-white modal-inner emoji-small" ref="emojiInsideRef">
                 <!-- Header -->
                 <div class="emj-topbar" id="dragHandle" title="Drag me" style="cursor: grab;" @mousedown="startDrag">
                     <div class="emj-brand">
@@ -12,8 +12,7 @@
                         </div>
                         <div class="emj-titlewrap">
                             <p class="emj-title">Emoji &amp; Stickers</p>
-                            <p class="emj-subtitle">Metallic red popup mock-up • searchable • mobile ready
-                            </p>
+                          
                         </div>
                     </div>
 
@@ -169,8 +168,10 @@ const activeTab = ref('emoji');
 const showEmojiPicker = ref(false)
 const emojiButtonRef = ref(null)
 const emojiPickerRef = ref(null)
+const emojiInsideRef = ref(null)
 const isDragging = ref(false)
 const dragOffset = ref({ x: 0, y: 0 })
+const debugOffset = ref({ x: 0, y: 0 })
 const pickerPosition = ref({ x: 500, y: 200 }) // initial position
 const pickerWidth = ref(300)
 const pickerHeight = ref(410)
@@ -215,6 +216,8 @@ const startDrag = (e: MouseEvent) => {
     x: e.clientX - rect.left,
     y: e.clientY - rect.top,
   }
+debugOffset.value = dragOffset.value
+  
 
   document.addEventListener('mousemove', onDrag)
   document.addEventListener('mouseup', stopDrag)
@@ -224,10 +227,51 @@ const startDrag = (e: MouseEvent) => {
 const onDrag = (e: MouseEvent) => {
   if (!isDragging.value || !emojiPickerRef.value) return
 
-  emojiPickerRef.value.style.transform = `translate(
-    ${e.clientX - dragOffset.value.x}px,
-    ${e.clientY - dragOffset.value.y}px
-  )`
+
+const picker = emojiPickerRef.value
+if (!picker) return
+
+const inner = emojiInsideRef.value
+const viewportWidth = window.innerWidth
+const viewportHeight = window.innerHeight
+
+// current visual rect (before applying new transform)
+const rect = inner.getBoundingClientRect()
+
+// current applied transform values
+const style = window.getComputedStyle(picker)
+const matrix = new DOMMatrixReadOnly(style.transform)
+
+// proposed transform
+let x = e.clientX - dragOffset.value.x
+let y = e.clientY - dragOffset.value.y
+
+// predicted future rect
+const futureLeft = rect.left + (x - matrix.m41)
+const futureRight = futureLeft + rect.width
+const futureTop = rect.top + (y - matrix.m42)
+const futureBottom = futureTop + rect.height
+
+// clamp X
+if (futureLeft < 0) {
+  x += -futureLeft
+}
+if (futureRight > viewportWidth) {
+  x -= futureRight - viewportWidth
+}
+
+// clamp Y
+if (futureTop < 0) {
+  y += -futureTop
+}
+if (futureBottom > viewportHeight) {
+  y -= futureBottom - viewportHeight
+}
+
+// apply ONCE
+picker.style.transform = `translate(${x}px, ${y}px)`
+
+
 }
 
 const stopDrag = () => {
