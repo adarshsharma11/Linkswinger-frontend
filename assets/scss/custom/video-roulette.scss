@@ -1,3 +1,11 @@
+:root {
+  --pipW: 132px;
+  --pipH: 172px;
+  --pipMinW: 112px;
+  --pipMinH: 14px;
+  --pad: 16px;
+}
+
 .vd-roulete-header {
       display: flex; align-items: center; justify-content: center; gap: 16px;
       padding: 16px 20px; border-bottom: 1px solid var(--ring);
