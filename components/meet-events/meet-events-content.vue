@@ -269,6 +269,9 @@
               </div>
 
               <div class="meet-section">
+                 <div class="meet-inline mb-2">
+                  <button class="meet-btn meet-small" @click="editEvent()" v-if="!is_delete_loading">Edit</button>
+                </div>
                 <div class="meet-inline mb-2">
                   <span class="btn-loader" v-if="is_delete_loading"
                     style="width: 20px; height: 20px; max-width: 20px; max-height: 40px;"></span>
@@ -1126,7 +1129,16 @@ function handleToggle() {
   })
 }
 
+async function editEvent() {
 
+detailEventModal.hide()
+
+  addEventSub.show()
+  router.push({
+    query: { modal: 'addEvent' }
+  })
+
+}
 async function deleteEvent() {
   if (is_delete_loading.value) {
     return;
