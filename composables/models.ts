@@ -484,8 +484,8 @@ export namespace UsersModel {
     is_friend?:boolean
     has_meet_event?:boolean
 is_location_on?:boolean
-   user_latitude?:number
-   user_longitude?:number
+   user_latitude?:number | null
+   user_longitude?:number | null
          
   }
 
