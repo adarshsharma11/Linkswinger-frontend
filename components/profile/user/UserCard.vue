@@ -26,7 +26,9 @@
           <div class="meta">{{ user.town }} • {{ distance }} miles</div>
           <div class="meta" v-if="(user.viewed_at ?? '').length > 0">Last viewed: {{ viewedAt(user) }}</div>
           <div class="meta" v-if="!isOnline && lastDate().length > 0">Last seen: {{ lastDate() }}</div>
-
+          <span class="friends-pill" v-if="user.is_friend">
+            <span class="text-white">FRIEND</span>
+          </span>
         </div>
       </div>
 
@@ -56,8 +58,9 @@
           Decline
         </button>
 
-        <button v-if="((user.friend_status ?? '') === 'pending') && (user.from_id === login_store.getUserDetails?.user_id)" class="action" data-action="call"
-          aria-label="Voice call" @click="removeCancelFriendRequest(user, true)">
+        <button
+          v-if="((user.friend_status ?? '') === 'pending') && (user.from_id === login_store.getUserDetails?.user_id)"
+          class="action" data-action="call" aria-label="Voice call" @click="removeCancelFriendRequest(user, true)">
           <span class="act-icon">
             <img src="/images/badges/animated/50X50px/call.gif" alt="Call" class="rounded-circle"
               style="width: 25px; height: 25px; object-fit: cover" />
@@ -286,7 +289,7 @@ async function removeCancelFriendRequest(user: UsersModel.ProfileDetailsResponse
   });
   user.isFriendDecisionLoading = false;
   if (response.success) {
-      emit('declineUser', user.user_id ?? 0)
+    emit('declineUser', user.user_id ?? 0)
   }
   else {
     showToastError(response.message)

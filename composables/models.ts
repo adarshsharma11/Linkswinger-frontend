@@ -479,6 +479,7 @@ export namespace UsersModel {
     banned_reason?:string
     has_warning?:boolean
   is_loading?:boolean
+    is_friend?:boolean
   }
 
   export class FetchMembershipRequestModel {

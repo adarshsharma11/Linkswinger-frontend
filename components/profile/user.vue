@@ -174,8 +174,12 @@
               {{ getGender() }} {{ getAge(getUser()?.dob ?? '') }} from
               {{ getUser()?.town ?? '' }}</h3>
             <span class="badge bg-success fs-6" v-if="isMine()">Online</span>
+            
             <span class="badge bg-success fs-6" v-else-if="!isMine() && isUserOnline()">Online</span>
             <span class="badge bg-success fs-6" v-else-if="!isMine() && !isUserOnline()">{{ getlastSeen() }}</span>
+            <span class="friends-pill" v-if="!isMine() && is_friend">
+              <span class="text-white">FRIEND</span>
+            </span>
             <p class="mb-0 mt-2 text-white text-break">{{ getUser()?.profile_status }} <i
                 v-if="isMine() && !is_status_loading" class="fa fa-pencil text-white fa-lg cursor-pointer"
                 @click="editStatus()"></i><span class="btn-loader" v-if="is_status_loading"></span></p>
@@ -482,9 +486,9 @@
                 </button>
               </div>
               <div v-if="verification.visibility === 'friends'"><strong>Verified by {{ verification.profile_type
-              }}</strong></div>
+                  }}</strong></div>
               <div v-if="verification.visibility === 'private'"><strong>Verified by {{ verification.profile_type
-              }}</strong></div>
+                  }}</strong></div>
               </p>
               <button class="ls-help-btn-secondary ls-help-submit-btn" v-if="verifications.length > 3"
                 @click="openVerifications()">More</button>
@@ -542,11 +546,11 @@
             <p v-for="verification in getallVerifications()">
             <div v-if="verification.visibility === 'public'"><button @click="openUserProfile(verification)">{{
               verification.nick_name
-            }}:</button>{{ verification.review }}</div>
+                }}:</button>{{ verification.review }}</div>
             <div v-if="verification.visibility === 'friends'"><strong>Verified by {{ verification.profile_type
-                }}</strong></div>
+            }}</strong></div>
             <div v-if="verification.visibility === 'private'"><strong>Verified by {{ verification.profile_type
-                }}</strong></div>
+            }}</strong></div>
             </p>
           </div>
         </div>
@@ -605,6 +609,7 @@ const is_like_loading = ref(false);
 const toggleRequestModal = ref(false);
 const { $bootstrap } = useNuxtApp();
 const friend_status = ref('');
+const is_friend = ref(false);
 const is_friend_loading = ref(false);
 const is_block_loading = ref(false);
 const is_blocked = ref(false);
@@ -703,6 +708,11 @@ if (isMine() === false) {
       }
     );
     friend_status.value = response.value?.response?.friend_status ?? ''
+    is_friend.value = response.value?.response?.is_friend ?? false
+    if (is_friend.value)
+    {
+      friend_status.value = 'accepted'
+    }
   };
   friendStatus();
 
@@ -1368,7 +1378,7 @@ async function sendFriendRequest() {
     return;
   }
 
-  if (friend_status.value === 'accepted' || friend_status.value === 'pending') {
+  if (friend_status.value === 'accepted' || friend_status.value === 'pending' || is_friend.value) {
     return;
   }
 
@@ -1390,6 +1400,7 @@ async function sendFriendRequest() {
   is_friend_loading.value = false;
   if (response.success) {
     friend_status.value = response.response?.friend_status ?? ''
+
   }
   else {
     showToastError(response.message);
