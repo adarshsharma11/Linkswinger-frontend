@@ -654,7 +654,7 @@ var advanceModelSub: any = null
 const latitude = ref<number | null>(null)
 const longitude = ref<number | null>(null)
 const is_logout_loading = ref(false);
-const is_location_on = ref(false);
+const is_location_on = ref(login_store.getUserDetails?.is_location_on ?? false);
 const selected_slot = ref(0)
 
 
@@ -800,6 +800,29 @@ function checkMobile() {
 //   console.log('Fetching all users for user list view...')
 //   users.value = await fetchallusers() as UsersModel.ProfileDetailsResponseModel[]
 // }
+async function updateUserLocation() {
+  const api_url = getUrl(RequestURL.updateUserLocation);
+
+  var body = {
+    user_id: login_store.getUserDetails?.user_id ?? 0,
+    latitude : is_location_on.value ? latitude.value : null,
+    longitude : is_location_on.value ? longitude.value : null
+  } 
+  let response = await $fetch<SuccessError<UsersModel.ProfileDetailsResponseModel>>(api_url, {
+    method: 'POST',
+    body: body,
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  });
+
+  if (response.success) {
+     login_store.setIsLocationOn(response.response?.is_location_on ?? false)
+  }
+  else {
+    showToastError(response.message ?? "Something went wrong");
+  }
+}
 
 async function fetchUsersList(fromAdvance = false) {
   const api_url = getUrl(RequestURL.fetchallusers);
@@ -1035,12 +1058,15 @@ watch(is_location_on, () => {
       (position) => {
         latitude.value = position.coords.latitude
         longitude.value = position.coords.longitude
+        updateUserLocation()
         fetchNearByUserList()
+        
       },
       (err) => {
         is_location_on.value = false
         latitude.value = null
         longitude.value = null
+         updateUserLocation()
         showToastError(err.message)
       }
     )
@@ -1048,6 +1074,7 @@ watch(is_location_on, () => {
   else
   {
     fetchNearByUserList()
+       updateUserLocation()
   }
 });
 

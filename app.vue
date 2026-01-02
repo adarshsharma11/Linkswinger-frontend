@@ -12,6 +12,7 @@
 import { NuxtLoadingIndicator } from '#components';
 import type { PromotionsModel } from './composables/models';
 const id_store = idStore()
+const user_store = userStore()
 const promotion_text = ref('')
 const speed = ref(50)
 
@@ -34,8 +35,17 @@ return {}
 
 }
 let response_model = await fetchOptions() as PromotionsModel.FetchResponseModel
+
+if (user_store.getLoginId === 0)
+{
 promotion_text.value = response_model.text ?? ''
 speed.value = response_model.speed ?? 5
+}
+else
+{
+promotion_text.value = response_model.post_login_text ?? ''
+speed.value = response_model.post_login_speed ?? 5
+}
 
 onMounted(() => {
     useDatabase();

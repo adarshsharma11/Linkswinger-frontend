@@ -90,8 +90,8 @@ export enum RequestURL {
   addReport = "/addReport",
   removeBannedWarning = "/removeBannedWarning",
   fetchAdminChat = "/fetchAdminChat",
-  fetchBlockList = "/fetchBlockList"
-
+  fetchBlockList = "/fetchBlockList",
+  updateUserLocation = "/updateUserLocation"
 }
 
 
@@ -255,6 +255,8 @@ export namespace PromotionsModel {
   export class FetchResponseModel {
     text?: string
     speed?: number
+    post_login_text?:string
+    post_login_speed?:number
   }
 }
 
@@ -481,6 +483,10 @@ export namespace UsersModel {
   is_loading?:boolean
     is_friend?:boolean
     has_meet_event?:boolean
+is_location_on?:boolean
+   user_latitude?:number
+   user_longitude?:number
+         
   }
 
   export class FetchMembershipRequestModel {

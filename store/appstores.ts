@@ -75,6 +75,14 @@ export const useLoginStore = defineStore('login_details', {
         }
          
        },
+        setIsLocationOn(is_location_on:boolean)
+       {
+        if(this.user)
+        {
+           this.user.is_location_on = is_location_on
+        }
+         
+       },
        clear()
       {
         this.setUserDetails(null)
