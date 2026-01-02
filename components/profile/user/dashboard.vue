@@ -1133,6 +1133,7 @@ function loadSearch(slot = 0) {
   selected_slot.value = slot
   const searches = savedSearches.value
 
+
  const saved = searches.find(s => s.slot === slot) || null
 
   if (saved) {
@@ -1172,6 +1173,10 @@ function loadSearch(slot = 0) {
     } catch (err) {
       console.warn('Failed to load saved filters:', err)
     }
+  }
+  else
+  {
+    console.log(login_store.getUserDetails?.looking_for)
   }
 
    

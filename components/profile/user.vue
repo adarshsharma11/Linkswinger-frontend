@@ -67,6 +67,13 @@
                     <span class="text-white">Upload Media</span>
                   </button>
                 </li>
+                 <li>
+                 <button class="dropdown-item text-white d-flex align-items-center" @click="ageVerification()">
+                    <img src="/images/badges/animated/50X50px/verified.gif" alt="Verify" class="rounded-circle me-2"
+                      style="width: 30px; height: 30px; object-fit: cover" />
+                    <span class="text-white">Age Verification</span>
+                  </button>
+                  </li>
                 <li>
                   <button class="dropdown-item text-white d-flex align-items-center position-relative"
                     @click="navigateTo(`/meet-verification`)">
@@ -174,7 +181,7 @@
               {{ getGender() }} {{ getAge(getUser()?.dob ?? '') }} from
               {{ getUser()?.town ?? '' }}</h3>
             <span class="badge bg-success fs-6" v-if="isMine()">Online</span>
-            
+
             <span class="badge bg-success fs-6" v-else-if="!isMine() && isUserOnline()">Online</span>
             <span class="badge bg-success fs-6" v-else-if="!isMine() && !isUserOnline()">{{ getlastSeen() }}</span>
             <span class="friends-pill" v-if="!isMine() && is_friend">
@@ -242,6 +249,13 @@
                   </button>
                 </li>
                 <li>
+                 <button class="dropdown-item text-white d-flex align-items-center"  @click="ageVerification()">
+                    <img src="/images/badges/animated/50X50px/verified.gif" alt="Verify" class="rounded-circle me-2"
+                      style="width: 30px; height: 30px; object-fit: cover" />
+                    <span class="text-white">Age Verification</span>
+                  </button>
+                  </li>
+                <li>
                   <button class="dropdown-item text-white d-flex align-items-center position-relative"
                     @click="navigateTo(`/meet-verification`)">
                     <span class="text-danger menu-item-span">
@@ -300,7 +314,7 @@
                 alt="Silver" class="badge-icon" />
               <img v-if="(getUser()?.is_meet_verified ?? false) === true"
                 src="/images/badges/animated/150X150px/MEET-VERIFYED.gif" alt="Meet Verified" class="badge-icon" />
-                 <img v-if="(getUser()?.has_meet_event ?? false) === true"
+              <img v-if="(getUser()?.has_meet_event ?? false) === true"
                 src="/images/badges/animated/150X150px/pineapple.gif" alt="Meet Verified" class="badge-icon" />
             </div>
           </div>
@@ -488,9 +502,9 @@
                 </button>
               </div>
               <div v-if="verification.visibility === 'friends'"><strong>Verified by {{ verification.profile_type
-                  }}</strong></div>
+              }}</strong></div>
               <div v-if="verification.visibility === 'private'"><strong>Verified by {{ verification.profile_type
-                  }}</strong></div>
+              }}</strong></div>
               </p>
               <button class="ls-help-btn-secondary ls-help-submit-btn" v-if="verifications.length > 3"
                 @click="openVerifications()">More</button>
@@ -548,11 +562,11 @@
             <p v-for="verification in getallVerifications()">
             <div v-if="verification.visibility === 'public'"><button @click="openUserProfile(verification)">{{
               verification.nick_name
-                }}:</button>{{ verification.review }}</div>
+            }}:</button>{{ verification.review }}</div>
             <div v-if="verification.visibility === 'friends'"><strong>Verified by {{ verification.profile_type
-            }}</strong></div>
+                }}</strong></div>
             <div v-if="verification.visibility === 'private'"><strong>Verified by {{ verification.profile_type
-            }}</strong></div>
+                }}</strong></div>
             </p>
           </div>
         </div>
@@ -563,7 +577,7 @@
     @close-warning-popup="showWarning = false" />
 </template>
 <script setup lang="ts">
-import { ChatsModel, MeetVerificationsModel, type UsersModel } from '~/composables/models';
+import { AgeAwareModel, ChatsModel, MeetVerificationsModel, RequestURL, type UsersModel } from '~/composables/models';
 import AcceptDeclineRequestModel from './accept-decline-request-modal.vue';
 
 import Swal from 'sweetalert2'
@@ -650,7 +664,7 @@ if (isMine() === false) {
     );
     if (response.value?.success) {
       userDetails.value = response.value.response;
-      
+
     }
     else {
       // ✅ Safe navigation
@@ -713,8 +727,7 @@ if (isMine() === false) {
     );
     friend_status.value = response.value?.response?.friend_status ?? ''
     is_friend.value = response.value?.response?.is_friend ?? false
-    if (is_friend.value)
-    {
+    if (is_friend.value) {
       friend_status.value = 'accepted'
     }
   };
@@ -1450,6 +1463,25 @@ async function crushListTapped() {
 
 async function openUserList(type: string) {
   await navigateTo('/user-listing?type=' + type)
+}
+
+async function ageVerification() 
+{ 
+   let api_url = getUrl(RequestURL.createAgeAwareToken)
+    const response = await $fetch<SuccessError<AgeAwareModel.RequestProofResponseModel>>(
+    api_url,
+    {
+      method: "POST",
+      body: {
+        user_id: login_store.getUserDetails?.user_id
+      },
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  console.log("ageaware..",response.response?.url)
 }
 
 

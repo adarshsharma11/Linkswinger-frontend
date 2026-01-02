@@ -91,7 +91,8 @@ export enum RequestURL {
   removeBannedWarning = "/removeBannedWarning",
   fetchAdminChat = "/fetchAdminChat",
   fetchBlockList = "/fetchBlockList",
-  updateUserLocation = "/updateUserLocation"
+  updateUserLocation = "/updateUserLocation",
+  createAgeAwareToken = "/ageaware/createAgeAwareToken"
 }
 
 
@@ -1042,6 +1043,19 @@ export class UserBannedModel {
     event_name?: string
       is_warning?: boolean
 }
+
+export namespace AgeAwareModel
+{
+   export class RequestProofRequestModel 
+    {
+         user_id?: number
+    }
+    export class RequestProofResponseModel 
+    {
+         url?: string
+    }
+}
+
 
 
 
