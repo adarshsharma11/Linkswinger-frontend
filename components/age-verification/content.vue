@@ -1,11 +1,31 @@
 <script setup lang="ts">
+import type { AgeAwareModel } from '~/composables/models'
+const login_store = useLoginStore();
 const handleBack = () => {
   if (window.history.length > 1) window.history.back()
   else window.location.href = "/"
 }
 
-const handleMethodClick = (method: string) => {
-  console.log("Start flow:", method)
+const handleMethodClick = async (method: string) => {
+  // console.log("Start flow:", method)
+
+  let api_url = getUrl(RequestURL.createAgeAwareToken)
+  const response = await $fetch<SuccessError<AgeAwareModel.RequestProofResponseModel>>(
+    api_url,
+    {
+      method: "POST",
+      body: {
+        user_id: login_store.getUserDetails?.user_id
+      },
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  await navigateTo(response.response?.url, {
+    external: true
+  })
 }
 </script>
 
@@ -42,10 +62,12 @@ const handleMethodClick = (method: string) => {
           </p>
 
           <p class="partner-note">
-           We use our trusted age verification partner <strong>AgeChecked</strong>, which is designed to help us comply with UK online safety rules and Ofcom guidance. All checks are carried out securely and lawfully.
+            We use our trusted age verification partner <strong>AgeChecked</strong>, which is designed to help us comply
+            with UK online safety rules and Ofcom guidance. All checks are carried out securely and lawfully.
           </p>
           <p class="warning">
-            You’ll be redirected to AgeChecked to complete your check. Your personal data is handled securely by them and is not stored by LinkSwingers.
+            You’ll be redirected to AgeChecked to complete your check. Your personal data is handled securely by them
+            and is not stored by LinkSwingers.
           </p>
         </div>
 
@@ -70,8 +92,8 @@ const handleMethodClick = (method: string) => {
               <div class="method-type">Option 2</div>
               <h2 class="method-title">Mobile Network</h2>
               <p class="method-desc">
-              Verify your age using your mobile phone number with your network provider.
-            </p>
+                Verify your age using your mobile phone number with your network provider.
+              </p>
               <p class="method-meta">
                 • Uses data held by your mobile network<br>• No document upload required
               </p>
@@ -84,8 +106,8 @@ const handleMethodClick = (method: string) => {
               <div class="method-type">Option 3</div>
               <h2 class="method-title">ID Scan</h2>
               <p class="method-desc">
-              Upload a photo of your passport, driving licence, or other government-issued ID.
-            </p>
+                Upload a photo of your passport, driving licence, or other government-issued ID.
+              </p>
               <p class="method-meta">
                 • Highest assurance level<br>• Exact date of birth verified
               </p>
@@ -98,8 +120,8 @@ const handleMethodClick = (method: string) => {
               <div class="method-type">Option 4</div>
               <h2 class="method-title">Credit / Debit Card (No Charge)</h2>
               <p class="method-desc">
-              Confirm your age using a valid credit or debit card. Your card will not be charged.
-            </p>
+                Confirm your age using a valid credit or debit card. Your card will not be charged.
+              </p>
               <p class="method-meta">
                 • Card details checked<br>• Used only for age confirmation
               </p>
@@ -111,7 +133,8 @@ const handleMethodClick = (method: string) => {
             <div>
               <div class="method-type">Option 5</div>
               <h2 class="method-title">Database / Electoral Roll Check</h2>
-              <p class="method-desc">Verify your age against trusted databases such as the electoral roll and credit reference data.</p>
+              <p class="method-desc">Verify your age against trusted databases such as the electoral roll and credit
+                reference data.</p>
               <p class="method-meta">
                 • No document upload needed<br>• Uses existing records
               </p>
@@ -123,7 +146,8 @@ const handleMethodClick = (method: string) => {
             <div>
               <div class="method-type">Option 6</div>
               <h2 class="method-title">Text Message (SMS)</h2>
-              <p class="method-desc">Receive a verification code by text message and confirm your age using your mobile number.</p>
+              <p class="method-desc">Receive a verification code by text message and confirm your age using your mobile
+                number.</p>
               <p class="method-meta">
                 • Quick and simple<br>• Uses mobile network data
               </p>

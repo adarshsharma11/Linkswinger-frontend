@@ -1467,23 +1467,9 @@ async function openUserList(type: string) {
 
 async function ageVerification() 
 { 
-   let api_url = getUrl(RequestURL.createAgeAwareToken)
-    const response = await $fetch<SuccessError<AgeAwareModel.RequestProofResponseModel>>(
-    api_url,
-    {
-      method: "POST",
-      body: {
-        user_id: login_store.getUserDetails?.user_id
-      },
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }
-  );
 
-  navigateTo(response.response?.url, {
-  external: true
-})
+  await navigateTo('/age-verification')
+
 }
 
 
