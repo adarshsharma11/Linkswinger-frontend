@@ -480,6 +480,7 @@ export namespace UsersModel {
     has_warning?:boolean
   is_loading?:boolean
     is_friend?:boolean
+    has_meet_event?:boolean
   }
 
   export class FetchMembershipRequestModel {
@@ -853,6 +854,8 @@ export namespace MeetEventsModel {
 
     can_comment?: boolean
     can_like?: boolean
+
+    meet_event_id?:number | null
   }
 
   export class CreateResponseModel {
@@ -912,6 +915,9 @@ export namespace MeetEventsModel {
     town?:string
     is_like_loading?:boolean
     is_comment_loading?:boolean
+
+    latitude?:number
+    longitude?:number
   }
 
   // =========================

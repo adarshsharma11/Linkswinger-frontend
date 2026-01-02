@@ -190,7 +190,8 @@
           <!-- Body -->
           <div class="meet-modal-grid">
             <div>
-              <div class="meet-detail-photo" v-if="(selectedEvent?.meet_photo?.length ?? 0) > 0" style="cursor: pointer;" @click="openPreview()">
+              <div class="meet-detail-photo" v-if="(selectedEvent?.meet_photo?.length ?? 0) > 0"
+                style="cursor: pointer;" @click="openPreview()">
                 <img :src="(selectedEvent?.media_path ?? '') + selectedEvent?.meet_photo"
                   style="max-height: 160px; object-fit: cover;"></img>
               </div>
@@ -269,7 +270,7 @@
               </div>
 
               <div class="meet-section">
-                 <div class="meet-inline mb-2">
+                <div class="meet-inline mb-2">
                   <button class="meet-btn meet-small" @click="editEvent()" v-if="!is_delete_loading">Edit</button>
                 </div>
                 <div class="meet-inline mb-2">
@@ -338,7 +339,7 @@
             <select v-model="selectedTimeISO">
               <option disabled value="">Select time</option>
 
-              <option v-for="t in timeOptions" :key="t.value" :value="t.value">
+              <option v-for="t in timeOptions()" :key="t.label" :value="t.value">
                 {{ t.label }}
               </option>
             </select>
@@ -435,11 +436,11 @@
 
             <div class="lsv-media-grid">
               <div v-for="media in allFeeds" :key="media.feed_id" class="lsv-media-item"
-                :class="{ 'lsv-media-item--selected': selectedMedia?.feed_id === media.feed_id }"
+                :class="{ 'lsv-media-item--selected': selectedMedia?.hd_feed_image === media.hd_feed_image }"
                 @click="selectMedia(media)">
                 <div class="lsv-media-image">
                   <img :src="(media.media_path ?? '') + media.hd_feed_image" />
-                  <div class="lsv-media-overlay" v-if="selectedMedia?.feed_id === media.feed_id">
+                  <div class="lsv-media-overlay" v-if="selectedMedia?.hd_feed_image === media.hd_feed_image">
                     <span class="lsv-check-icon">✓</span>
                   </div>
                 </div>
@@ -471,7 +472,7 @@
           </div>
           <div class="meet-divider"></div>
           <div class="meet-inline" v-if="!is_event_loading">
-            <button class="meet-btn meet-small meet-ghost" id="createResetBtn" type="button"
+            <button v-if="!is_editing" class="meet-btn meet-small meet-ghost" id="createResetBtn" type="button"
               @click="resetMeetEvent()">Reset</button>
             <button class="meet-btn meet-small meet-primary" id="createSaveBtn" type="button"
               @click="createMeetEvent()">Save Event</button>
@@ -562,8 +563,9 @@
             ✕
           </button>
         </div>
-        <div class="modal-body p-0 h-100">
-          <img :key="selectedEvent?.meet_event_id" :src="(selectedEvent?.media_path ?? '') + selectedEvent?.meet_photo" class="img-fluid" style="max-height: 100%; max-width: 100%; object-fit: contain;" />
+        <div class="modal-body p-0 h-100 image-wrapper">
+          <img :key="selectedEvent?.meet_event_id" :src="(selectedEvent?.media_path ?? '') + selectedEvent?.meet_photo"
+            class="img-cover" />
         </div>
       </div>
     </div>
@@ -572,7 +574,7 @@
 
 
 <script setup lang="ts">
-import { RequestURL, type FeedsModel, type MeetEventsModel, type SuccessError, type UsersModel } from '~/composables/models';
+import { FeedsModel, RequestURL, UsersModel, type MeetEventsModel, type SuccessError } from '~/composables/models';
 import Multiselect from 'vue-multiselect';
 import 'vue-multiselect/dist/vue-multiselect.css';
 const router = useRouter()
@@ -584,7 +586,7 @@ const filtersCollapsed = ref(false);
 const user_store = userStore()
 const login_store = useLoginStore()
 const isCustomLocation = ref(false)
-const selectedTown = ref<UsersModel.FetchTownResponseModel>({});
+const selectedTown = ref<UsersModel.FetchTownResponseModel | null>({});
 const selectedPostTown = ref<UsersModel.FetchTownPostCodesResponseModel>({});
 const selectedMedia = ref<FeedsModel.FeedsResponseModel | null>(null)
 const selectedEvent = ref<MeetEventsModel.ListResponseModel | null>(null)
@@ -635,6 +637,7 @@ var addEventSub: any = null
 var commentModal: any = null
 var detailEventModal: any = null
 var videoModalSub: any = null
+var is_editing = ref(false)
 
 const { $bootstrap } = useNuxtApp();
 
@@ -670,7 +673,7 @@ const fetchMeetEvents = async () => {
       "content-type": "application/json"
     }
   });
-
+console.log(meet_response.value)
   return meet_response.value?.result ?? []
 }
 
@@ -681,24 +684,23 @@ watch(
   () => route.query.modal,
   (newHash, oldHash) => {
     if ((newHash ?? '').length === 0 && oldHash === 'addEvent') {
-      addEventSub.hide()
+      addEventSub?.hide()
     }
     if ((newHash ?? '').length === 0 && oldHash === 'media') {
-      videoModalSub.hide()
+      videoModalSub?.hide()
     }
   }
 );
-function openPreview()
-{
-   videoModalSub.show()
+function openPreview() {
+  videoModalSub.show()
 }
 onBeforeUnmount(() => {
-  
-  
+
+
   detailEventModal?.hide()
   addEventSub?.hide()
- videoModalSub?.hide()
- commentModal?.hide()
+  videoModalSub?.hide()
+  commentModal?.hide()
 
 })
 
@@ -708,6 +710,8 @@ onMounted(() => {
 
   addEventSub._element.addEventListener('hidden.bs.modal', () => {
     router.replace({ query: {} })
+    is_editing.value = false
+     resetMeetEvent()
   })
 
   videoModalSub = new ($bootstrap as any).Modal(document.getElementById('videoModal'));
@@ -890,7 +894,9 @@ const next14Days = computed(() => {
   }
   return days
 })
-const timeOptions = computed(() => {
+
+function timeOptions()
+{
   const options: { label: string; value: string }[] = []
 
   const now = new Date()
@@ -912,7 +918,11 @@ const timeOptions = computed(() => {
           minute: '2-digit',
           hour12: true
         }),
-        value: current.toISOString()
+        value: current.toLocaleTimeString([], {
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: true
+        })
       })
       current.setHours(current.getHours() + 1)
     }
@@ -933,12 +943,16 @@ const timeOptions = computed(() => {
         minute: '2-digit',
         hour12: true
       }),
-      value: t.toISOString()
+      value: t.toLocaleTimeString([], {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true
+      })
     })
   }
 
   return options
-})
+}
 
 
 watch(isTodayMode, () => {
@@ -986,6 +1000,8 @@ function resetMeetEvent() {
   selectedTown.value = {}
   can_comment.value = true
   can_like.value = true
+  description.value = ''
+  selectedTown.value = null
 }
 
 function closeMobileFilters() {
@@ -1027,9 +1043,9 @@ function buildMeetDateISO(): string | null {
   }
 
   // combine date + time
-  const time = new Date(selectedTimeISO.value)
   const date = selectedDateISO.value
-
+  const time = new Date(`${date} ${selectedTimeISO.value}`)
+  
   const combined = new Date(
     `${date}T${time.toISOString().split('T')[1]}`
   )
@@ -1081,7 +1097,7 @@ async function fetchMeetEventWithFilter(isFilter: boolean = true) {
     method: 'POST',
     body: payload
   })
-  console.log(response)
+
   if (response.success) {
     allMeetEvents.value = response.result ?? []
   }
@@ -1128,15 +1144,78 @@ function handleToggle() {
     }
   })
 }
-
+function isSameDay(a: Date, b: Date): boolean {
+  return (
+    a.getFullYear() === b.getFullYear() &&
+    a.getMonth() === b.getMonth() &&
+    a.getDate() === b.getDate()
+  )
+}
 async function editEvent() {
 
-detailEventModal.hide()
+  detailEventModal.hide()
 
   addEventSub.show()
   router.push({
     query: { modal: 'addEvent' }
   })
+
+  is_editing.value = true
+
+  //  const payload: MeetEventsModel.CreateRequestModel = {
+  //   meet_date: meetDateISO,
+  // }
+
+let meet_date = formatLocal(selectedEvent.value?.meet_date ?? '')
+if (meet_date)
+{
+   const dateObj = new Date(meet_date)
+  isTodayMode.value = isSameDay(dateObj, new Date())
+ 
+  nextTick(() => {
+    selectedDateISO.value = dateObj.toISOString().split('T')[0]
+  selectedTimeISO.value = dateObj.toLocaleTimeString('en-US', {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true
+  }).toLowerCase()
+  })
+}
+
+selectedMeetType.value = selectedEvent.value?.meet_type ?? ''
+description.value =  selectedEvent.value?.description ?? ''
+selectedLookingFor.value = selectedEvent.value?.looking_for ?? []
+minAge.value = selectedEvent.value?.min_age ?? 18
+maxAge.value = selectedEvent.value?.max_age ?? 99
+isCustomLocation.value = !(login_store.getUserDetails?.town_id === selectedEvent.value?.town_id)
+
+let meet_photo = selectedEvent.value?.meet_photo ?? ''
+selectedMedia.value = null
+if (meet_photo.length !== 0)
+{
+let feedmodel = new FeedsModel.FeedsResponseModel()
+feedmodel.hd_feed_image = selectedEvent.value?.meet_photo
+selectedMedia.value = feedmodel
+}
+
+
+
+let town_model = new UsersModel.FetchTownResponseModel()
+town_model.town = selectedEvent.value?.town
+town_model.town_id = selectedEvent.value?.town_id
+town_model.latitude = selectedEvent.value?.latitude
+town_model.longitude = selectedEvent.value?.longitude
+selectedTown.value = null
+if (isCustomLocation.value)
+{
+selectedTown.value = town_model
+}
+
+
+
+radius.value = selectedEvent.value?.radius ?? 40
+can_comment.value = selectedEvent.value?.can_comment ?? false
+can_like.value = selectedEvent.value?.can_like ?? false
 
 }
 async function deleteEvent() {
@@ -1325,6 +1404,7 @@ async function createMeetEvent() {
   }
 
   const payload: MeetEventsModel.CreateRequestModel = {
+    meet_event_id: is_editing.value ? selectedEvent.value?.meet_event_id : null, 
     user_id: user_store.getLoginId,
     meet_date: meetDateISO,
     meet_type: selectedMeetType.value,
@@ -1355,7 +1435,7 @@ async function createMeetEvent() {
     // success UX
     if (response.success) {
       resetMeetEvent()
-      addEventSub.hide()
+      addEventSub?.hide()
       showToastSuccess(response.message)
     }
     else {
@@ -1388,48 +1468,51 @@ async function createMeetEvent() {
 
 
 }
+.image-wrapper {
+  width: 100%;
+  height: calc(100vh - 60px); /* subtract header height */
+  overflow: hidden;
+}
 
+.img-cover {
+  width: auto;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  margin: auto;
+}
 .msgf-pill {
-  font-size: 14px;
-  line-height: 1;
-  height: 20px;
-  width: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-left: auto;
-  border: none !important;
-  outline: none !important;
-  box-shadow: none !important;
-  background: transparent;
-  /* optional */
+    font-size: 14px;
+    line-height: 1;
+    height: 20px;
+    width: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: auto;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    background: transparent;
+    /* optional */
 }
 
 .modal-header {
-  min-height: 0 !important;
-  max-height: 20px;
-  border-bottom: none !important;
+    min-height: 0 !important;
+    max-height: 20px;
+    border-bottom: none !important;
 }
-
 
 .modal-dialog {
-  height: 100%;
-  max-height: 100%;
-  margin: 0 auto;
-}
-
-@supports (-webkit-touch-callout: none) {
-  .modal-dialog {
-    height: 100dvh;
-  }
+    height: 100vh;
+    max-height: 100vh;
+    margin: 0 auto;
 }
 
 .modal-content {
-  height: auto;
-  max-height: 100vh;
-  overflow: hidden;
-  /* disables internal scroll */
+    height: auto;
+    max-height: 100vh;
+    overflow: hidden;
+    /* disables internal scroll */
 }
 </style>
-
-
