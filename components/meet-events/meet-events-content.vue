@@ -182,7 +182,7 @@
             </div>
 
             <div class="meet-head-right">
-           
+
               <span class="meet-head-pill" id="detailsMeetTypePill">{{ selectedEvent?.meet_type }}</span>
               <button class="meet-btn meet-small meet-ghost" data-bs-dismiss="modal" aria-label="Close">Close</button>
             </div>
@@ -190,7 +190,7 @@
           <!-- Body -->
           <div class="meet-modal-grid">
             <div>
-              <div class="meet-detail-photo" v-if="(selectedEvent?.meet_photo?.length ?? 0) > 0">
+              <div class="meet-detail-photo" v-if="(selectedEvent?.meet_photo?.length ?? 0) > 0" style="cursor: pointer;" @click="openPreview()">
                 <img :src="(selectedEvent?.media_path ?? '') + selectedEvent?.meet_photo"
                   style="max-height: 160px; object-fit: cover;"></img>
               </div>
@@ -209,7 +209,7 @@
                   <div class="meet-info-box">
                     <div class="meet-info-label">Profile</div>
                     <div class="meet-info-value" id="detailsWhoText" @click="openProfile()">{{ selectedEvent?.nick_name
-                      }} {{
+                    }} {{
                         selectedEvent?.profile_type }}</div>
 
                   </div>
@@ -245,9 +245,11 @@
                       <div class="meet-t-sub">Turn comments on/off</div>
                     </div>
                     <div class="meet-switch" :class="{ 'on': selectedEvent?.can_comment }" id="ownerCommentsSwitch"
-                      role="switch" aria-checked="true" tabindex="0" v-if="(selectedEvent?.is_comment_loading ?? false) === false" @click="updateCommentStatus(selectedEvent)">
+                      role="switch" aria-checked="true" tabindex="0"
+                      v-if="(selectedEvent?.is_comment_loading ?? false) === false"
+                      @click="updateCommentStatus(selectedEvent)">
                     </div>
-                     <span class="btn-loader" v-if="selectedEvent?.is_comment_loading"></span>
+                    <span class="btn-loader" v-if="selectedEvent?.is_comment_loading"></span>
                   </div>
 
                   <div class="meet-toggle-row">
@@ -256,7 +258,9 @@
                       <div class="meet-t-sub">Turn likes on/off</div>
                     </div>
                     <div class="meet-switch" :class="{ 'on': selectedEvent?.can_like }" id="ownerLikesSwitch"
-                      role="switch" aria-checked="true" tabindex="0" v-if="(selectedEvent?.is_like_loading ?? false) === false" @click="updateLikeStatus(selectedEvent)">
+                      role="switch" aria-checked="true" tabindex="0"
+                      v-if="(selectedEvent?.is_like_loading ?? false) === false"
+                      @click="updateLikeStatus(selectedEvent)">
                     </div>
                     <span class="btn-loader" v-if="selectedEvent?.is_like_loading"></span>
                   </div>
@@ -265,11 +269,11 @@
               </div>
 
               <div class="meet-section">
-              <div class="meet-inline mb-2">
-                 <span class="btn-loader" v-if="is_delete_loading"
+                <div class="meet-inline mb-2">
+                  <span class="btn-loader" v-if="is_delete_loading"
                     style="width: 20px; height: 20px; max-width: 20px; max-height: 40px;"></span>
-                    <button class="meet-btn meet-small" @click="deleteEvent()" v-if="!is_delete_loading">Delete</button>
-              </div>
+                  <button class="meet-btn meet-small" @click="deleteEvent()" v-if="!is_delete_loading">Delete</button>
+                </div>
                 <div class="meet-inline">
                   <span class="btn-loader" v-if="is_like_loading"
                     style="width: 20px; height: 20px; max-width: 20px; max-height: 40px;"></span>
@@ -545,6 +549,22 @@
 
   <EmojiPicker v-if="showPicker" :key="route.fullPath" ref="emojiPickerRef" v-on:selected-emoji="selectedEmoji"
     v-on:select-custom-emoji="selectCustomEmoji" @closed-emoji-picker="showPicker = false" />
+
+
+  <div class="modal fade" id="videoModal" tabindex="-1" aria-labelledby="videoModal" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content bg-black">
+        <div class="modal-header">
+          <button type="button" class="msgf-pill" data-bs-dismiss="modal" aria-label="Close">
+            ✕
+          </button>
+        </div>
+        <div class="modal-body p-0 h-100">
+          <img :key="selectedEvent?.meet_event_id" :src="(selectedEvent?.media_path ?? '') + selectedEvent?.meet_photo" class="img-fluid" style="max-height: 100%; max-width: 100%; object-fit: contain;" />
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 
@@ -611,7 +631,7 @@ const emojiPickerRef = ref<EmojiPicker | null>(null)
 var addEventSub: any = null
 var commentModal: any = null
 var detailEventModal: any = null
-
+var videoModalSub: any = null
 
 const { $bootstrap } = useNuxtApp();
 
@@ -660,8 +680,24 @@ watch(
     if ((newHash ?? '').length === 0 && oldHash === 'addEvent') {
       addEventSub.hide()
     }
+    if ((newHash ?? '').length === 0 && oldHash === 'media') {
+      videoModalSub.hide()
+    }
   }
 );
+function openPreview()
+{
+   videoModalSub.show()
+}
+onBeforeUnmount(() => {
+  
+  
+  detailEventModal?.hide()
+  addEventSub?.hide()
+ videoModalSub?.hide()
+ commentModal?.hide()
+
+})
 
 onMounted(() => {
   addEventSub = new ($bootstrap as any).Modal(document.getElementById('addMeetBtn'));
@@ -671,8 +707,16 @@ onMounted(() => {
     router.replace({ query: {} })
   })
 
+  videoModalSub = new ($bootstrap as any).Modal(document.getElementById('videoModal'));
+
+  videoModalSub._element.addEventListener('hidden.bs.modal', () => {
+    //galleryItems.value = []
+
+  })
+
   commentModal = new ($bootstrap as any).Modal(document.getElementById('commentmodal'));
 })
+
 function fetchTowns(query: string) {
   if (query.length === 0) {
     allTowns.value = []
@@ -805,7 +849,7 @@ async function updateLikeStatus(feed: MeetEventsModel.ListResponseModel) {
   feed.is_like_loading = true;
   let api_url = getUrl(RequestURL.meetupdateLikeStatus);
   let postData = {
-  meet_event_id: feed.meet_event_id
+    meet_event_id: feed.meet_event_id
   }
   let response = await $fetch<SuccessError<FeedsModel.FeedsResponseModel>>(api_url, {
     method: 'POST',
@@ -1083,31 +1127,29 @@ function handleToggle() {
 }
 
 
-async function deleteEvent() 
-{
-  if (is_delete_loading.value)
-{
-  return;
-}
+async function deleteEvent() {
+  if (is_delete_loading.value) {
+    return;
+  }
   is_delete_loading.value = true
-let meet_event_id = selectedEvent.value?.meet_event_id
- let postData = {
+  let meet_event_id = selectedEvent.value?.meet_event_id
+  let postData = {
     meet_event_id: meet_event_id,
   }
- let api_url = getUrl(RequestURL.deleteMeetEvent);
-let response = await $fetch<SuccessError<FeedsModel.FeedLikeDisLikeResponseModel>>(api_url, {
+  let api_url = getUrl(RequestURL.deleteMeetEvent);
+  let response = await $fetch<SuccessError<FeedsModel.FeedLikeDisLikeResponseModel>>(api_url, {
     method: 'POST',
     body: postData,
     headers: {
       'Content-Type': 'application/json'
     }
   });
-    is_delete_loading.value = false
-    if (response.success) {
- allMeetEvents.value.splice(allMeetEvents.value.findIndex(u => u.meet_event_id === meet_event_id), 1);
-  detailEventModal.hide()
-    }
-      else {
+  is_delete_loading.value = false
+  if (response.success) {
+    allMeetEvents.value.splice(allMeetEvents.value.findIndex(u => u.meet_event_id === meet_event_id), 1);
+    detailEventModal.hide()
+  }
+  else {
     showToastError(response.message)
   }
 }
@@ -1334,4 +1376,48 @@ async function createMeetEvent() {
 
 
 }
+
+.msgf-pill {
+  font-size: 14px;
+  line-height: 1;
+  height: 20px;
+  width: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: auto;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  background: transparent;
+  /* optional */
+}
+
+.modal-header {
+  min-height: 0 !important;
+  max-height: 20px;
+  border-bottom: none !important;
+}
+
+
+.modal-dialog {
+  height: 100%;
+  max-height: 100%;
+  margin: 0 auto;
+}
+
+@supports (-webkit-touch-callout: none) {
+  .modal-dialog {
+    height: 100dvh;
+  }
+}
+
+.modal-content {
+  height: auto;
+  max-height: 100vh;
+  overflow: hidden;
+  /* disables internal scroll */
+}
 </style>
+
+
