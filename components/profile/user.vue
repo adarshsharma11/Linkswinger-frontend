@@ -300,6 +300,8 @@
                 alt="Silver" class="badge-icon" />
               <img v-if="(getUser()?.is_meet_verified ?? false) === true"
                 src="/images/badges/animated/150X150px/MEET-VERIFYED.gif" alt="Meet Verified" class="badge-icon" />
+                 <img v-if="(getUser()?.has_meet_event ?? false) === true"
+                src="/images/badges/animated/150X150px/MEET-VERIFYED.gif" alt="Meet Verified" class="badge-icon" />
             </div>
           </div>
 
@@ -611,6 +613,7 @@ const { $bootstrap } = useNuxtApp();
 const friend_status = ref('');
 const is_friend = ref(false);
 const is_friend_loading = ref(false);
+
 const is_block_loading = ref(false);
 const is_blocked = ref(false);
 const isWSConnected = ref(false)
@@ -647,6 +650,7 @@ if (isMine() === false) {
     );
     if (response.value?.success) {
       userDetails.value = response.value.response;
+      
     }
     else {
       // ✅ Safe navigation
