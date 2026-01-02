@@ -301,7 +301,7 @@
               <img v-if="(getUser()?.is_meet_verified ?? false) === true"
                 src="/images/badges/animated/150X150px/MEET-VERIFYED.gif" alt="Meet Verified" class="badge-icon" />
                  <img v-if="(getUser()?.has_meet_event ?? false) === true"
-                src="/images/badges/animated/150X150px/MEET-VERIFYED.gif" alt="Meet Verified" class="badge-icon" />
+                src="/images/badges/animated/150X150px/pineapple.gif" alt="Meet Verified" class="badge-icon" />
             </div>
           </div>
 
