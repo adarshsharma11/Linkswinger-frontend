@@ -653,8 +653,15 @@ const { $bootstrap } = useNuxtApp();
 var advanceModelSub: any = null
 const latitude = ref<number | null>(null)
 const longitude = ref<number | null>(null)
+
+  
 const is_logout_loading = ref(false);
+
+const has_location_error = ref(false);
 const is_location_on = ref(login_store.getUserDetails?.is_location_on ?? false);
+const user_latitude = ref<number | null>(login_store.getUserDetails?.user_latitude ?? null)
+const user_longitude = ref<number | null>(login_store.getUserDetails?.user_longitude ?? null)
+
 const selected_slot = ref(0)
 
 
@@ -802,11 +809,10 @@ function checkMobile() {
 // }
 async function updateUserLocation() {
   const api_url = getUrl(RequestURL.updateUserLocation);
-
   var body = {
     user_id: login_store.getUserDetails?.user_id ?? 0,
-    latitude : is_location_on.value ? latitude.value : null,
-    longitude : is_location_on.value ? longitude.value : null
+    latitude : is_location_on.value ? user_latitude.value : null,
+    longitude : is_location_on.value ? user_longitude.value : null
   } 
   let response = await $fetch<SuccessError<UsersModel.ProfileDetailsResponseModel>>(api_url, {
     method: 'POST',
@@ -815,9 +821,8 @@ async function updateUserLocation() {
       'Content-Type': 'application/json'
     }
   });
-
   if (response.success) {
-     login_store.setIsLocationOn(response.response?.is_location_on ?? false)
+     login_store.setIsLocationOn(response.response?.is_location_on ?? false , user_latitude.value , user_longitude.value)
   }
   else {
     showToastError(response.message ?? "Something went wrong");
@@ -969,16 +974,9 @@ async function fetchNearByUserList() {
   const api_url = getUrl(RequestURL.fetchNearByUsers);
   users.value = []
   let body = {
-    user_id: login_store.getUserDetails?.user_id ?? 0,
-    latitude: null,
-    longitude: null
-  }
-  if (is_location_on.value) {
-    body = {
-      user_id: login_store.getUserDetails?.user_id ?? 0,
-      latitude: latitude.value,
-      longitude: longitude.value
-    }
+    user_id:   login_store.getUserDetails?.user_id ?? 0,
+    latitude:  is_location_on.value  ? user_latitude.value :  null,
+    longitude: is_location_on.value ? user_longitude.value :  null,
   }
   let response = await $fetch<SuccessError<UsersModel.LoginRequestModel>>(api_url, {
     method: 'POST',
@@ -1052,29 +1050,31 @@ watch(current_loc, () => {
 
 });
 
-watch(is_location_on, () => {
+watch(is_location_on, (newValue, oldValue) => {
   if (is_location_on.value) {
     navigator.geolocation.getCurrentPosition(
       (position) => {
-        latitude.value = position.coords.latitude
-        longitude.value = position.coords.longitude
+        user_latitude.value = position.coords.latitude
+        user_longitude.value = position.coords.longitude
         updateUserLocation()
         fetchNearByUserList()
         
       },
       (err) => {
-        is_location_on.value = false
-        latitude.value = null
-        longitude.value = null
-         updateUserLocation()
-        showToastError(err.message)
+         is_location_on.value = oldValue
+         has_location_error.value = true
+         showToastError(err.message)
       }
     )
   }
   else
   {
-    fetchNearByUserList()
+    if (has_location_error.value === false)
+    {
        updateUserLocation()
+       fetchNearByUserList()
+    }
+    has_location_error.value = false
   }
 });
 

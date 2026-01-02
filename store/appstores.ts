@@ -75,11 +75,13 @@ export const useLoginStore = defineStore('login_details', {
         }
          
        },
-        setIsLocationOn(is_location_on:boolean)
+        setIsLocationOn(is_location_on:boolean , user_latitude:number | null,user_longitude:number | null)
        {
         if(this.user)
         {
            this.user.is_location_on = is_location_on
+            this.user.user_latitude = user_latitude
+             this.user.user_longitude = user_longitude
         }
          
        },
