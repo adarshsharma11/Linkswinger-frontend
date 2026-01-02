@@ -1481,7 +1481,9 @@ async function ageVerification()
     }
   );
 
-  console.log("ageaware..",response.response?.url)
+  navigateTo(response.response?.url, {
+  external: true
+})
 }
 
 
