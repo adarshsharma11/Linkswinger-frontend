@@ -3,6 +3,17 @@
 import { visualizer } from 'rollup-plugin-visualizer'
 export default defineNuxtConfig({
   compatibilityDate: '2024-11-01',
+ nitro: {
+    routeRules: {
+      '/aa_config.jwt': {
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'GET',
+          'Access-Control-Allow-Headers': '*'
+        }
+      }
+    }
+  },
   app:{
     head:{
       link: [
